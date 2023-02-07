@@ -155,6 +155,7 @@ public class ImGUILayer {
 
     public void update() {
         startFrame();
+        DiaConsole.log("Updating imgui", "debug");
         setupDockSpace();
         endFrame();
     }
