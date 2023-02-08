@@ -172,14 +172,16 @@ public class Window {
     }
 
     public void endFrame() {
-        glfwSwapBuffers(glfwWindow);
         if (this.imGUILayer != null) {
             this.imGUILayer.update();
         }
+        glfwSwapBuffers(glfwWindow);
     }
 
     public void close() {
         // Free allocated memory
+        alcDestroyContext(audioContext);
+        alcCloseDevice(audioDevice);
         glfwFreeCallbacks(glfwWindow);
         glfwDestroyWindow(glfwWindow);
         posX = null;

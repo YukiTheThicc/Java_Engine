@@ -11,26 +11,17 @@ public class MenuBar {
         ImGui.beginMenuBar();
         // FILES Menu
         if (ImGui.beginMenu("File")) {
-            if (ImGui.menuItem("Save", "Ctrl+S")) {
+            if (ImGui.menuItem("Open Project", "Ctrl+S")) {
                 //EventSystem.notify(null, new Event(EventType.SaveLevel));
             }
-            if (ImGui.menuItem("Load", "Ctrl+L")) {
-                //EventSystem.notify(null, new Event(EventType.LoadLevel));
+            if (ImGui.menuItem("Export Project", "Ctrl+S")) {
+                //EventSystem.notify(null, new Event(EventType.SaveLevel));
             }
             ImGui.separator();
-            if (ImGui.menuItem("Settings")) {
-                //EventSystem.notify(null, new Event(EventType.LoadLevel));
-            }
             ImGui.endMenu();
         }
         // WINDOW Menu
         if (ImGui.beginMenu("Window")) {
-            if (ImGui.menuItem("Save", "Ctrl+S")) {
-                //EventSystem.notify(null, new Event(EventType.SaveLevel));
-            }
-            if (ImGui.menuItem("Load", "Ctrl+L")) {
-                //EventSystem.notify(null, new Event(EventType.LoadLevel));
-            }
             ImGui.endMenu();
         }
         ImGui.endMenuBar();

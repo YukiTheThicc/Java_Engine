@@ -1,6 +1,8 @@
 package diaEditor.imgui;
 
 import diaEditor.EditorConfig;
+import diaEditor.imgui.windows.ImguiWindow;
+import diaEditor.imgui.windows.SettingsWindow;
 import diamondEngine.Window;
 import diamondEngine.DiaConsole;
 import imgui.*;
@@ -13,8 +15,8 @@ import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.type.ImBoolean;
 import org.joml.Vector2f;
-
 import java.io.File;
+import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -28,15 +30,25 @@ public class ImGUILayer {
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
     private MenuBar menuBar;
+    private ArrayList<ImguiWindow> windows;
 
     // CONSTRUCTORS
     public ImGUILayer(long windowPtr) {
         this.glfwWindow = windowPtr;
         this.menuBar = new MenuBar();
+        this.windows = new ArrayList<>();
     }
 
     // GETTERS & SETTERS
+    public ArrayList<ImguiWindow> getWindows() {
+        return windows;
+    }
 
+    public void addWindow(ImguiWindow window) {
+        if (window != null) {
+            this.windows.add(window);
+        }
+    }
 
     // METHODS
     public void init() {
@@ -140,6 +152,10 @@ public class ImGUILayer {
             DiaConsole.log("Specified engine font has not been found: \"" + fontDir + "\"", "error");
         }
 
+        // For now windows are going to be statically added in the init function
+        // WINDOWS
+        this.windows.add(new SettingsWindow());
+
         /*
          * Method initializes LWJGL3 renderer.
          * This method SHOULD be called after initializing ImGui configuration.
@@ -155,8 +171,10 @@ public class ImGUILayer {
 
     public void update() {
         startFrame();
-        DiaConsole.log("Updating imgui", "debug");
         setupDockSpace();
+        for (ImguiWindow window : this.windows) {
+            window.imgui();
+        }
         endFrame();
     }
 
