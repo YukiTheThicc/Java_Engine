@@ -2,8 +2,7 @@ package diaEditor;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-import diamondEngine.DiaConsole;
-import diamondEngine.DiaUtils;
+import diamondEngine.diaUtils.DiaConsole;
 import diamondEngine.Game;
 import diamondEngine.Window;
 
@@ -32,9 +31,6 @@ public class ContainerEditor {
 
     // METHODS
     public void init() {
-        // Initialize general Engine Utilities
-        DiaUtils.get().init();
-        EditorConfig.get().init();
         DiaConsole.log("Initializing Editor Container...", "debug");
         this.window.init(true);
     }

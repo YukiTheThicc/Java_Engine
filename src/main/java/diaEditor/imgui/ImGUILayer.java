@@ -1,9 +1,9 @@
 package diaEditor.imgui;
 
-import diaEditor.EditorConfig;
+import diaEditor.FrontEnd;
 import diaEditor.imgui.windows.*;
 import diamondEngine.Window;
-import diamondEngine.DiaConsole;
+import diamondEngine.diaUtils.DiaConsole;
 import imgui.*;
 import imgui.callback.ImStrConsumer;
 import imgui.callback.ImStrSupplier;
@@ -135,7 +135,7 @@ public class ImGUILayer {
             }
         });
 
-        String fontDir = EditorConfig.get().getFont();
+        String fontDir = FrontEnd.get().getSettings().getFont();
         if (new File(fontDir).isFile()) {
             final ImFontAtlas fontAtlas = io.getFonts();
             final ImFontConfig fontConfig = new ImFontConfig(); // Natively allocated object, should be explicitly destroyed
@@ -157,6 +157,22 @@ public class ImGUILayer {
         this.windows.add(new EntityPropertiesWindow());
         this.windows.add(new AssetsWindow());
         this.windows.add(new GameViewPortWindow());
+
+        /* Settings for the windows are loaded. At the time of writing this code, only one setting is stored, being if
+         * the window is active or not. Because of this, the window settings are stored as a simple map. When it comes
+         * to runtime, the windows are stored in memory as an ArrayList. For the moment then, when initializing the
+         * front end the settings map will be iterated through and the windows names will be compared with the key of
+         * each entry, then set it to active or not appropriately. Could be necessary in the future to fully serialize
+         * the windows. With this solution its also assured that all windows available will be created no matter if it
+         * is registered or not on the settings.
+         */
+        for (String windowId : FrontEnd.get().getSettings().getActiveWindows().keySet()) {
+            for (ImguiWindow window : this.windows) {
+                if (window.getId().equals(windowId)) {
+                    window.setActive(FrontEnd.get().getSettings().getActiveWindows().get(windowId));
+                }
+            }
+        }
 
         /*
          * Method initializes LWJGL3 renderer.

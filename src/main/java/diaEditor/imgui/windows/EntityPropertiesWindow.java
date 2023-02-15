@@ -5,7 +5,7 @@ import imgui.ImGui;
 public class EntityPropertiesWindow extends ImguiWindow {
 
     public EntityPropertiesWindow() {
-        super("Entity Properties");
+        super("entity_properties", "Entity Properties");
     }
 
     @Override

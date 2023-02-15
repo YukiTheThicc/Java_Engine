@@ -1,0 +1,10 @@
+{
+  "dir": "",
+  "font": "res/fonts/visitor.ttf",
+  "activeWindows": {
+    "view_port": true,
+    "settings": true,
+    "assets": true,
+    "entity_properties": true
+  }
+}

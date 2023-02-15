@@ -5,7 +5,7 @@ import imgui.ImGui;
 public class SettingsWindow extends ImguiWindow {
 
     public SettingsWindow() {
-        super("Settings");
+        super("settings", "Settings");
     }
 
     @Override

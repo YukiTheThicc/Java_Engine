@@ -1,6 +1,6 @@
 package diaEditor;
 
-import diamondEngine.DiaConsole;
+import diamondEngine.diaUtils.DiaConsole;
 
 public class DiaFront {
 

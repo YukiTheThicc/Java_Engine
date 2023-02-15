@@ -5,7 +5,7 @@ import imgui.ImGui;
 public class GameViewPortWindow extends ImguiWindow {
 
     public GameViewPortWindow() {
-        super("Game View Port");
+        super("view_port", "Game View Port");
     }
 
     @Override

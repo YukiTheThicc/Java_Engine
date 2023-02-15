@@ -1,8 +1,9 @@
 package diaEditor.imgui;
 
+import diaEditor.DiaFrontSettings;
+import diaEditor.FrontEnd;
 import diaEditor.imgui.windows.ImguiWindow;
-import diamondEngine.DiaConsole;
-import diamondEngine.DiaUtils;
+import diamondEngine.diaUtils.DiaConsole;
 import imgui.ImGui;
 
 public class MenuBar {
@@ -19,6 +20,9 @@ public class MenuBar {
                 //EventSystem.notify(null, new Event(EventType.SaveLevel));
             }
             ImGui.separator();
+            if (ImGui.menuItem("Settings", "Ctrl+Shift+S")) {
+                //EventSystem.notify(null, new Event(EventType.SaveLevel));
+            }
             ImGui.endMenu();
         }
 
@@ -28,6 +32,8 @@ public class MenuBar {
                 for (ImguiWindow window : layer.getWindows()) {
                     if (ImGui.checkbox(window.getTitle(), window.isActive())) {
                         DiaConsole.log("Saving active windows", "debug");
+                        FrontEnd.get().getSettings().getActiveWindows().put(window.getId(), window.isActive().get());
+                        FrontEnd.get().getSettings().save();
                     }
                 }
                 ImGui.endMenu();

@@ -5,7 +5,7 @@ import imgui.ImGui;
 public class AssetsWindow extends ImguiWindow {
 
     public AssetsWindow() {
-        super("Assets");
+        super("assets","Assets");
     }
 
     @Override
