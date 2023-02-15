@@ -1,4 +1,4 @@
-package diaEditor.imgui.windows;
+package sapphire.imgui.windows;
 
 import imgui.type.ImBoolean;
 

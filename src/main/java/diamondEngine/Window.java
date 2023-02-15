@@ -1,6 +1,7 @@
 package diamondEngine;
 
-import diaEditor.imgui.ImGUILayer;
+import sapphire.imgui.ImGUILayer;
+import diamondEngine.diaRenderer.Framebuffer;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.openal.AL;
@@ -20,12 +21,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
 
-    /*
-     * WINDOW CLASS SINGLETON
-     *
-     * Only one window per game/engine instance will exist.
-     */
-
+    // ATTRIBUTES
     private int width, height;
     private IntBuffer posX, posY;
     private String title;
@@ -34,6 +30,7 @@ public class Window {
     private long audioContext;
     private long audioDevice;
     private ImGUILayer imGUILayer;
+    private Framebuffer framebuffer;
 
     // CONSTRUCTORS
     private Window() {
@@ -94,6 +91,10 @@ public class Window {
         return pos;
     }
 
+    public static Framebuffer getFramebuffer() {
+        return get().framebuffer;
+    }
+
     // METHODS
     public void resizeCallback() {
         System.out.println("Resizing");
@@ -141,13 +142,21 @@ public class Window {
             assert false : "Audio library not supported";
         }
 
-        // Setup context and showwindow
+        // Setup context and show window
         glfwMakeContextCurrent(glfwWindow);
         glfwSwapInterval(1);
         GL.createCapabilities();
         glDisable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         glfwShowWindow(glfwWindow);
+
+        /*
+         * For now there is only one framebuffer and it is attached to the window itself.
+         * TODO: find a better solution so the framebuffer/s are detached from the window and multiple can exist at any
+         *  given time.
+         */
+        this.framebuffer = new Framebuffer(this.width, this.height);
+        glViewport((int)getPosition().x, (int)getPosition().y, width, height);
 
         if (editorMode) {
             imGUILayer = new ImGUILayer(glfwWindow);
@@ -167,11 +176,13 @@ public class Window {
     }
 
     public void startFrame() {
+        this.framebuffer.bind();
         glClearColor(1, 1, 1, 1);
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
     public void endFrame() {
+        this.framebuffer.unBind();
         if (this.imGUILayer != null) {
             this.imGUILayer.update();
         }

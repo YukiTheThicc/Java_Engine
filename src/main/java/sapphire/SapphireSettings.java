@@ -1,8 +1,7 @@
-package diaEditor;
+package sapphire;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import diaEditor.imgui.windows.ImguiWindow;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,7 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
-public class DiaFrontSettings {
+public class SapphireSettings {
 
     // ATTRIBUTES
     private String dir;
@@ -18,7 +17,7 @@ public class DiaFrontSettings {
     HashMap<String, Boolean> activeWindows;
 
     // CONSTRUCTORS
-    public DiaFrontSettings() {
+    public SapphireSettings() {
         this.dir = "";
         this.font = "";
         this.activeWindows = new HashMap<>();
@@ -63,7 +62,8 @@ public class DiaFrontSettings {
                 .enableComplexMapKeySerialization()
                 .create();
         try {
-            FileWriter writer = new FileWriter("settings.json");
+            Files.createDirectories(Paths.get("sapphire"));
+            FileWriter writer = new FileWriter("sapphire/settings.json");
             writer.write(gson.toJson(this));
             writer.close();
         } catch (IOException e) {
@@ -78,13 +78,13 @@ public class DiaFrontSettings {
                 .create();
         String inFile = "";
         try {
-            inFile = new String(Files.readAllBytes(Paths.get("settings.json")));
+            inFile = new String(Files.readAllBytes(Paths.get("sapphire/settings.json")));
         } catch (IOException e) {
             e.printStackTrace();
         }
         if (!inFile.equals("")) {
 
-            DiaFrontSettings temp = gson.fromJson(inFile, DiaFrontSettings.class);
+            SapphireSettings temp = gson.fromJson(inFile, SapphireSettings.class);
             this.activeWindows = temp.getActiveWindows();
         }
     }

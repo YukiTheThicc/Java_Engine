@@ -1,4 +1,4 @@
-package diaEditor.imgui;
+package sapphire.imgui;
 
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
@@ -7,7 +7,7 @@ import imgui.type.ImString;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
-public class DiaImGui {
+public class SapphireImGui {
 
     private static final float DEFAULT_COLUMN_WIDTH = 100f;
 

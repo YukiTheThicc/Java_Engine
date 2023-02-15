@@ -1,8 +1,7 @@
-package diaEditor.imgui;
+package sapphire.imgui;
 
-import diaEditor.DiaFrontSettings;
-import diaEditor.FrontEnd;
-import diaEditor.imgui.windows.ImguiWindow;
+import sapphire.Sapphire;
+import sapphire.imgui.windows.ImguiWindow;
 import diamondEngine.diaUtils.DiaConsole;
 import imgui.ImGui;
 
@@ -32,8 +31,8 @@ public class MenuBar {
                 for (ImguiWindow window : layer.getWindows()) {
                     if (ImGui.checkbox(window.getTitle(), window.isActive())) {
                         DiaConsole.log("Saving active windows", "debug");
-                        FrontEnd.get().getSettings().getActiveWindows().put(window.getId(), window.isActive().get());
-                        FrontEnd.get().getSettings().save();
+                        Sapphire.get().getSettings().getActiveWindows().put(window.getId(), window.isActive().get());
+                        Sapphire.get().getSettings().save();
                     }
                 }
                 ImGui.endMenu();

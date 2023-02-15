@@ -1,12 +1,12 @@
-package diaEditor;
+package sapphire;
 
 import diamondEngine.diaUtils.DiaConsole;
 
-public class DiaFront {
+public class SapphireMain {
 
     public static void main(String[] args) {
         DiaConsole.printFrontEndStartUp();
-        FrontEnd frontEnd = FrontEnd.get();
-        frontEnd.start();
+        Sapphire sapphire = Sapphire.get();
+        sapphire.start();
     }
 }

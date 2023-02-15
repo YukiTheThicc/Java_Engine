@@ -1,4 +1,4 @@
-package diaEditor;
+package sapphire;
 
 import static org.lwjgl.glfw.GLFW.*;
 

@@ -1,39 +1,39 @@
-package diaEditor;
+package sapphire;
 
 import diamondEngine.diaUtils.DiaUtils;
 
-public class FrontEnd {
+public class Sapphire {
 
     /**
      * Class that manages and contains all FrontEnd/Editor functionalities and resources
      */
 
     // ATTRIBUTES
-    private static FrontEnd frontEnd = null;
+    private static Sapphire sapphire = null;
     private ContainerEditor container;
-    private DiaFrontSettings settings;
+    private SapphireSettings settings;
 
     // CONSTRUCTORS
-    private FrontEnd () {
+    private Sapphire() {
         this.container = new ContainerEditor();
-        this.settings = new DiaFrontSettings();
+        this.settings = new SapphireSettings();
     }
 
     // GETTERS & SETTERS
-    public DiaFrontSettings getSettings() {
+    public SapphireSettings getSettings() {
         return settings;
     }
 
-    public void setSettings(DiaFrontSettings settings) {
+    public void setSettings(SapphireSettings settings) {
         this.settings = settings;
     }
 
     // METHODS
-    public static FrontEnd get() {
-        if (FrontEnd.frontEnd == null) {
-            FrontEnd.frontEnd = new FrontEnd();
+    public static Sapphire get() {
+        if (Sapphire.sapphire == null) {
+            Sapphire.sapphire = new Sapphire();
         }
-        return frontEnd;
+        return sapphire;
     }
 
     public void start() {

@@ -1,7 +1,7 @@
-package diaEditor.imgui;
+package sapphire.imgui;
 
-import diaEditor.FrontEnd;
-import diaEditor.imgui.windows.*;
+import sapphire.Sapphire;
+import sapphire.imgui.windows.*;
 import diamondEngine.Window;
 import diamondEngine.diaUtils.DiaConsole;
 import imgui.*;
@@ -135,7 +135,7 @@ public class ImGUILayer {
             }
         });
 
-        String fontDir = FrontEnd.get().getSettings().getFont();
+        String fontDir = Sapphire.get().getSettings().getFont();
         if (new File(fontDir).isFile()) {
             final ImFontAtlas fontAtlas = io.getFonts();
             final ImFontConfig fontConfig = new ImFontConfig(); // Natively allocated object, should be explicitly destroyed
@@ -166,10 +166,10 @@ public class ImGUILayer {
          * the windows. With this solution its also assured that all windows available will be created no matter if it
          * is registered or not on the settings.
          */
-        for (String windowId : FrontEnd.get().getSettings().getActiveWindows().keySet()) {
+        for (String windowId : Sapphire.get().getSettings().getActiveWindows().keySet()) {
             for (ImguiWindow window : this.windows) {
                 if (window.getId().equals(windowId)) {
-                    window.setActive(FrontEnd.get().getSettings().getActiveWindows().get(windowId));
+                    window.setActive(Sapphire.get().getSettings().getActiveWindows().get(windowId));
                 }
             }
         }
