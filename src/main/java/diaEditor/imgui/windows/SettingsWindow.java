@@ -2,14 +2,16 @@ package diaEditor.imgui.windows;
 
 import imgui.ImGui;
 
-public class SettingsWindow extends ImguiWindow{
+public class SettingsWindow extends ImguiWindow {
 
     public SettingsWindow() {
-
+        super("Settings");
     }
 
     @Override
     public void imgui() {
-        ImGui.showDemoWindow();
+        ImGui.begin(this.getTitle());
+
+        ImGui.end();
     }
 }

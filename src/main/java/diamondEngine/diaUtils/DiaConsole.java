@@ -1,4 +1,4 @@
-package diamondEngine;
+package diamondEngine.diaUtils;
 
 public class DiaConsole {
 

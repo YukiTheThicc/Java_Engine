@@ -1,8 +1,7 @@
 package diaEditor.imgui;
 
 import diaEditor.EditorConfig;
-import diaEditor.imgui.windows.ImguiWindow;
-import diaEditor.imgui.windows.SettingsWindow;
+import diaEditor.imgui.windows.*;
 import diamondEngine.Window;
 import diamondEngine.DiaConsole;
 import imgui.*;
@@ -155,6 +154,9 @@ public class ImGUILayer {
         // For now windows are going to be statically added in the init function
         // WINDOWS
         this.windows.add(new SettingsWindow());
+        this.windows.add(new EntityPropertiesWindow());
+        this.windows.add(new AssetsWindow());
+        this.windows.add(new GameViewPortWindow());
 
         /*
          * Method initializes LWJGL3 renderer.
@@ -173,7 +175,9 @@ public class ImGUILayer {
         startFrame();
         setupDockSpace();
         for (ImguiWindow window : this.windows) {
-            window.imgui();
+            if (window.isActive().get()) {
+                window.imgui();
+            }
         }
         endFrame();
     }
@@ -220,7 +224,7 @@ public class ImGUILayer {
         // Dockspace
         ImGui.dockSpace(ImGui.getID("Dockspace"));
 
-        menuBar.imgui();
+        menuBar.imgui(this);
 
         ImGui.end();
     }

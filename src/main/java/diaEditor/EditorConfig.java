@@ -1,11 +1,15 @@
 package diaEditor;
 
+import imgui.type.ImBoolean;
+import java.util.HashMap;
+
 public class EditorConfig {
 
     // ATTRIBUTES
     private static EditorConfig editorConfig;
     private String dir;
     private String font;
+    HashMap<String, ImBoolean> activeWindows;
 
     // CONSTRUCTORS
     private EditorConfig() {

@@ -6,7 +6,6 @@ import diamondEngine.DiaConsole;
 import diamondEngine.DiaUtils;
 import diamondEngine.Game;
 import diamondEngine.Window;
-import org.lwjgl.glfw.GLFWErrorCallback;
 
 public class ContainerEditor {
 
