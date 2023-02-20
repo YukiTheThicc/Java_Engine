@@ -15,6 +15,9 @@ import imgui.glfw.ImGuiImplGlfw;
 import imgui.type.ImBoolean;
 import org.joml.Vector2f;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -56,13 +59,17 @@ public class ImGUILayer {
         ImGui.createContext();
         final ImGuiIO io = ImGui.getIO();
 
-        io.setIniFilename("imgui.ini"); // We don't want to save .ini file
+        try {
+            Files.createDirectories(Paths.get("sapphire"));
+            io.setIniFilename("sapphire/imgui.ini");
+        } catch (IOException e) {
+            DiaConsole.log("Failed to set ImGui ini file", "error");
+        }
         io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
         io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
         io.setBackendPlatformName("imgui_java_impl_glfw");
 
         // GLFW callbacks to handle user input
-
         glfwSetKeyCallback(glfwWindow, (w, key, scancode, action, mods) -> {
             if (action == GLFW_PRESS) {
                 io.setKeysDown(key, true);
@@ -156,7 +163,8 @@ public class ImGUILayer {
         this.windows.add(new SettingsWindow());
         this.windows.add(new EntityPropertiesWindow());
         this.windows.add(new AssetsWindow());
-        this.windows.add(new GameViewPortWindow());
+        this.windows.add(new EnvHierarchyWindow());
+        this.windows.add(new MainViewPort());
 
         /* Settings for the windows are loaded. At the time of writing this code, only one setting is stored, being if
          * the window is active or not. Because of this, the window settings are stored as a simple map. When it comes
@@ -200,7 +208,7 @@ public class ImGUILayer {
 
     private void endFrame() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glClearColor(0, 1, 1, 1);
+        glClearColor(1f, 1f, 1f, 1f);
         glClear(GL_COLOR_BUFFER_BIT);
         // After Dear ImGui prepared a draw data, we use it in the LWJGL3 renderer.
         // At that moment ImGui will be rendered to the current OpenGL context.
@@ -228,8 +236,8 @@ public class ImGUILayer {
         Vector2f windowPos = Window.getPosition();
         ImGui.setNextWindowPos(windowPos.x, windowPos.y);
         ImGui.setNextWindowSize(Window.getWidth(), Window.getHeight());
-        ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
-        ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0.2f);
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.2f);
         windowFlags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse |
                 ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove |
                 ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;

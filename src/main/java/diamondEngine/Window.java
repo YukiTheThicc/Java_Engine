@@ -40,7 +40,7 @@ public class Window {
         this.posX = stackCallocInt(1);
         stackPush();
         this.posY = stackCallocInt(1);
-        this.title = "DiamondEngine v0.0.0.1a";
+        this.title = "DiamondEngine v0.0.0.1";
         stackPop();
         stackPop();
     }
@@ -177,7 +177,7 @@ public class Window {
 
     public void startFrame() {
         this.framebuffer.bind();
-        glClearColor(1, 1, 1, 1);
+        glClearColor(0.33f, 0.33f, 0.33f, 1f);
         glClear(GL_COLOR_BUFFER_BIT);
     }
 

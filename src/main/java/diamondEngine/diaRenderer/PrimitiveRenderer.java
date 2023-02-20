@@ -1,4 +1,6 @@
 package diamondEngine.diaRenderer;
 
-public class DebugRenderer {
+public class PrimitiveRenderer {
+
+
 }

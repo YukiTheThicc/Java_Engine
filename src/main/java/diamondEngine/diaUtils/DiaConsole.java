@@ -16,6 +16,10 @@ public class DiaConsole {
         DiaConsole.print("|_________________________________________________________________________________|");
     }
 
+    public static void log(String message) {
+        DiaConsole.log(message, "global");
+    }
+
     public static void log(String message, String log) {
         DiaConsole.print("[" + log.toUpperCase() + "][" + DiaUtils.get().getTime() + "] -> " + message);
     }

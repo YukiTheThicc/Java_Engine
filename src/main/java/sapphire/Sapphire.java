@@ -2,6 +2,9 @@ package sapphire;
 
 import diamondEngine.diaUtils.DiaUtils;
 
+import java.io.File;
+import java.util.ArrayList;
+
 public class Sapphire {
 
     /**
@@ -12,6 +15,7 @@ public class Sapphire {
     private static Sapphire sapphire = null;
     private ContainerEditor container;
     private SapphireSettings settings;
+    private ArrayList<File> openedFiles;
 
     // CONSTRUCTORS
     private Sapphire() {
@@ -24,8 +28,8 @@ public class Sapphire {
         return settings;
     }
 
-    public void setSettings(SapphireSettings settings) {
-        this.settings = settings;
+    public ArrayList<File> getOpenedFiles() {
+        return openedFiles;
     }
 
     // METHODS

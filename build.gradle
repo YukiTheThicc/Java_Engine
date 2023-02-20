@@ -27,7 +27,7 @@ tasks.withType(JavaCompile) {
 project.ext.lwjglVersion = "3.2.3"
 project.ext.jomlVersion = "1.9.23"
 project.ext.lwjglNatives = "natives-windows"
-project.ext.imguiVersion = '1.81.0'
+project.ext.imguiVersion = '1.86.7'
 
 dependencies {
     // Box2D
@@ -41,6 +41,7 @@ dependencies {
 
     // ImGUI stuff
     implementation "io.github.spair:imgui-java-app:$imguiVersion"
+    implementation "io.github.spair:imgui-java-binding:$imguiVersion"
 
     // LWJGL stuff
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")

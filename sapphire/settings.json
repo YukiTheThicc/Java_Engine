@@ -3,7 +3,9 @@
   "font": "res/fonts/visitor.ttf",
   "activeWindows": {
     "view_port": true,
+    "main_port": true,
     "settings": true,
+    "en_hierarchy": true,
     "assets": true,
     "entity_properties": true
   }
