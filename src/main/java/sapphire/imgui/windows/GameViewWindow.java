@@ -14,7 +14,7 @@ public class GameViewWindow extends ImguiWindow {
 
     public void imgui(ImGUILayer layer) {
 
-        int windowFlags = ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoDecoration;
+        int windowFlags = ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar;
         imgui.internal.ImGui.setNextWindowDockID(layer.getDockId());
         ImGui.begin(this.getTitle(), windowFlags);
 

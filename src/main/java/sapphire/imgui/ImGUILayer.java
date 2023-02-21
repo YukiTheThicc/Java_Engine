@@ -227,7 +227,6 @@ public class ImGUILayer {
 
     private void updateFileWindows() {
         // Check for new opened files on the front end and update the file windows accordingly
-        // TODO: Consider changing ArrayList for HashMap to avoid nested for loops
         if (Sapphire.get().hasUpdatedFiles()) {
 
             ArrayList<FileWindow> windowsToAdd = new ArrayList<>();

@@ -11,9 +11,7 @@ import java.io.File;
 
 public class MenuBar {
 
-    public void imgui(ImGUILayer layer) {
-        ImGui.beginMenuBar();
-
+    private void fileMenu () {
         // FILES Menu
         if (ImGui.beginMenu("File")) {
             if (ImGui.menuItem("New File", "Ctrl+N")) {
@@ -46,7 +44,9 @@ public class MenuBar {
             }
             ImGui.endMenu();
         }
+    }
 
+    private void windowsMenu(ImGUILayer layer) {
         // WINDOW Menu
         if (ImGui.beginMenu("Window")) {
             if (ImGui.beginMenu("Active windows")) {
@@ -62,6 +62,13 @@ public class MenuBar {
             }
             ImGui.endMenu();
         }
+    }
+
+    public void imgui(ImGUILayer layer) {
+        ImGui.beginMenuBar();
+
+        fileMenu();
+        windowsMenu(layer);
 
         ImGui.endMenuBar();
     }
