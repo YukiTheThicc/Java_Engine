@@ -1,6 +1,7 @@
 package sapphire.imgui.windows;
 
 import imgui.type.ImBoolean;
+import sapphire.imgui.ImGUILayer;
 
 public abstract class ImguiWindow {
 
@@ -42,5 +43,13 @@ public abstract class ImguiWindow {
     }
 
     // METHODS
-    public abstract void imgui();
+    public abstract void imgui(ImGUILayer layer);
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (!(obj instanceof ImguiWindow)) return false;
+        ImguiWindow window = (ImguiWindow) obj;
+        return this.id.equals(window.getId());
+    }
 }

@@ -1,15 +1,21 @@
 package sapphire.imgui.windows;
 
 import imgui.ImGui;
+import imgui.flag.ImGuiCond;
+import sapphire.imgui.ImGUILayer;
 
 public class EnvHierarchyWindow extends ImguiWindow {
 
     public EnvHierarchyWindow() {
-        super("en_hierarchy", "Environment Hierarchy");
+        super("env_hierarchy", "Environment Hierarchy");
     }
 
     @Override
-    public void imgui() {
-        ImGui.showDemoWindow();
+    public void imgui(ImGUILayer layer) {
+
+        ImGui.setNextWindowSize(400f, 400f, ImGuiCond.FirstUseEver);
+        ImGui.begin(this.getTitle());
+
+        ImGui.end();
     }
 }

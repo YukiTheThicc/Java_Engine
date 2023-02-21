@@ -1,6 +1,8 @@
 package sapphire.imgui.windows;
 
 import imgui.ImGui;
+import imgui.flag.ImGuiCond;
+import sapphire.imgui.ImGUILayer;
 
 public class EntityPropertiesWindow extends ImguiWindow {
 
@@ -9,7 +11,9 @@ public class EntityPropertiesWindow extends ImguiWindow {
     }
 
     @Override
-    public void imgui() {
+    public void imgui(ImGUILayer layer) {
+
+        ImGui.setNextWindowSize(400f, 400f, ImGuiCond.FirstUseEver);
         ImGui.begin(this.getTitle());
 
         ImGui.end();

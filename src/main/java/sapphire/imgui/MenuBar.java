@@ -1,9 +1,13 @@
 package sapphire.imgui;
 
+import imgui.ImGui;
 import sapphire.Sapphire;
+import sapphire.SapphireUtils;
+import sapphire.imgui.windows.FileWindow;
 import sapphire.imgui.windows.ImguiWindow;
 import diamondEngine.diaUtils.DiaConsole;
-import imgui.ImGui;
+
+import java.io.File;
 
 public class MenuBar {
 
@@ -16,7 +20,11 @@ public class MenuBar {
                 //EventSystem.notify(null, new Event(EventType.SaveLevel));
             }
             if (ImGui.menuItem("Open File", "Ctrl+O")) {
-                //EventSystem.notify(null, new Event(EventType.SaveLevel));
+                String[] paths = SapphireUtils.selectFiles();
+                for (int i = 0; i < paths.length; i++) {
+                    DiaConsole.log("Trying to open file on path '" + paths[i] + "'...", "debug");
+                    Sapphire.get().addOpenedFile(new File(paths[i]));
+                }
             }
             if (ImGui.menuItem("Save File", "Ctrl+S")) {
                 //EventSystem.notify(null, new Event(EventType.SaveLevel));
@@ -42,8 +50,9 @@ public class MenuBar {
         // WINDOW Menu
         if (ImGui.beginMenu("Window")) {
             if (ImGui.beginMenu("Active windows")) {
-                for (ImguiWindow window : layer.getWindows()) {
-                    if (ImGui.checkbox(window.getTitle(), window.isActive())) {
+                for (String windowId : layer.getWindows().keySet()) {
+                    ImguiWindow window = layer.getWindows().get(windowId);
+                    if (!(window instanceof FileWindow) && ImGui.checkbox(window.getTitle(), window.isActive())) {
                         DiaConsole.log("Saving active windows", "debug");
                         Sapphire.get().getSettings().getActiveWindows().put(window.getId(), window.isActive().get());
                         Sapphire.get().getSettings().save();

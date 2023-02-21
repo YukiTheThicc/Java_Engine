@@ -1,5 +1,6 @@
 package sapphire;
 
+import diamondEngine.diaUtils.DiaConsole;
 import diamondEngine.diaUtils.DiaUtils;
 
 import java.io.File;
@@ -16,11 +17,14 @@ public class Sapphire {
     private ContainerEditor container;
     private SapphireSettings settings;
     private ArrayList<File> openedFiles;
+    private boolean updatedFiles;
 
     // CONSTRUCTORS
     private Sapphire() {
         this.container = new ContainerEditor();
         this.settings = new SapphireSettings();
+        this.openedFiles = new ArrayList<>();
+        this.updatedFiles = false;
     }
 
     // GETTERS & SETTERS
@@ -32,12 +36,33 @@ public class Sapphire {
         return openedFiles;
     }
 
+    public boolean hasUpdatedFiles() {
+        return updatedFiles;
+    }
+
+    public void filesUpdated() {
+        this.updatedFiles = false;
+    }
+
+    public void newOpenedFiles() {
+        this.updatedFiles = true;
+    }
+
     // METHODS
     public static Sapphire get() {
         if (Sapphire.sapphire == null) {
             Sapphire.sapphire = new Sapphire();
         }
         return sapphire;
+    }
+
+    public void addOpenedFile(File file) {
+        if (openedFiles.contains(file)) {
+            DiaConsole.log("Tried to add an already opened file", "warn");
+        } else {
+            openedFiles.add(file);
+            updatedFiles = true;
+        }
     }
 
     public void start() {

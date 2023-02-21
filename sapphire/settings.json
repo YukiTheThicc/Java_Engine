@@ -2,11 +2,14 @@
   "dir": "",
   "font": "res/fonts/visitor.ttf",
   "activeWindows": {
-    "view_port": true,
-    "main_port": true,
     "settings": true,
     "en_hierarchy": true,
     "assets": true,
-    "entity_properties": true
+    "ImportacionAssetsNOTICIA.jsp": true,
+    "file_dialog": false,
+    "GuardarAsset.jsp": true,
+    "env_hierarchy": true,
+    "entity_properties": true,
+    "game_view": true
   }
 }

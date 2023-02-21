@@ -13,12 +13,14 @@ import imgui.flag.ImGuiWindowFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.type.ImBoolean;
+import imgui.internal.ImGui;
 import org.joml.Vector2f;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -32,24 +34,31 @@ public class ImGUILayer {
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
     private MenuBar menuBar;
-    private ArrayList<ImguiWindow> windows;
+    private HashMap<String, ImguiWindow> windows;
+    private GameViewWindow gameView;
+    private int dockId;
 
     // CONSTRUCTORS
     public ImGUILayer(long windowPtr) {
         this.glfwWindow = windowPtr;
         this.menuBar = new MenuBar();
-        this.windows = new ArrayList<>();
+        this.windows = new HashMap<>();
+        this.dockId = -1;
     }
 
     // GETTERS & SETTERS
-    public ArrayList<ImguiWindow> getWindows() {
+    public HashMap<String, ImguiWindow> getWindows() {
         return windows;
     }
 
     public void addWindow(ImguiWindow window) {
         if (window != null) {
-            this.windows.add(window);
+            this.windows.put(window.getId(), window);
         }
+    }
+
+    public int getDockId() {
+        return dockId;
     }
 
     // METHODS
@@ -160,11 +169,15 @@ public class ImGUILayer {
 
         // For now windows are going to be statically added in the init function
         // WINDOWS
-        this.windows.add(new SettingsWindow());
-        this.windows.add(new EntityPropertiesWindow());
-        this.windows.add(new AssetsWindow());
-        this.windows.add(new EnvHierarchyWindow());
-        this.windows.add(new MainViewPort());
+        gameView = new GameViewWindow();
+        ImguiWindow newWindow = new SettingsWindow();
+        addWindow(newWindow);
+        newWindow = new EntityPropertiesWindow();
+        addWindow(newWindow);
+        newWindow = new AssetsWindow();
+        addWindow(newWindow);
+        newWindow = new EnvHierarchyWindow();
+        addWindow(newWindow);
 
         /* Settings for the windows are loaded. At the time of writing this code, only one setting is stored, being if
          * the window is active or not. Because of this, the window settings are stored as a simple map. When it comes
@@ -175,9 +188,9 @@ public class ImGUILayer {
          * is registered or not on the settings.
          */
         for (String windowId : Sapphire.get().getSettings().getActiveWindows().keySet()) {
-            for (ImguiWindow window : this.windows) {
-                if (window.getId().equals(windowId)) {
-                    window.setActive(Sapphire.get().getSettings().getActiveWindows().get(windowId));
+            for (String window : windows.keySet()) {
+                if (windows.get(window).getId().equals(windowId)) {
+                    windows.get(window).setActive(Sapphire.get().getSettings().getActiveWindows().get(windowId));
                 }
             }
         }
@@ -190,6 +203,10 @@ public class ImGUILayer {
         imGuiGl3.init("#version 330 core");
     }
 
+    public void removeWindow(String id) {
+        windows.remove(id);
+    }
+
     private void startFrame() {
         imGuiGlfw.newFrame();
         ImGui.newFrame();
@@ -198,12 +215,34 @@ public class ImGUILayer {
     public void update() {
         startFrame();
         setupDockSpace();
-        for (ImguiWindow window : this.windows) {
-            if (window.isActive().get()) {
-                window.imgui();
+        this.gameView.imgui(this);
+        for (String window : windows.keySet()) {
+            if ((windows.get(window) instanceof FileWindow) || windows.get(window).isActive().get()) {
+                windows.get(window).imgui(this);
             }
         }
+        updateFileWindows();
         endFrame();
+    }
+
+    private void updateFileWindows() {
+        // Check for new opened files on the front end and update the file windows accordingly
+        // TODO: Consider changing ArrayList for HashMap to avoid nested for loops
+        if (Sapphire.get().hasUpdatedFiles()) {
+
+            ArrayList<FileWindow> windowsToAdd = new ArrayList<>();
+            for (File file : Sapphire.get().getOpenedFiles()) {
+                if (windows.get(file.getName()) == null) {
+                    windowsToAdd.add(new FileWindow(file.getName(), file));
+                }
+            }
+
+            for (FileWindow fileWindow : windowsToAdd) {
+                windows.put(fileWindow.getId(), fileWindow);
+            }
+
+            Sapphire.get().filesUpdated();
+        }
     }
 
     private void endFrame() {
@@ -227,7 +266,9 @@ public class ImGUILayer {
     }
 
     private void setupDockSpace() {
-        int windowFlags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking;
+        int windowFlags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar |
+                ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove |
+                ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
 
         ImGuiViewport mainViewport = ImGui.getMainViewport();
         ImGui.setNextWindowPos(mainViewport.getWorkPosX(), mainViewport.getWorkPosY());
@@ -236,18 +277,16 @@ public class ImGUILayer {
         Vector2f windowPos = Window.getPosition();
         ImGui.setNextWindowPos(windowPos.x, windowPos.y);
         ImGui.setNextWindowSize(Window.getWidth(), Window.getHeight());
+
+        // ImGui Styles
         ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0.2f);
         ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.2f);
-        windowFlags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse |
-                ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove |
-                ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
-
         ImGui.begin("Dockspace Outer", new ImBoolean(true), windowFlags);
         ImGui.popStyleVar(2);
 
         // Dockspace
-        ImGui.dockSpace(ImGui.getID("Dockspace"));
-
+        dockId = ImGui.dockSpace(ImGui.getID("Dockspace"));
+        imgui.ImGui.setNextWindowDockID(dockId);
         menuBar.imgui(this);
 
         ImGui.end();
