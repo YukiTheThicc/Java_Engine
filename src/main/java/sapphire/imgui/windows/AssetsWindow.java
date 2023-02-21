@@ -2,6 +2,7 @@ package sapphire.imgui.windows;
 
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
+import imgui.type.ImBoolean;
 import sapphire.imgui.ImGUILayer;
 
 public class AssetsWindow extends ImguiWindow {

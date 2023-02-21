@@ -5,6 +5,7 @@ import imgui.ImGui;
 import imgui.extension.texteditor.TextEditor;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiWindowFlags;
+import imgui.type.ImBoolean;
 import sapphire.imgui.ImGUILayer;
 
 import java.io.File;
@@ -17,12 +18,14 @@ public class FileWindow extends ImguiWindow {
     // ATTRIBUTES
     private final TextEditor textEditor;
     private File file;
+    private ImBoolean isOpen;
 
     // CONSTRUCTORS
     public FileWindow(String name, File file) {
         super(name, name);
         this.textEditor = new TextEditor();
         this.file = file;
+        this.isOpen = new ImBoolean(true);
 
         try {
             byte[] data = Files.readAllBytes(Paths.get(file.getPath()));
@@ -40,10 +43,9 @@ public class FileWindow extends ImguiWindow {
 
         ImGui.setNextWindowSize(400f, 600f, ImGuiCond.FirstUseEver);
         imgui.internal.ImGui.setNextWindowDockID(layer.getDockId(), ImGuiCond.FirstUseEver);
-        if (ImGui.begin(this.getTitle())) {
+        if (isOpen.get()) {
+            ImGui.begin(this.getTitle(), isOpen);
             textEditor.render(this.getTitle());
-            ImGui.end();
-        } else {
             ImGui.end();
         }
     }
