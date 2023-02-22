@@ -14,7 +14,7 @@ public class EntityPropertiesWindow extends ImguiWindow {
     public void imgui(ImGUILayer layer) {
 
         ImGui.setNextWindowSize(400f, 400f, ImGuiCond.FirstUseEver);
-        ImGui.begin(this.getTitle());
+        ImGui.begin(this.getTitle(), this.getFlags());
 
         ImGui.end();
     }

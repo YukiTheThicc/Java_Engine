@@ -17,15 +17,14 @@ public class FileWindow extends ImguiWindow {
 
     // ATTRIBUTES
     private final TextEditor textEditor;
-    private File file;
-    private ImBoolean isOpen;
+    private final File file;
 
     // CONSTRUCTORS
     public FileWindow(String name, File file) {
-        super(name, name);
+        super(name, name, false);
         this.textEditor = new TextEditor();
         this.file = file;
-        this.isOpen = new ImBoolean(true);
+        this.setActive(true);
 
         try {
             byte[] data = Files.readAllBytes(Paths.get(file.getPath()));
@@ -43,10 +42,16 @@ public class FileWindow extends ImguiWindow {
 
         ImGui.setNextWindowSize(400f, 600f, ImGuiCond.FirstUseEver);
         imgui.internal.ImGui.setNextWindowDockID(layer.getDockId(), ImGuiCond.FirstUseEver);
-        if (isOpen.get()) {
-            ImGui.begin(this.getTitle(), isOpen);
+        if (this.isActive().get()) {
+            ImGui.begin(this.getTitle(), this.isActive(), this.getFlags());
             textEditor.render(this.getTitle());
             ImGui.end();
+        } else {
+            this.shouldClose(true);
         }
+    }
+
+    public void saveFile() {
+        DiaConsole.log("Trying to save file '" + file.getPath() + "'", "debug");
     }
 }

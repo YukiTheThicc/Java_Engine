@@ -15,6 +15,7 @@ import imgui.glfw.ImGuiImplGlfw;
 import imgui.type.ImBoolean;
 import imgui.internal.ImGui;
 import org.joml.Vector2f;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -53,7 +54,11 @@ public class ImGUILayer {
 
     public void addWindow(ImguiWindow window) {
         if (window != null) {
-            this.windows.put(window.getId(), window);
+            if (windows.get(window.getTitle()) == null) {
+                this.windows.put(window.getId(), window);
+            } else {
+                DiaConsole.log("Tried to open an already opened window: '" + window.getId() + "'", "debug");
+            }
         }
     }
 
@@ -215,32 +220,22 @@ public class ImGUILayer {
     public void update() {
         startFrame();
         setupDockSpace();
+
+        ArrayList<String> toRemove = new ArrayList<>();
         this.gameView.imgui(this);
         for (String window : windows.keySet()) {
-            if ((windows.get(window) instanceof FileWindow) || windows.get(window).isActive().get()) {
+            if (windows.get(window).shouldClose()) {
+                toRemove.add(window);
+            }
+            if (windows.get(window).isActive().get()) {
                 windows.get(window).imgui(this);
             }
         }
-        updateFileWindows();
+
         endFrame();
-    }
 
-    private void updateFileWindows() {
-        // Check for new opened files on the front end and update the file windows accordingly
-        if (Sapphire.get().hasUpdatedFiles()) {
-
-            ArrayList<FileWindow> windowsToAdd = new ArrayList<>();
-            for (File file : Sapphire.get().getOpenedFiles()) {
-                if (windows.get(file.getName()) == null) {
-                    windowsToAdd.add(new FileWindow(file.getName(), file));
-                }
-            }
-
-            for (FileWindow fileWindow : windowsToAdd) {
-                windows.put(fileWindow.getId(), fileWindow);
-            }
-
-            Sapphire.get().filesUpdated();
+        for (String window : toRemove) {
+            windows.remove(window);
         }
     }
 

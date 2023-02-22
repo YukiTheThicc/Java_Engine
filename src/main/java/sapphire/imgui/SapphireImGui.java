@@ -151,8 +151,4 @@ public class SapphireImGui {
 
         return text;
     }
-
-    public static String textEditor() {
-        return "";
-    }
 }

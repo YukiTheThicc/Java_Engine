@@ -18,6 +18,7 @@ public class DiaUtils {
     // METHODS
     public void init() {
         this.sdf = new SimpleDateFormat("hh:mm:ss.SSS");
+        DiaConsole.log("Initializing engine utilities...");
     }
 
     public static DiaUtils get() {
@@ -29,5 +30,9 @@ public class DiaUtils {
 
     public String getTime() {
         return this.sdf.format(Calendar.getInstance().getTime());
+    }
+
+    public String getOS() {
+        return System.getProperty("os.name");
     }
 }

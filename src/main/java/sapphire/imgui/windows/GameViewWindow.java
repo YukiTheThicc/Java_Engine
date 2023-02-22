@@ -10,13 +10,13 @@ public class GameViewWindow extends ImguiWindow {
 
     public GameViewWindow() {
         super("game_view", "Game View");
+        this.setFlags(ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar);
     }
 
     public void imgui(ImGUILayer layer) {
 
-        int windowFlags = ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar;
         imgui.internal.ImGui.setNextWindowDockID(layer.getDockId());
-        ImGui.begin(this.getTitle(), windowFlags);
+        ImGui.begin(this.getTitle(), this.getFlags());
 
         ImVec2 windowSize2 = new ImVec2();
         ImGui.getContentRegionAvail(windowSize2);

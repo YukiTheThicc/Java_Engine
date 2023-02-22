@@ -2,14 +2,31 @@
   "dir": "",
   "font": "res/fonts/visitor.ttf",
   "activeWindows": {
-    "settings": true,
-    "en_hierarchy": true,
     "assets": true,
-    "ImportacionAssetsNOTICIA.jsp": true,
-    "file_dialog": false,
-    "GuardarAsset.jsp": true,
     "env_hierarchy": true,
-    "entity_properties": true,
-    "game_view": true
+    "entity_properties": true
+  },
+  "literals": {
+    "cancel": "Cancel",
+    "settings": "File",
+    "no": "No",
+    "apply": "Apply",
+    "yes": "Yes",
+    "env_hierarchy": "File",
+    "new_file": "File",
+    "export_project": "File",
+    "save_file": "File",
+    "sprites": "File",
+    "active_windows": "File",
+    "tiles": "File",
+    "open_project": "File",
+    "file": "File",
+    "assets": "File",
+    "sounds": "File",
+    "open_file": "File",
+    "entity_properties": "File",
+    "window": "Window",
+    "close": "Close",
+    "confirm_save": "Save?"
   }
 }
