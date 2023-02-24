@@ -4,8 +4,6 @@ import diamondEngine.diaUtils.DiaConsole;
 import imgui.ImGui;
 import imgui.extension.texteditor.TextEditor;
 import imgui.flag.ImGuiCond;
-import imgui.flag.ImGuiWindowFlags;
-import imgui.type.ImBoolean;
 import sapphire.imgui.ImGUILayer;
 
 import java.io.File;
@@ -30,7 +28,7 @@ public class FileWindow extends ImguiWindow {
             byte[] data = Files.readAllBytes(Paths.get(file.getPath()));
             textEditor.setText(new String(data));
         } catch (IOException e) {
-            DiaConsole.log("Failed to load data from file '" + file.getPath() + "'", "error");
+            DiaConsole.log("Failed to load data from file '" + file.getPath() + "'", DiaConsole.ERROR);
         }
     }
 
@@ -52,6 +50,6 @@ public class FileWindow extends ImguiWindow {
     }
 
     public void saveFile() {
-        DiaConsole.log("Trying to save file '" + file.getPath() + "'", "debug");
+        DiaConsole.log("Trying to save file '" + file.getPath() + "'");
     }
 }

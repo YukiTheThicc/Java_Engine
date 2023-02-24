@@ -39,12 +39,9 @@ public class Sapphire {
     public void start() {
         // Initialize general front end an Engine
         DiaConsole.init();
-        DiaConsole.print("\n\t\t\t----> FRONT END STARTING <----\n");
         DiaUtils.get().init();
         this.settings.init();
-        if (this.container != null) {
-            this.container.init();
-            this.container.run();
-        }
+        this.container.init();
+        this.container.run();
     }
 }

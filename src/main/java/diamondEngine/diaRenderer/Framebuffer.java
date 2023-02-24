@@ -24,7 +24,7 @@ public class Framebuffer {
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboId);
 
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-            DiaConsole.log("Error creating frame buffer, framebuffer is not complete", "error");
+            DiaConsole.log("Error creating frame buffer, framebuffer is not complete");
         }
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);

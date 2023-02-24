@@ -31,10 +31,9 @@ import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 public class ImGUILayer {
 
     private long glfwWindow;
-    // LWJGL3 renderer (SHOULD be initialized)
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
-    private MenuBar menuBar;
+    private final MenuBar menuBar;
     private HashMap<String, ImguiWindow> windows;
     private GameViewWindow gameView;
     private int dockId;
@@ -52,16 +51,6 @@ public class ImGUILayer {
         return windows;
     }
 
-    public void addWindow(ImguiWindow window) {
-        if (window != null) {
-            if (windows.get(window.getTitle()) == null) {
-                this.windows.put(window.getId(), window);
-            } else {
-                DiaConsole.log("Tried to open an already opened window: '" + window.getId() + "'", "debug");
-            }
-        }
-    }
-
     public int getDockId() {
         return dockId;
     }
@@ -69,7 +58,7 @@ public class ImGUILayer {
     // METHODS
     public void init() {
 
-        DiaConsole.log("Initializing ImGUI...", "debug");
+        DiaConsole.log("Initializing ImGUI...");
         ImGui.createContext();
         final ImGuiIO io = ImGui.getIO();
 
@@ -77,12 +66,42 @@ public class ImGUILayer {
             Files.createDirectories(Paths.get("sapphire"));
             io.setIniFilename("sapphire/imgui.ini");
         } catch (IOException e) {
-            DiaConsole.log("Failed to set ImGui ini file", "error");
+            DiaConsole.log("Failed to set ImGui ini file", DiaConsole.ERROR);
         }
         io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
         io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
         io.setBackendPlatformName("imgui_java_impl_glfw");
 
+        initCallbacks(io);
+        String fontDir = Sapphire.get().getSettings().getFont();
+        setFont(io, fontDir);
+        initWindows();
+
+        // Set up clipboard functionality
+        io.setSetClipboardTextFn(new ImStrConsumer() {
+            @Override
+            public void accept(final String s) {
+                glfwSetClipboardString(glfwWindow, s);
+            }
+        });
+
+        io.setGetClipboardTextFn(new ImStrSupplier() {
+            @Override
+            public String get() {
+                final String clipboardString = glfwGetClipboardString(glfwWindow);
+                if (clipboardString != null) {
+                    return clipboardString;
+                } else {
+                    return "";
+                }
+            }
+        });
+
+        imGuiGlfw.init(glfwWindow, true);
+        imGuiGl3.init("#version 330 core");
+    }
+
+    private void initCallbacks(ImGuiIO io) {
         // GLFW callbacks to handle user input
         glfwSetKeyCallback(glfwWindow, (w, key, scancode, action, mods) -> {
             if (action == GLFW_PRESS) {
@@ -136,42 +155,9 @@ public class ImGUILayer {
                 MouseListener.mouseScrollCallback(w, xOffset, yOffset);
             }*/
         });
+    }
 
-        io.setSetClipboardTextFn(new ImStrConsumer() {
-            @Override
-            public void accept(final String s) {
-                glfwSetClipboardString(glfwWindow, s);
-            }
-        });
-
-        io.setGetClipboardTextFn(new ImStrSupplier() {
-            @Override
-            public String get() {
-                final String clipboardString = glfwGetClipboardString(glfwWindow);
-                if (clipboardString != null) {
-                    return clipboardString;
-                } else {
-                    return "";
-                }
-            }
-        });
-
-        String fontDir = Sapphire.get().getSettings().getFont();
-        if (new File(fontDir).isFile()) {
-            final ImFontAtlas fontAtlas = io.getFonts();
-            final ImFontConfig fontConfig = new ImFontConfig(); // Natively allocated object, should be explicitly destroyed
-
-            // Glyphs could be added per-font as well as per config used globally like here
-            fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesDefault());
-
-            // Fonts merge example
-            fontConfig.setPixelSnapH(true);
-            fontAtlas.addFontFromFileTTF(fontDir, 12, fontConfig);
-            fontConfig.destroy(); // After all fonts were added we don't need this config more
-        } else {
-            DiaConsole.log("Specified engine font has not been found: \"" + fontDir + "\"", "error");
-        }
-
+    private void initWindows() {
         // For now windows are going to be statically added in the init function
         // WINDOWS
         gameView = new GameViewWindow();
@@ -182,6 +168,8 @@ public class ImGUILayer {
         newWindow = new AssetsWindow();
         addWindow(newWindow);
         newWindow = new EnvHierarchyWindow();
+        addWindow(newWindow);
+        newWindow = new LogViewerWindow();
         addWindow(newWindow);
 
         /* Settings for the windows are loaded. At the time of writing this code, only one setting is stored, being if
@@ -199,13 +187,33 @@ public class ImGUILayer {
                 }
             }
         }
+    }
 
-        /*
-         * Method initializes LWJGL3 renderer.
-         * This method SHOULD be called after initializing ImGui configuration.
-         */
-        imGuiGlfw.init(glfwWindow, true);
-        imGuiGl3.init("#version 330 core");
+    public void addWindow(ImguiWindow window) {
+        if (window != null) {
+            if (windows.get(window.getTitle()) == null) {
+                this.windows.put(window.getId(), window);
+            } else {
+                DiaConsole.log("Tried to open an already opened window: '" + window.getId() + "'");
+            }
+        }
+    }
+
+    public void setFont(imgui.ImGuiIO io, String fontPath) {
+        if (new File(fontPath).isFile()) {
+            final ImFontAtlas fontAtlas = io.getFonts();
+            final ImFontConfig fontConfig = new ImFontConfig(); // Natively allocated object, should be explicitly destroyed
+
+            // Glyphs could be added per-font as well as per config used globally like here
+            fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesDefault());
+
+            // Fonts merge example
+            fontConfig.setPixelSnapH(true);
+            fontAtlas.addFontFromFileTTF(fontPath, 12, fontConfig);
+            fontConfig.destroy(); // After all fonts were added we don't need this config more
+        } else {
+            DiaConsole.log("Specified engine font has not been found: \"" + fontPath + "\"", DiaConsole.ERROR);
+        }
     }
 
     public void removeWindow(String id) {

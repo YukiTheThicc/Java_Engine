@@ -1,10 +1,12 @@
 {
-  "dir": "",
+  "workspace": "",
+  "logDir": "",
   "font": "res/fonts/visitor.ttf",
   "activeWindows": {
     "assets": true,
     "env_hierarchy": true,
-    "entity_properties": true
+    "entity_properties": true,
+    "log_viewer": true
   },
   "literals": {
     "cancel": "Cancel",
@@ -28,5 +30,6 @@
     "window": "Window",
     "close": "Close",
     "confirm_save": "Save?"
-  }
+  },
+  "languages": {}
 }

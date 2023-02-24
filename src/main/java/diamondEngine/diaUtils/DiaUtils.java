@@ -18,7 +18,7 @@ public class DiaUtils {
     // METHODS
     public void init() {
         this.sdf = new SimpleDateFormat("hh:mm:ss.SSS");
-        DiaConsole.log("Initializing engine utilities...");
+        DiaConsole.log("Initializing Diamond utilities...");
     }
 
     public static DiaUtils get() {

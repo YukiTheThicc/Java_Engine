@@ -27,16 +27,16 @@ public class SapphireUtils {
                 long numFiles = NFD_PathSet_GetCount(pathSet);
                 paths = new String[(int)numFiles];
                 for (long i = 0; i < numFiles; i++) {
-                    DiaConsole.log( "File dialog selected path #"+ (i + 1) + ": '" + NFD_PathSet_GetPath(pathSet, i) + "'", "debug");
+                    DiaConsole.log( "File dialog selected path #"+ (i + 1) + ": '" + NFD_PathSet_GetPath(pathSet, i) + "'");
                     paths[(int)i] = NFD_PathSet_GetPath(pathSet, i);
                 }
                 pathSet.free();
                 break;
             case NFD_CANCEL:
-                DiaConsole.log("User cancelled file dialog", "debug");
+                DiaConsole.log("User cancelled file dialog");
                 break;
             default: // NFD_ERROR
-                DiaConsole.log("Error while opening file dialog: " + NFD_GetError(), "error");
+                DiaConsole.log("Error while opening file dialog: " + NFD_GetError(), DiaConsole.ERROR);
         }
 
         NFD_PathSet_Free(pathSet);

@@ -21,7 +21,7 @@ public class MenuBar {
                 String[] paths = SapphireUtils.selectFiles();
                 if (paths != null) {
                     for (String path : paths) {
-                        DiaConsole.log("Trying to open file on path '" + path + "'...", "debug");
+                        DiaConsole.log("Trying to open file on path '" + path + "'...");
                         File newFile = new File(path);
                         layer.addWindow(new FileWindow(newFile.getName(), newFile));
                     }
@@ -57,7 +57,7 @@ public class MenuBar {
                 for (String windowId : layer.getWindows().keySet()) {
                     ImguiWindow window = layer.getWindows().get(windowId);
                     if (window.isConfigurable() && ImGui.checkbox(window.getTitle(), window.isActive())) {
-                        DiaConsole.log("Saving active windows", "debug");
+                        DiaConsole.log("Saving active windows");
                         Sapphire.get().getSettings().getActiveWindows().put(window.getId(), window.isActive().get());
                         Sapphire.get().getSettings().save();
                     }

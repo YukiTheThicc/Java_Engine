@@ -13,7 +13,8 @@ import java.util.HashMap;
 public class SapphireSettings {
 
     // ATTRIBUTES
-    private String dir;
+    private String workspace;
+    private String logDir;
     private String font;
     private HashMap<String, Boolean> activeWindows;
     private HashMap<String, String> literals;
@@ -21,7 +22,8 @@ public class SapphireSettings {
 
     // CONSTRUCTORS
     public SapphireSettings() {
-        this.dir = "";
+        this.workspace = "";
+        this.logDir = "";
         this.font = "";
         this.activeWindows = new HashMap<>();
         this.literals = new HashMap<>();
@@ -29,12 +31,12 @@ public class SapphireSettings {
     }
 
     // GETTERS & SETTERS
-    public String getDir() {
-        return dir;
+    public String getWorkspace() {
+        return workspace;
     }
 
-    public void setDir(String dir) {
-        this.dir = dir;
+    public void setWorkspace(String workspace) {
+        this.workspace = workspace;
     }
 
     public String getFont() {
@@ -96,11 +98,11 @@ public class SapphireSettings {
     }
 
     public void changeLangTo(String lang) {
-        String path = "sapphire/lang" + lang + ".josn";
+        String path = "sapphire/lang/" + lang + ".json";
         try {
             byte[] data = Files.readAllBytes(Paths.get(path));
         } catch (IOException e) {
-            DiaConsole.log("Failed to load language map from '" + path + "'", "error");
+            DiaConsole.log("Failed to load language map from '" + path + "'", DiaConsole.ERROR);
         }
     }
 

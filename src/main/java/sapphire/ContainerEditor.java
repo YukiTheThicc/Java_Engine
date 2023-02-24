@@ -31,7 +31,7 @@ public class ContainerEditor {
 
     // METHODS
     public void init() {
-        DiaConsole.log("Initializing Editor Container...", "debug");
+        DiaConsole.log("Initializing Editor Container...");
         this.window.init(true);
     }
 
