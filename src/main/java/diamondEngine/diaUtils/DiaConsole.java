@@ -1,7 +1,6 @@
 package diamondEngine.diaUtils;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -59,6 +58,7 @@ public class DiaConsole {
         DiaConsole.literals.put(DiaConsole.WARN, "WARNING");
         DiaConsole.literals.put(DiaConsole.ERROR, "ERROR");
         DiaConsole.literals.put(DiaConsole.CRITICAL, "CRITICAL");
+        DiaConsole.log("--------New Session--------", DiaConsole.CRITICAL);
     }
 
     private static String getTime() {
@@ -83,12 +83,19 @@ public class DiaConsole {
     public static void log(String message, int level) {
         if (DiaConsole.log != null) {
             if (DiaConsole.currentLevel >= level) {
+                try {
 
-                String levelLit = DiaConsole.literals.get(level);
-                if (levelLit == null) {
-                    System.out.println("[" + DiaConsole.getTime() + "][" + DiaConsole.literals.get(DiaConsole.ERROR) + "] Trying to log with unknown level");
+                    PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(DiaConsole.log, true)));
+                    String levelLit = DiaConsole.literals.get(level);
+                    if (levelLit == null) {
+                        out.println("[" + DiaConsole.getTime() + "][" + DiaConsole.literals.get(DiaConsole.ERROR) + "] Trying to log with unknown level");
+                    }
+                    out.println("[" + DiaConsole.getTime() + "][" + levelLit + "] " + message);
+                    out.close();
+
+                } catch (IOException e) {
+                    System.err.println("FAILED WHILE TRYING TO LOG");
                 }
-                System.out.println("[" + DiaConsole.getTime() + "][" + levelLit + "] " + message);
             }
         } else {
             assert false;
