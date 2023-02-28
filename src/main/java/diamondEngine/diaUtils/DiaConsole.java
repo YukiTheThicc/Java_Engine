@@ -52,6 +52,15 @@ public class DiaConsole {
         DiaConsole.sdf = new SimpleDateFormat("hh:mm:ss.SSS");
         DiaConsole.currentLevel = DiaConsole.DEBUG;
         DiaConsole.log = new File("log.txt");
+        // Clear log file for new session
+        // REVISE: Maybe better to keep ALL log entries for other sessions or creating log file depending on the day
+        try {
+            PrintWriter writer = new PrintWriter(DiaConsole.log);
+            writer.print("");
+            writer.close();
+        } catch (IOException e) {
+            System.err.println("FAILED WHILE CLEARING LOG: '" + DiaConsole.log.getAbsolutePath() + "'");
+        }
         DiaConsole.literals = new HashMap<>();
         DiaConsole.literals.put(DiaConsole.INFO, "INFO");
         DiaConsole.literals.put(DiaConsole.DEBUG, "DEBUG");
@@ -94,7 +103,7 @@ public class DiaConsole {
                     out.close();
 
                 } catch (IOException e) {
-                    System.err.println("FAILED WHILE TRYING TO LOG");
+                    System.err.println("FAILED WHILE TRYING TO LOG TO: '" + DiaConsole.log.getAbsolutePath() + "'");
                 }
             }
         } else {
