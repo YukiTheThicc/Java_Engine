@@ -17,27 +17,26 @@ import java.util.List;
 public class LogViewerWindow extends ImguiWindow {
 
     // ATTRIBUTES
-    private boolean autoScroll;
     private String feed;
     private File log;
     private ImGuiTextFilter filter;
     private ImGuiListClipper clipper;
+    private ImBoolean autoScroll;
     private WatchKey watchKey;
-
 
     // CONSTRUCTORS
     public LogViewerWindow() {
         super("log_viewer", "Log Viewer");
         this.log = new File("log.txt");
-        this.autoScroll = true;
         this.feed = "";
         this.filter = new ImGuiTextFilter();
+        this.autoScroll = new ImBoolean(true);
 
         Path logDir = Paths.get(this.log.getAbsolutePath());
         DiaConsole.log(logDir.getParent().toString());
         try {
             WatchService watcher = logDir.getParent().getFileSystem().newWatchService();
-            this.watchKey = logDir.getParent().register(watcher, StandardWatchEventKinds.ENTRY_MODIFY);
+            this.watchKey = logDir.getParent().register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
         } catch (Exception e) {
             DiaConsole.log("Failed to set up observer for log viewer: " + e, DiaConsole.ERROR);
         }
@@ -69,9 +68,8 @@ public class LogViewerWindow extends ImguiWindow {
         this.update();
         ImGui.begin(this.getTitle());
 
-        ImBoolean optionOpen = new ImBoolean(false);
         if (ImGui.beginPopup("Options")) {
-            ImGui.checkbox("Auto-scroll", optionOpen);
+            ImGui.checkbox("Auto-scroll", this.autoScroll);
             ImGui.endPopup();
         }
 
@@ -87,8 +85,9 @@ public class LogViewerWindow extends ImguiWindow {
 
         if (ImGui.beginChild("scrolling", 0f, 0f, false, ImGuiWindowFlags.HorizontalScrollbar)) {
             if (copy) ImGui.logToClipboard();
+            if (clear) this.clear();
 
-
+            ImGui.textUnformatted(this.feed);
 
             // Keep up at the bottom of the scroll region if we were already at the bottom at the beginning of the frame.
             // Using a scrollbar or mouse-wheel will take away from the bottom edge.

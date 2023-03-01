@@ -38,7 +38,7 @@ public class Sapphire {
 
     public void start() {
         // Initialize general front end an Engine
-        DiaConsole.init();
+        DiaConsole.init(true);
         DiaUtils.get().init();
         this.settings.init();
         this.container.init();

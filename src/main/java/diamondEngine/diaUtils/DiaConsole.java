@@ -21,6 +21,7 @@ public class DiaConsole {
     private static SimpleDateFormat sdf;
     private static int currentLevel;
     private static HashMap<Integer, String> literals;
+    public static boolean isLogging;
 
     // GETTERS & SETTERS
     public int getCurrentLevel() {
@@ -48,10 +49,12 @@ public class DiaConsole {
     }
 
     // METHODS
-    public static void init() {
+    public static void init(boolean isLogging) {
         DiaConsole.sdf = new SimpleDateFormat("hh:mm:ss.SSS");
         DiaConsole.currentLevel = DiaConsole.DEBUG;
         DiaConsole.log = new File("log.txt");
+        DiaConsole.isLogging = isLogging;
+
         // Clear log file for new session
         // REVISE: Maybe better to keep ALL log entries for other sessions or creating log file depending on the day
         try {
