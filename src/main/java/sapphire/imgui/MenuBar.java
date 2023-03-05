@@ -5,7 +5,7 @@ import sapphire.Sapphire;
 import sapphire.SapphireUtils;
 import sapphire.imgui.windows.FileWindow;
 import sapphire.imgui.windows.ImguiWindow;
-import diamondEngine.diaUtils.DiaConsole;
+import diamondEngine.diaUtils.DiaLogger;
 
 import java.io.File;
 
@@ -21,7 +21,7 @@ public class MenuBar {
                 String[] paths = SapphireUtils.selectFiles();
                 if (paths != null) {
                     for (String path : paths) {
-                        DiaConsole.log("Trying to open file on path '" + path + "'...");
+                        DiaLogger.log("Trying to open file on path '" + path + "'...");
                         File newFile = new File(path);
                         layer.addWindow(new FileWindow(newFile.getName(), newFile));
                     }
@@ -43,7 +43,7 @@ public class MenuBar {
             ImGui.separator();
 
             if (ImGui.menuItem("Settings")) {
-                DiaConsole.log("Trying to open settings modal window");
+                DiaLogger.log("Trying to open settings modal window");
                 layer.getWindows().get("settings").setActive(true);
             }
             ImGui.endMenu();
@@ -57,7 +57,7 @@ public class MenuBar {
                 for (String windowId : layer.getWindows().keySet()) {
                     ImguiWindow window = layer.getWindows().get(windowId);
                     if (window.isConfigurable() && ImGui.checkbox(window.getTitle(), window.isActive())) {
-                        DiaConsole.log("Saving active windows");
+                        DiaLogger.log("Saving active windows");
                         Sapphire.get().getSettings().getActiveWindows().put(window.getId(), window.isActive().get());
                         Sapphire.get().getSettings().save();
                     }

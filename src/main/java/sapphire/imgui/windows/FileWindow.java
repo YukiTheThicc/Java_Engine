@@ -1,6 +1,7 @@
 package sapphire.imgui.windows;
 
-import diamondEngine.diaUtils.DiaConsole;
+import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.diaUtils.DiaLoggerLevel;
 import imgui.ImGui;
 import imgui.extension.texteditor.TextEditor;
 import imgui.flag.ImGuiCond;
@@ -28,7 +29,7 @@ public class FileWindow extends ImguiWindow {
             byte[] data = Files.readAllBytes(Paths.get(file.getPath()));
             textEditor.setText(new String(data));
         } catch (IOException e) {
-            DiaConsole.log("Failed to load data from file '" + file.getPath() + "'", DiaConsole.ERROR);
+            DiaLogger.log("Failed to load data from file '" + file.getPath() + "'", DiaLoggerLevel.ERROR);
         }
     }
 
@@ -50,6 +51,6 @@ public class FileWindow extends ImguiWindow {
     }
 
     public void saveFile() {
-        DiaConsole.log("Trying to save file '" + file.getPath() + "'");
+        DiaLogger.log("Trying to save file '" + file.getPath() + "'");
     }
 }

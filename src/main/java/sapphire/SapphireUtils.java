@@ -1,6 +1,7 @@
 package sapphire;
 
-import diamondEngine.diaUtils.DiaConsole;
+import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.diaUtils.DiaLoggerLevel;
 import org.lwjgl.util.nfd.NFDPathSet;
 
 import java.io.File;
@@ -27,16 +28,16 @@ public class SapphireUtils {
                 long numFiles = NFD_PathSet_GetCount(pathSet);
                 paths = new String[(int)numFiles];
                 for (long i = 0; i < numFiles; i++) {
-                    DiaConsole.log( "File dialog selected path #"+ (i + 1) + ": '" + NFD_PathSet_GetPath(pathSet, i) + "'");
+                    DiaLogger.log( "File dialog selected path #"+ (i + 1) + ": '" + NFD_PathSet_GetPath(pathSet, i) + "'");
                     paths[(int)i] = NFD_PathSet_GetPath(pathSet, i);
                 }
                 pathSet.free();
                 break;
             case NFD_CANCEL:
-                DiaConsole.log("User cancelled file dialog");
+                DiaLogger.log("User cancelled file dialog");
                 break;
             default: // NFD_ERROR
-                DiaConsole.log("Error while opening file dialog: " + NFD_GetError(), DiaConsole.ERROR);
+                DiaLogger.log("Error while opening file dialog: " + NFD_GetError(), DiaLoggerLevel.ERROR);
         }
 
         NFD_PathSet_Free(pathSet);
@@ -68,7 +69,7 @@ public class SapphireUtils {
                 if (file.isFile()) {
                     String fileExtension = file.getPath().substring(file.getPath().lastIndexOf(".") + 1);
                     if (extension != null && !extension.isEmpty() && extension.equals(fileExtension)) {
-                        DiaConsole.log("Found file with extension '" + extension + "': " + file.getPath());
+                        DiaLogger.log("Found file with extension '" + extension + "': " + file.getPath());
                     }
                 }
             }

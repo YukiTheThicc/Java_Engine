@@ -2,7 +2,7 @@ package sapphire;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-import diamondEngine.diaUtils.DiaConsole;
+import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.Game;
 import diamondEngine.Window;
 
@@ -31,7 +31,7 @@ public class ContainerEditor {
 
     // METHODS
     public void init() {
-        DiaConsole.log("Initializing Editor Container...");
+        DiaLogger.log("Initializing Editor Container...");
         this.window.init(true);
     }
 

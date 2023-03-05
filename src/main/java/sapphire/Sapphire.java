@@ -1,10 +1,7 @@
 package sapphire;
 
-import diamondEngine.diaUtils.DiaConsole;
+import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
-
-import java.io.File;
-import java.util.ArrayList;
 
 public class Sapphire {
 
@@ -38,8 +35,8 @@ public class Sapphire {
 
     public void start() {
         // Initialize general front end an Engine
-        DiaConsole.init(true);
-        DiaUtils.get().init();
+        DiaLogger.init();
+        DiaUtils.init();
         this.settings.init();
         this.container.init();
         this.container.run();

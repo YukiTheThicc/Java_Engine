@@ -1,12 +1,8 @@
 package sapphire.imgui.windows;
 
-import diamondEngine.diaUtils.DiaConsole;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
-import imgui.flag.ImGuiPopupFlags;
 import imgui.flag.ImGuiWindowFlags;
-import imgui.type.ImBoolean;
-import imgui.type.ImInt;
 import sapphire.Sapphire;
 import sapphire.SapphireSettings;
 import sapphire.imgui.ImGUILayer;

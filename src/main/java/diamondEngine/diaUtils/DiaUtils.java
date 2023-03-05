@@ -5,34 +5,19 @@ import java.util.Calendar;
 
 public class DiaUtils {
 
-    private static DiaUtils diaUtils = null;
-    private SimpleDateFormat sdf;
-
-    // CONSTRUCTORS
-    private DiaUtils() {
-
-    }
-
-    // GETTERS & SETTERS
+    private static SimpleDateFormat sdf;
 
     // METHODS
-    public void init() {
-        this.sdf = new SimpleDateFormat("hh:mm:ss.SSS");
-        DiaConsole.log("Initializing Diamond utilities...");
+    public static void init() {
+        DiaUtils.sdf = new SimpleDateFormat("hh:mm:ss.SSS");
+        DiaLogger.log("Initializing Diamond utilities...");
     }
 
-    public static DiaUtils get() {
-        if (diaUtils == null) {
-            diaUtils = new DiaUtils();
-        }
-        return diaUtils;
+    public static String getTime() {
+        return DiaUtils.sdf.format(Calendar.getInstance().getTime());
     }
 
-    public String getTime() {
-        return this.sdf.format(Calendar.getInstance().getTime());
-    }
-
-    public String getOS() {
+    public static String getOS() {
         return System.getProperty("os.name");
     }
 }

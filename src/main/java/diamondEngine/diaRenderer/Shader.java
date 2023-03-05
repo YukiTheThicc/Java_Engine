@@ -1,6 +1,7 @@
 package diamondEngine.diaRenderer;
 
-import diamondEngine.diaUtils.DiaConsole;
+import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.diaUtils.DiaLoggerLevel;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
 
@@ -83,14 +84,14 @@ public class Shader {
             this.vertex = new String(Files.readAllBytes(Paths.get(vertexPath)));
         } catch (IOException e) {
             e.printStackTrace();
-            DiaConsole.log(name + ": Failed while trying to load vertex shader from '" + vertexPath + "'", DiaConsole.ERROR);
+            DiaLogger.log(name + ": Failed while trying to load vertex shader from '" + vertexPath + "'", DiaLoggerLevel.ERROR);
         }
 
         try {
             this.fragment = new String(Files.readAllBytes(Paths.get(fragmentPath)));
         } catch (IOException e) {
             e.printStackTrace();
-            DiaConsole.log(name + ": Failed while trying to load vertex shader from '" + fragmentPath + "'", DiaConsole.ERROR);
+            DiaLogger.log(name + ": Failed while trying to load vertex shader from '" + fragmentPath + "'", DiaLoggerLevel.ERROR);
         }
     }
 
@@ -108,7 +109,7 @@ public class Shader {
         glCompileShader(vertexId);
         if (glGetShaderi(vertexId, GL_COMPILE_STATUS) == GL_FALSE) {
             int length = glGetShaderi(vertexId, GL_INFO_LOG_LENGTH);
-            DiaConsole.log("Failed vertex shader compilation for '" + name + "': " + glGetShaderInfoLog(vertexId, length), DiaConsole.ERROR);
+            DiaLogger.log("Failed vertex shader compilation for '" + name + "': " + glGetShaderInfoLog(vertexId, length), DiaLoggerLevel.ERROR);
             failed = true;
         }
 
@@ -118,7 +119,7 @@ public class Shader {
         glCompileShader(fragmentId);
         if (glGetShaderi(fragmentId, GL_COMPILE_STATUS) == GL_FALSE) {
             int length = glGetShaderi(fragmentId, GL_INFO_LOG_LENGTH);
-            DiaConsole.log("Failed fragment shader compilation for '" + name + "': " + glGetShaderInfoLog(vertexId, length), DiaConsole.ERROR);
+            DiaLogger.log("Failed fragment shader compilation for '" + name + "': " + glGetShaderInfoLog(vertexId, length), DiaLoggerLevel.ERROR);
             failed = true;
         }
 
@@ -131,7 +132,7 @@ public class Shader {
             if (glGetProgrami(programId, GL_LINK_STATUS) == GL_FALSE) {
                 programId = -1;
                 int length = glGetProgrami(programId, GL_INFO_LOG_LENGTH);
-                DiaConsole.log("Failed while trying to link shader program '" + name + "': " + glGetProgramInfoLog(programId, length), DiaConsole.ERROR);
+                DiaLogger.log("Failed while trying to link shader program '" + name + "': " + glGetProgramInfoLog(programId, length), DiaLoggerLevel.ERROR);
             }
         }
     }

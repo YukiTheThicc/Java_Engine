@@ -1,9 +1,10 @@
 package sapphire.imgui;
 
+import diamondEngine.diaUtils.DiaLoggerLevel;
 import sapphire.Sapphire;
 import sapphire.imgui.windows.*;
 import diamondEngine.Window;
-import diamondEngine.diaUtils.DiaConsole;
+import diamondEngine.diaUtils.DiaLogger;
 import imgui.*;
 import imgui.callback.ImStrConsumer;
 import imgui.callback.ImStrSupplier;
@@ -58,7 +59,7 @@ public class ImGUILayer {
     // METHODS
     public void init() {
 
-        DiaConsole.log("Initializing ImGUI...");
+        DiaLogger.log("Initializing ImGUI...");
         ImGui.createContext();
         final ImGuiIO io = ImGui.getIO();
 
@@ -66,7 +67,7 @@ public class ImGUILayer {
             Files.createDirectories(Paths.get("sapphire"));
             io.setIniFilename("sapphire/imgui.ini");
         } catch (IOException e) {
-            DiaConsole.log("Failed to set ImGui ini file", DiaConsole.ERROR);
+            DiaLogger.log("Failed to set ImGui ini file", DiaLoggerLevel.ERROR);
         }
         io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
         io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
@@ -194,7 +195,7 @@ public class ImGUILayer {
             if (windows.get(window.getTitle()) == null) {
                 this.windows.put(window.getId(), window);
             } else {
-                DiaConsole.log("Tried to open an already opened window: '" + window.getId() + "'");
+                DiaLogger.log("Tried to open an already opened window: '" + window.getId() + "'");
             }
         }
     }
@@ -212,7 +213,7 @@ public class ImGUILayer {
             fontAtlas.addFontFromFileTTF(fontPath, 12, fontConfig);
             fontConfig.destroy(); // After all fonts were added we don't need this config more
         } else {
-            DiaConsole.log("Specified engine font has not been found: \"" + fontPath + "\"", DiaConsole.ERROR);
+            DiaLogger.log("Specified engine font has not been found: \"" + fontPath + "\"", DiaLoggerLevel.ERROR);
         }
     }
 

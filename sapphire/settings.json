@@ -1,7 +1,6 @@
 {
   "workspace": "",
-  "logDir": "",
-  "font": "res/fonts/visitor.ttf",
+  "font": "res/fonts/consola.ttf",
   "activeWindows": {
     "assets": true,
     "env_hierarchy": true,

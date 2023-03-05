@@ -2,7 +2,8 @@ package sapphire;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import diamondEngine.diaUtils.DiaConsole;
+import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.diaUtils.DiaLoggerLevel;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,7 +15,6 @@ public class SapphireSettings {
 
     // ATTRIBUTES
     private String workspace;
-    private String logDir;
     private String font;
     private HashMap<String, Boolean> activeWindows;
     private HashMap<String, String> literals;
@@ -23,7 +23,6 @@ public class SapphireSettings {
     // CONSTRUCTORS
     public SapphireSettings() {
         this.workspace = "";
-        this.logDir = "";
         this.font = "";
         this.activeWindows = new HashMap<>();
         this.literals = new HashMap<>();
@@ -61,10 +60,10 @@ public class SapphireSettings {
 
     // METHODS
     public void init() {
-        DiaConsole.log("Initializing settings...");
+        DiaLogger.log("Initializing settings...");
         this.load();
         if (this.font == null || this.font.equals("")) {
-            this.font = "res/fonts/visitor.ttf";
+            this.font = "res/fonts/consola.ttf";
         }
 
         SapphireUtils.getFilesInDir("sapphire/lang", "json");
@@ -102,12 +101,12 @@ public class SapphireSettings {
         try {
             byte[] data = Files.readAllBytes(Paths.get(path));
         } catch (IOException e) {
-            DiaConsole.log("Failed to load language map from '" + path + "'", DiaConsole.ERROR);
+            DiaLogger.log("Failed to load language map from '" + path + "'", DiaLoggerLevel.ERROR);
         }
     }
 
     public void save() {
-        DiaConsole.log("Saving Sapphire settings...");
+        DiaLogger.log("Saving Sapphire settings...");
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .enableComplexMapKeySerialization()
