@@ -1,11 +1,16 @@
 package sapphire.imgui;
 
+import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
+import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
+import imgui.type.ImInt;
 import imgui.type.ImString;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
+
+import java.util.HashMap;
 
 public class SapphireImGui {
 
@@ -150,5 +155,22 @@ public class SapphireImGui {
         ImGui.popID();
 
         return text;
+    }
+
+    public static String combo(String label, String selected, HashMap<String, String> values) {
+        /*for (int i = 0; i < values.length; i++) {
+            if () {
+
+            }
+        }
+        if (ImGui.combo(label, index, values)) {
+            index.set();
+        }*/
+        return "";
+    }
+
+    public static ImVec2 getAlignment() {
+        ImVec2 aPos = new ImVec2();
+        return aPos;
     }
 }

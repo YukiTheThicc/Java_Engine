@@ -2,23 +2,33 @@ package sapphire;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
+import imgui.ImVec4;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SapphireSettings {
 
+    // CONSTANTS
+    private static final String UNKNOWN_LITERAL = "UNKNOWN";
+
     // ATTRIBUTES
     private String workspace;
     private String font;
+    private String currentLang;
     private HashMap<String, Boolean> activeWindows;
     private HashMap<String, String> literals;
     private HashMap<String, String> languages;
+    private HashMap<String, ImVec4> colors;
 
     // CONSTRUCTORS
     public SapphireSettings() {
@@ -27,6 +37,7 @@ public class SapphireSettings {
         this.activeWindows = new HashMap<>();
         this.literals = new HashMap<>();
         this.languages = new HashMap<>();
+        this.colors = new HashMap<>();
     }
 
     // GETTERS & SETTERS
@@ -55,7 +66,20 @@ public class SapphireSettings {
     }
 
     public String getLiteral(String literal) {
-        return this.literals.get(literal);
+        if (this.literals.get(literal) != null) {
+            return this.literals.get(literal);
+        }
+        return UNKNOWN_LITERAL;
+    }
+
+    public String[] getLanguages() {
+        String[] langs = new String[1];
+        langs = languages.keySet().toArray(langs);
+        return langs;
+    }
+
+    public String getCurrentLang() {
+        return currentLang;
     }
 
     // METHODS
@@ -66,7 +90,21 @@ public class SapphireSettings {
             this.font = "res/fonts/consola.ttf";
         }
 
-        SapphireUtils.getFilesInDir("sapphire/lang", "json");
+        ArrayList<File> langFiles = SapphireUtils.getFilesInDir("sapphire/lang", "json");
+
+        for (File langFile : langFiles) {
+            try {
+                ArrayList<String> data = (ArrayList<String>) Files.readAllLines(Paths.get(langFile.getAbsolutePath()));
+                JsonElement langJson = JsonParser.parseString(String.join("", data));
+                if (langJson != null && langJson.isJsonObject()) {
+                    languages.put(langFile.getName().substring(0, langFile.getName().lastIndexOf('.')), langJson.getAsJsonObject().get("lang").toString().replace("\"", ""));
+                } else {
+                    DiaLogger.log("Language file is not valid: '" + langFile.getAbsolutePath() + "'", DiaLoggerLevel.WARN);
+                }
+            } catch (IOException e) {
+                DiaLogger.log("Failed to load language map from '" + langFile.getAbsolutePath() + "'", DiaLoggerLevel.ERROR);
+            }
+        }
 
         // Initialize literal map, by default in english
         this.defaultLiterals();
@@ -94,15 +132,33 @@ public class SapphireSettings {
         literals.put("yes", "Yes");
         literals.put("no", "No");
         literals.put("confirm_save", "Save?");
+        literals.put("clear", "Clear");
+        literals.put("severity", "Severity");
+        literals.put("lang", "Language");
     }
 
-    public void changeLangTo(String lang) {
-        String path = "sapphire/lang/" + lang + ".json";
-        try {
-            byte[] data = Files.readAllBytes(Paths.get(path));
-        } catch (IOException e) {
-            DiaLogger.log("Failed to load language map from '" + path + "'", DiaLoggerLevel.ERROR);
+    /**
+     * @param lang
+     * @return
+     */
+    public int changeLangTo(String lang) {
+        if (lang != null && !lang.isEmpty()) {
+            String path = "sapphire/lang/" + lang + ".json";
+            this.currentLang = lang;
+            try {
+                byte[] data = Files.readAllBytes(Paths.get(path));
+            } catch (IOException e) {
+                DiaLogger.log("Failed to load language map from '" + path + "'", DiaLoggerLevel.ERROR);
+            }
+
+            String[] langs = getLanguages();
+            for (int i = 0; i < langs.length; i++) {
+                if (lang.equals(langs[i])) {
+                    return i;
+                }
+            }
         }
+        return -1;
     }
 
     public void save() {

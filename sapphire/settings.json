@@ -1,6 +1,7 @@
 {
   "workspace": "",
   "font": "res/fonts/consola.ttf",
+  "currentLang": "es",
   "activeWindows": {
     "assets": true,
     "env_hierarchy": true,
@@ -9,11 +10,13 @@
   },
   "literals": {
     "cancel": "Cancel",
+    "severity": "Severity",
     "settings": "File",
     "no": "No",
     "apply": "Apply",
     "yes": "Yes",
     "env_hierarchy": "File",
+    "clear": "Clear",
     "new_file": "File",
     "export_project": "File",
     "save_file": "File",
@@ -27,8 +30,13 @@
     "open_file": "File",
     "entity_properties": "File",
     "window": "Window",
+    "lang": "Language",
     "close": "Close",
     "confirm_save": "Save?"
   },
-  "languages": {}
+  "languages": {
+    "es-GA": "Galego",
+    "es": "Español"
+  },
+  "colors": {}
 }

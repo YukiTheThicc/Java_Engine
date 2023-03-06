@@ -25,6 +25,10 @@ public class Sapphire {
         return settings;
     }
 
+    public static String getLiteral(String literal) {
+        return Sapphire.get().settings.getLiteral(literal);
+    }
+
     // METHODS
     public static Sapphire get() {
         if (Sapphire.sapphire == null) {

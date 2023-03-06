@@ -10,19 +10,14 @@ import java.util.HashMap;
 
 public class DiaLogger extends Thread {
 
-    // CONSTANTS
-    public static final int INFO = 4;
-    public static final int DEBUG = 3;
-    public static final int WARN = 2;
-    public static final int ERROR = 1;
-    public static final int CRITICAL = 0;
-
     // ATTRIBUTES
     private static DiaLogger diaLogger;
     private static File log;
     private static SimpleDateFormat sdf;
-    private static HashMap<Integer, String> literals;
+    private static HashMap<DiaLoggerLevel, String> literals;
     private static ArrayList<DiaLoggerObserver> observers;
+    private static ArrayList<String> entryBuffer;
+    private static ArrayList<DiaLoggerLevel> levelBuffer;
     private static DiaLoggerLevel currentLevel;
     private static boolean isLogging;
     private static boolean isInitialized;
@@ -70,6 +65,10 @@ public class DiaLogger extends Thread {
 
     public static void addObserver(DiaLoggerObserver observer) {
         DiaLogger.observers.add(observer);
+        // If no observer was added previously the buffers are dumped to the observers
+        if (DiaLogger.observers.size() == 1) {
+            dumpLogBuffers();
+        }
     }
 
     // METHODS
@@ -79,6 +78,8 @@ public class DiaLogger extends Thread {
         DiaLogger.literals = new HashMap<>();
         DiaLogger.sdf = new SimpleDateFormat("hh:mm:ss.SSS");
         DiaLogger.observers = new ArrayList<>();
+        DiaLogger.entryBuffer = new ArrayList<>();
+        DiaLogger.levelBuffer = new ArrayList<>();
         DiaLogger.currentLevel = DiaLoggerLevel.DEBUG;
         DiaLogger.isLogging = true;
         DiaLogger.isInitialized = true;
@@ -93,11 +94,11 @@ public class DiaLogger extends Thread {
             System.err.println("FAILED WHILE CLEARING LOG: '" + DiaLogger.log.getAbsolutePath() + "'");
         }
 
-        DiaLogger.literals.put(DiaLogger.INFO, "INFO");
-        DiaLogger.literals.put(DiaLogger.DEBUG, "DEBUG");
-        DiaLogger.literals.put(DiaLogger.WARN, "WARNING");
-        DiaLogger.literals.put(DiaLogger.ERROR, "ERROR");
-        DiaLogger.literals.put(DiaLogger.CRITICAL, "CRITICAL");
+        DiaLogger.literals.put(DiaLoggerLevel.INFO, "INFO");
+        DiaLogger.literals.put(DiaLoggerLevel.DEBUG, "DEBUG");
+        DiaLogger.literals.put(DiaLoggerLevel.WARN, "WARNING");
+        DiaLogger.literals.put(DiaLoggerLevel.ERROR, "ERROR");
+        DiaLogger.literals.put(DiaLoggerLevel.CRITICAL, "CRITICAL");
         DiaLogger.log("--------New Session--------", DiaLoggerLevel.CRITICAL);
 
         diaLogger.start();
@@ -125,22 +126,26 @@ public class DiaLogger extends Thread {
      */
     public static void log(String message, DiaLoggerLevel level) {
 
-        String toLog = "[" + DiaLogger.getTime() + "][" + level + "] " + message;
-        // Notify observers of log entry
-        if (observers != null && !observers.isEmpty()) {
-            for (DiaLoggerObserver observer : DiaLogger.observers) {
-                observer.newEntry(toLog, level);
-            }
-        }
-
         if (DiaLogger.log != null) {
             if (DiaLogger.currentLevel.ordinal() >= level.ordinal()) {
+
+                String toLog = "[" + DiaLogger.getTime() + "][" + level + "] " + message;
+                // Notify observers of log entry
+                if (observers != null && !observers.isEmpty()) {
+                    for (DiaLoggerObserver observer : DiaLogger.observers) {
+                        observer.newEntry(toLog, level);
+                    }
+                } else {
+                    // If there are no observers the log entries are stored on buffers to be dumped later
+                    DiaLogger.addLogToBuffers(toLog, level);
+                }
+
                 try {
-                    String levelLit = DiaLogger.literals.get(level.ordinal());
+                    String levelLit = DiaLogger.literals.get(level);
                     PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(DiaLogger.log, true)));
 
                     if (levelLit == null) {
-                        out.println("[" + DiaLogger.getTime() + "][" + DiaLogger.literals.get(DiaLogger.ERROR) + "] Trying to log with unknown level");
+                        out.println("[" + DiaLogger.getTime() + "][" + DiaLogger.literals.get(DiaLoggerLevel.ERROR) + "] Trying to log with unknown level");
                     }
                     out.println(toLog);
                     out.close();
@@ -151,6 +156,23 @@ public class DiaLogger extends Thread {
             }
         } else {
             assert false;
+        }
+    }
+
+    private static void addLogToBuffers(String text, DiaLoggerLevel level) {
+        DiaLogger.entryBuffer.add(text);
+        DiaLogger.levelBuffer.add(level);
+    }
+
+    private static void dumpLogBuffers() {
+        if (DiaLogger.entryBuffer.size() == DiaLogger.levelBuffer.size()) {
+            for (DiaLoggerObserver observer : DiaLogger.observers) {
+                for (int i = 0; i < DiaLogger.entryBuffer.size(); i++) {
+                    observer.newEntry(DiaLogger.entryBuffer.get(i), DiaLogger.levelBuffer.get(i));
+                }
+            }
+        } else {
+            log("Unable to dump log buffers into observers, entry and level buffers are of different sizes: " + DiaLogger.entryBuffer.size() + " / " + DiaLogger.levelBuffer.size(), DiaLoggerLevel.ERROR);
         }
     }
 

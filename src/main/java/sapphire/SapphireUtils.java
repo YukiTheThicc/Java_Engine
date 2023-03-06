@@ -57,7 +57,7 @@ public class SapphireUtils {
      * Looks for all files with the given extension within the specified directory.
      * @param directory Directory in which files are going to be searched.
      * @param extension Extension of the files to retrieve.
-     * @return List of retrieved files.
+     * @return ArrayList of retrieved files.
      */
     public static ArrayList<File> getFilesInDir(String directory, String extension) {
 
@@ -69,7 +69,7 @@ public class SapphireUtils {
                 if (file.isFile()) {
                     String fileExtension = file.getPath().substring(file.getPath().lastIndexOf(".") + 1);
                     if (extension != null && !extension.isEmpty() && extension.equals(fileExtension)) {
-                        DiaLogger.log("Found file with extension '" + extension + "': " + file.getPath());
+                        retrievedFiles.add(file);
                     }
                 }
             }

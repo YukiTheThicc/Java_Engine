@@ -1,8 +1,10 @@
 package sapphire.imgui.windows;
 
+import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiWindowFlags;
+import imgui.type.ImInt;
 import sapphire.Sapphire;
 import sapphire.SapphireSettings;
 import sapphire.imgui.ImGUILayer;
@@ -30,8 +32,14 @@ public class SettingsWindow extends ImguiWindow {
             if (ImGui.beginPopupModal(this.getTitle(), this.isActive(), this.getFlags())) {
 
                 SapphireSettings settings = Sapphire.get().getSettings();
-
                 settings.setFont(SapphireImGui.inputText("Font", settings.getFont()));
+
+                /*
+                settings.getLiteral("lang");
+                settings.getLanguages();
+                settings.changeLangTo(settings.getLanguages()[index.get()]);
+                DiaLogger.log("Changed language to: " + settings.getLanguages()[index.get()]);*/
+                //SapphireImGui.comboString(settings.getLiteral("lang"), settings.getCurrentLang(), settings.getLanguages());
 
                 // Calculate close and accept buttons position
                 float applyButton = settings.getLiteral("apply").length() * ImGui.getFontSize() + ImGui.getStyle().getCellPaddingX();
