@@ -2,19 +2,23 @@ package sapphire.imgui;
 
 import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
-import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiStyleVar;
-import imgui.type.ImInt;
+import imgui.flag.ImGuiWindowFlags;
+import imgui.type.ImBoolean;
 import imgui.type.ImString;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
+import sapphire.Sapphire;
 
 import java.util.HashMap;
 
 public class SapphireImGui {
 
     private static final float DEFAULT_COLUMN_WIDTH = 100f;
+    private static final float DEFAULT_CONF_WINDOW_WIDTH = 250f;
+    private static final float DEFAULT_CONF_WINDOW_HEIGHT = 100f;
 
     public static void drawVec2Control(String label, Vector2f values) {
         drawVec2Control(label, values, 0.0f, DEFAULT_COLUMN_WIDTH);
@@ -169,8 +173,93 @@ public class SapphireImGui {
         return "";
     }
 
-    public static ImVec2 getAlignment() {
-        ImVec2 aPos = new ImVec2();
-        return aPos;
+    /**
+     * Sets the ImGUI cursor to be aligned on both axis given the desired alignment (CENTER, TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT or
+     * BOTTOM_RIGHT) and total size of the elements to be
+     * aligned on both axis
+     * @param alignment Enum value of the alignment (default CENTER)
+     * @param sizeX Size on the horizontal axis to offset the cursor
+     * @param sizeY Size on the vertical axis to offset the cursor
+     */
+    public static void align(Alignment alignment, float sizeX, float sizeY) {
+
+        float x = 0f;
+        float y = 0f;
+        float titleBarY = ImGui.getFrameHeightWithSpacing();
+        float regionX = ImGui.getWindowSizeX();
+        float regionY = ImGui.getWindowSizeY();
+        DiaLogger.log(ImGui.getContentRegionAvailX() + "");
+
+        DiaLogger.log("regX: " + regionX + ", regY: " + regionY);
+
+        switch (alignment) {
+            case CENTER:
+                x = (regionX - sizeX/2)/2;
+                y = (regionY - sizeY/2 + titleBarY)/2;
+                break;
+            case TOP_LEFT:
+                x = ImGui.getStyle().getFramePaddingX();
+                y = (regionY - sizeY + titleBarY)/2;
+                break;
+            case TOP_RIGHT:
+                break;
+            case BOTTOM_LEFT:
+                break;
+            case BOTTOM_RIGHT:
+                break;
+        }
+        DiaLogger.log("x: " + x + ", y: " + y);
+        DiaLogger.log(ImGui.getContentRegionAvailX() + "");
+
+        ImGui.setCursorPos(x, y);
+    }
+
+    /**
+     * Sets the ImGUI cursor to be aligned horizontally given an alignment (CENTER, RIGHT or LEFT) and size on the horizontal
+     * axis.
+     * @param alignment Enum value of the alignment (default CENTER)
+     * @param size Size on the horizontal axis to offset the cursor
+     */
+    public static void alignH(Alignment alignment, float size) {
+
+    }
+
+    /**
+     * Sets the ImGUI cursor to be centered vertically given an alignment (CENTER, TOP or BOTTOM) and size on the vertical
+     * axis.
+     * @param alignment Enum value of the alignment (default CENTER)
+     * @param size Size on the vertical axis to offset the cursor
+     */
+    public static void alignV(Alignment alignment, float size) {
+
+    }
+
+    public static boolean confirmModal(String title, String message) {
+        ImBoolean showAgain = new ImBoolean(Sapphire.get().getSettings().getShowPreference(title));
+        boolean result = false;
+        if (showAgain.get()) {
+
+            ImGui.setNextWindowSize(DEFAULT_CONF_WINDOW_WIDTH, DEFAULT_CONF_WINDOW_HEIGHT, ImGuiCond.Always);
+
+            if (ImGui.beginPopupModal(title, ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize |
+                    ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)) {
+
+                align(Alignment.CENTER, message.length()*ImGui.getFontSize(), ImGui.getFontSize());
+                ImGui.text(message);
+                if (ImGui.button(Sapphire.getLiteral("yes"))) {
+                    result = true;
+                    ImGui.closeCurrentPopup();;
+                }
+                ImGui.sameLine();
+                if (ImGui.button(Sapphire.getLiteral("no"))) {
+                    result = false;
+                    ImGui.closeCurrentPopup();
+                }
+                if (ImGui.checkbox(Sapphire.getLiteral("dont_show_again"), showAgain))
+                    Sapphire.get().getSettings().setShowPreference(title, showAgain.get());
+                ImGui.endPopup();
+            }
+        }
+        return result;
     }
 }

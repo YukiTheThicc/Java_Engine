@@ -29,6 +29,7 @@ public class SapphireSettings {
     private HashMap<String, String> literals;
     private HashMap<String, String> languages;
     private HashMap<String, ImVec4> colors;
+    private HashMap<String, Boolean> showPreferences;
 
     // CONSTRUCTORS
     public SapphireSettings() {
@@ -38,6 +39,7 @@ public class SapphireSettings {
         this.literals = new HashMap<>();
         this.languages = new HashMap<>();
         this.colors = new HashMap<>();
+        this.showPreferences = new HashMap<>();
     }
 
     // GETTERS & SETTERS
@@ -59,10 +61,6 @@ public class SapphireSettings {
 
     public HashMap<String, Boolean> getActiveWindows() {
         return activeWindows;
-    }
-
-    public void setActiveWindows(HashMap<String, Boolean> activeWindows) {
-        this.activeWindows = activeWindows;
     }
 
     public String getLiteral(String literal) {
@@ -135,6 +133,20 @@ public class SapphireSettings {
         literals.put("clear", "Clear");
         literals.put("severity", "Severity");
         literals.put("lang", "Language");
+        literals.put("save_log", "Save log");
+    }
+
+    public void setShowPreference(String window, boolean show) {
+        showPreferences.put(window, show);
+    }
+
+    /**
+     * Gets the preference for a confirmation window to be showed again or not
+     * @param window ID of the confirmation window
+     * @return Returns the stored value or true in case it does not exist
+     */
+    public boolean getShowPreference(String window) {
+        return showPreferences.get(window) != null ? showPreferences.get(window) : true;
     }
 
     /**

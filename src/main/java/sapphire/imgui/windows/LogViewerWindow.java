@@ -5,11 +5,13 @@ import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaLoggerObserver;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
 import imgui.type.ImInt;
 import sapphire.Sapphire;
 import sapphire.imgui.ImGUILayer;
+import sapphire.imgui.SapphireImGui;
 
 public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver {
 
@@ -67,6 +69,15 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver {
                 DiaLogger.changeLevel(DiaLoggerLevel.values()[index.get()]);
                 DiaLogger.log("Changed log level to: " + DiaLogger.getCurrentLevel());
             }
+
+            float saveLogX = 0f;
+            float saveLogY = 0f;
+            String title = Sapphire.getLiteral("save_log");
+            boolean res = SapphireImGui.confirmModal(title, title);
+            if (ImGui.button(title)) {
+                ImGui.openPopup(title);
+                DiaLogger.log(res + "");
+            }
         }
         ImGui.endChild();
         ImGui.popStyleColor();
@@ -112,10 +123,9 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver {
 
     @Override
     public void newEntry(String message, DiaLoggerLevel level) {
-            entries[currentLine % lines] = message;
-            levels[currentLine % lines] = level;
-            currentLine++;
-
+        entries[currentLine % lines] = message;
+        levels[currentLine % lines] = level;
+        currentLine++;
     }
 }
 
