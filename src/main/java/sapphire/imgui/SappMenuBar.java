@@ -9,9 +9,9 @@ import diamondEngine.diaUtils.DiaLogger;
 
 import java.io.File;
 
-public class MenuBar {
+public class SappMenuBar {
 
-    private void fileMenu (ImGUILayer layer) {
+    private void fileMenu (SappImGUILayer layer) {
         // FILES Menu
         if (ImGui.beginMenu("File")) {
             if (ImGui.menuItem("New File", "Ctrl+N")) {
@@ -50,7 +50,7 @@ public class MenuBar {
         }
     }
 
-    private void windowsMenu(ImGUILayer layer) {
+    private void windowsMenu(SappImGUILayer layer) {
         // WINDOW Menu
         if (ImGui.beginMenu("Window")) {
             if (ImGui.beginMenu("Active windows")) {
@@ -68,7 +68,7 @@ public class MenuBar {
         }
     }
 
-    public void imgui(ImGUILayer layer) {
+    public void imgui(SappImGUILayer layer) {
         ImGui.beginMenuBar();
 
         fileMenu(layer);

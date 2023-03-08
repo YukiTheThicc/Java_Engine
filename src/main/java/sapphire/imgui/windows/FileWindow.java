@@ -5,7 +5,7 @@ import diamondEngine.diaUtils.DiaLoggerLevel;
 import imgui.ImGui;
 import imgui.extension.texteditor.TextEditor;
 import imgui.flag.ImGuiCond;
-import sapphire.imgui.ImGUILayer;
+import sapphire.imgui.SappImGUILayer;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class FileWindow extends ImguiWindow {
 
     // METHODS
     @Override
-    public void imgui(ImGUILayer layer) {
+    public void imgui(SappImGUILayer layer) {
 
         ImGui.setNextWindowSize(400f, 600f, ImGuiCond.FirstUseEver);
         imgui.internal.ImGui.setNextWindowDockID(layer.getDockId(), ImGuiCond.FirstUseEver);

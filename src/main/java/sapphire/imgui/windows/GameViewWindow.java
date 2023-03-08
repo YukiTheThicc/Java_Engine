@@ -4,7 +4,7 @@ import diamondEngine.Window;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiWindowFlags;
-import sapphire.imgui.ImGUILayer;
+import sapphire.imgui.SappImGUILayer;
 
 public class GameViewWindow extends ImguiWindow {
 
@@ -13,7 +13,7 @@ public class GameViewWindow extends ImguiWindow {
         this.setFlags(ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar);
     }
 
-    public void imgui(ImGUILayer layer) {
+    public void imgui(SappImGUILayer layer) {
 
         imgui.internal.ImGui.setNextWindowDockID(layer.getDockId());
         ImGui.begin(this.getTitle(), this.getFlags());

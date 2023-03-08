@@ -1,20 +1,19 @@
 package sapphire.imgui;
 
-import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.Window;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
-import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiStyleVar;
-import imgui.flag.ImGuiWindowFlags;
-import imgui.type.ImBoolean;
 import imgui.type.ImString;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import sapphire.Sapphire;
+import sapphire.SappEvents.SappObserver;
+import sapphire.imgui.windows.ConfirmationWindow;
+import sapphire.imgui.windows.ImguiWindow;
 
 import java.util.HashMap;
 
-public class SapphireImGui {
+public class SappImGui {
 
     private static final float DEFAULT_COLUMN_WIDTH = 100f;
     private static final float DEFAULT_CONF_WINDOW_WIDTH = 250f;
@@ -173,93 +172,73 @@ public class SapphireImGui {
         return "";
     }
 
+    public static float textSize(String text) {
+        return ImGui.getFont().calcTextSizeAX(ImGui.getFontSize(), ImGui.getWindowSizeX(), ImGui.getWindowSizeX(), text);
+    }
+
     /**
-     * Sets the ImGUI cursor to be aligned on both axis given the desired alignment (CENTER, TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT or
-     * BOTTOM_RIGHT) and total size of the elements to be
-     * aligned on both axis
-     * @param alignment Enum value of the alignment (default CENTER)
+     * Sets the ImGUI cursor to be aligned on both axis given the desired alignment and total size of the elements to be
+     * aligned on both axis, within the window the function is called.
+     * @param alignX Enum value of the horizontal alignment
+     * @param alignY Enum value of the vertical alignment
      * @param sizeX Size on the horizontal axis to offset the cursor
      * @param sizeY Size on the vertical axis to offset the cursor
      */
-    public static void align(Alignment alignment, float sizeX, float sizeY) {
+    public static void align(AlignX alignX, AlignY alignY, float sizeX, float sizeY) {
 
+        ImGui.setCursorPos(0, 0);
         float x = 0f;
         float y = 0f;
         float titleBarY = ImGui.getFrameHeightWithSpacing();
         float regionX = ImGui.getWindowSizeX();
         float regionY = ImGui.getWindowSizeY();
-        DiaLogger.log(ImGui.getContentRegionAvailX() + "");
 
-        DiaLogger.log("regX: " + regionX + ", regY: " + regionY);
-
-        switch (alignment) {
+        switch (alignX) {
+            case LEFT:
+                x = ImGui.getStyle().getWindowPaddingX();
+                break;
             case CENTER:
-                x = (regionX - sizeX/2)/2;
-                y = (regionY - sizeY/2 + titleBarY)/2;
+                x = regionX/2 - sizeX/2;
                 break;
-            case TOP_LEFT:
-                x = ImGui.getStyle().getFramePaddingX();
-                y = (regionY - sizeY + titleBarY)/2;
-                break;
-            case TOP_RIGHT:
-                break;
-            case BOTTOM_LEFT:
-                break;
-            case BOTTOM_RIGHT:
+            case RIGHT:
+                x = regionX - sizeX - ImGui.getStyle().getWindowPaddingX();
                 break;
         }
-        DiaLogger.log("x: " + x + ", y: " + y);
-        DiaLogger.log(ImGui.getContentRegionAvailX() + "");
+
+        switch (alignY) {
+            case TOP:
+                y = titleBarY;
+                break;
+            case CENTER:
+                y = regionY/2 - sizeY/2;
+                break;
+            case BOTTOM:
+                y = regionY - sizeY - ImGui.getStyle().getWindowPaddingY();
+                break;
+        }
 
         ImGui.setCursorPos(x, y);
     }
 
-    /**
-     * Sets the ImGUI cursor to be aligned horizontally given an alignment (CENTER, RIGHT or LEFT) and size on the horizontal
-     * axis.
-     * @param alignment Enum value of the alignment (default CENTER)
-     * @param size Size on the horizontal axis to offset the cursor
-     */
-    public static void alignH(Alignment alignment, float size) {
-
-    }
-
-    /**
-     * Sets the ImGUI cursor to be centered vertically given an alignment (CENTER, TOP or BOTTOM) and size on the vertical
-     * axis.
-     * @param alignment Enum value of the alignment (default CENTER)
-     * @param size Size on the vertical axis to offset the cursor
-     */
-    public static void alignV(Alignment alignment, float size) {
-
-    }
-
-    public static boolean confirmModal(String title, String message) {
-        ImBoolean showAgain = new ImBoolean(Sapphire.get().getSettings().getShowPreference(title));
-        boolean result = false;
-        if (showAgain.get()) {
-
-            ImGui.setNextWindowSize(DEFAULT_CONF_WINDOW_WIDTH, DEFAULT_CONF_WINDOW_HEIGHT, ImGuiCond.Always);
-
-            if (ImGui.beginPopupModal(title, ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize |
-                    ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)) {
-
-                align(Alignment.CENTER, message.length()*ImGui.getFontSize(), ImGui.getFontSize());
-                ImGui.text(message);
-                if (ImGui.button(Sapphire.getLiteral("yes"))) {
-                    result = true;
-                    ImGui.closeCurrentPopup();;
-                }
-                ImGui.sameLine();
-                if (ImGui.button(Sapphire.getLiteral("no"))) {
-                    result = false;
-                    ImGui.closeCurrentPopup();
-                }
-                if (ImGui.checkbox(Sapphire.getLiteral("dont_show_again"), showAgain))
-                    Sapphire.get().getSettings().setShowPreference(title, showAgain.get());
-                ImGui.endPopup();
-            }
+    public static ImguiWindow confirmModal(String title, String message, String aff, String neg, SappObserver parent) {
+        String id = title.toLowerCase().replace(" ", "_");
+        ImguiWindow modal =  Window.getImGuiLayer().getWindows().get(id);
+        if (modal == null) {
+            modal = new ConfirmationWindow(id, title, message, aff, neg, parent);
+            Window.getImGuiLayer().addWindow(modal);
         }
-        return result;
+        modal.setActive(true);
+        return modal;
+    }
+
+    public static ImguiWindow confirmModal(String title, String message, SappObserver parent) {
+        String id = title.toLowerCase().replace(" ", "_");
+        ImguiWindow modal =  Window.getImGuiLayer().getWindows().get(id);
+        if (modal == null) {
+            modal = new ConfirmationWindow(id, title, message, parent);
+            Window.getImGuiLayer().addWindow(modal);
+        }
+        modal.setActive(true);
+        return modal;
     }
 }

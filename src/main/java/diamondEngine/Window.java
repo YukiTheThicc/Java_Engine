@@ -1,6 +1,6 @@
 package diamondEngine;
 
-import sapphire.imgui.ImGUILayer;
+import sapphire.imgui.SappImGUILayer;
 import diamondEngine.diaRenderer.Framebuffer;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -29,7 +29,7 @@ public class Window {
     private static Window window = null;
     private long audioContext;
     private long audioDevice;
-    private ImGUILayer imGUILayer;
+    private SappImGUILayer imGUILayer;
     private Framebuffer framebuffer;
 
     // CONSTRUCTORS
@@ -66,7 +66,7 @@ public class Window {
         return 16.0f / 9.0f;
     }
 
-    public static ImGUILayer getImGuiLayer() {
+    public static SappImGUILayer getImGuiLayer() {
         return get().imGUILayer;
     }
 
@@ -159,7 +159,7 @@ public class Window {
         glViewport((int)getPosition().x, (int)getPosition().y, width, height);
 
         if (editorMode) {
-            imGUILayer = new ImGUILayer(glfwWindow);
+            imGUILayer = new SappImGUILayer(glfwWindow);
             imGUILayer.init();
         }
     }

@@ -5,8 +5,8 @@ import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiWindowFlags;
 import sapphire.Sapphire;
 import sapphire.SapphireSettings;
-import sapphire.imgui.ImGUILayer;
-import sapphire.imgui.SapphireImGui;
+import sapphire.imgui.SappImGUILayer;
+import sapphire.imgui.SappImGui;
 
 public class SettingsWindow extends ImguiWindow {
 
@@ -22,7 +22,7 @@ public class SettingsWindow extends ImguiWindow {
     }
 
     @Override
-    public void imgui(ImGUILayer layer) {
+    public void imgui(SappImGUILayer layer) {
 
         ImGui.setNextWindowSize(this.sizeX, this.sizeY, ImGuiCond.Always);
         if (this.isActive().get()) {
@@ -30,7 +30,7 @@ public class SettingsWindow extends ImguiWindow {
             if (ImGui.beginPopupModal(this.getTitle(), this.isActive(), this.getFlags())) {
 
                 SapphireSettings settings = Sapphire.get().getSettings();
-                settings.setFont(SapphireImGui.inputText("Font", settings.getFont()));
+                settings.setFont(SappImGui.inputText("Font", settings.getFont()));
 
                 /*
                 settings.getLiteral("lang");

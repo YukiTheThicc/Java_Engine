@@ -5,15 +5,16 @@ import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaLoggerObserver;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
-import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
 import imgui.type.ImInt;
+import sapphire.SappEvents.SappObserver;
 import sapphire.Sapphire;
-import sapphire.imgui.ImGUILayer;
-import sapphire.imgui.SapphireImGui;
+import sapphire.SapphireUtils;
+import sapphire.imgui.SappImGUILayer;
+import sapphire.imgui.SappImGui;
 
-public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver {
+public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, SappObserver {
 
     private static final int DEFAULT_LINES = 20;
 
@@ -21,7 +22,8 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver {
     private ImBoolean autoScroll;
     private String[] entries;
     private DiaLoggerLevel[] levels;
-    private String[] availableLevels;
+    private ConfirmationWindow confWindow;
+    private final String[] availableLevels;
     private int currentLine;
     private int lines;
 
@@ -49,7 +51,7 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver {
     }
 
     @Override
-    public void imgui(ImGUILayer layer) {
+    public void imgui(SappImGUILayer layer) {
 
         ImGui.begin(this.getTitle(), this.getFlags());
 
@@ -70,15 +72,13 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver {
                 DiaLogger.log("Changed log level to: " + DiaLogger.getCurrentLevel());
             }
 
-            float saveLogX = 0f;
-            float saveLogY = 0f;
             String title = Sapphire.getLiteral("save_log");
-            boolean res = SapphireImGui.confirmModal(title, title);
+            String message = Sapphire.getLiteral("sure_to_save_log");
             if (ImGui.button(title)) {
-                ImGui.openPopup(title);
-                DiaLogger.log(res + "");
+                confWindow = (ConfirmationWindow) SappImGui.confirmModal(title, message, this);
             }
         }
+
         ImGui.endChild();
         ImGui.popStyleColor();
         ImGui.sameLine();
@@ -126,6 +126,18 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver {
         entries[currentLine % lines] = message;
         levels[currentLine % lines] = level;
         currentLine++;
+    }
+
+    @Override
+    public void onNotify() {
+        DiaLogger.log("Save log modal window response received");
+        if (confWindow != null) {
+            if (confWindow.result()) {
+                String file = SapphireUtils.createFile();
+                DiaLogger.log("Selected file to save: '" + file + "'");
+            }
+            confWindow.shouldClose(true);
+        }
     }
 }
 

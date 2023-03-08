@@ -2,8 +2,7 @@ package sapphire.imgui.windows;
 
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
-import imgui.type.ImBoolean;
-import sapphire.imgui.ImGUILayer;
+import sapphire.imgui.SappImGUILayer;
 
 public class AssetsWindow extends ImguiWindow {
 
@@ -12,7 +11,7 @@ public class AssetsWindow extends ImguiWindow {
     }
 
     @Override
-    public void imgui(ImGUILayer layer) {
+    public void imgui(SappImGUILayer layer) {
 
         ImGui.setNextWindowSize(400f, 400f, ImGuiCond.FirstUseEver);
         ImGui.begin(this.getTitle());

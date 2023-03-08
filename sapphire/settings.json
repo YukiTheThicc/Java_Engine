@@ -1,7 +1,6 @@
 {
   "workspace": "",
   "font": "res/fonts/consola.ttf",
-  "currentLang": "es",
   "activeWindows": {
     "assets": true,
     "env_hierarchy": true,
@@ -10,33 +9,38 @@
   },
   "literals": {
     "cancel": "Cancel",
+    "no": "No",
+    "save_file": "File",
+    "sprites": "File",
+    "active_windows": "File",
+    "tiles": "File",
+    "file": "File",
+    "assets": "File",
+    "sounds": "File",
+    "entity_properties": "File",
+    "lang": "Language",
+    "close": "Close",
+    "confirm_save": "Save?",
     "severity": "Severity",
     "settings": "File",
-    "no": "No",
     "apply": "Apply",
     "yes": "Yes",
     "env_hierarchy": "File",
     "clear": "Clear",
     "new_file": "File",
     "export_project": "File",
-    "save_file": "File",
-    "sprites": "File",
-    "active_windows": "File",
-    "tiles": "File",
+    "dont_ask_again": "Don\u0027t ask this again",
     "open_project": "File",
-    "file": "File",
-    "assets": "File",
-    "sounds": "File",
     "open_file": "File",
-    "entity_properties": "File",
-    "window": "Window",
-    "lang": "Language",
-    "close": "Close",
-    "confirm_save": "Save?"
+    "save_log": "Save log",
+    "window": "Window"
   },
   "languages": {
     "es-GA": "Galego",
-    "es": "Español"
+    "es": "EspaÃ±ol"
   },
-  "colors": {}
+  "colors": {},
+  "showPreferences": {
+    "Save log": true
+  }
 }

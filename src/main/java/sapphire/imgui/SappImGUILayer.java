@@ -29,20 +29,20 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 
-public class ImGUILayer {
+public class SappImGUILayer {
 
     private long glfwWindow;
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
-    private final MenuBar menuBar;
+    private final SappMenuBar menuBar;
     private HashMap<String, ImguiWindow> windows;
     private GameViewWindow gameView;
     private int dockId;
 
     // CONSTRUCTORS
-    public ImGUILayer(long windowPtr) {
+    public SappImGUILayer(long windowPtr) {
         this.glfwWindow = windowPtr;
-        this.menuBar = new MenuBar();
+        this.menuBar = new SappMenuBar();
         this.windows = new HashMap<>();
         this.dockId = -1;
     }
@@ -217,10 +217,6 @@ public class ImGUILayer {
         }
     }
 
-    public void removeWindow(String id) {
-        windows.remove(id);
-    }
-
     private void startFrame() {
         imGuiGlfw.newFrame();
         ImGui.newFrame();
@@ -240,9 +236,7 @@ public class ImGUILayer {
                 windows.get(window).imgui(this);
             }
         }
-
         endFrame();
-
         for (String window : toRemove) {
             windows.remove(window);
         }

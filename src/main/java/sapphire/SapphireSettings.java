@@ -85,7 +85,7 @@ public class SapphireSettings {
         DiaLogger.log("Initializing settings...");
         this.load();
         if (this.font == null || this.font.equals("")) {
-            this.font = "res/fonts/consola.ttf";
+            this.font = "sapphire/fonts/consola.ttf";
         }
 
         ArrayList<File> langFiles = SapphireUtils.getFilesInDir("sapphire/lang", "json");
@@ -134,6 +134,7 @@ public class SapphireSettings {
         literals.put("severity", "Severity");
         literals.put("lang", "Language");
         literals.put("save_log", "Save log");
+        literals.put("dont_ask_again", "Don't ask this again");
     }
 
     public void setShowPreference(String window, boolean show) {
