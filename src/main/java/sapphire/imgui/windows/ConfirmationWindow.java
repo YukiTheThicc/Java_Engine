@@ -29,8 +29,8 @@ public class ConfirmationWindow extends ImguiWindow {
         this.negative = negative;
         this.askAgain = new ImBoolean(true);
         this.parent = parent;
-        this.setSizeX(360f);
-        this.setSizeY(180f);
+        this.setSizeX(250f);
+        this.setSizeY(100f);
         this.setActive(true);
     }
 

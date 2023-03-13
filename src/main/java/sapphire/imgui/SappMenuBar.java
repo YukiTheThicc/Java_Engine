@@ -16,7 +16,9 @@ public class SappMenuBar {
         if (ImGui.beginMenu(Sapphire.getLiteral("file"))) {
             if (ImGui.menuItem(Sapphire.getLiteral("new_file"), "Ctrl+N")) {
                 File newFile = SapphireUtils.createFile();
-                layer.addWindow(new FileWindow(newFile.getName(), newFile));
+                if (newFile != null) {
+                    layer.addWindow(new FileWindow(newFile.getName(), newFile));
+                }
             }
             ImGui.separator();
             if (ImGui.menuItem(Sapphire.getLiteral("open_file"), "Ctrl+O")) {
