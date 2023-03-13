@@ -29,6 +29,8 @@ public class ConfirmationWindow extends ImguiWindow {
         this.negative = negative;
         this.askAgain = new ImBoolean(true);
         this.parent = parent;
+        this.setSizeX(360f);
+        this.setSizeY(180f);
         this.setActive(true);
     }
 
@@ -40,6 +42,8 @@ public class ConfirmationWindow extends ImguiWindow {
         this.negative = Sapphire.getLiteral("no");
         this.askAgain = new ImBoolean(true);
         this.parent = parent;
+        this.setSizeX(250f);
+        this.setSizeY(100f);
         this.setActive(true);
     }
 
@@ -52,6 +56,7 @@ public class ConfirmationWindow extends ImguiWindow {
     @Override
     public void imgui(SappImGUILayer layer) {
         ImGui.openPopup(getTitle());
+        ImGui.setNextWindowSize(this.getSizeX(), this.getSizeY());
         if (ImGui.beginPopupModal(getTitle(), ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize |
                 ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)) {
 
