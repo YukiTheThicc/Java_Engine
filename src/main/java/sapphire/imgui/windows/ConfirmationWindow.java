@@ -51,23 +51,23 @@ public class ConfirmationWindow extends ImguiWindow {
     // METHODS
     @Override
     public void imgui(SappImGUILayer layer) {
-        ImGui.openPopup(this.getTitle());
-        if (ImGui.beginPopupModal(this.getTitle(), ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize |
+        ImGui.openPopup(getTitle());
+        if (ImGui.beginPopupModal(getTitle(), ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize |
                 ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)) {
 
             SappImGui.align(AlignX.LEFT, AlignY.CENTER, SappImGui.textSize(message), ImGui.getFontSize());
             ImGui.text(message);
 
-            float totalSizeButtonsX = SappImGui.textSize(this.affirmative) + SappImGui.textSize(this.negative) + ImGui.getStyle().getCellPaddingX() * 5;
+            float totalSizeButtonsX = SappImGui.textSize(affirmative) + SappImGui.textSize(negative) + ImGui.getStyle().getCellPaddingX() * 5;
             float totalSizeButtonsY = ImGui.getFontSize() + ImGui.getStyle().getCellPaddingY() * 2;
             SappImGui.align(AlignX.LEFT, AlignY.BOTTOM, totalSizeButtonsX, totalSizeButtonsY);
 
-            if (ImGui.button(this.affirmative)) {
+            if (ImGui.button(affirmative)) {
                 result = true;
                 parent.onNotify();
             }
             ImGui.sameLine();
-            if (ImGui.button(this.negative)) {
+            if (ImGui.button(negative)) {
                 result = false;
                 parent.onNotify();
             }

@@ -160,18 +160,6 @@ public class SappImGui {
         return text;
     }
 
-    public static String combo(String label, String selected, HashMap<String, String> values) {
-        /*for (int i = 0; i < values.length; i++) {
-            if () {
-
-            }
-        }
-        if (ImGui.combo(label, index, values)) {
-            index.set();
-        }*/
-        return "";
-    }
-
     public static float textSize(String text) {
         return ImGui.getFont().calcTextSizeAX(ImGui.getFontSize(), ImGui.getWindowSizeX(), ImGui.getWindowSizeX(), text);
     }

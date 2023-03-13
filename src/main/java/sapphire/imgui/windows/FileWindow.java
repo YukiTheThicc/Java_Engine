@@ -46,7 +46,7 @@ public class FileWindow extends ImguiWindow {
             textEditor.render(this.getTitle());
             ImGui.end();
         } else {
-            this.shouldClose(true);
+            this.close(true);
         }
     }
 

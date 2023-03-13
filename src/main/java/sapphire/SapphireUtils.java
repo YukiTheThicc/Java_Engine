@@ -14,19 +14,20 @@ import static org.lwjgl.util.nfd.NativeFileDialog.*;
 public class SapphireUtils {
 
     /**
-     * Opens native OS to create a file.
+     * Opens native OS to create a file with the specified default extension.
+     * @param filters Default extesion
      * @return String with the path for the new file
      */
-    public static String createFile() {
+    public static File createFile(String filters) {
 
+        String defaultPath = new File("log").getAbsolutePath();
         PointerBuffer pb = PointerBuffer.allocateDirect(2048);
-        int result = NFD_SaveDialog((ByteBuffer)null, (ByteBuffer)null, pb);
-        String path = null;
+        int result = NFD_SaveDialog(filters, defaultPath, pb);
+        File file = null;
 
         switch (result) {
             case NFD_OKAY:
-                path = pb.getStringUTF8();
-
+                file = new File(pb.getStringUTF8());
                 break;
             case NFD_CANCEL:
                 DiaLogger.log("User cancelled file dialog");
@@ -36,7 +37,34 @@ public class SapphireUtils {
         }
 
         pb.free();
-        return path;
+        return file;
+    }
+
+    /**
+     * Opens native OS to create a file. No extension is set.
+     * @return String with the path for the new file
+     */
+    public static File createFile() {
+
+        String filters = "log";
+        String defaultPath = new File("log").getAbsolutePath() + "." + filters;
+        PointerBuffer pb = PointerBuffer.allocateDirect(2048);
+        int result = NFD_SaveDialog(filters, defaultPath, pb);
+        File file = null;
+
+        switch (result) {
+            case NFD_OKAY:
+                file = new File(pb.getStringUTF8());
+                break;
+            case NFD_CANCEL:
+                DiaLogger.log("User cancelled file dialog");
+                break;
+            default: // NFD_ERROR
+                DiaLogger.log("Error while opening file dialog: " + NFD_GetError(), DiaLoggerLevel.ERROR);
+        }
+
+        pb.free();
+        return file;
     }
 
     /**

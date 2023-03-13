@@ -159,11 +159,19 @@ public class DiaLogger extends Thread {
         }
     }
 
+    /**
+     * Adds a log entry to the no-observer buffers.
+     * @param text Message of the log
+     * @param level Level of the log
+     */
     private static void addLogToBuffers(String text, DiaLoggerLevel level) {
         DiaLogger.entryBuffer.add(text);
         DiaLogger.levelBuffer.add(level);
     }
 
+    /**
+     * Dumps all the entries stored on the buffers to the logs observers.
+     */
     private static void dumpLogBuffers() {
         if (DiaLogger.entryBuffer.size() == DiaLogger.levelBuffer.size()) {
             for (DiaLoggerObserver observer : DiaLogger.observers) {

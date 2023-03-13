@@ -1,46 +1,43 @@
 {
   "workspace": "",
-  "font": "res/fonts/consola.ttf",
+  "font": "sapphire/fonts/consola.ttf",
   "activeWindows": {
     "assets": true,
     "env_hierarchy": true,
     "entity_properties": true,
     "log_viewer": true
   },
-  "literals": {
-    "cancel": "Cancel",
-    "no": "No",
-    "save_file": "File",
-    "sprites": "File",
-    "active_windows": "File",
-    "tiles": "File",
-    "file": "File",
-    "assets": "File",
-    "sounds": "File",
-    "entity_properties": "File",
-    "lang": "Language",
-    "close": "Close",
-    "confirm_save": "Save?",
-    "severity": "Severity",
-    "settings": "File",
-    "apply": "Apply",
-    "yes": "Yes",
-    "env_hierarchy": "File",
-    "clear": "Clear",
-    "new_file": "File",
-    "export_project": "File",
-    "dont_ask_again": "Don\u0027t ask this again",
-    "open_project": "File",
-    "open_file": "File",
-    "save_log": "Save log",
-    "window": "Window"
+  "colors": {
+    "DiaLogger.ERROR": [
+      200,
+      50,
+      50,
+      255
+    ],
+    "DiaLogger.DEBUG": [
+      50,
+      200,
+      50,
+      255
+    ],
+    "DiaLogger.WARN": [
+      200,
+      175,
+      50,
+      255
+    ],
+    "DiaLogger.CRITICAL": [
+      175,
+      50,
+      233,
+      255
+    ],
+    "DiaLogger.INFO": [
+      255,
+      255,
+      255,
+      255
+    ]
   },
-  "languages": {
-    "es-GA": "Galego",
-    "es": "Español"
-  },
-  "colors": {},
-  "showPreferences": {
-    "Save log": true
-  }
+  "showPreferences": {}
 }

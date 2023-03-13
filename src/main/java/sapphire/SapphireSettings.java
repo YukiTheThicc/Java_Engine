@@ -1,9 +1,6 @@
 package sapphire;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import imgui.ImVec4;
@@ -11,6 +8,8 @@ import imgui.ImVec4;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -26,10 +25,10 @@ public class SapphireSettings {
     private String font;
     private String currentLang;
     private HashMap<String, Boolean> activeWindows;
-    private HashMap<String, String> literals;
-    private HashMap<String, String> languages;
-    private HashMap<String, ImVec4> colors;
+    private HashMap<String, int[]> colors;
     private HashMap<String, Boolean> showPreferences;
+    private transient HashMap<String, String> literals;
+    private transient HashMap<String, String> languages;
 
     // CONSTRUCTORS
     public SapphireSettings() {
@@ -67,7 +66,23 @@ public class SapphireSettings {
         if (this.literals.get(literal) != null) {
             return this.literals.get(literal);
         }
-        return UNKNOWN_LITERAL;
+        return literal + ": " + UNKNOWN_LITERAL;
+    }
+
+    public HashMap<String, int[]> getColors() {
+        return colors;
+    }
+
+    public int[] getColor(String color) {
+        return colors.get(color);
+    }
+
+    public void setColor(String color, int[] value) {
+        if (value.length == 4) {
+            colors.put(color, value);
+        } else {
+            DiaLogger.log("Color values not valid");
+        }
     }
 
     public String[] getLanguages() {
@@ -80,16 +95,26 @@ public class SapphireSettings {
         return currentLang;
     }
 
+    /**
+     * Return all the windows show preferences. Used only to load settings form file.
+     * @return Hashmap with all the colors
+     */
+    private HashMap<String, Boolean> getShowPreferences() {
+        return showPreferences;
+    }
+
     // METHODS
     public void init() {
         DiaLogger.log("Initializing settings...");
+        // Initialize literal map, by default in english, and default colors
+        this.defaultLiterals();
+        this.defaultColors();
         this.load();
-        if (this.font == null || this.font.equals("")) {
-            this.font = "sapphire/fonts/consola.ttf";
+        if (font == null || font.equals("")) {
+            font = "sapphire/fonts/consola.ttf";
         }
 
         ArrayList<File> langFiles = SapphireUtils.getFilesInDir("sapphire/lang", "json");
-
         for (File langFile : langFiles) {
             try {
                 ArrayList<String> data = (ArrayList<String>) Files.readAllLines(Paths.get(langFile.getAbsolutePath()));
@@ -103,38 +128,44 @@ public class SapphireSettings {
                 DiaLogger.log("Failed to load language map from '" + langFile.getAbsolutePath() + "'", DiaLoggerLevel.ERROR);
             }
         }
-
-        // Initialize literal map, by default in english
-        this.defaultLiterals();
     }
 
     private void defaultLiterals() {
         literals.put("file", "File");
         literals.put("window", "Window");
-        literals.put("new_file", "File");
-        literals.put("open_file", "File");
-        literals.put("save_file", "File");
-        literals.put("open_project", "File");
-        literals.put("export_project", "File");
-        literals.put("settings", "File");
-        literals.put("active_windows", "File");
-        literals.put("assets", "File");
-        literals.put("sprites", "File");
-        literals.put("tiles", "File");
-        literals.put("sounds", "File");
-        literals.put("entity_properties", "File");
-        literals.put("env_hierarchy", "File");
+        literals.put("new_file", "New file");
+        literals.put("open_file", "Open file");
+        literals.put("save_file", "Save file");
+        literals.put("save_as", "Save as...");
+        literals.put("open_project", "Open project");
+        literals.put("export_project", "Export project");
+        literals.put("settings", "Settings");
+        literals.put("active_windows", "Active windows");
+        literals.put("assets", "Assets");
+        literals.put("sprites", "Sprites");
+        literals.put("tiles", "Tiles");
+        literals.put("sounds", "Sounds");
+        literals.put("entity_properties", "Entity properties");
+        literals.put("env_hierarchy", "Environments");
         literals.put("apply", "Apply");
         literals.put("close", "Close");
         literals.put("cancel", "Cancel");
         literals.put("yes", "Yes");
         literals.put("no", "No");
         literals.put("confirm_save", "Save?");
+        literals.put("sure_to_save_log", "Save log to new file?");
         literals.put("clear", "Clear");
         literals.put("severity", "Severity");
         literals.put("lang", "Language");
-        literals.put("save_log", "Save log");
         literals.put("dont_ask_again", "Don't ask this again");
+    }
+
+    private void defaultColors() {
+        colors.put("DiaLogger.CRITICAL", new int[]{175,50,233,255});
+        colors.put("DiaLogger.ERROR", new int[]{200,50,50,255});
+        colors.put("DiaLogger.WARN", new int[]{200,175,50,255});
+        colors.put("DiaLogger.DEBUG", new int[]{50,200,50,255});
+        colors.put("DiaLogger.INFO", new int[]{255,255,255,255});
     }
 
     public void setShowPreference(String window, boolean show) {
@@ -142,7 +173,7 @@ public class SapphireSettings {
     }
 
     /**
-     * Gets the preference for a confirmation window to be showed again or not
+     * Gets the preference for a confirmation window to be shown again or not
      * @param window ID of the confirmation window
      * @return Returns the stored value or true in case it does not exist
      */
@@ -150,10 +181,6 @@ public class SapphireSettings {
         return showPreferences.get(window) != null ? showPreferences.get(window) : true;
     }
 
-    /**
-     * @param lang
-     * @return
-     */
     public int changeLangTo(String lang) {
         if (lang != null && !lang.isEmpty()) {
             String path = "sapphire/lang/" + lang + ".json";
@@ -174,6 +201,9 @@ public class SapphireSettings {
         return -1;
     }
 
+    /**
+     * Saves current settings into the settings.json file.
+     */
     public void save() {
         DiaLogger.log("Saving Sapphire settings...");
         Gson gson = new GsonBuilder()
@@ -190,6 +220,9 @@ public class SapphireSettings {
         }
     }
 
+    /**
+     * Loads into this instance all stored properties in the settings.json file.
+     */
     public void load() {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
@@ -204,7 +237,11 @@ public class SapphireSettings {
         if (!inFile.equals("")) {
 
             SapphireSettings temp = gson.fromJson(inFile, SapphireSettings.class);
-            this.activeWindows = temp.getActiveWindows();
+            workspace = temp.getWorkspace();
+            font = temp.getFont();
+            activeWindows = temp.getActiveWindows();
+            colors = temp.getColors();
+            showPreferences = temp.getShowPreferences();
         }
     }
 }

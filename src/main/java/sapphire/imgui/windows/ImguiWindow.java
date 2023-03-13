@@ -6,7 +6,12 @@ import sapphire.imgui.SappImGUILayer;
 
 public abstract class ImguiWindow {
 
+    private static final float DEFAULT_SIZE_X = 400f;
+    private static final float DEFAULT_SIZE_Y = 400f;
+
     // ATTRIBUTES
+    private float sizeX;
+    private float sizeY;
     private String id;
     private String title;
     private ImBoolean isActive;
@@ -30,6 +35,8 @@ public abstract class ImguiWindow {
         this.shouldClose = false;
         this.flags = ImGuiWindowFlags.None;
         this.isConfigurable = isConfigurable;
+        this.sizeX = DEFAULT_SIZE_X;
+        this.sizeY = DEFAULT_SIZE_Y;
     }
 
     /**
@@ -45,6 +52,8 @@ public abstract class ImguiWindow {
         this.shouldClose = false;
         this.flags = ImGuiWindowFlags.None;
         this.isConfigurable = true;
+        this.sizeX = DEFAULT_SIZE_X;
+        this.sizeY = DEFAULT_SIZE_Y;
     }
 
     // GETTERS & SETTERS
@@ -76,7 +85,13 @@ public abstract class ImguiWindow {
         return shouldClose;
     }
 
-    public void shouldClose(boolean close) {
+    /**
+     * Sets if the window should close. Sapphire will store all windows that should close in an Array after they are
+     * updated, and then proceed to remove them. In this way, if a window has the capability of close itself, its always
+     * removed safely.
+     * @param close
+     */
+    public void close(boolean close) {
         this.shouldClose = close;
     }
 
@@ -90,6 +105,22 @@ public abstract class ImguiWindow {
 
     public void setFlags(int flags) {
         this.flags = flags;
+    }
+
+    public float getSizeX() {
+        return sizeX;
+    }
+
+    public void setSizeX(float sizeX) {
+        this.sizeX = sizeX;
+    }
+
+    public float getSizeY() {
+        return sizeY;
+    }
+
+    public void setSizeY(float sizeY) {
+        this.sizeY = sizeY;
     }
 
     // METHODS

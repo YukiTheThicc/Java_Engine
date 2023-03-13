@@ -14,6 +14,11 @@ import sapphire.SapphireUtils;
 import sapphire.imgui.SappImGUILayer;
 import sapphire.imgui.SappImGui;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+
 public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, SappObserver {
 
     private static final int DEFAULT_LINES = 20;
@@ -89,23 +94,8 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
             for (int i = 0; i < entries.length; i++) {
                 j = currentLine >= entries.length ? (currentLine + i) % entries.length : i;
                 if (entries[j] != null) {
-                    switch (levels[j]) {
-                        case CRITICAL:
-                            ImGui.textColored(175, 50, 233, 255, entries[j]);
-                            break;
-                        case ERROR:
-                            ImGui.textColored(200, 50, 50, 255, entries[j]);
-                            break;
-                        case WARN:
-                            ImGui.textColored(200, 175, 50, 255, entries[j]);
-                            break;
-                        case DEBUG:
-                            ImGui.textColored(50, 200, 50, 255, entries[j]);
-                            break;
-                        default:
-                            ImGui.textColored(255, 255, 255, 255, entries[j]);
-                            break;
-                    }
+                    int[] color = Sapphire.get().getSettings().getColor("DiaLogger." + levels[j]);
+                    ImGui.textColored(color[0], color[1], color[2], color[3], entries[j]);
                 } else {
                     break;
                 }
@@ -133,10 +123,17 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
         DiaLogger.log("Save log modal window response received");
         if (confWindow != null) {
             if (confWindow.result()) {
-                String file = SapphireUtils.createFile();
-                DiaLogger.log("Selected file to save: '" + file + "'");
+                File file = SapphireUtils.createFile();
+                if (file != null) {
+                    DiaLogger.log("Selected file to save: '" + file + "'");
+                    try {
+                        Files.copy(DiaLogger.getLog().toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException e) {
+                        DiaLogger.log("Failed to save log to new file");
+                    }
+                }
             }
-            confWindow.shouldClose(true);
+            confWindow.close(true);
         }
     }
 }
