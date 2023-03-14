@@ -100,7 +100,6 @@ public class SapphireUtils {
                 DiaLogger.log("Error while opening file dialog: " + NFD_GetError(), DiaLoggerLevel.ERROR);
         }
 
-        pathSet.free();
         NFD_PathSet_Free(pathSet);
         return paths;
     }

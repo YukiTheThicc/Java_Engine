@@ -90,7 +90,7 @@ public class SappMenuBar {
             for (String path : paths) {
                 DiaLogger.log("Trying to open file on path '" + path + "'...");
                 File newFile = new File(path);
-                //layer.addWindow(new FileWindow(newFile.getName(), newFile));
+                layer.addWindow(new FileWindow(newFile.getName(), newFile));
             }
         }
     }

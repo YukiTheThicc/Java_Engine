@@ -29,7 +29,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 
-public class SappImGUILayer extends Thread{
+public class SappImGUILayer {
 
     private long glfwWindow;
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
@@ -70,6 +70,7 @@ public class SappImGUILayer extends Thread{
         DiaLogger.log("Initializing ImGUI...");
         ImGui.createContext();
         final ImGuiIO io = ImGui.getIO();
+        ImGui.getIO().clearInputKeys();
 
         try {
             Files.createDirectories(Paths.get("sapphire"));
@@ -108,7 +109,6 @@ public class SappImGUILayer extends Thread{
 
         imGuiGlfw.init(glfwWindow, true);
         imGuiGl3.init("#version 330 core");
-        this.start();
     }
 
     private void initCallbacks(ImGuiIO io) {
@@ -116,8 +116,10 @@ public class SappImGUILayer extends Thread{
         glfwSetKeyCallback(glfwWindow, (w, key, scancode, action, mods) -> {
             if (action == GLFW_PRESS) {
                 io.setKeysDown(key, true);
+                DiaLogger.log("key down: " + key);
             } else if (action == GLFW_RELEASE) {
                 io.setKeysDown(key, false);
+                DiaLogger.log("key up: " + key);
             }
 
             io.setKeyCtrl(io.getKeysDown(GLFW_KEY_LEFT_CONTROL) || io.getKeysDown(GLFW_KEY_RIGHT_CONTROL));
@@ -127,6 +129,7 @@ public class SappImGUILayer extends Thread{
 
             if (!io.getWantCaptureKeyboard()) {
                 //KeyListener.keyCallback(w, key, scancode, action, mods);
+                DiaLogger.log("no quiero");
             }
         });
 
@@ -172,17 +175,17 @@ public class SappImGUILayer extends Thread{
         // WINDOWS
         gameView = new GameViewWindow();
         ImguiWindow newWindow = new SettingsWindow();
-        addWindow(newWindow);
+        windows.put(newWindow.getId(), newWindow);
         newWindow = new EntityPropertiesWindow();
-        addWindow(newWindow);
+        windows.put(newWindow.getId(), newWindow);
         newWindow = new AssetsWindow();
-        addWindow(newWindow);
+        windows.put(newWindow.getId(), newWindow);
         newWindow = new EnvHierarchyWindow();
-        addWindow(newWindow);
+        windows.put(newWindow.getId(), newWindow);
         newWindow = new LogViewerWindow();
-        addWindow(newWindow);
+        windows.put(newWindow.getId(), newWindow);
         newWindow = new ProfilerWindow();
-        addWindow(newWindow);
+        windows.put(newWindow.getId(), newWindow);
 
         /* Settings for the windows are loaded. At the time of writing this code, only one setting is stored, being if
          * the window is active or not. Because of this, the window settings are stored as a simple map. When it comes
@@ -204,16 +207,12 @@ public class SappImGUILayer extends Thread{
     public void addWindow(ImguiWindow window) {
         if (window != null) {
             if (windows.get(window.getTitle()) == null) {
-                this.windows.put(window.getId(), window);
+                this.windowsToAdd.add(window);
+                this.windowsChanged = true;
             } else {
                 DiaLogger.log("Tried to open an already opened window: '" + window.getId() + "'");
             }
         }
-        this.windowsChanged = true;
-    }
-
-    public void removeWindow(String key) {
-        this.windowsChanged = true;
     }
 
     public void changeFont(imgui.ImGuiIO io, String fontPath) {
@@ -245,8 +244,10 @@ public class SappImGUILayer extends Thread{
         ArrayList<String> toRemove = new ArrayList<>();
         this.gameView.imgui(this);
         for (String window : windows.keySet()) {
+
             if (windows.get(window).shouldClose()) {
                 toRemove.add(window);
+                windowsChanged = true;
             }
             if (windows.get(window).isActive().get()) {
                 windows.get(window).imgui(this);
@@ -311,10 +312,5 @@ public class SappImGUILayer extends Thread{
         menuBar.imgui(this);
 
         ImGui.end();
-    }
-
-    @Override
-    public void run() {
-        DiaLogger.log("Running ImGUI thread: " + this.getState());
     }
 }
