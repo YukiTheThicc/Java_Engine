@@ -29,15 +29,17 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 
-public class SappImGUILayer {
+public class SappImGUILayer extends Thread{
 
     private long glfwWindow;
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
     private final SappMenuBar menuBar;
     private HashMap<String, ImguiWindow> windows;
+    private ArrayList<ImguiWindow> windowsToAdd;
     private GameViewWindow gameView;
     private int dockId;
+    private boolean windowsChanged;
 
     // CONSTRUCTORS
     public SappImGUILayer(long windowPtr) {
@@ -45,6 +47,8 @@ public class SappImGUILayer {
         this.menuBar = new SappMenuBar();
         this.windows = new HashMap<>();
         this.dockId = -1;
+        this.windowsChanged = true;
+        this.windowsToAdd = new ArrayList<>();
     }
 
     // GETTERS & SETTERS
@@ -54,6 +58,10 @@ public class SappImGUILayer {
 
     public int getDockId() {
         return dockId;
+    }
+
+    public void setWindowsChanged(boolean windowsChanged) {
+        this.windowsChanged = windowsChanged;
     }
 
     // METHODS
@@ -75,7 +83,7 @@ public class SappImGUILayer {
 
         initCallbacks(io);
         String fontDir = Sapphire.get().getSettings().getFont();
-        setFont(io, fontDir);
+        changeFont(io, fontDir);
         initWindows();
 
         // Set up clipboard functionality
@@ -100,6 +108,7 @@ public class SappImGUILayer {
 
         imGuiGlfw.init(glfwWindow, true);
         imGuiGl3.init("#version 330 core");
+        this.start();
     }
 
     private void initCallbacks(ImGuiIO io) {
@@ -200,9 +209,14 @@ public class SappImGUILayer {
                 DiaLogger.log("Tried to open an already opened window: '" + window.getId() + "'");
             }
         }
+        this.windowsChanged = true;
     }
 
-    public void setFont(imgui.ImGuiIO io, String fontPath) {
+    public void removeWindow(String key) {
+        this.windowsChanged = true;
+    }
+
+    public void changeFont(imgui.ImGuiIO io, String fontPath) {
         if (new File(fontPath).isFile()) {
             final ImFontAtlas fontAtlas = io.getFonts();
             final ImFontConfig fontConfig = new ImFontConfig(); // Natively allocated object, should be explicitly destroyed
@@ -239,8 +253,16 @@ public class SappImGUILayer {
             }
         }
         endFrame();
-        for (String window : toRemove) {
-            windows.remove(window);
+
+        if (windowsChanged) {
+            for (String window : toRemove) {
+                windows.remove(window);
+            }
+            for (ImguiWindow window : windowsToAdd) {
+                windows.put(window.getId(), window);
+            }
+            windowsToAdd.clear();
+            this.windowsChanged = false;
         }
     }
 
@@ -289,5 +311,10 @@ public class SappImGUILayer {
         menuBar.imgui(this);
 
         ImGui.end();
+    }
+
+    @Override
+    public void run() {
+        DiaLogger.log("Running ImGUI thread: " + this.getState());
     }
 }

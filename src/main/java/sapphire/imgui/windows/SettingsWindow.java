@@ -39,8 +39,6 @@ public class SettingsWindow extends ImguiWindow {
                     ImGui.endTabBar();
                 }
 
-
-
                 // Calculate close and accept buttons position
                 float sizeX = SappImGui.textSize(settings.getLiteral("apply")) + SappImGui.textSize(settings.getLiteral("close")) + ImGui.getStyle().getFramePaddingX() * 6;
                 float sizeY = ImGui.getFontSize() + ImGui.getStyle().getFramePaddingY() * 2;

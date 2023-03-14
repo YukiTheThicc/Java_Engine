@@ -48,5 +48,6 @@ public class Sapphire {
         this.settings.init();
         this.container.init();
         this.container.run();
+        DiaLogger.close();
     }
 }
