@@ -5,7 +5,8 @@
     "assets": true,
     "env_hierarchy": true,
     "entity_properties": true,
-    "log_viewer": true
+    "log_viewer": true,
+    "profiler": true
   },
   "colors": {
     "DiaLogger.ERROR": [

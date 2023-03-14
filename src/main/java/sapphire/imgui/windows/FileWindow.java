@@ -25,11 +25,13 @@ public class FileWindow extends ImguiWindow {
         this.file = file;
         this.setActive(true);
 
-        try {
-            byte[] data = Files.readAllBytes(Paths.get(file.getPath()));
-            textEditor.setText(new String(data));
-        } catch (IOException e) {
-            DiaLogger.log("Failed to load data from file '" + file.getPath() + "'", DiaLoggerLevel.ERROR);
+        if (file.exists()) {
+            try {
+                byte[] data = Files.readAllBytes(Paths.get(file.getPath()));
+                textEditor.setText(new String(data));
+            } catch (IOException e) {
+                DiaLogger.log("Failed to load data from file '" + file.getPath() + "'", DiaLoggerLevel.ERROR);
+            }
         }
     }
 

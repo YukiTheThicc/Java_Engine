@@ -6,7 +6,9 @@ import org.lwjgl.PointerBuffer;
 import org.lwjgl.util.nfd.NFDPathSet;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
 import static org.lwjgl.util.nfd.NativeFileDialog.*;
@@ -55,6 +57,11 @@ public class SapphireUtils {
         switch (result) {
             case NFD_OKAY:
                 file = new File(pb.getStringUTF8());
+                try {
+                    Files.createFile(file.toPath());
+                } catch (IOException e) {
+                    DiaLogger.log("Failed to create file with path: " + file.getAbsolutePath(), DiaLoggerLevel.ERROR);
+                }
                 break;
             case NFD_CANCEL:
                 DiaLogger.log("User cancelled file dialog");

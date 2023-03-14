@@ -11,6 +11,7 @@ public class ContainerEditor {
     private final Window window;
     private boolean running;
     private boolean editorPlaying = false;
+    private float dt;
     private Game game;
 
     // CONSTRUCTORS
@@ -18,6 +19,7 @@ public class ContainerEditor {
         this.running = false;
         this.window = Window.get();
         this.game = null;
+        this.dt = 0f;
     }
 
     // GETTERS AND SETTERS
@@ -27,6 +29,10 @@ public class ContainerEditor {
 
     public boolean isRunning() {
         return running;
+    }
+
+    public float getDt() {
+        return dt;
     }
 
     // METHODS
@@ -51,7 +57,6 @@ public class ContainerEditor {
         this.running = true;
         float bt = (float) glfwGetTime();
         float et = (float) glfwGetTime();
-        float dt = 0f;
         while (this.running) {
             this.window.pollEvents();
             this.window.startFrame();

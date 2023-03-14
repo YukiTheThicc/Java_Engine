@@ -11,41 +11,33 @@ import java.io.File;
 
 public class SappMenuBar {
 
-    private void fileMenu (SappImGUILayer layer) {
+    // MENUS
+    private static void fileMenu (SappImGUILayer layer) {
         // FILES Menu
         if (ImGui.beginMenu(Sapphire.getLiteral("file"))) {
             if (ImGui.menuItem(Sapphire.getLiteral("new_file"), "Ctrl+N")) {
-                File newFile = SapphireUtils.createFile();
-                if (newFile != null) {
-                    layer.addWindow(new FileWindow(newFile.getName(), newFile));
-                }
+                newFile(layer);
             }
             ImGui.separator();
             if (ImGui.menuItem(Sapphire.getLiteral("open_file"), "Ctrl+O")) {
-                String[] paths = SapphireUtils.selectFiles();
-                if (paths != null) {
-                    for (String path : paths) {
-                        DiaLogger.log("Trying to open file on path '" + path + "'...");
-                        File newFile = new File(path);
-                        layer.addWindow(new FileWindow(newFile.getName(), newFile));
-                    }
-                }
+                openFile(layer);
             }
             if (ImGui.menuItem(Sapphire.getLiteral("save_file"), "Ctrl+S")) {
-                //EventSystem.notify(null, new Event(EventType.SaveLevel));
+                saveFile(layer);
             }
             if (ImGui.menuItem(Sapphire.getLiteral("save_as"), "Ctrl+Alt+S")) {
-                //EventSystem.notify(null, new Event(EventType.SaveLevel));
+                saveFileAs(layer);
             }
 
             ImGui.separator();
 
+            /*
             if (ImGui.menuItem(Sapphire.getLiteral("open_project"))) {
                 //EventSystem.notify(null, new Event(EventType.SaveLevel));
             }
             if (ImGui.menuItem(Sapphire.getLiteral("export_project"))) {
                 //EventSystem.notify(null, new Event(EventType.SaveLevel));
-            }
+            }*/
 
             ImGui.separator();
 
@@ -57,7 +49,7 @@ public class SappMenuBar {
         }
     }
 
-    private void windowsMenu(SappImGUILayer layer) {
+    private static void windowsMenu(SappImGUILayer layer) {
         // WINDOW Menu
         if (ImGui.beginMenu(Sapphire.getLiteral("window"))) {
             if (ImGui.beginMenu(Sapphire.getLiteral("active_windows"))) {
@@ -75,7 +67,43 @@ public class SappMenuBar {
         }
     }
 
-    public void imgui(SappImGUILayer layer) {
+    // ACTIONS
+    private static void newFile(SappImGUILayer layer) {
+        String fileName = Sapphire.getLiteral("new_file");
+        if (layer.getWindows().get(fileName) != null) {
+            // If the new file name has a number, retrieve that number and add 1 to it. If not, add ' 1' to the
+            // new files name
+            String[] splitName = fileName.split("(\\d+)(?!.*\\d)");
+            if (splitName.length > 1) {
+                int fileNumber = Integer.parseInt(splitName[splitName.length - 1]) + 1;
+                fileName += " " + fileNumber;
+            } else {
+                fileName += "New File";
+            }
+        }
+        layer.addWindow(new FileWindow(fileName, new File("")));
+    }
+
+    private static void openFile(SappImGUILayer layer) {
+        String[] paths = SapphireUtils.selectFiles();
+        if (paths != null) {
+            for (String path : paths) {
+                DiaLogger.log("Trying to open file on path '" + path + "'...");
+                File newFile = new File(path);
+                layer.addWindow(new FileWindow(newFile.getName(), newFile));
+            }
+        }
+    }
+
+    private static void saveFile(SappImGUILayer layer) {
+        DiaLogger.log("Trying to save file");
+    }
+
+    private static void saveFileAs(SappImGUILayer layer) {
+
+    }
+
+    public static void imgui(SappImGUILayer layer) {
         ImGui.beginMenuBar();
 
         fileMenu(layer);

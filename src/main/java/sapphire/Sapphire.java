@@ -29,6 +29,10 @@ public class Sapphire {
         return Sapphire.get().settings.getLiteral(literal);
     }
 
+    public ContainerEditor getContainer() {
+        return container;
+    }
+
     // METHODS
     public static Sapphire get() {
         if (Sapphire.sapphire == null) {

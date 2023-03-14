@@ -172,6 +172,8 @@ public class SappImGUILayer {
         addWindow(newWindow);
         newWindow = new LogViewerWindow();
         addWindow(newWindow);
+        newWindow = new ProfilerWindow();
+        addWindow(newWindow);
 
         /* Settings for the windows are loaded. At the time of writing this code, only one setting is stored, being if
          * the window is active or not. Because of this, the window settings are stored as a simple map. When it comes
