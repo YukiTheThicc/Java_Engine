@@ -29,7 +29,6 @@ public class Window {
     private static Window window = null;
     private long audioContext;
     private long audioDevice;
-    private SappImGUILayer imGUILayer;
     private Framebuffer framebuffer;
 
     // CONSTRUCTORS
@@ -66,10 +65,6 @@ public class Window {
         return 16.0f / 9.0f;
     }
 
-    public static SappImGUILayer getImGuiLayer() {
-        return get().imGUILayer;
-    }
-
     public static void setWidth(int width) {
         get().width = width;
     }
@@ -100,7 +95,7 @@ public class Window {
         System.out.println("Resizing");
     }
 
-    public void init(boolean editorMode) {
+    public void init() {
         GLFWErrorCallback.createPrint(System.err).set();
 
         if (!glfwInit()) {
@@ -157,11 +152,6 @@ public class Window {
          */
         this.framebuffer = new Framebuffer(this.width, this.height);
         glViewport((int)getPosition().x, (int)getPosition().y, width, height);
-
-        if (editorMode) {
-            imGUILayer = new SappImGUILayer(glfwWindow);
-            imGUILayer.init();
-        }
     }
 
     public static Window get() {
@@ -183,9 +173,6 @@ public class Window {
 
     public void endFrame() {
         this.framebuffer.unBind();
-        if (this.imGUILayer != null) {
-            this.imGUILayer.update();
-        }
         glfwSwapBuffers(glfwWindow);
     }
 
@@ -201,6 +188,5 @@ public class Window {
         // Termination of GLFW
         glfwTerminate();
         glfwSetErrorCallback(null).free();
-        this.imGUILayer.destroyImGui();
     }
 }

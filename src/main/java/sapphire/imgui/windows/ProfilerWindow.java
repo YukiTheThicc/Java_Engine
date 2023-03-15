@@ -2,7 +2,6 @@ package sapphire.imgui.windows;
 
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
-import imgui.type.ImString;
 import sapphire.Sapphire;
 import sapphire.imgui.SappImGUILayer;
 
@@ -27,9 +26,9 @@ public class ProfilerWindow extends ImguiWindow {
 
         ImGui.begin(this.getTitle(), this.getFlags());
 
-        accTime += Sapphire.get().getContainer().getDt();
+        accTime += Sapphire.get().getDt();
         if (accTime > 0.1f) {
-            fps = (int) (1 / Sapphire.get().getContainer().getDt());
+            fps = (int) (1 / Sapphire.get().getDt());
             accTime -= 0.1f;
         }
 

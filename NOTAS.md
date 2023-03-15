@@ -33,3 +33,4 @@ código va a ser abierto. Ignorar entonces cosas que puedan tener que ver con el
   - [ ] Considerar crear un hilo para la capa de imgui (igual es mejor que no lo sea)
 
 
+xd

@@ -16,13 +16,13 @@ public class SapphireControls {
     public static void processControls(ImGuiIO io) {
         io.getKeysDown(keyPressed);
         if (io.getKeyCtrl() && keyPressed[GLFW_KEY_S]) {
-            SapphireActions.saveFile(Window.getImGuiLayer());
+            SapphireActions.saveFile(Sapphire.get().getImGUILayer());
         }
         if (io.getKeyCtrl() && keyPressed[GLFW_KEY_O]) {
-            SapphireActions.openFile(Window.getImGuiLayer());
+            SapphireActions.openFile(Sapphire.get().getImGUILayer());
         }
         if (io.getKeyCtrl() && keyPressed[GLFW_KEY_N]) {
-            SapphireActions.newFile(Window.getImGuiLayer());
+            SapphireActions.newFile(Sapphire.get().getImGUILayer());
         }
     }
 }
