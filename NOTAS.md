@@ -27,6 +27,9 @@ código va a ser abierto. Ignorar entonces cosas que puedan tener que ver con el
 - [ ! ] La capa de ImGUI ahroa mismo está asociada a la ventana, un objeto que debería de ser independiente de Sapphire
   - [ ] Cambiar / Refactorizar SappImGUILayer para que sea o un singleton o un objeto estático que se dibuje de forma
         independiente en el beginFrame del contenedor de Sapphire
+    - [ ] Refactorizar ventana en general para que no haya ataduras entre ventana, capa de imgui y frame buffer. Igual
+            centralizar los accesos a framebuffers o permitir tener más de uno, lanzando hilos de renderizado por cada vez
+            que se quieran usar, etc...
   - [ ] Considerar crear un hilo para la capa de imgui (igual es mejor que no lo sea)
 
 
