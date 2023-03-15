@@ -116,11 +116,11 @@ public class SappImGUILayer {
         glfwSetKeyCallback(glfwWindow, (w, key, scancode, action, mods) -> {
             if (action == GLFW_PRESS) {
                 io.setKeysDown(key, true);
-                DiaLogger.log("key down: " + key);
             } else if (action == GLFW_RELEASE) {
                 io.setKeysDown(key, false);
-                DiaLogger.log("key up: " + key);
             }
+
+            io.addConfigFlags(ImGuiConfigFlags.NavNoCaptureKeyboard);
 
             io.setKeyCtrl(io.getKeysDown(GLFW_KEY_LEFT_CONTROL) || io.getKeysDown(GLFW_KEY_RIGHT_CONTROL));
             io.setKeyShift(io.getKeysDown(GLFW_KEY_LEFT_SHIFT) || io.getKeysDown(GLFW_KEY_RIGHT_SHIFT));
@@ -129,14 +129,14 @@ public class SappImGUILayer {
 
             if (!io.getWantCaptureKeyboard()) {
                 //KeyListener.keyCallback(w, key, scancode, action, mods);
-                DiaLogger.log("no quiero");
             }
         });
 
         glfwSetCharCallback(glfwWindow, (w, c) -> {
+            /*
             if (c != GLFW_KEY_DELETE) {
                 io.addInputCharacter(c);
-            }
+            }*/
         });
 
         glfwSetMouseButtonCallback(glfwWindow, (w, button, action, mods) -> {

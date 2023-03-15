@@ -118,7 +118,7 @@ public class DiaLogger extends Thread {
      * @param level   Level of severity.
      */
     public static void log(String message, DiaLoggerLevel level) {
-        diaLogger.entryBuffer.add(message);
+        diaLogger.entryBuffer.add("[" + DiaLogger.getTime() + "][" + level + "] " + message);
         diaLogger.levelBuffer.add(level);
         diaLogger.dirty = true;
     }
@@ -153,15 +153,14 @@ public class DiaLogger extends Thread {
         if (DiaLogger.diaLogger.log != null) {
             if (DiaLogger.diaLogger.currentLevel.ordinal() >= level.ordinal()) {
 
-                String toLog = "[" + DiaLogger.getTime() + "][" + level + "] " + message;
                 // Notify observers of log entry
                 if (diaLogger.observers != null && !diaLogger.observers.isEmpty()) {
                     for (DiaLoggerObserver observer : DiaLogger.diaLogger.observers) {
-                        observer.newEntry(toLog, level);
+                        observer.newEntry(message, level);
                     }
                 } else {
                     // If there are no observers the log entries are stored on buffers to be dumped later
-                    DiaLogger.diaLogger.addLogToBuffers(toLog, level);
+                    DiaLogger.diaLogger.addLogToBuffers(message, level);
                 }
 
                 try {
@@ -171,7 +170,7 @@ public class DiaLogger extends Thread {
                     if (levelLit == null) {
                         out.println("[" + DiaLogger.getTime() + "][" + DiaLogger.diaLogger.literals.get(DiaLoggerLevel.ERROR) + "] Trying to log with unknown level");
                     }
-                    out.println(toLog);
+                    out.println(message);
                     out.close();
 
                 } catch (IOException e) {
@@ -203,8 +202,9 @@ public class DiaLogger extends Thread {
                     entryBuffer.clear();
                     levelBuffer.clear();
                     dirty = false;
+                } else {
+                    sleep(250);
                 }
-                sleep(250);
             }
             System.out.println("Closing Logger thread...");
             DiaLogger.diaLogger.interrupt();
