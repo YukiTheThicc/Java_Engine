@@ -3,6 +3,7 @@ package sapphire;
 import com.google.gson.*;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
+import diamondEngine.diaUtils.DiaUtils;
 import imgui.ImVec4;
 
 import java.io.File;
@@ -114,7 +115,7 @@ public class SapphireSettings {
             font = "sapphire/fonts/consola.ttf";
         }
 
-        ArrayList<File> langFiles = SapphireUtils.getFilesInDir("sapphire/lang", "json");
+        ArrayList<File> langFiles = DiaUtils.getFilesInDir("sapphire/lang", "json");
         for (File langFile : langFiles) {
             try {
                 ArrayList<String> data = (ArrayList<String>) Files.readAllLines(Paths.get(langFile.getAbsolutePath()));

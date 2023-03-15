@@ -3,6 +3,7 @@ package sapphire.imgui.windows;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaLoggerObserver;
+import diamondEngine.diaUtils.DiaUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiWindowFlags;
@@ -10,7 +11,6 @@ import imgui.type.ImBoolean;
 import imgui.type.ImInt;
 import sapphire.SappEvents.SappObserver;
 import sapphire.Sapphire;
-import sapphire.SapphireUtils;
 import sapphire.imgui.SappImGUILayer;
 import sapphire.imgui.SappImGui;
 
@@ -123,7 +123,7 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
         DiaLogger.log("Save log modal window response received");
         if (confWindow != null) {
             if (confWindow.result()) {
-                File file = SapphireUtils.createFile();
+                File file = DiaUtils.createFile();
                 if (file != null) {
                     DiaLogger.log("Selected file to save: '" + file + "'");
                     try {

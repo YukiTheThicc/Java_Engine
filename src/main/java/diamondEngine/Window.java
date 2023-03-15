@@ -201,5 +201,6 @@ public class Window {
         // Termination of GLFW
         glfwTerminate();
         glfwSetErrorCallback(null).free();
+        this.imGUILayer.destroyImGui();
     }
 }

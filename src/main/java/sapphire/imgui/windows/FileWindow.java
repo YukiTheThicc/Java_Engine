@@ -1,16 +1,12 @@
 package sapphire.imgui.windows;
 
-import diamondEngine.diaUtils.DiaLogger;
-import diamondEngine.diaUtils.DiaLoggerLevel;
+import diamondEngine.diaUtils.DiaUtils;
 import imgui.ImGui;
 import imgui.extension.texteditor.TextEditor;
 import imgui.flag.ImGuiCond;
 import sapphire.imgui.SappImGUILayer;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.*;
 
 public class FileWindow extends ImguiWindow {
 
@@ -27,16 +23,8 @@ public class FileWindow extends ImguiWindow {
         this.file = file;
         this.dirty = true;
         this.setActive(true);
-
-        if (file.exists()) {
-            try {
-                byte[] data = Files.readAllBytes(Paths.get(file.getPath()));
-                textEditor.setText(new String(data));
-                dirty = false;
-            } catch (IOException e) {
-                DiaLogger.log("Failed to load data from file '" + file.getPath() + "'", DiaLoggerLevel.ERROR);
-            }
-        }
+        textEditor.setText(new String(DiaUtils.readAllBytes(file)));
+        dirty = false;
     }
 
     // METHODS
@@ -49,6 +37,7 @@ public class FileWindow extends ImguiWindow {
             ImGui.begin(this.getTitle() + (dirty?"*":"") + "###" + this.getTitle(), this.isActive(), this.getFlags());
             textEditor.render(this.getTitle());
             if (textEditor.isTextChanged()) dirty = true;
+            if (ImGui.isWindowFocused()) layer.setLastFocusedFile(this);
             ImGui.end();
         } else {
             this.close(true);
@@ -56,6 +45,7 @@ public class FileWindow extends ImguiWindow {
     }
 
     public void saveFile() {
-        DiaLogger.log("Trying to save file '" + file.getPath() + "'");
+        DiaUtils.saveToFile(file, textEditor.getTextLines());
+        dirty = false;
     }
 }

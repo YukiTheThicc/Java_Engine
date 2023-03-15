@@ -1,7 +1,9 @@
 package sapphire.imgui;
 
 import diamondEngine.diaUtils.DiaLoggerLevel;
+import diamondEngine.diaUtils.DiaUtils;
 import sapphire.Sapphire;
+import sapphire.SapphireControls;
 import sapphire.imgui.windows.*;
 import diamondEngine.Window;
 import diamondEngine.diaUtils.DiaLogger;
@@ -31,24 +33,24 @@ import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 
 public class SappImGUILayer {
 
-    private long glfwWindow;
+    private final long glfwWindow;
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
-    private final SappMenuBar menuBar;
     private HashMap<String, ImguiWindow> windows;
     private ArrayList<ImguiWindow> windowsToAdd;
     private GameViewWindow gameView;
+    private FileWindow lastFocusedFile;
     private int dockId;
     private boolean windowsChanged;
 
     // CONSTRUCTORS
     public SappImGUILayer(long windowPtr) {
         this.glfwWindow = windowPtr;
-        this.menuBar = new SappMenuBar();
         this.windows = new HashMap<>();
         this.dockId = -1;
         this.windowsChanged = true;
         this.windowsToAdd = new ArrayList<>();
+        this.lastFocusedFile = null;
     }
 
     // GETTERS & SETTERS
@@ -62,6 +64,14 @@ public class SappImGUILayer {
 
     public void setWindowsChanged(boolean windowsChanged) {
         this.windowsChanged = windowsChanged;
+    }
+
+    public FileWindow getLastFocusedFile() {
+        return lastFocusedFile;
+    }
+
+    public void setLastFocusedFile(FileWindow lastFocusedFile) {
+        this.lastFocusedFile = lastFocusedFile;
     }
 
     // METHODS
@@ -83,8 +93,7 @@ public class SappImGUILayer {
         io.setBackendPlatformName("imgui_java_impl_glfw");
 
         initCallbacks(io);
-        String fontDir = Sapphire.get().getSettings().getFont();
-        changeFont(io, fontDir);
+        addFonts(io);
         initWindows();
 
         // Set up clipboard functionality
@@ -120,6 +129,8 @@ public class SappImGUILayer {
                 io.setKeysDown(key, false);
             }
 
+            SapphireControls.processControls(io);
+
             io.addConfigFlags(ImGuiConfigFlags.NavNoCaptureKeyboard);
 
             io.setKeyCtrl(io.getKeysDown(GLFW_KEY_LEFT_CONTROL) || io.getKeysDown(GLFW_KEY_RIGHT_CONTROL));
@@ -133,10 +144,11 @@ public class SappImGUILayer {
         });
 
         glfwSetCharCallback(glfwWindow, (w, c) -> {
-            /*
-            if (c != GLFW_KEY_DELETE) {
-                io.addInputCharacter(c);
-            }*/
+            //DiaLogger.log("Pressed char: " + w + " - " + c);
+        });
+
+        glfwSetCharModsCallback(glfwWindow, (w, c, k) -> {
+            //DiaLogger.log("Pressed char: " + w + " - " + c + " - " + k);
         });
 
         glfwSetMouseButtonCallback(glfwWindow, (w, button, action, mods) -> {
@@ -188,13 +200,7 @@ public class SappImGUILayer {
         windows.put(newWindow.getId(), newWindow);
 
         /* Settings for the windows are loaded. At the time of writing this code, only one setting is stored, being if
-         * the window is active or not. Because of this, the window settings are stored as a simple map. When it comes
-         * to runtime, the windows are stored in memory as an ArrayList. For the moment then, when initializing the
-         * front end the settings map will be iterated through and the windows names will be compared with the key of
-         * each entry, then set it to active or not appropriately. Could be necessary in the future to fully serialize
-         * the windows. With this solution its also assured that all windows available will be created no matter if it
-         * is registered or not on the settings.
-         */
+         * the window is active or not. Because of this, the window settings are stored as a simple map*/
         for (String windowId : Sapphire.get().getSettings().getActiveWindows().keySet()) {
             for (String window : windows.keySet()) {
                 if (windows.get(window).getId().equals(windowId)) {
@@ -215,20 +221,23 @@ public class SappImGUILayer {
         }
     }
 
-    public void changeFont(imgui.ImGuiIO io, String fontPath) {
-        if (new File(fontPath).isFile()) {
-            final ImFontAtlas fontAtlas = io.getFonts();
-            final ImFontConfig fontConfig = new ImFontConfig(); // Natively allocated object, should be explicitly destroyed
+    public void addFonts(imgui.ImGuiIO io) {
+        ArrayList<File> fontFiles = DiaUtils.getFilesInDir("sapphire/fonts", "ttf");
+        if (!fontFiles.isEmpty()) {
+            for (File file : fontFiles) {
+                final ImFontAtlas fontAtlas = io.getFonts();
+                final ImFontConfig fontConfig = new ImFontConfig(); // Natively allocated object, should be explicitly destroyed
 
-            // Glyphs could be added per-font as well as per config used globally like here
-            fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesDefault());
+                // Glyphs could be added per-font as well as per config used globally like here
+                fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesDefault());
 
-            // Fonts merge example
-            fontConfig.setPixelSnapH(true);
-            fontAtlas.addFontFromFileTTF(fontPath, 12, fontConfig);
-            fontConfig.destroy(); // After all fonts were added we don't need this config more
+                // Fonts merge example
+                fontConfig.setPixelSnapH(true);
+                fontAtlas.addFontFromFileTTF(file.getAbsolutePath(), 12, fontConfig);
+                fontConfig.destroy(); // After all fonts were added we don't need this config more
+            }
         } else {
-            DiaLogger.log("Specified engine font has not been found: \"" + fontPath + "\"", DiaLoggerLevel.ERROR);
+            DiaLogger.log("Failed to load any font files from Sapphire fonts dir");
         }
     }
 
@@ -282,7 +291,7 @@ public class SappImGUILayer {
         glfwMakeContextCurrent(backupWindowPtr);
     }
 
-    private void destroyImGui() {
+    public void destroyImGui() {
         imGuiGl3.dispose();
         ImGui.destroyContext();
     }
@@ -309,7 +318,7 @@ public class SappImGUILayer {
         // Dockspace
         dockId = ImGui.dockSpace(ImGui.getID("Dockspace"));
         imgui.ImGui.setNextWindowDockID(dockId);
-        menuBar.imgui(this);
+        SappMenuBar.imgui(this);
 
         ImGui.end();
     }

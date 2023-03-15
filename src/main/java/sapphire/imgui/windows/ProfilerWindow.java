@@ -37,7 +37,7 @@ public class ProfilerWindow extends ImguiWindow {
         ImGui.text("FPS: ");
         ImGui.sameLine();
         ImGui.text(String.valueOf(fps));
-        ImGui.inputText("TEST", new ImString());
+        ImGui.text(layer.getLastFocusedFile() != null ? layer.getLastFocusedFile().getTitle() : "No file opened");
 
         ImGui.nextColumn();
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
@@ -50,8 +50,6 @@ public class ProfilerWindow extends ImguiWindow {
         }
         ImGui.endChild();
         ImGui.popStyleColor();
-
-
         ImGui.end();
     }
 }

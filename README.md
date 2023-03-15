@@ -13,6 +13,8 @@ At this moment, the priority is to develop _Sapphire_ into a state in which it h
 the first core elements of Diamond, so they can be exposed and managed through Sapphire. This includes a file edition system, 
 logging system, game viewport, customization elements and much more.
 
+You can now edit and store files using Sapphire, aside from having key shortcuts to make your life easier
+
 ## Diamond Games
 
 At this moment there is no game structure, as the engine and front-end are not featured enough yet to support building
@@ -27,3 +29,4 @@ This engine is being developed using the following dependencies:
 * jbox2d-library: https://github.com/jbox2d/jbox2d
 * joml: https://github.com/JOML-CI/JOML
 * gson: https://github.com/google/gson
+
