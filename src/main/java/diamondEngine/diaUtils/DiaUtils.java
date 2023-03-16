@@ -67,6 +67,7 @@ public class DiaUtils {
      */
     public static File createFile() {
 
+        DiaLogger.log("Creating file...");
         String filters = "log";
         String defaultPath = new File("log").getAbsolutePath() + "." + filters;
         PointerBuffer pb = PointerBuffer.allocateDirect(2048);
@@ -138,8 +139,9 @@ public class DiaUtils {
      */
     public static String[] selectFiles() {
 
+        DiaLogger.log("Selecting files...");
         NFDPathSet pathSet = NFDPathSet.create();
-        int result = NFD_OpenDialogMultiple((ByteBuffer)null, (ByteBuffer)null, pathSet);
+        int result = NFD_OpenDialogMultiple("", "", pathSet);
         String[] paths = null;
 
         switch (result) {
@@ -159,6 +161,7 @@ public class DiaUtils {
         }
 
         NFD_PathSet_Free(pathSet);
+        pathSet.free();
         return paths;
     }
 

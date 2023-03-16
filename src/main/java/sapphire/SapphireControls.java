@@ -1,10 +1,8 @@
 package sapphire;
 
-import diamondEngine.Window;
 import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGuiIO;
-
-import java.util.HashMap;
+import java.util.Arrays;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -24,5 +22,6 @@ public class SapphireControls {
         if (io.getKeyCtrl() && keyPressed[GLFW_KEY_N]) {
             SapphireActions.newFile(Sapphire.get().getImGUILayer());
         }
+        Arrays.fill(keyPressed, false);
     }
 }
