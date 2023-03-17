@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import static org.lwjgl.util.nfd.NativeFileDialog.*;
+import static org.lwjgl.util.tinyfd.TinyFileDialogs.*;
 
 public class DiaUtils {
 
@@ -36,28 +36,20 @@ public class DiaUtils {
 
     /**
      * Opens native OS to create a file with the specified default extension.
-     * @param filters Default extesion
+     * @param extension Default extesion
      * @return String with the path for the new file
      */
-    public static File createFile(String filters) {
+    public static File createFile(String extension) {
 
-        String defaultPath = new File("log").getAbsolutePath();
-        PointerBuffer pb = PointerBuffer.allocateDirect(2048);
-        int result = NFD_SaveDialog(filters, defaultPath, pb);
-        File file = null;
-
-        switch (result) {
-            case NFD_OKAY:
-                file = new File(pb.getStringUTF8());
-                break;
-            case NFD_CANCEL:
-                DiaLogger.log("User cancelled file dialog");
-                break;
-            default: // NFD_ERROR
-                DiaLogger.log("Error while opening file dialog: " + NFD_GetError(), DiaLoggerLevel.ERROR);
-        }
-
+        DiaLogger.log("Creating file...");
+        PointerBuffer pb = PointerBuffer.allocateDirect(256);
+        PointerBuffer.create(ByteBuffer.wrap(extension.getBytes()));
+        String path = tinyfd_saveFileDialog("", "", null, "");
         pb.free();
+        File file = null;
+        if (path != null && !path.isEmpty()) {
+            file = new File(path);
+        }
         return file;
     }
 
@@ -67,31 +59,7 @@ public class DiaUtils {
      */
     public static File createFile() {
 
-        DiaLogger.log("Creating file...");
-        String filters = "log";
-        String defaultPath = new File("log").getAbsolutePath() + "." + filters;
-        PointerBuffer pb = PointerBuffer.allocateDirect(2048);
-        int result = NFD_SaveDialog(filters, defaultPath, pb);
-        File file = null;
-
-        switch (result) {
-            case NFD_OKAY:
-                file = new File(pb.getStringUTF8());
-                try {
-                    Files.createFile(file.toPath());
-                } catch (IOException e) {
-                    DiaLogger.log("Failed to create file with path: " + file.getAbsolutePath(), DiaLoggerLevel.ERROR);
-                }
-                break;
-            case NFD_CANCEL:
-                DiaLogger.log("User cancelled file dialog");
-                break;
-            default: // NFD_ERROR
-                DiaLogger.log("Error while opening file dialog: " + NFD_GetError(), DiaLoggerLevel.ERROR);
-        }
-
-        pb.free();
-        return file;
+        return createFile("");
     }
 
     /**
@@ -140,29 +108,11 @@ public class DiaUtils {
     public static String[] selectFiles() {
 
         DiaLogger.log("Selecting files...");
-        NFDPathSet pathSet = NFDPathSet.create();
-        int result = NFD_OpenDialogMultiple("", "", pathSet);
-        String[] paths = null;
-
-        switch (result) {
-            case NFD_OKAY:
-                long numFiles = NFD_PathSet_GetCount(pathSet);
-                paths = new String[(int)numFiles];
-                for (long i = 0; i < numFiles; i++) {
-                    DiaLogger.log( "File dialog selected path #"+ (i + 1) + ": '" + NFD_PathSet_GetPath(pathSet, i) + "'");
-                    paths[(int)i] = NFD_PathSet_GetPath(pathSet, i);
-                }
-                break;
-            case NFD_CANCEL:
-                DiaLogger.log("User cancelled file dialog");
-                break;
-            default: // NFD_ERROR
-                DiaLogger.log("Error while opening file dialog: " + NFD_GetError(), DiaLoggerLevel.ERROR);
+        String result = tinyfd_openFileDialog("", null, null, null, true);
+        if (result != null && !result.isEmpty()) {
+            return result.split("\\|");
         }
-
-        NFD_PathSet_Free(pathSet);
-        pathSet.free();
-        return paths;
+        return new String[0];
     }
 
     /**
