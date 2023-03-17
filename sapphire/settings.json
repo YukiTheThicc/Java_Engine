@@ -1,6 +1,6 @@
 {
   "workspace": "",
-  "font": "sapphire/fonts/consola.ttf",
+  "currentFont": "consola",
   "activeWindows": {
     "assets": true,
     "env_hierarchy": true,
@@ -40,5 +40,6 @@
       255
     ]
   },
-  "showPreferences": {}
+  "showPreferences": {},
+  "fontSize": 15
 }

@@ -11,6 +11,8 @@ import imgui.type.ImBoolean;
 import imgui.type.ImInt;
 import sapphire.SappEvents.SappObserver;
 import sapphire.Sapphire;
+import sapphire.imgui.AlignX;
+import sapphire.imgui.AlignY;
 import sapphire.imgui.SappImGUILayer;
 import sapphire.imgui.SappImGui;
 
@@ -68,15 +70,19 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
         // Logger options part
         ImGui.pushStyleColor(ImGuiCol.ChildBg, 50, 50, 50, 255);
         if (ImGui.beginChild("options", 200f, 0f)) {
-            if (ImGui.button(Sapphire.getLiteral("clear"))) clear();
+
             ImGui.sameLine();
-            if (ImGui.button("Add test entry")) newEntry("[DEBUG] Test entry", DiaLoggerLevel.DEBUG);
             ImInt index = new ImInt(DiaLogger.getCurrentLevel().ordinal());
-            if (ImGui.combo(Sapphire.getLiteral("severity"), index, availableLevels)) {
+            if (SappImGui.combo(Sapphire.getLiteral("severity"), index, availableLevels, 80f)) {
                 DiaLogger.changeLevel(DiaLoggerLevel.values()[index.get()]);
                 DiaLogger.log("Changed log level to: " + DiaLogger.getCurrentLevel());
             }
 
+            float clearX = SappImGui.textSize(Sapphire.getLiteral("clear")) + ImGui.getStyle().getCellPaddingX() * 5;
+            float clearY = ImGui.getFontSize() + ImGui.getStyle().getCellPaddingY() * 2;
+            SappImGui.align(AlignX.LEFT, AlignY.BOTTOM, clearX, clearY);
+            if (ImGui.button(Sapphire.getLiteral("clear"))) clear();
+            ImGui.sameLine();
             String title = Sapphire.getLiteral("save_log");
             String message = Sapphire.getLiteral("sure_to_save_log");
             if (ImGui.button(title)) {

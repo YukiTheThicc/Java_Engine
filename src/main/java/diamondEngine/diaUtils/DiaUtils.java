@@ -1,11 +1,7 @@
 package diamondEngine.diaUtils;
 
-import org.lwjgl.PointerBuffer;
-import org.lwjgl.util.nfd.NFDPathSet;
-
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -42,10 +38,7 @@ public class DiaUtils {
     public static File createFile(String extension) {
 
         DiaLogger.log("Creating file...");
-        PointerBuffer pb = PointerBuffer.allocateDirect(256);
-        PointerBuffer.create(ByteBuffer.wrap(extension.getBytes()));
         String path = tinyfd_saveFileDialog("", "", null, "");
-        pb.free();
         File file = null;
         if (path != null && !path.isEmpty()) {
             file = new File(path);

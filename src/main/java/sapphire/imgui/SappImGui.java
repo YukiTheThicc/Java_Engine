@@ -1,9 +1,12 @@
 package sapphire.imgui;
 
 import diamondEngine.Window;
+import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.diaUtils.DiaLoggerLevel;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
+import imgui.type.ImInt;
 import imgui.type.ImString;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -207,6 +210,40 @@ public class SappImGui {
         }
 
         ImGui.setCursorPos(x, y);
+    }
+
+    public static boolean combo(String title, ImInt index, String[] options) {
+
+        ImGui.pushID(title);
+        ImGui.columns(2);
+        ImGui.setColumnWidth(0, DEFAULT_COLUMN_WIDTH);
+        ImGui.text(title);
+        ImGui.nextColumn();
+
+        if (ImGui.combo("##" + title, index, options)) {
+            ImGui.popID();
+            return true;
+        }
+        ImGui.columns(1);
+        ImGui.popID();
+        return false;
+    }
+
+    public static boolean combo(String title, ImInt index, String[] options, float labelColWidth) {
+
+        ImGui.pushID(title);
+        ImGui.columns(2);
+        ImGui.setColumnWidth(0, labelColWidth);
+        ImGui.text(title);
+        ImGui.nextColumn();
+
+        if (ImGui.combo("##" + title, index, options)) {
+            ImGui.popID();
+            return true;
+        }
+        ImGui.columns(1);
+        ImGui.popID();
+        return false;
     }
 
     public static ImguiWindow confirmModal(String title, String message, String aff, String neg, SappObserver parent) {

@@ -1,9 +1,10 @@
 package sapphire.imgui.windows;
 
 import diamondEngine.diaUtils.DiaLogger;
-import diamondEngine.diaUtils.DiaLoggerLevel;
-import imgui.ImGui;
+import diamondEngine.diaUtils.DiaUtils;
+import imgui.*;
 import imgui.flag.ImGuiCond;
+import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImInt;
 import sapphire.Sapphire;
@@ -12,6 +13,9 @@ import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
 import sapphire.imgui.SappImGUILayer;
 import sapphire.imgui.SappImGui;
+
+import java.io.File;
+import java.util.ArrayList;
 
 public class SettingsWindow extends ImguiWindow {
 
@@ -32,6 +36,7 @@ public class SettingsWindow extends ImguiWindow {
             ImGui.openPopup(this.getTitle());
             if (ImGui.beginPopupModal(this.getTitle(), this.isActive(), this.getFlags())) {
 
+                ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 6, 6);
                 SapphireSettings settings = Sapphire.get().getSettings();
                 if (ImGui.beginTabBar(this.getTitle(), this.getFlags())) {
                     generalSettingsTab(settings);
@@ -48,6 +53,7 @@ public class SettingsWindow extends ImguiWindow {
                 ImGui.sameLine();
                 if (ImGui.button(settings.getLiteral("close"))) this.setActive(false);
 
+                ImGui.popStyleVar(1);
                 ImGui.endPopup();
             }
         }
@@ -56,13 +62,16 @@ public class SettingsWindow extends ImguiWindow {
     private void generalSettingsTab(SapphireSettings settings) {
         if (ImGui.beginTabItem(settings.getLiteral("general_settings"))) {
 
-            settings.setFont(SappImGui.inputText("Font", settings.getFont()));
-            /*
-                settings.getLiteral("lang");
-                settings.getLanguages();
-                settings.changeLangTo(settings.getLanguages()[index.get()]);
-                DiaLogger.log("Changed language to: " + settings.getLanguages()[index.get()]);*/
-            //SapphireImGui.comboString(settings.getLiteral("lang"), settings.getCurrentLang(), settings.getLanguages());
+            // Font
+            ImInt iFont = new ImInt(1);
+            if (SappImGui.combo(settings.getLiteral("font"), iFont, settings.getFonts())) settings.setCurrentFont(settings.getFont(settings.getFonts()[iFont.get()]));
+            ImGui.sameLine();
+            ImInt fontSize = new ImInt(settings.getFontSize());
+            if (ImGui.inputInt(settings.getLiteral("font"), fontSize)) settings.setFontSize(fontSize.get());
+
+            // Language
+            ImInt iLang = new ImInt();
+            SappImGui.combo(settings.getLiteral("lang"), iLang, settings.getLanguages());
 
             ImGui.endTabItem();
         }

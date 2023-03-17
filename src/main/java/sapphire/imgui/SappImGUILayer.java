@@ -41,14 +41,16 @@ public class SappImGUILayer {
     private GameViewWindow gameView;
     private FileWindow lastFocusedFile;
     private int dockId;
-    private boolean windowsChanged;
+    private boolean dirty;
+    private boolean dirtyFont;
 
     // CONSTRUCTORS
     public SappImGUILayer(long windowPtr) {
         this.glfwWindow = windowPtr;
         this.windows = new HashMap<>();
         this.dockId = -1;
-        this.windowsChanged = true;
+        this.dirty = true;
+        this.dirty = false;
         this.windowsToAdd = new ArrayList<>();
         this.lastFocusedFile = null;
     }
@@ -62,8 +64,8 @@ public class SappImGUILayer {
         return dockId;
     }
 
-    public void setWindowsChanged(boolean windowsChanged) {
-        this.windowsChanged = windowsChanged;
+    public void setDirty(boolean dirty) {
+        this.dirty = dirty;
     }
 
     public FileWindow getLastFocusedFile() {
@@ -74,13 +76,16 @@ public class SappImGUILayer {
         this.lastFocusedFile = lastFocusedFile;
     }
 
+    public void isDirtyFont() {
+        dirtyFont = true;
+    }
+
     // METHODS
     public void init() {
 
         DiaLogger.log("Initializing ImGUI...");
         ImGui.createContext();
         final ImGuiIO io = ImGui.getIO();
-        ImGui.getIO().clearInputKeys();
 
         try {
             Files.createDirectories(Paths.get("sapphire"));
@@ -93,7 +98,7 @@ public class SappImGUILayer {
         io.setBackendPlatformName("imgui_java_impl_glfw");
 
         initCallbacks(io);
-        addFonts(io);
+        updateFonts(io);
         initWindows();
 
         // Set up clipboard functionality
@@ -214,14 +219,14 @@ public class SappImGUILayer {
         if (window != null) {
             if (windows.get(window.getTitle()) == null) {
                 this.windowsToAdd.add(window);
-                this.windowsChanged = true;
+                this.dirty = true;
             } else {
                 DiaLogger.log("Tried to open an already opened window: '" + window.getId() + "'");
             }
         }
     }
 
-    public void addFonts(imgui.ImGuiIO io) {
+    public void updateFonts(imgui.ImGuiIO io) {
         ArrayList<File> fontFiles = DiaUtils.getFilesInDir("sapphire/fonts", "ttf");
         if (!fontFiles.isEmpty()) {
             for (File file : fontFiles) {
@@ -233,7 +238,7 @@ public class SappImGUILayer {
 
                 // Fonts merge example
                 fontConfig.setPixelSnapH(true);
-                fontAtlas.addFontFromFileTTF(file.getAbsolutePath(), 12, fontConfig);
+                fontAtlas.addFontFromFileTTF(file.getAbsolutePath(), Sapphire.get().getSettings().getFontSize(), fontConfig);
                 fontConfig.destroy(); // After all fonts were added we don't need this config more
             }
         } else {
@@ -256,7 +261,7 @@ public class SappImGUILayer {
 
             if (windows.get(window).shouldClose()) {
                 toRemove.add(window);
-                windowsChanged = true;
+                dirty = true;
             }
             if (windows.get(window).isActive().get()) {
                 windows.get(window).imgui(this);
@@ -264,7 +269,7 @@ public class SappImGUILayer {
         }
         endFrame();
 
-        if (windowsChanged) {
+        if (dirty) {
             for (String window : toRemove) {
                 windows.remove(window);
             }
@@ -272,7 +277,12 @@ public class SappImGUILayer {
                 windows.put(window.getId(), window);
             }
             windowsToAdd.clear();
-            this.windowsChanged = false;
+            this.dirty = false;
+        }
+
+        if (dirtyFont) {
+            updateFonts(imgui.ImGui.getIO());
+            dirtyFont = false;
         }
     }
 

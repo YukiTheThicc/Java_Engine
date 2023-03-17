@@ -4,13 +4,11 @@ import com.google.gson.*;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
-import imgui.ImVec4;
+import imgui.ImGui;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -23,23 +21,27 @@ public class SapphireSettings {
 
     // ATTRIBUTES
     private String workspace;
-    private String font;
+    private String currentFont;
     private String currentLang;
     private HashMap<String, Boolean> activeWindows;
     private HashMap<String, int[]> colors;
     private HashMap<String, Boolean> showPreferences;
     private transient HashMap<String, String> literals;
     private transient HashMap<String, String> languages;
+    private transient HashMap<String, String> fonts;
+    private int fontSize;
 
     // CONSTRUCTORS
     public SapphireSettings() {
         this.workspace = "";
-        this.font = "";
+        this.currentFont = "";
         this.activeWindows = new HashMap<>();
         this.literals = new HashMap<>();
         this.languages = new HashMap<>();
         this.colors = new HashMap<>();
         this.showPreferences = new HashMap<>();
+        this.fonts = new HashMap<>();
+        this.fontSize = 12;
     }
 
     // GETTERS & SETTERS
@@ -51,12 +53,12 @@ public class SapphireSettings {
         this.workspace = workspace;
     }
 
-    public String getFont() {
-        return font;
+    public String getCurrentFont() {
+        return currentFont;
     }
 
-    public void setFont(String font) {
-        this.font = font;
+    public void setCurrentFont(String currentFont) {
+        this.currentFont = currentFont;
     }
 
     public HashMap<String, Boolean> getActiveWindows() {
@@ -104,6 +106,25 @@ public class SapphireSettings {
         return showPreferences;
     }
 
+    public String[] getFonts() {
+        String[] fonts = new String[1];
+        fonts = this.fonts.keySet().toArray(fonts);
+        return fonts;
+    }
+
+    public String getFont(String font) {
+        return this.fonts.get(font);
+    }
+
+    public int getFontSize() {
+        return fontSize;
+    }
+
+    public void setFontSize(int fontSize) {
+        this.fontSize = fontSize;
+        Sapphire.get().getImGUILayer().isDirtyFont();
+    }
+
     // METHODS
     public void init() {
         DiaLogger.log("Initializing settings...");
@@ -111,8 +132,14 @@ public class SapphireSettings {
         this.defaultLiterals();
         this.defaultColors();
         this.load();
-        if (font == null || font.equals("")) {
-            font = "sapphire/fonts/consola.ttf";
+        if (currentFont == null || currentFont.equals("")) {
+            currentFont = "consola";
+        }
+
+        ArrayList<File> fonts = DiaUtils.getFilesInDir("sapphire/fonts", "ttf");
+        for (File font : fonts) {
+            String fontName = font.getName().substring(0, font.getName().lastIndexOf('.'));
+            this.fonts.put(fontName, font.getAbsolutePath());
         }
 
         ArrayList<File> langFiles = DiaUtils.getFilesInDir("sapphire/lang", "json");
@@ -159,6 +186,10 @@ public class SapphireSettings {
         literals.put("severity", "Severity");
         literals.put("lang", "Language");
         literals.put("dont_ask_again", "Don't ask this again");
+        literals.put("save_log", "Save log");
+        literals.put("general_settings", "General");
+        literals.put("style_settings", "Styles");
+        literals.put("font", "Font");
     }
 
     private void defaultColors() {
@@ -239,7 +270,7 @@ public class SapphireSettings {
 
             SapphireSettings temp = gson.fromJson(inFile, SapphireSettings.class);
             workspace = temp.getWorkspace();
-            font = temp.getFont();
+            currentFont = temp.getCurrentFont();
             activeWindows = temp.getActiveWindows();
             colors = temp.getColors();
             showPreferences = temp.getShowPreferences();

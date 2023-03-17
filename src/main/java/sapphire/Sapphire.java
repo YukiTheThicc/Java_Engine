@@ -66,12 +66,12 @@ public class Sapphire {
         DiaUtils.init();
         settings.init();
         imGUILayer.init();
-        this.run(imGUILayer);
+        this.run();
         DiaLogger.close();
         imGUILayer.destroyImGui();
     }
 
-    public void run(SappImGUILayer layer) {
+    public void run() {
         this.running = true;
         float bt = (float) glfwGetTime();
         float et = 0;
@@ -81,7 +81,7 @@ public class Sapphire {
             /*if (dt >= 0) {
             }*/
             this.window.endFrame();
-            layer.update();
+            this.imGUILayer.update();
             et = (float) glfwGetTime();
             dt = et - bt;
             bt = et;
