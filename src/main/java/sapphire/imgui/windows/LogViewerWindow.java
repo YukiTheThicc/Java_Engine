@@ -23,7 +23,7 @@ import java.nio.file.StandardCopyOption;
 
 public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, SappObserver {
 
-    private static final int DEFAULT_LINES = 20;
+    private static final int DEFAULT_LINES = 50;
 
     // ATTRIBUTES
     private ImBoolean autoScroll;
@@ -78,6 +78,9 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
                 DiaLogger.log("Changed log level to: " + DiaLogger.getCurrentLevel());
             }
 
+            ImInt lines = new ImInt(this.lines);
+            if (ImGui.inputInt(Sapphire.getLiteral("log_lines"), lines)) changeLineCount(lines.get());
+
             float clearX = SappImGui.textSize(Sapphire.getLiteral("clear")) + ImGui.getStyle().getCellPaddingX() * 5;
             float clearY = ImGui.getFontSize() + ImGui.getStyle().getCellPaddingY() * 2;
             SappImGui.align(AlignX.LEFT, AlignY.BOTTOM, clearX, clearY);
@@ -117,6 +120,20 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
         ImGui.end();
     }
 
+    public void changeLineCount(int newCount) {
+
+        String[] oldEntries = entries.clone();
+        DiaLoggerLevel[] oldLevels = levels.clone();
+        lines = newCount;
+        entries = new String[lines];
+        levels = new DiaLoggerLevel[lines];
+
+        currentLine = 0;
+        for (int i = 0; i < oldEntries.length; i++) {
+            newEntry(oldEntries[i], oldLevels[i]);
+        }
+    }
+
     @Override
     public void newEntry(String message, DiaLoggerLevel level) {
         entries[currentLine % lines] = message;
@@ -129,7 +146,7 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
         DiaLogger.log("Save log modal window response received");
         if (confWindow != null) {
             if (confWindow.result()) {
-                File file = DiaUtils.createFile();
+                File file = DiaUtils.saveFile();
                 if (file != null) {
                     DiaLogger.log("Selected file to save: '" + file + "'");
                     try {

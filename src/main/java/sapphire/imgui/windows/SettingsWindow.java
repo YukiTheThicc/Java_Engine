@@ -63,16 +63,19 @@ public class SettingsWindow extends ImguiWindow {
         if (ImGui.beginTabItem(settings.getLiteral("general_settings"))) {
 
             // Font
-            ImInt iFont = new ImInt(1);
-            if (SappImGui.combo(settings.getLiteral("font"), iFont, settings.getFonts())) settings.setCurrentFont(settings.getFont(settings.getFonts()[iFont.get()]));
+            String newFont = SappImGui.combo(settings.getLiteral("font"), settings.getCurrentFont(), settings.getFonts());
+            if (newFont != null) {
+                settings.setCurrentFont(newFont);
+            }
             ImGui.sameLine();
             ImInt fontSize = new ImInt(settings.getFontSize());
             if (ImGui.inputInt(settings.getLiteral("font"), fontSize)) settings.setFontSize(fontSize.get());
 
             // Language
-            ImInt iLang = new ImInt();
-            SappImGui.combo(settings.getLiteral("lang"), iLang, settings.getLanguages());
-
+            String newLang = SappImGui.combo(settings.getLiteral("lang"), settings.getCurrentLang(), settings.getLanguages());
+            if (newLang != null) {
+                settings.changeLangTo(newLang);
+            }
             ImGui.endTabItem();
         }
     }

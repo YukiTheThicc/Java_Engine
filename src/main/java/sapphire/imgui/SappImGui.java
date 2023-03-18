@@ -3,7 +3,9 @@ package sapphire.imgui;
 import diamondEngine.Window;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
+import imgui.ImFont;
 import imgui.ImGui;
+import imgui.ImGuiIO;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
 import imgui.type.ImInt;
@@ -227,6 +229,23 @@ public class SappImGui {
         ImGui.columns(1);
         ImGui.popID();
         return false;
+    }
+
+    public static String combo(String title, String selected, String[] options) {
+
+        String result = null;
+        if (ImGui.beginCombo(title, selected)) {
+            for (String option : options) {
+                ImGui.pushID(option);
+                if (ImGui.selectable(option)) {
+                    DiaLogger.log("Selected '" + option + "'");
+                    result = option;
+                }
+                ImGui.popID();
+            }
+            ImGui.endCombo();
+        }
+        return result;
     }
 
     public static boolean combo(String title, ImInt index, String[] options, float labelColWidth) {

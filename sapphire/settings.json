@@ -1,6 +1,7 @@
 {
   "workspace": "",
-  "currentFont": "consola",
+  "currentFont": "C:\\Proyects\\Java_Engine\\sapphire\\fonts\\consola.ttf",
+  "currentLang": "en",
   "activeWindows": {
     "assets": true,
     "env_hierarchy": true,
@@ -41,5 +42,5 @@
     ]
   },
   "showPreferences": {},
-  "fontSize": 15
+  "fontSize": 12
 }

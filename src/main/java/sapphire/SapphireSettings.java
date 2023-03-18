@@ -4,7 +4,6 @@ import com.google.gson.*;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
-import imgui.ImGui;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -18,6 +17,7 @@ public class SapphireSettings {
 
     // CONSTANTS
     private static final String UNKNOWN_LITERAL = "UNKNOWN";
+    private static final String DEFAULT_LANG = "en";
 
     // ATTRIBUTES
     private String workspace;
@@ -35,9 +35,11 @@ public class SapphireSettings {
     public SapphireSettings() {
         this.workspace = "";
         this.currentFont = "";
+        this.currentLang = DEFAULT_LANG;
         this.activeWindows = new HashMap<>();
         this.literals = new HashMap<>();
         this.languages = new HashMap<>();
+        this.languages.put(this.currentLang, "English");
         this.colors = new HashMap<>();
         this.showPreferences = new HashMap<>();
         this.fonts = new HashMap<>();
@@ -213,24 +215,33 @@ public class SapphireSettings {
         return showPreferences.get(window) != null ? showPreferences.get(window) : true;
     }
 
-    public int changeLangTo(String lang) {
+    public void changeLangTo(String lang) {
         if (lang != null && !lang.isEmpty()) {
-            String path = "sapphire/lang/" + lang + ".json";
-            this.currentLang = lang;
+            DiaLogger.log("Changing language to '" + lang + "'");
+            File path = new File("sapphire/lang/" + lang + ".json");
             try {
-                byte[] data = Files.readAllBytes(Paths.get(path));
-            } catch (IOException e) {
-                DiaLogger.log("Failed to load language map from '" + path + "'", DiaLoggerLevel.ERROR);
-            }
+                if (DEFAULT_LANG.equals(lang)) {
+                    defaultLiterals();
+                } else {
+                    ArrayList<String> data = (ArrayList<String>) Files.readAllLines(path.toPath());
+                    JsonElement langJson = JsonParser.parseString(String.join("", data));
+                    if (langJson != null && langJson.isJsonObject()) {
 
-            String[] langs = getLanguages();
-            for (int i = 0; i < langs.length; i++) {
-                if (lang.equals(langs[i])) {
-                    return i;
+                        JsonObject literals = langJson.getAsJsonObject().get("literals").getAsJsonObject();
+                        if (literals != null && literals.isJsonObject()) {
+                            for (String key : literals.keySet()) {
+                                this.literals.put(key, literals.get(key).getAsString());
+                            }
+                        }
+                    } else {
+                        DiaLogger.log("Language file is not valid: '" + languages.get(lang) + "'", DiaLoggerLevel.WARN);
+                    }
                 }
+                this.currentLang = lang;
+            } catch (IOException e) {
+                DiaLogger.log("Failed to load language map from '" + path.getAbsolutePath() + "'", DiaLoggerLevel.ERROR);
             }
         }
-        return -1;
     }
 
     /**

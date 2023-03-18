@@ -1,5 +1,9 @@
 package diamondEngine;
 
+import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.diaUtils.DiaUtils;
+import org.lwjgl.glfw.GLFWImage;
+import org.lwjgl.system.MemoryStack;
 import sapphire.imgui.SappImGUILayer;
 import diamondEngine.diaRenderer.Framebuffer;
 import org.joml.Vector2f;
@@ -10,12 +14,15 @@ import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.opengl.GL;
 
+import java.io.File;
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.stb.STBImage.stbi_load;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -95,7 +102,7 @@ public class Window {
         System.out.println("Resizing");
     }
 
-    public void init() {
+    public void init(String title, String iconPath) {
         GLFWErrorCallback.createPrint(System.err).set();
 
         if (!glfwInit()) {
@@ -152,6 +159,11 @@ public class Window {
          */
         this.framebuffer = new Framebuffer(this.width, this.height);
         glViewport((int)getPosition().x, (int)getPosition().y, width, height);
+
+        GLFWImage.Buffer image = DiaUtils.loadGLFWImage(iconPath);
+        if (image != null) {
+            glfwSetWindowIcon(glfwWindow, image);
+        }
     }
 
     public static Window get() {

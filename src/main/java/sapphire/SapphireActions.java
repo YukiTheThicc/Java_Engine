@@ -2,6 +2,7 @@ package sapphire;
 
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
+import imgui.ImGui;
 import sapphire.imgui.SappImGUILayer;
 import sapphire.imgui.windows.FileWindow;
 
@@ -22,7 +23,7 @@ public class SapphireActions {
                 fileName += "New File";
             }
         }
-        //layer.addWindow(new FileWindow(fileName, new File("")));
+        layer.addWindow(new FileWindow(fileName, new File("")));
     }
 
     public static void openFile(SappImGUILayer layer) {
@@ -43,6 +44,13 @@ public class SapphireActions {
     }
 
     public static void saveFileAs(SappImGUILayer layer) {
-
+        FileWindow focusedFile = layer.getLastFocusedFile();
+        if (focusedFile != null) {
+            File file = DiaUtils.saveFile(focusedFile.getFile().getAbsolutePath());
+            if (file != null && file.isFile()) {
+                focusedFile.setFile(file);
+                focusedFile.saveFile();
+            }
+        }
     }
 }

@@ -16,7 +16,7 @@ public class Sapphire {
     // ATTRIBUTES
     private static Sapphire sapphire = null;
     private final Window window;
-    private final SappImGUILayer imGUILayer;
+    private SappImGUILayer imGUILayer;
     private boolean running;
     private float dt;
     private SapphireSettings settings;
@@ -24,9 +24,8 @@ public class Sapphire {
     // CONSTRUCTORS
     private Sapphire() {
         this.window = Window.get();
-        this.window.init();
         this.settings = new SapphireSettings();
-        this.imGUILayer = new SappImGUILayer(this.window.getGlfwWindow());
+        this.imGUILayer = null;
         this.running = false;
         this.dt = 0f;
     }
@@ -64,11 +63,14 @@ public class Sapphire {
         // Initialize general front end an Engine
         DiaLogger.init();
         DiaUtils.init();
+        window.init("Sapphire", "sapphire/icon.png");
+        imGUILayer = new SappImGUILayer(this.window.getGlfwWindow());
         settings.init();
         imGUILayer.init();
-        this.run();
+        run();
         DiaLogger.close();
         imGUILayer.destroyImGui();
+        settings.save();
     }
 
     public void run() {

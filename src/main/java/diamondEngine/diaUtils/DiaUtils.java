@@ -1,7 +1,12 @@
 package diamondEngine.diaUtils;
 
+import org.lwjgl.glfw.GLFWImage;
+import org.lwjgl.system.MemoryStack;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -10,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
+import static org.lwjgl.stb.STBImage.stbi_load;
 import static org.lwjgl.util.tinyfd.TinyFileDialogs.*;
 
 public class DiaUtils {
@@ -31,28 +37,33 @@ public class DiaUtils {
     }
 
     /**
-     * Opens native OS to create a file with the specified default extension.
-     * @param extension Default extesion
-     * @return String with the path for the new file
+     * Opens native OS to save a file. Returns null when the file has not been selected (cancelled or failed)
+     * @return String with the path for the new file or null.
      */
-    public static File createFile(String extension) {
-
-        DiaLogger.log("Creating file...");
-        String path = tinyfd_saveFileDialog("", "", null, "");
-        File file = null;
-        if (path != null && !path.isEmpty()) {
-            file = new File(path);
-        }
-        return file;
+    public static File saveFile() {
+        return saveFile("");
     }
 
     /**
-     * Opens native OS to create a file. No extension is set.
-     * @return String with the path for the new file
+     * Opens native OS to save a file. Returns null when the file has not been selected (cancelled or failed)
+     * @return String with the path for the new file or null.
      */
-    public static File createFile() {
+    public static File saveFile(String defaultFile) {
 
-        return createFile("");
+        DiaLogger.log("Creating file...");
+        String path = tinyfd_saveFileDialog("", defaultFile, null, "");
+        File file = null;
+        if (path != null && !path.isEmpty()) {
+            file = new File(path);
+            try {
+                if (file.createNewFile()) {
+                    DiaLogger.log("Overwriting file '" + file.getAbsolutePath() + "'");
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return file;
     }
 
     /**
@@ -140,5 +151,27 @@ public class DiaUtils {
         }
 
         return retrievedFiles;
+    }
+
+    public static GLFWImage.Buffer loadGLFWImage(String path) {
+
+        GLFWImage.Buffer imageBuffer = null;
+        ByteBuffer buffer;
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+
+            IntBuffer comp = stack.mallocInt(1);
+            IntBuffer width = stack.mallocInt(1);
+            IntBuffer height = stack.mallocInt(1);
+            buffer = stbi_load(new File("sapphire/icon.png").getAbsolutePath(), width, height, comp, 4);
+            if (buffer != null) {
+
+                GLFWImage image = GLFWImage.malloc();
+                imageBuffer = GLFWImage.malloc(1);
+                image.set(width.get(), height.get(), buffer);
+                imageBuffer.put(0, image);
+            }
+        }
+
+        return imageBuffer;
     }
 }
