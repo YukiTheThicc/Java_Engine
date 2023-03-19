@@ -1,5 +1,5 @@
 package diamondEngine;
 
-public class Container {
+public class Diamond {
 
 }

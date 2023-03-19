@@ -1,5 +1,6 @@
 package sapphire.imgui.windows;
 
+import diamondEngine.Window;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
 import imgui.*;
@@ -33,6 +34,8 @@ public class SettingsWindow extends ImguiWindow {
 
         ImGui.setNextWindowSize(this.getSizeX(), this.getSizeY(), ImGuiCond.Always);
         if (this.isActive().get()) {
+            ImGui.setNextWindowPos(Window.getPosition().x + (Window.getWidth() - this.getSizeX()) / 2,
+                    Window.getPosition().y + (Window.getHeight() - this.getSizeY()) / 2);
             ImGui.openPopup(this.getTitle());
             if (ImGui.beginPopupModal(this.getTitle(), this.isActive(), this.getFlags())) {
 

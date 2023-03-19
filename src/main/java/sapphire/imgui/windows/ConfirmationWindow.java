@@ -1,5 +1,6 @@
 package sapphire.imgui.windows;
 
+import diamondEngine.Window;
 import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
@@ -57,6 +58,8 @@ public class ConfirmationWindow extends ImguiWindow {
     public void imgui(SappImGUILayer layer) {
         ImGui.openPopup(getTitle());
         ImGui.setNextWindowSize(this.getSizeX(), this.getSizeY());
+        ImGui.setNextWindowPos(Window.getPosition().x + (Window.getWidth() - this.getSizeX()) / 2,
+                Window.getPosition().y + (Window.getHeight() - this.getSizeY()) / 2);
         if (ImGui.beginPopupModal(getTitle(), ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize |
                 ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)) {
 

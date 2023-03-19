@@ -1,10 +1,7 @@
 package diamondEngine;
 
-import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
 import org.lwjgl.glfw.GLFWImage;
-import org.lwjgl.system.MemoryStack;
-import sapphire.imgui.SappImGUILayer;
 import diamondEngine.diaRenderer.Framebuffer;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -13,16 +10,12 @@ import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.opengl.GL;
-
-import java.io.File;
-import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.stb.STBImage.stbi_load;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -140,9 +133,7 @@ public class Window {
         ALCCapabilities alcCapabilities = ALC.createCapabilities(audioDevice);
         ALCapabilities alCapabilities = AL.createCapabilities(alcCapabilities);
 
-        if (!alCapabilities.OpenAL10) {
-            assert false : "Audio library not supported";
-        }
+        assert alCapabilities.OpenAL10 : "Audio library not supported";
 
         // Setup context and show window
         glfwMakeContextCurrent(glfwWindow);
@@ -179,7 +170,7 @@ public class Window {
 
     public void startFrame() {
         this.framebuffer.bind();
-        glClearColor(0.33f, 0.33f, 0.33f, 1f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1f);
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
