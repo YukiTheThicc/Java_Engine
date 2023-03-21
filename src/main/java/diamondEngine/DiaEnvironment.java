@@ -1,13 +1,14 @@
 package diamondEngine;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class DiaEnvironment {
 
     // ATTRIBUTES
     private DiaEnvironment parent;
-    private ArrayList<DiaEnvironment> children;
-    private ArrayList<DiaEntity> entities;
+    private List<DiaEnvironment> children;
+    private List<DiaEntity> entities;
+    private List<DiaEntity> components;
     private boolean isInitialized;
 
     // CONSTRUCTORS
@@ -16,7 +17,7 @@ public class DiaEnvironment {
     }
 
     // GETTERS & SETTERS
-    public ArrayList<DiaEnvironment> getChildren() {
+    public List<DiaEnvironment> getChildren() {
         return children;
     }
 

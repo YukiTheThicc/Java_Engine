@@ -65,6 +65,10 @@ public class SettingsWindow extends ImguiWindow {
     private void generalSettingsTab(SapphireSettings settings) {
         if (ImGui.beginTabItem(settings.getLiteral("general_settings"))) {
 
+            // Workspace
+            settings.setWorkspace(SappImGui.inputText(settings.getLiteral("workspace"), settings.getWorkspace()));
+            ImGui.separator();
+
             // Font
             String newFont = SappImGui.combo(settings.getLiteral("font"), settings.getCurrentFont(), settings.getFonts());
             if (newFont != null) {

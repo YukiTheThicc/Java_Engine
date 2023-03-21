@@ -16,6 +16,8 @@ public class SappMenuBar {
     private static void fileMenu (SappImGUILayer layer) {
         // FILES Menu
         if (ImGui.beginMenu(Sapphire.getLiteral("file"))) {
+
+            // File menu items
             if (ImGui.menuItem(Sapphire.getLiteral("new_file"), "Ctrl+N")) {
                 SapphireActions.newFile(layer);
             }
@@ -31,6 +33,18 @@ public class SappMenuBar {
             }
             ImGui.separator();
 
+            // Project menu items
+            if (ImGui.menuItem(Sapphire.getLiteral("create_project"))) {
+                SapphireActions.openProject(layer);
+            }
+            if (ImGui.menuItem(Sapphire.getLiteral("open_project"))) {
+                SapphireActions.openProject(layer);
+            }
+            if (ImGui.menuItem(Sapphire.getLiteral("export_project"))) {
+                SapphireActions.exportProject(layer);
+            }
+
+            ImGui.separator();
             if (ImGui.menuItem(Sapphire.getLiteral("settings"))) {
                 DiaLogger.log("Trying to open settings modal window");
                 layer.getWindows().get("settings").setActive(true);

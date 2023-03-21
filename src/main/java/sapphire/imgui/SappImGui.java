@@ -1,23 +1,17 @@
 package sapphire.imgui;
 
-import diamondEngine.Window;
 import diamondEngine.diaUtils.DiaLogger;
-import diamondEngine.diaUtils.DiaLoggerLevel;
-import imgui.ImFont;
 import imgui.ImGui;
-import imgui.ImGuiIO;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import sapphire.SappEvents.SappObserver;
+import sapphire.SapphireObserver;
 import sapphire.Sapphire;
 import sapphire.imgui.windows.ConfirmationWindow;
 import sapphire.imgui.windows.ImguiWindow;
-
-import java.util.HashMap;
 
 public class SappImGui {
 
@@ -234,6 +228,11 @@ public class SappImGui {
     public static String combo(String title, String selected, String[] options) {
 
         String result = null;
+        ImGui.pushID(title);
+        ImGui.columns(2);
+        ImGui.setColumnWidth(0, DEFAULT_COLUMN_WIDTH);
+        ImGui.text(title);
+        ImGui.nextColumn();
         if (ImGui.beginCombo(title, selected)) {
             for (String option : options) {
                 ImGui.pushID(option);
@@ -245,6 +244,8 @@ public class SappImGui {
             }
             ImGui.endCombo();
         }
+        ImGui.columns(1);
+        ImGui.popID();
         return result;
     }
 
@@ -265,7 +266,7 @@ public class SappImGui {
         return false;
     }
 
-    public static ImguiWindow confirmModal(String title, String message, String aff, String neg, SappObserver parent) {
+    public static ImguiWindow confirmModal(String title, String message, String aff, String neg, SapphireObserver parent) {
         String id = title.toLowerCase().replace(" ", "_");
         ImguiWindow modal =  Sapphire.get().getImGUILayer().getWindows().get(id);
         if (modal == null) {
@@ -276,7 +277,7 @@ public class SappImGui {
         return modal;
     }
 
-    public static ImguiWindow confirmModal(String title, String message, SappObserver parent) {
+    public static ImguiWindow confirmModal(String title, String message, SapphireObserver parent) {
         String id = title.toLowerCase().replace(" ", "_");
         ImguiWindow modal =  Sapphire.get().getImGUILayer().getWindows().get(id);
         if (modal == null) {

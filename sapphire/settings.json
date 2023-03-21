@@ -1,5 +1,5 @@
 {
-  "workspace": "",
+  "workspace": "C:\\Sapphire\\Test Project",
   "currentFont": "C:\\Proyects\\Java_Engine\\sapphire\\fonts\\consola.ttf",
   "currentLang": "en",
   "activeWindows": {
@@ -7,6 +7,8 @@
     "env_hierarchy": true,
     "entity_properties": true,
     "log_viewer": true,
+    "project": true,
+    "env_preview": true,
     "profiler": true
   },
   "colors": {

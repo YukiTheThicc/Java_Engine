@@ -4,7 +4,7 @@ import diamondEngine.Window;
 import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
-import sapphire.SappEvents.SappObserver;
+import sapphire.SapphireObserver;
 import sapphire.Sapphire;
 import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
@@ -18,11 +18,11 @@ public class ConfirmationWindow extends ImguiWindow {
     private final String message;
     private final String affirmative;
     private final String negative;
-    private final SappObserver parent;
+    private final SapphireObserver parent;
     private ImBoolean askAgain;
 
     // CONSTRUCTORS
-    public ConfirmationWindow(String id, String title, String message, String affirmative, String negative, SappObserver parent) {
+    public ConfirmationWindow(String id, String title, String message, String affirmative, String negative, SapphireObserver parent) {
         super(id, title, false);
         this.result = false;
         this.message = message;
@@ -35,7 +35,7 @@ public class ConfirmationWindow extends ImguiWindow {
         this.setActive(true);
     }
 
-    public ConfirmationWindow(String id, String title, String message, SappObserver parent) {
+    public ConfirmationWindow(String id, String title, String message, SapphireObserver parent) {
         super(id, title, false);
         this.result = false;
         this.message = message;

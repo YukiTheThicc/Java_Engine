@@ -9,7 +9,7 @@ import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
 import imgui.type.ImInt;
-import sapphire.SappEvents.SappObserver;
+import sapphire.SapphireObserver;
 import sapphire.Sapphire;
 import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
-public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, SappObserver {
+public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, SapphireObserver {
 
     private static final int DEFAULT_LINES = 50;
 

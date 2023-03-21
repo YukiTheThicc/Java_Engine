@@ -116,7 +116,37 @@ public class DiaUtils {
         if (result != null && !result.isEmpty()) {
             return result.split("\\|");
         }
-        return new String[0];
+        return null;
+    }
+
+    /**
+     * Opens a single file selection dialog
+     * @return String containing the path of the selected file.
+     */
+    public static String selectFile() {
+
+        DiaLogger.log("Selecting files...");
+        String result = tinyfd_openFileDialog("", null, null, null, false);
+        if (result != null && !result.isEmpty()) {
+            return result;
+        }
+        return null;
+    }
+
+    /**
+     * Opens a single directory selection dialog
+     * @param title Title for the dialog window
+     * @param defaultPath Default path from which the file dialog is going to open
+     * @return String containing the path of the selected file.
+     */
+    public static String selectDirectory(String title, String defaultPath) {
+
+        DiaLogger.log("Selecting files...");
+        String result = tinyfd_selectFolderDialog(title, defaultPath);
+        if (result != null && !result.isEmpty()) {
+            return result;
+        }
+        return null;
     }
 
     /**
@@ -152,6 +182,28 @@ public class DiaUtils {
 
         return retrievedFiles;
     }
+
+    /**
+     * Gets all folders within the specified directory;
+     * @param directory Directory from which to look
+     * @return List if found folders
+     */
+    public static ArrayList<File> getFoldersInDir(String directory) {
+
+        File dir = new File(directory);
+        ArrayList<File> retrievedFiles = new ArrayList<>();
+        File[] files = dir.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    retrievedFiles.add(file);
+                }
+            }
+        }
+
+        return retrievedFiles;
+    }
+
 
     public static GLFWImage.Buffer loadGLFWImage(String path) {
 
