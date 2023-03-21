@@ -1,18 +1,23 @@
 package sapphire;
 
+import com.google.gson.JsonObject;
 import diamondEngine.Window;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
 import sapphire.imgui.SappImGUILayer;
 
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+import java.util.HashMap;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 public class Sapphire {
 
     /**
      * Class that manages and contains all FrontEnd/Editor functionalities and resources
      */
+    // CONSTANTS
+    private static final String UNKNOWN_LITERAL = "UNKNOWN";
+
     // ATTRIBUTES
     private static Sapphire sapphire = null;
     private final Window window;
@@ -20,6 +25,7 @@ public class Sapphire {
     private boolean running;
     private float dt;
     private SapphireSettings settings;
+    private HashMap<String, String> literals;
 
     // CONSTRUCTORS
     private Sapphire() {
@@ -27,6 +33,7 @@ public class Sapphire {
         this.settings = new SapphireSettings();
         this.imGUILayer = null;
         this.running = false;
+        this.literals = new HashMap<>();
         this.dt = 0f;
     }
 
@@ -35,8 +42,51 @@ public class Sapphire {
         return settings;
     }
 
+    public void setLiterals(JsonObject literals) {
+        for (String key : literals.keySet()) {
+            this.literals.put(key, literals.get(key).getAsString());
+        }
+    }
+
+    public void defaultLiterals() {
+        literals.put("file", "File");
+        literals.put("window", "Window");
+        literals.put("new_file", "New file");
+        literals.put("open_file", "Open file");
+        literals.put("save_file", "Save file");
+        literals.put("save_as", "Save as...");
+        literals.put("open_project", "Open project");
+        literals.put("export_project", "Export project");
+        literals.put("settings", "Settings");
+        literals.put("active_windows", "Active windows");
+        literals.put("assets", "Assets");
+        literals.put("sprites", "Sprites");
+        literals.put("tiles", "Tiles");
+        literals.put("sounds", "Sounds");
+        literals.put("entity_properties", "Entity properties");
+        literals.put("env_hierarchy", "Environments");
+        literals.put("apply", "Apply");
+        literals.put("close", "Close");
+        literals.put("cancel", "Cancel");
+        literals.put("yes", "Yes");
+        literals.put("no", "No");
+        literals.put("confirm_save", "Save?");
+        literals.put("sure_to_save_log", "Save log to new file?");
+        literals.put("clear", "Clear");
+        literals.put("severity", "Severity");
+        literals.put("lang", "Language");
+        literals.put("dont_ask_again", "Don't ask this again");
+        literals.put("save_log", "Save log");
+        literals.put("general_settings", "General");
+        literals.put("style_settings", "Styles");
+        literals.put("font", "Font");
+    }
+
     public static String getLiteral(String literal) {
-        return Sapphire.get().settings.getLiteral(literal);
+        if (Sapphire.get().literals.get(literal) != null) {
+            return Sapphire.get().literals.get(literal);
+        }
+        return literal + ": " + UNKNOWN_LITERAL;
     }
 
     public SappImGUILayer getImGUILayer() {
@@ -63,6 +113,7 @@ public class Sapphire {
         // Initialize general front end an Engine
         DiaLogger.init();
         DiaUtils.init();
+        defaultLiterals();
         window.init("Sapphire", "sapphire/icon.png");
         imGUILayer = new SappImGUILayer(this.window.getGlfwWindow());
         settings.init();
@@ -76,14 +127,16 @@ public class Sapphire {
     public void run() {
         this.running = true;
         float bt = (float) glfwGetTime();
-        float et = 0;
+        float et;
         while (this.running) {
             this.window.pollEvents();
             this.window.startFrame();
-            /*if (dt >= 0) {
-            }*/
+            if (glfwGetWindowAttrib(window.getGlfwWindow(), GLFW_FOCUSED) != 0) {
+                /*if (dt >= 0) {
+                }*/
+                this.imGUILayer.update();
+            }
             this.window.endFrame();
-            this.imGUILayer.update();
             et = (float) glfwGetTime();
             dt = et - bt;
             bt = et;

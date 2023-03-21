@@ -16,7 +16,6 @@ import java.util.HashMap;
 public class SapphireSettings {
 
     // CONSTANTS
-    private static final String UNKNOWN_LITERAL = "UNKNOWN";
     private static final String DEFAULT_LANG = "en";
 
     // ATTRIBUTES
@@ -26,7 +25,6 @@ public class SapphireSettings {
     private HashMap<String, Boolean> activeWindows;
     private HashMap<String, int[]> colors;
     private HashMap<String, Boolean> showPreferences;
-    private transient HashMap<String, String> literals;
     private transient HashMap<String, String> languages;
     private transient HashMap<String, String> fonts;
     private int fontSize;
@@ -37,7 +35,6 @@ public class SapphireSettings {
         this.currentFont = "";
         this.currentLang = DEFAULT_LANG;
         this.activeWindows = new HashMap<>();
-        this.literals = new HashMap<>();
         this.languages = new HashMap<>();
         this.languages.put(this.currentLang, "English");
         this.colors = new HashMap<>();
@@ -65,13 +62,6 @@ public class SapphireSettings {
 
     public HashMap<String, Boolean> getActiveWindows() {
         return activeWindows;
-    }
-
-    public String getLiteral(String literal) {
-        if (this.literals.get(literal) != null) {
-            return this.literals.get(literal);
-        }
-        return literal + ": " + UNKNOWN_LITERAL;
     }
 
     public HashMap<String, int[]> getColors() {
@@ -131,7 +121,6 @@ public class SapphireSettings {
     public void init() {
         DiaLogger.log("Initializing settings...");
         // Initialize literal map, by default in english, and default colors
-        this.defaultLiterals();
         this.defaultColors();
         this.load();
         if (currentFont == null || currentFont.equals("")) {
@@ -158,40 +147,6 @@ public class SapphireSettings {
                 DiaLogger.log("Failed to load language map from '" + langFile.getAbsolutePath() + "'", DiaLoggerLevel.ERROR);
             }
         }
-    }
-
-    private void defaultLiterals() {
-        literals.put("file", "File");
-        literals.put("window", "Window");
-        literals.put("new_file", "New file");
-        literals.put("open_file", "Open file");
-        literals.put("save_file", "Save file");
-        literals.put("save_as", "Save as...");
-        literals.put("open_project", "Open project");
-        literals.put("export_project", "Export project");
-        literals.put("settings", "Settings");
-        literals.put("active_windows", "Active windows");
-        literals.put("assets", "Assets");
-        literals.put("sprites", "Sprites");
-        literals.put("tiles", "Tiles");
-        literals.put("sounds", "Sounds");
-        literals.put("entity_properties", "Entity properties");
-        literals.put("env_hierarchy", "Environments");
-        literals.put("apply", "Apply");
-        literals.put("close", "Close");
-        literals.put("cancel", "Cancel");
-        literals.put("yes", "Yes");
-        literals.put("no", "No");
-        literals.put("confirm_save", "Save?");
-        literals.put("sure_to_save_log", "Save log to new file?");
-        literals.put("clear", "Clear");
-        literals.put("severity", "Severity");
-        literals.put("lang", "Language");
-        literals.put("dont_ask_again", "Don't ask this again");
-        literals.put("save_log", "Save log");
-        literals.put("general_settings", "General");
-        literals.put("style_settings", "Styles");
-        literals.put("font", "Font");
     }
 
     private void defaultColors() {
@@ -221,7 +176,7 @@ public class SapphireSettings {
             File path = new File("sapphire/lang/" + lang + ".json");
             try {
                 if (DEFAULT_LANG.equals(lang)) {
-                    defaultLiterals();
+                    Sapphire.get().defaultLiterals();
                 } else {
                     ArrayList<String> data = (ArrayList<String>) Files.readAllLines(path.toPath());
                     JsonElement langJson = JsonParser.parseString(String.join("", data));
@@ -229,9 +184,7 @@ public class SapphireSettings {
 
                         JsonObject literals = langJson.getAsJsonObject().get("literals").getAsJsonObject();
                         if (literals != null && literals.isJsonObject()) {
-                            for (String key : literals.keySet()) {
-                                this.literals.put(key, literals.get(key).getAsString());
-                            }
+                            Sapphire.get().setLiterals(literals);
                         }
                     } else {
                         DiaLogger.log("Language file is not valid: '" + languages.get(lang) + "'", DiaLoggerLevel.WARN);
@@ -285,6 +238,8 @@ public class SapphireSettings {
             activeWindows = temp.getActiveWindows();
             colors = temp.getColors();
             showPreferences = temp.getShowPreferences();
+            currentLang = temp.getCurrentLang();
+            changeLangTo(currentLang);
         }
     }
 }

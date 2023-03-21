@@ -48,13 +48,13 @@ public class SettingsWindow extends ImguiWindow {
                 }
 
                 // Calculate close and accept buttons position
-                float sizeX = SappImGui.textSize(settings.getLiteral("apply")) + SappImGui.textSize(settings.getLiteral("close")) + ImGui.getStyle().getFramePaddingX() * 6;
+                float sizeX = SappImGui.textSize(Sapphire.getLiteral("apply")) + SappImGui.textSize(Sapphire.getLiteral("close")) + ImGui.getStyle().getFramePaddingX() * 6;
                 float sizeY = ImGui.getFontSize() + ImGui.getStyle().getFramePaddingY() * 2;
 
                 SappImGui.align(AlignX.RIGHT, AlignY.BOTTOM, sizeX, sizeY);
-                if (ImGui.button(settings.getLiteral("apply"))) settings.save();
+                if (ImGui.button(Sapphire.getLiteral("apply"))) settings.save();
                 ImGui.sameLine();
-                if (ImGui.button(settings.getLiteral("close"))) this.setActive(false);
+                if (ImGui.button(Sapphire.getLiteral("close"))) this.setActive(false);
 
                 ImGui.popStyleVar(1);
                 ImGui.endPopup();
@@ -63,23 +63,25 @@ public class SettingsWindow extends ImguiWindow {
     }
 
     private void generalSettingsTab(SapphireSettings settings) {
-        if (ImGui.beginTabItem(settings.getLiteral("general_settings"))) {
+        if (ImGui.beginTabItem(Sapphire.getLiteral("general_settings"))) {
 
             // Workspace
-            settings.setWorkspace(SappImGui.inputText(settings.getLiteral("workspace"), settings.getWorkspace()));
+            settings.setWorkspace(SappImGui.inputText(Sapphire.getLiteral("workspace"), settings.getWorkspace()));
+            ImGui.sameLine();
+            ImGui.button("##");
             ImGui.separator();
 
             // Font
-            String newFont = SappImGui.combo(settings.getLiteral("font"), settings.getCurrentFont(), settings.getFonts());
+            String newFont = SappImGui.combo(Sapphire.getLiteral("font"), settings.getCurrentFont(), settings.getFonts());
             if (newFont != null) {
                 settings.setCurrentFont(newFont);
             }
             ImGui.sameLine();
             ImInt fontSize = new ImInt(settings.getFontSize());
-            if (ImGui.inputInt(settings.getLiteral("font"), fontSize)) settings.setFontSize(fontSize.get());
+            if (ImGui.inputInt(Sapphire.getLiteral("font"), fontSize)) settings.setFontSize(fontSize.get());
 
             // Language
-            String newLang = SappImGui.combo(settings.getLiteral("lang"), settings.getCurrentLang(), settings.getLanguages());
+            String newLang = SappImGui.combo(Sapphire.getLiteral("lang"), settings.getCurrentLang(), settings.getLanguages());
             if (newLang != null) {
                 settings.changeLangTo(newLang);
             }
@@ -88,7 +90,7 @@ public class SettingsWindow extends ImguiWindow {
     }
 
     private void styleSettingsTab(SapphireSettings settings) {
-        if (ImGui.beginTabItem(settings.getLiteral("style_settings"))) {
+        if (ImGui.beginTabItem(Sapphire.getLiteral("style_settings"))) {
 
             String[] colors = {};
             colors = settings.getColors().keySet().toArray(colors);
