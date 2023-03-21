@@ -4,6 +4,7 @@ import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
 import sapphire.imgui.SappImGUILayer;
 import sapphire.imgui.windows.FileWindow;
+import sapphire.imgui.windows.ProjectWindow;
 
 import java.io.File;
 
