@@ -173,7 +173,9 @@ public class DiaUtils {
             for (File file : files) {
                 if (file.isFile()) {
                     String fileExtension = file.getPath().substring(file.getPath().lastIndexOf(".") + 1);
-                    if (extension != null && !extension.isEmpty() && extension.equals(fileExtension)) {
+                    if (extension == null || extension.isEmpty()) {
+                        retrievedFiles.add(file);
+                    } else if (extension.equals(fileExtension)) {
                         retrievedFiles.add(file);
                     }
                 }

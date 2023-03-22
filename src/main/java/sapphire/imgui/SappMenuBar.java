@@ -35,7 +35,7 @@ public class SappMenuBar {
 
             // Project menu items
             if (ImGui.menuItem(Sapphire.getLiteral("create_project"))) {
-                SapphireActions.openProject(layer);
+                SapphireActions.createProject(layer);
             }
             if (ImGui.menuItem(Sapphire.getLiteral("open_project"))) {
                 SapphireActions.openProject(layer);

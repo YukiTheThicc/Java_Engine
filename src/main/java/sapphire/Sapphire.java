@@ -25,6 +25,7 @@ public class Sapphire {
     private boolean running;
     private float dt;
     private SapphireSettings settings;
+    private SapphireProject project;
     private HashMap<String, String> literals;
 
     // CONSTRUCTORS
@@ -34,6 +35,7 @@ public class Sapphire {
         this.imGUILayer = null;
         this.running = false;
         this.literals = new HashMap<>();
+        this.project = null;
         this.dt = 0f;
     }
 
@@ -87,6 +89,14 @@ public class Sapphire {
             return Sapphire.get().literals.get(literal);
         }
         return literal + ": " + UNKNOWN_LITERAL;
+    }
+
+    public SapphireProject getProject() {
+        return project;
+    }
+
+    public void setProject(SapphireProject project) {
+        this.project = project;
     }
 
     public SappImGUILayer getImGUILayer() {

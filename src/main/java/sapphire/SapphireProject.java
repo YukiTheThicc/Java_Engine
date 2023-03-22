@@ -20,10 +20,9 @@ public class SapphireProject {
     // ATTRIBUTES
     private List<File> openedFiles;
     private List<DiaEnvironment> environments;
-    private String rootPath;
     private transient SapphireDir root;
 
-    // CONTRUCTORS
+    // CONSTRUCTORS
     public SapphireProject(SapphireDir root) {
         this.root = root;
         this.openedFiles = new ArrayList<>();
@@ -98,5 +97,12 @@ public class SapphireProject {
             this.environments = temp.getEnvironments();
             this.openedFiles = temp.getOpenedFiles();
         }
+    }
+
+    public static SapphireProject create(String path) {
+
+        SapphireDir root = new SapphireDir(path);
+        root.loadDirectory();
+        return new SapphireProject(root);
     }
 }

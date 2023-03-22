@@ -1,6 +1,5 @@
 package sapphire;
 
-import diamondEngine.DiaEnvironment;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
@@ -9,12 +8,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SapphireDir {
+public class SapphireDir extends Thread{
 
     // ATTRIBUTES
     private String path;
     private SapphireDir dir;
-    private List<File> dirs;
+    private List<SapphireDir> dirs;
     private List<File> files;
 
     // CONSTRUCTORS
@@ -41,11 +40,11 @@ public class SapphireDir {
         this.dir = dir;
     }
 
-    public List<File> getDirs() {
+    public List<SapphireDir> getDirs() {
         return dirs;
     }
 
-    public void setDirs(List<File> dirs) {
+    public void setDirs(List<SapphireDir> dirs) {
         this.dirs = dirs;
     }
 
@@ -66,15 +65,35 @@ public class SapphireDir {
     }
 
     // METHODS
-    public void loadDirectory() {
-        if (dir != null) {
-
-            File currentDir = new File(path);
-            dirs = DiaUtils.getFoldersInDir(path);
+    @Override
+    public void run() {
+        if (dir == null) {
             files = DiaUtils.getFilesInDir(path);
-
+            ArrayList<File> dirs = DiaUtils.getFoldersInDir(path);
+            if (dirs.size() > 0) {
+                for (File dir : dirs) {
+                    this.dirs.add(recursiveFolderDive(this, dir.getAbsolutePath()));
+                }
+            }
+            DiaLogger.log("Successfully loaded project folder '" + path + "'");
         } else {
             DiaLogger.log("Cannot load directory if it isn't the root dir", DiaLoggerLevel.WARN);
         }
+        interrupt();
+    }
+
+    public void loadDirectory() {
+        this.start();
+    }
+
+    private static SapphireDir recursiveFolderDive(SapphireDir parent, String rootPath) {
+        SapphireDir dir = new SapphireDir(parent, rootPath);
+        for (File file : DiaUtils.getFoldersInDir(dir.getPath())) {
+            dir.getDirs().add(recursiveFolderDive(dir, file.getAbsolutePath()));
+        }
+        for (File file : DiaUtils.getFilesInDir(dir.getPath())) {
+            dir.getFiles().add(file);
+        }
+        return dir;
     }
 }
