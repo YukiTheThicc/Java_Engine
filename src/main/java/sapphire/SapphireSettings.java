@@ -22,6 +22,7 @@ public class SapphireSettings {
     private String workspace;
     private String currentFont;
     private String currentLang;
+    private String lastProject;
     private HashMap<String, Boolean> activeWindows;
     private HashMap<String, int[]> colors;
     private HashMap<String, Boolean> showPreferences;
@@ -33,6 +34,7 @@ public class SapphireSettings {
     public SapphireSettings() {
         this.workspace = "";
         this.currentFont = "";
+        this.lastProject = "";
         this.currentLang = DEFAULT_LANG;
         this.activeWindows = new HashMap<>();
         this.languages = new HashMap<>();
@@ -115,6 +117,14 @@ public class SapphireSettings {
     public void setFontSize(int fontSize) {
         this.fontSize = fontSize;
         Sapphire.get().getImGUILayer().isDirtyFont();
+    }
+
+    public String getLastProject() {
+        return lastProject;
+    }
+
+    public void setLastProject(String lastProject) {
+        this.lastProject = lastProject;
     }
 
     // METHODS

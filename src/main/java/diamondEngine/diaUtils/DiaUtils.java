@@ -206,7 +206,6 @@ public class DiaUtils {
         return retrievedFiles;
     }
 
-
     public static GLFWImage.Buffer loadGLFWImage(String path) {
 
         GLFWImage.Buffer imageBuffer = null;
@@ -216,7 +215,7 @@ public class DiaUtils {
             IntBuffer comp = stack.mallocInt(1);
             IntBuffer width = stack.mallocInt(1);
             IntBuffer height = stack.mallocInt(1);
-            buffer = stbi_load(new File("sapphire/icon.png").getAbsolutePath(), width, height, comp, 4);
+            buffer = stbi_load(new File(path).getAbsolutePath(), width, height, comp, 4);
             if (buffer != null) {
 
                 GLFWImage image = GLFWImage.malloc();

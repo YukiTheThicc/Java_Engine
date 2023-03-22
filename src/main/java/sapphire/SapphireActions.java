@@ -58,11 +58,11 @@ public class SapphireActions {
     }
 
     public static void openProject(SappImGUILayer layer) {
-        String file = DiaUtils.selectDirectory(Sapphire.getLiteral("open_project"), Sapphire.get().getSettings().getWorkspace());
-        if (file != null && !file.isEmpty()) {
-            DiaLogger.log("Opening project '" + file + "'");
-            Sapphire.get().getSettings().setWorkspace(file);
-            Sapphire.get().setProject(SapphireProject.create(file));
+        String path = DiaUtils.selectDirectory(Sapphire.getLiteral("open_project"), Sapphire.get().getSettings().getWorkspace());
+        if (path != null && !path.isEmpty()) {
+            DiaLogger.log("Opening project '" + path + "'");
+            Sapphire.get().getSettings().setWorkspace(path);
+            Sapphire.get().setProject(SapphireProject.create(path));
         }
     }
 

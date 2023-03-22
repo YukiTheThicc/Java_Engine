@@ -2,8 +2,14 @@ package sapphire.imgui.windows;
 
 import imgui.ImGui;
 import sapphire.Sapphire;
+import sapphire.SapphireDir;
 import sapphire.SapphireProject;
+import sapphire.imgui.AlignX;
+import sapphire.imgui.AlignY;
 import sapphire.imgui.SappImGUILayer;
+import sapphire.imgui.SappImGui;
+
+import java.io.File;
 
 public class ProjectWindow extends ImguiWindow {
 
@@ -24,10 +30,25 @@ public class ProjectWindow extends ImguiWindow {
         SapphireProject project = Sapphire.get().getProject();
         if (project != null) {
             if (project.getRoot().isAlive()) {
-                ImGui.text("Loading...");
+                SappImGui.align(AlignX.CENTER, AlignY.CENTER, SappImGui.textSize(Sapphire.getLiteral("loading")), ImGui.getFontSize());
+                ImGui.text(Sapphire.getLiteral("loading"));
+            } else {
+                dirNode(project.getRoot());
             }
-            //ImGui.treeNode("", "");
         }
         ImGui.end();
+    }
+
+    private void dirNode(SapphireDir dir) {
+        if (ImGui.treeNode(dir.getPath().getName())) {
+            for (SapphireDir nestedDir : dir.getDirs()) {
+                dirNode(nestedDir);
+            }
+            for (File file : dir.getFiles()) {
+                ImGui.text(file.getName());
+            }
+            ImGui.treePop();
+            ImGui.spacing();
+        }
     }
 }

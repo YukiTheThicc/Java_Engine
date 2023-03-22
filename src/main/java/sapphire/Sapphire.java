@@ -2,6 +2,7 @@ package sapphire;
 
 import com.google.gson.JsonObject;
 import diamondEngine.Window;
+import diamondEngine.diaRenderer.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
 import sapphire.imgui.SappImGUILayer;
@@ -27,6 +28,7 @@ public class Sapphire {
     private SapphireSettings settings;
     private SapphireProject project;
     private HashMap<String, String> literals;
+    private HashMap<String, Texture> icons;
 
     // CONSTRUCTORS
     private Sapphire() {
@@ -35,6 +37,7 @@ public class Sapphire {
         this.imGUILayer = null;
         this.running = false;
         this.literals = new HashMap<>();
+        this.icons = new HashMap<>();
         this.project = null;
         this.dt = 0f;
     }
@@ -48,6 +51,38 @@ public class Sapphire {
         for (String key : literals.keySet()) {
             this.literals.put(key, literals.get(key).getAsString());
         }
+    }
+
+    public static String getLiteral(String literal) {
+        if (Sapphire.get().literals.get(literal) != null) {
+            return Sapphire.get().literals.get(literal);
+        }
+        return literal + ": " + UNKNOWN_LITERAL;
+    }
+
+    public SapphireProject getProject() {
+        return project;
+    }
+
+    public void setProject(SapphireProject project) {
+        this.project = project;
+    }
+
+    public SappImGUILayer getImGUILayer() {
+        return imGUILayer;
+    }
+
+    public float getDt() {
+        return dt;
+    }
+
+    // METHODS
+    private boolean shouldClose() {
+        return glfwWindowShouldClose(this.window.getGlfwWindow());
+    }
+
+    private void loadIcons() {
+        icons.put("genericFile", new Texture());
     }
 
     public void defaultLiterals() {
@@ -84,39 +119,11 @@ public class Sapphire {
         literals.put("font", "Font");
     }
 
-    public static String getLiteral(String literal) {
-        if (Sapphire.get().literals.get(literal) != null) {
-            return Sapphire.get().literals.get(literal);
-        }
-        return literal + ": " + UNKNOWN_LITERAL;
-    }
-
-    public SapphireProject getProject() {
-        return project;
-    }
-
-    public void setProject(SapphireProject project) {
-        this.project = project;
-    }
-
-    public SappImGUILayer getImGUILayer() {
-        return imGUILayer;
-    }
-
-    public float getDt() {
-        return dt;
-    }
-
-    // METHODS
     public static Sapphire get() {
         if (Sapphire.sapphire == null) {
             Sapphire.sapphire = new Sapphire();
         }
         return sapphire;
-    }
-
-    private boolean shouldClose() {
-        return glfwWindowShouldClose(this.window.getGlfwWindow());
     }
 
     public void start() {

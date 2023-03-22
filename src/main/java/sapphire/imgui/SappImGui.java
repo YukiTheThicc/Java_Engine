@@ -1,5 +1,6 @@
 package sapphire.imgui;
 
+import diamondEngine.diaRenderer.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
@@ -286,5 +287,15 @@ public class SappImGui {
         }
         modal.setActive(true);
         return modal;
+    }
+
+    public static boolean imageButton(Texture image, String label) {
+        ImGui.text(label);
+        return ImGui.imageButton(image.getId(), image.getWidth(), image.getHeight());
+    }
+
+    public static void iconText(Texture image, String text) {
+        ImGui.image(image.getId(), image.getWidth(), image.getHeight());
+        ImGui.text(text);
     }
 }

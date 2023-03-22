@@ -11,21 +11,21 @@ import java.util.List;
 public class SapphireDir extends Thread{
 
     // ATTRIBUTES
-    private String path;
+    private File path;
     private SapphireDir dir;
     private List<SapphireDir> dirs;
     private List<File> files;
 
     // CONSTRUCTORS
     public SapphireDir(SapphireDir parent, String path) {
-        this.path = path;
+        this.path = new File(path);
         this.files = new ArrayList<>();
         this.dirs = new ArrayList<>();
         this.dir = parent;
     }
 
     public SapphireDir(String path) {
-        this.path = path;
+        this.path = new File(path);
         this.files = new ArrayList<>();
         this.dirs = new ArrayList<>();
         this.dir = null;
@@ -56,11 +56,11 @@ public class SapphireDir extends Thread{
         this.files = files;
     }
 
-    public String getPath() {
+    public File getPath() {
         return path;
     }
 
-    public void setPath(String path) {
+    public void setPath(File path) {
         this.path = path;
     }
 
@@ -68,11 +68,11 @@ public class SapphireDir extends Thread{
     @Override
     public void run() {
         if (dir == null) {
-            files = DiaUtils.getFilesInDir(path);
-            ArrayList<File> dirs = DiaUtils.getFoldersInDir(path);
+            files = DiaUtils.getFilesInDir(path.getAbsolutePath());
+            ArrayList<File> dirs = DiaUtils.getFoldersInDir(path.getAbsolutePath());
             if (dirs.size() > 0) {
                 for (File dir : dirs) {
-                    this.dirs.add(recursiveFolderDive(this, dir.getAbsolutePath()));
+                    this.dirs.add(recursiveFolderDive(this, dir));
                 }
             }
             DiaLogger.log("Successfully loaded project folder '" + path + "'");
@@ -86,12 +86,12 @@ public class SapphireDir extends Thread{
         this.start();
     }
 
-    private static SapphireDir recursiveFolderDive(SapphireDir parent, String rootPath) {
-        SapphireDir dir = new SapphireDir(parent, rootPath);
-        for (File file : DiaUtils.getFoldersInDir(dir.getPath())) {
-            dir.getDirs().add(recursiveFolderDive(dir, file.getAbsolutePath()));
+    private static SapphireDir recursiveFolderDive(SapphireDir parent, File rootPath) {
+        SapphireDir dir = new SapphireDir(parent, rootPath.getAbsolutePath());
+        for (File file : DiaUtils.getFoldersInDir(dir.getPath().getAbsolutePath())) {
+            dir.getDirs().add(recursiveFolderDive(dir, file));
         }
-        for (File file : DiaUtils.getFilesInDir(dir.getPath())) {
+        for (File file : DiaUtils.getFilesInDir(dir.getPath().getAbsolutePath())) {
             dir.getFiles().add(file);
         }
         return dir;

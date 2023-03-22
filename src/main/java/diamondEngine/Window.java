@@ -154,6 +154,7 @@ public class Window {
         GLFWImage.Buffer image = DiaUtils.loadGLFWImage(iconPath);
         if (image != null) {
             glfwSetWindowIcon(glfwWindow, image);
+            image.close();
         }
     }
 

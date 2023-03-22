@@ -184,6 +184,7 @@ public class DiaLogger extends Thread {
 
     public static void close() {
         DiaLogger.diaLogger.isRunning = false;
+        DiaLogger.diaLogger.interrupt();
     }
 
     @Override
@@ -206,9 +207,6 @@ public class DiaLogger extends Thread {
                     sleep(250);
                 }
             }
-            System.out.println("Closing Logger thread...");
-            DiaLogger.diaLogger.interrupt();
-            DiaLogger.diaLogger.join();
         } catch (InterruptedException e) {
             assert false;
         }
