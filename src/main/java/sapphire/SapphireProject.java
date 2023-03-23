@@ -6,6 +6,7 @@ import diamondEngine.DiaEnvironment;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
+import sapphire.imgui.SappImGui;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -69,8 +70,12 @@ public class SapphireProject {
 
     /**
      * Loads into this instance all stored properties in the settings.json file.
+     *
+     * @return True if the project has loaded correctly
      */
-    public void load(String path) {
+    public boolean load() {
+
+        String path = root.getPath().getAbsolutePath();
 
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
@@ -82,11 +87,11 @@ public class SapphireProject {
             ArrayList<File> projectFile = DiaUtils.getFilesInDir(path, "sapp");
             if (projectFile.size() > 0) {
                 if (projectFile.size() > 1) {
-                    DiaLogger.log("Found to project files within the directory, using most recent one", DiaLoggerLevel.WARN);
+                    DiaLogger.log("Found multiple project files within the directory, using most recent one", DiaLoggerLevel.WARN);
                 }
                 inFile = new String(Files.readAllBytes(projectFile.get(0).toPath()));
             } else {
-                DiaLogger.log("No Sapphire project file was found in '" + path + "'", DiaLoggerLevel.WARN);
+                SappImGui.infoModal(Sapphire.getLiteral("project"), Sapphire.getLiteral("no_project_file"));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -94,9 +99,13 @@ public class SapphireProject {
 
         if (!inFile.equals("")) {
             SapphireProject temp = gson.fromJson(inFile, SapphireProject.class);
-            this.environments = temp.getEnvironments();
-            this.openedFiles = temp.getOpenedFiles();
+            root.loadDirectory();
+            environments = temp.getEnvironments();
+            openedFiles = temp.getOpenedFiles();
+            return true;
         }
+
+        return false;
     }
 
     public static SapphireProject create(String path) {

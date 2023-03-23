@@ -11,7 +11,7 @@ import sapphire.imgui.AlignY;
 import sapphire.imgui.SappImGUILayer;
 import sapphire.imgui.SappImGui;
 
-public class ConfirmationWindow extends ImguiWindow {
+public class ModalConfirmation extends ImguiWindow {
 
     // ATTRIBUTES
     private boolean result;
@@ -22,7 +22,7 @@ public class ConfirmationWindow extends ImguiWindow {
     private ImBoolean askAgain;
 
     // CONSTRUCTORS
-    public ConfirmationWindow(String id, String title, String message, String affirmative, String negative, SapphireObserver parent) {
+    public ModalConfirmation(String id, String title, String message, String affirmative, String negative, SapphireObserver parent) {
         super(id, title, false);
         this.result = false;
         this.message = message;
@@ -35,7 +35,7 @@ public class ConfirmationWindow extends ImguiWindow {
         this.setActive(true);
     }
 
-    public ConfirmationWindow(String id, String title, String message, SapphireObserver parent) {
+    public ModalConfirmation(String id, String title, String message, SapphireObserver parent) {
         super(id, title, false);
         this.result = false;
         this.message = message;

@@ -1,10 +1,11 @@
 {
-  "workspace": "C:\\Proyectos\\_FORMACION\\CursoAngular\\Tweempus",
+  "workspace": "C:\\Proyects\\Java_Engine",
   "currentFont": "C:\\Proyects\\Java_Engine\\sapphire\\fonts\\consola.ttf",
   "currentLang": "en",
-  "lastProject": "",
+  "lastProject": "C:\\Proyects\\Java_Engine",
   "activeWindows": {
     "assets": true,
+    "debug_sapp": true,
     "env_hierarchy": true,
     "entity_properties": true,
     "log_viewer": true,

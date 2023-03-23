@@ -7,6 +7,8 @@ import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
 import sapphire.imgui.SappImGUILayer;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -60,12 +62,21 @@ public class Sapphire {
         return literal + ": " + UNKNOWN_LITERAL;
     }
 
+    public static Texture getIcon(String name) {
+        if (Sapphire.get().icons.get(name) != null) {
+            return Sapphire.get().icons.get(name);
+        }
+        return Sapphire.get().icons.get("_blank.png");
+    }
+
+
     public SapphireProject getProject() {
         return project;
     }
 
     public void setProject(SapphireProject project) {
         this.project = project;
+        settings.setLastProject(project.getRoot().getPath().getAbsolutePath());
     }
 
     public SappImGUILayer getImGUILayer() {
@@ -82,7 +93,14 @@ public class Sapphire {
     }
 
     private void loadIcons() {
-        icons.put("genericFile", new Texture());
+        ArrayList<File> icons = DiaUtils.getFilesInDir("sapphire/res/icons/16", "png");
+        for (File icon : icons) {
+            Texture iconTex = new Texture();
+            iconTex.load(icon.getAbsolutePath());
+            if (iconTex.getId() != 0 && !"".equals(iconTex.getPath())) {
+                this.icons.put(icon.getName(), iconTex);
+            }
+        }
     }
 
     public void defaultLiterals() {
@@ -103,6 +121,8 @@ public class Sapphire {
         literals.put("entity_properties", "Entity properties");
         literals.put("env_hierarchy", "Environments");
         literals.put("apply", "Apply");
+        literals.put("accept", "Accept");
+        literals.put("ok", "Ok");
         literals.put("close", "Close");
         literals.put("cancel", "Cancel");
         literals.put("yes", "Yes");
@@ -117,6 +137,9 @@ public class Sapphire {
         literals.put("general_settings", "General");
         literals.put("style_settings", "Styles");
         literals.put("font", "Font");
+        literals.put("create_project", "Create project");
+        literals.put("no_project_file", "No project configuration has been found on the directory");
+        literals.put("dir_not_empty", "Couldn't create new project, target directory is not empty");
     }
 
     public static Sapphire get() {
@@ -132,6 +155,7 @@ public class Sapphire {
         DiaUtils.init();
         defaultLiterals();
         window.init("Sapphire", "sapphire/icon.png");
+        loadIcons();
         imGUILayer = new SappImGUILayer(this.window.getGlfwWindow());
         settings.init();
         imGUILayer.init();

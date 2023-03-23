@@ -11,8 +11,9 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 import sapphire.SapphireObserver;
 import sapphire.Sapphire;
-import sapphire.imgui.windows.ConfirmationWindow;
+import sapphire.imgui.windows.ModalConfirmation;
 import sapphire.imgui.windows.ImguiWindow;
+import sapphire.imgui.windows.ModalInformation;
 
 public class SappImGui {
 
@@ -271,7 +272,7 @@ public class SappImGui {
         String id = title.toLowerCase().replace(" ", "_");
         ImguiWindow modal =  Sapphire.get().getImGUILayer().getWindows().get(id);
         if (modal == null) {
-            modal = new ConfirmationWindow(id, title, message, aff, neg, parent);
+            modal = new ModalConfirmation(id, title, message, aff, neg, parent);
             Sapphire.get().getImGUILayer().addWindow(modal);
         }
         modal.setActive(true);
@@ -282,7 +283,18 @@ public class SappImGui {
         String id = title.toLowerCase().replace(" ", "_");
         ImguiWindow modal =  Sapphire.get().getImGUILayer().getWindows().get(id);
         if (modal == null) {
-            modal = new ConfirmationWindow(id, title, message, parent);
+            modal = new ModalConfirmation(id, title, message, parent);
+            Sapphire.get().getImGUILayer().addWindow(modal);
+        }
+        modal.setActive(true);
+        return modal;
+    }
+
+    public static ImguiWindow infoModal(String title, String message) {
+        String id = title.toLowerCase().replace(" ", "_");
+        ImguiWindow modal =  Sapphire.get().getImGUILayer().getWindows().get(id);
+        if (modal == null) {
+            modal = new ModalInformation(id, title, message);
             Sapphire.get().getImGUILayer().addWindow(modal);
         }
         modal.setActive(true);

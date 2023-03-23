@@ -250,6 +250,10 @@ public class SapphireSettings {
             showPreferences = temp.getShowPreferences();
             currentLang = temp.getCurrentLang();
             changeLangTo(currentLang);
+
+            if (!workspace.isEmpty() && new File(workspace).isDirectory()) {
+                Sapphire.get().setProject(SapphireProject.create(workspace));
+            }
         }
     }
 }

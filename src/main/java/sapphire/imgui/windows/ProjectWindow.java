@@ -1,6 +1,8 @@
 package sapphire.imgui.windows;
 
+import diamondEngine.diaRenderer.Texture;
 import imgui.ImGui;
+import imgui.ImVec2;
 import sapphire.Sapphire;
 import sapphire.SapphireDir;
 import sapphire.SapphireProject;
@@ -33,18 +35,24 @@ public class ProjectWindow extends ImguiWindow {
                 SappImGui.align(AlignX.CENTER, AlignY.CENTER, SappImGui.textSize(Sapphire.getLiteral("loading")), ImGui.getFontSize());
                 ImGui.text(Sapphire.getLiteral("loading"));
             } else {
-                dirNode(project.getRoot());
+                drawFile(project.getRoot());
             }
         }
         ImGui.end();
     }
 
-    private void dirNode(SapphireDir dir) {
+    private void drawFile(SapphireDir dir) {
         if (ImGui.treeNode(dir.getPath().getName())) {
             for (SapphireDir nestedDir : dir.getDirs()) {
-                dirNode(nestedDir);
+                drawFile(nestedDir);
             }
+            String iconFile;
+            Texture tex;
             for (File file : dir.getFiles()) {
+                iconFile = file.getName().substring(file.getName().lastIndexOf('.') + 1) + ".png";
+                tex = Sapphire.getIcon(iconFile);
+                ImGui.image(tex.getId(), tex.getWidth(), tex.getHeight(),0, 1,1, 0);
+                ImGui.sameLine();
                 ImGui.text(file.getName());
             }
             ImGui.treePop();

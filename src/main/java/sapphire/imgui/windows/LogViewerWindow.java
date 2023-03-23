@@ -29,7 +29,7 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
     private ImBoolean autoScroll;
     private String[] entries;
     private DiaLoggerLevel[] levels;
-    private ConfirmationWindow confWindow;
+    private ModalConfirmation confWindow;
     private final String[] availableLevels;
     private int currentLine;
     private int lines;
@@ -89,7 +89,7 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
             String title = Sapphire.getLiteral("save_log");
             String message = Sapphire.getLiteral("sure_to_save_log");
             if (ImGui.button(title)) {
-                confWindow = (ConfirmationWindow) SappImGui.confirmModal(title, message, this);
+                confWindow = (ModalConfirmation) SappImGui.confirmModal(title, message, this);
             }
         }
 
