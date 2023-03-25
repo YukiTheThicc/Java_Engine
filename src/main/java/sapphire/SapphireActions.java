@@ -5,6 +5,7 @@ import diamondEngine.diaUtils.DiaUtils;
 import sapphire.imgui.SappImGUILayer;
 import sapphire.imgui.SappImGui;
 import sapphire.imgui.windows.FileWindow;
+import sapphire.utils.SappProjectCreator;
 
 import java.io.File;
 
@@ -57,15 +58,9 @@ public class SapphireActions {
     public static void createProject(SappImGUILayer layer) {
         String path = DiaUtils.selectDirectory(Sapphire.getLiteral("create_project"), Sapphire.get().getSettings().getWorkspace());
         if (path != null && !path.isEmpty()) {
-            if (DiaUtils.getFilesInDir(path).isEmpty() && DiaUtils.getFoldersInDir(path).isEmpty()) {
-                DiaLogger.log("Creating project in '" + path + "'");
-                SapphireProject project = new SapphireProject(new SapphireDir(path));
-                if (project.load()) {
-                    Sapphire.get().setProject(project);
-                }
-            } else {
-                SappImGui.infoModal(Sapphire.getLiteral("create_project"), Sapphire.getLiteral("dir_not_empty"));
-            }
+            DiaLogger.log("Creating project in '" + path + "'");
+            SapphireProject project = SappProjectCreator.create(path);
+            Sapphire.get().setProject(project);
         }
     }
 

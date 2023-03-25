@@ -249,10 +249,13 @@ public class SapphireSettings {
             colors = temp.getColors();
             showPreferences = temp.getShowPreferences();
             currentLang = temp.getCurrentLang();
+            lastProject = temp.getLastProject();
             changeLangTo(currentLang);
 
-            if (!workspace.isEmpty() && new File(workspace).isDirectory()) {
-                Sapphire.get().setProject(SapphireProject.create(workspace));
+            if (!lastProject.isEmpty() && new File(lastProject).isDirectory()) {
+                SapphireProject project = new SapphireProject(new SapphireDir(lastProject));
+                project.load();
+                Sapphire.get().setProject(project);
             }
         }
     }

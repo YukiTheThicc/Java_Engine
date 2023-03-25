@@ -30,7 +30,7 @@ public class ProjectWindow extends ImguiWindow {
 
         ImGui.begin(this.getTitle());
         SapphireProject project = Sapphire.get().getProject();
-        if (project != null) {
+        if (project != null && project.getRoot() != null) {
             if (project.getRoot().isAlive()) {
                 SappImGui.align(AlignX.CENTER, AlignY.CENTER, SappImGui.textSize(Sapphire.getLiteral("loading")), ImGui.getFontSize());
                 ImGui.text(Sapphire.getLiteral("loading"));
@@ -42,12 +42,14 @@ public class ProjectWindow extends ImguiWindow {
     }
 
     private void drawFile(SapphireDir dir) {
+        Texture tex = Sapphire.getIcon("dir.png");
+        ImGui.image(tex.getId(), tex.getWidth(), tex.getHeight(),0, 1,1, 0);
+        ImGui.sameLine();
         if (ImGui.treeNode(dir.getPath().getName())) {
             for (SapphireDir nestedDir : dir.getDirs()) {
                 drawFile(nestedDir);
             }
             String iconFile;
-            Texture tex;
             for (File file : dir.getFiles()) {
                 iconFile = file.getName().substring(file.getName().lastIndexOf('.') + 1) + ".png";
                 tex = Sapphire.getIcon(iconFile);

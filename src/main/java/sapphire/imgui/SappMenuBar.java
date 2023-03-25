@@ -22,6 +22,7 @@ public class SappMenuBar {
                 SapphireActions.newFile(layer);
             }
             ImGui.separator();
+
             if (ImGui.menuItem(Sapphire.getLiteral("open_file"), "Ctrl+O")) {
                 SapphireActions.openFile(layer);
             }

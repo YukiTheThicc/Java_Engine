@@ -42,10 +42,10 @@ public class ModalInformation extends ImguiWindow{
         if (ImGui.beginPopupModal(getTitle(), ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize |
                 ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)) {
 
-            SappImGui.align(AlignX.LEFT, AlignY.CENTER, SappImGui.textSize(message), ImGui.getFontSize());
+            SappImGui.align(AlignX.LEFT, AlignY.TOP, SappImGui.textSize(message), ImGui.getFontSize());
             ImGui.textWrapped(message);
 
-            float totalSizeButtonsX = SappImGui.textSize(ok) + SappImGui.textSize(ok) + ImGui.getStyle().getCellPaddingX() * 5;
+            float totalSizeButtonsX = SappImGui.textSize(ok) + ImGui.getStyle().getCellPaddingX() * 2;
             float totalSizeButtonsY = ImGui.getFontSize() + ImGui.getStyle().getCellPaddingY() * 2;
             SappImGui.align(AlignX.CENTER, AlignY.BOTTOM, totalSizeButtonsX, totalSizeButtonsY);
             if (ImGui.button(ok)) {

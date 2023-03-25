@@ -76,7 +76,13 @@ public class Sapphire {
 
     public void setProject(SapphireProject project) {
         this.project = project;
-        settings.setLastProject(project.getRoot().getPath().getAbsolutePath());
+        if (project.getRoot() != null) {
+            settings.setLastProject(project.getRoot().getPath().getAbsolutePath());
+            settings.save();
+        } else {
+            settings.setLastProject("");
+            settings.save();
+        }
     }
 
     public SappImGUILayer getImGUILayer() {
@@ -139,7 +145,7 @@ public class Sapphire {
         literals.put("font", "Font");
         literals.put("create_project", "Create project");
         literals.put("no_project_file", "No project configuration has been found on the directory");
-        literals.put("dir_not_empty", "Couldn't create new project, target directory is not empty");
+        literals.put("dir_not_empty", "Cannot create a project on this directory, choose an empty directoryw");
     }
 
     public static Sapphire get() {
@@ -162,7 +168,6 @@ public class Sapphire {
         run();
         DiaLogger.close();
         imGUILayer.destroyImGui();
-        settings.save();
     }
 
     public void run() {

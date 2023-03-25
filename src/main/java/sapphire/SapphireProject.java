@@ -18,6 +18,10 @@ import java.util.List;
 
 public class SapphireProject {
 
+    // CONSTANTS
+    public static final String PROJECT_FILE = "project.sapp";
+    public static final String ENVS_DIR = "envs";
+
     // ATTRIBUTES
     private List<File> openedFiles;
     private List<DiaEnvironment> environments;
@@ -48,6 +52,7 @@ public class SapphireProject {
     }
 
     // METHODS
+
     /**
      * Saves current settings into the settings.json file.
      */
@@ -69,7 +74,7 @@ public class SapphireProject {
     }
 
     /**
-     * Loads into this instance all stored properties in the settings.json file.
+     * Loads this project
      *
      * @return True if the project has loaded correctly
      */
@@ -84,14 +89,12 @@ public class SapphireProject {
         String inFile = "";
 
         try {
-            ArrayList<File> projectFile = DiaUtils.getFilesInDir(path, "sapp");
-            if (projectFile.size() > 0) {
-                if (projectFile.size() > 1) {
-                    DiaLogger.log("Found multiple project files within the directory, using most recent one", DiaLoggerLevel.WARN);
-                }
-                inFile = new String(Files.readAllBytes(projectFile.get(0).toPath()));
+            File projectFile = new File (path + "\\" + PROJECT_FILE);
+            if (projectFile.exists()) {
+                inFile = new String(Files.readAllBytes(projectFile.toPath()));
             } else {
                 SappImGui.infoModal(Sapphire.getLiteral("project"), Sapphire.getLiteral("no_project_file"));
+                root = null;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -104,14 +107,6 @@ public class SapphireProject {
             openedFiles = temp.getOpenedFiles();
             return true;
         }
-
         return false;
-    }
-
-    public static SapphireProject create(String path) {
-
-        SapphireDir root = new SapphireDir(path);
-        root.loadDirectory();
-        return new SapphireProject(root);
     }
 }
