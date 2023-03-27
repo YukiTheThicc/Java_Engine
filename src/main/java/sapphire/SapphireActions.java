@@ -3,7 +3,6 @@ package sapphire;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
 import sapphire.imgui.SappImGUILayer;
-import sapphire.imgui.SappImGui;
 import sapphire.imgui.windows.FileWindow;
 import sapphire.utils.SappProjectCreator;
 
@@ -55,16 +54,18 @@ public class SapphireActions {
         }
     }
 
-    public static void createProject(SappImGUILayer layer) {
+    public static void createProject() {
         String path = DiaUtils.selectDirectory(Sapphire.getLiteral("create_project"), Sapphire.get().getSettings().getWorkspace());
         if (path != null && !path.isEmpty()) {
             DiaLogger.log("Creating project in '" + path + "'");
             SapphireProject project = SappProjectCreator.create(path);
-            Sapphire.get().setProject(project);
+            if (project != null) {
+                Sapphire.get().setProject(project);
+            }
         }
     }
 
-    public static void openProject(SappImGUILayer layer) {
+    public static void openProject() {
         String path = DiaUtils.selectDirectory(Sapphire.getLiteral("open_project"), Sapphire.get().getSettings().getWorkspace());
         if (path != null && !path.isEmpty()) {
             DiaLogger.log("Opening project '" + path + "'");

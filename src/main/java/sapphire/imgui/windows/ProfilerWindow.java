@@ -39,6 +39,9 @@ public class ProfilerWindow extends ImguiWindow {
         ImGui.text(layer.getLastFocusedFile() != null ? layer.getLastFocusedFile().getTitle() : "No file opened");
 
         ImGui.nextColumn();
+
+        ImGui.columns(1);
+        ImGui.separator();
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
         ImGui.text(Sapphire.getLiteral("current_threads"));
         ImGui.pushStyleColor(ImGuiCol.ChildBg, 50, 50, 50, 255);

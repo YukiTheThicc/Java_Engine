@@ -1,8 +1,10 @@
 package sapphire.imgui.windows;
 
 import diamondEngine.diaRenderer.Texture;
+import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.diaUtils.DiaUtils;
 import imgui.ImGui;
-import imgui.ImVec2;
+import imgui.flag.ImGuiSelectableFlags;
 import sapphire.Sapphire;
 import sapphire.SapphireDir;
 import sapphire.SapphireProject;
@@ -13,15 +15,13 @@ import sapphire.imgui.SappImGui;
 
 import java.io.File;
 
-public class ProjectWindow extends ImguiWindow {
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 
-    // ATTRIBUTES
-    private float dt;
+public class ProjectWindow extends ImguiWindow {
 
     // CONSTRUCTORS
     public ProjectWindow() {
         super("project", "Project");
-        this.dt = 0.0f;
     }
 
     // METHODS
@@ -35,30 +35,50 @@ public class ProjectWindow extends ImguiWindow {
                 SappImGui.align(AlignX.CENTER, AlignY.CENTER, SappImGui.textSize(Sapphire.getLiteral("loading")), ImGui.getFontSize());
                 ImGui.text(Sapphire.getLiteral("loading"));
             } else {
-                drawFile(project.getRoot());
+                ImGui.setNextItemOpen(true);
+                drawDir(project.getRoot(), layer);
             }
         }
         ImGui.end();
     }
 
-    private void drawFile(SapphireDir dir) {
+    private void drawDir(SapphireDir dir, SappImGUILayer layer) {
         Texture tex = Sapphire.getIcon("dir.png");
-        ImGui.image(tex.getId(), tex.getWidth(), tex.getHeight(),0, 1,1, 0);
+        ImGui.image(tex.getId(), tex.getWidth(), tex.getHeight(), 0, 1, 1, 0);
         ImGui.sameLine();
+        if (dir.getDir() == null) {
+            ImGui.setNextItemOpen(true);
+        }
+
         if (ImGui.treeNode(dir.getPath().getName())) {
+
             for (SapphireDir nestedDir : dir.getDirs()) {
-                drawFile(nestedDir);
+                drawDir(nestedDir, layer);
             }
+
             String iconFile;
-            for (File file : dir.getFiles()) {
+            String selected;
+            for (File file : DiaUtils.getFilesInDir(dir.getPath().getAbsolutePath())) {
+
+                selected = null;
                 iconFile = file.getName().substring(file.getName().lastIndexOf('.') + 1) + ".png";
                 tex = Sapphire.getIcon(iconFile);
-                ImGui.image(tex.getId(), tex.getWidth(), tex.getHeight(),0, 1,1, 0);
+                ImGui.image(tex.getId(), tex.getWidth(), tex.getHeight(), 0, 1, 1, 0);
                 ImGui.sameLine();
-                ImGui.text(file.getName());
+
+                if (ImGui.selectable(file.getName(), false, ImGuiSelectableFlags.AllowDoubleClick)) selected = file.getName();
+                if (ImGui.isMouseDoubleClicked(GLFW_MOUSE_BUTTON_LEFT) && selected != null) {
+                    layer.addWindow(new FileWindow(file.getName(), file));
+                }
+
             }
+
             ImGui.treePop();
             ImGui.spacing();
         }
+    }
+
+    private void drawFile() {
+
     }
 }

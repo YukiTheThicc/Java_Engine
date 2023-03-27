@@ -1,14 +1,10 @@
 package sapphire.imgui;
 
-import diamondEngine.diaUtils.DiaUtils;
 import imgui.ImGui;
 import sapphire.Sapphire;
 import sapphire.SapphireActions;
-import sapphire.imgui.windows.FileWindow;
 import sapphire.imgui.windows.ImguiWindow;
 import diamondEngine.diaUtils.DiaLogger;
-
-import java.io.File;
 
 public class SappMenuBar {
 
@@ -36,10 +32,10 @@ public class SappMenuBar {
 
             // Project menu items
             if (ImGui.menuItem(Sapphire.getLiteral("create_project"))) {
-                SapphireActions.createProject(layer);
+                SapphireActions.createProject();
             }
             if (ImGui.menuItem(Sapphire.getLiteral("open_project"))) {
-                SapphireActions.openProject(layer);
+                SapphireActions.openProject();
             }
             if (ImGui.menuItem(Sapphire.getLiteral("export_project"))) {
                 SapphireActions.exportProject(layer);

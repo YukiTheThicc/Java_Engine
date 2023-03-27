@@ -22,6 +22,7 @@ public class SapphireDir extends Thread{
         this.files = new ArrayList<>();
         this.dirs = new ArrayList<>();
         this.dir = parent;
+        this.setName("Directory Loader");
     }
 
     public SapphireDir(String path) {
@@ -29,6 +30,7 @@ public class SapphireDir extends Thread{
         this.files = new ArrayList<>();
         this.dirs = new ArrayList<>();
         this.dir = null;
+        this.setName("Directory Loader");
     }
 
     // GETTERS & SETTERS
@@ -79,11 +81,24 @@ public class SapphireDir extends Thread{
         } else {
             DiaLogger.log("Cannot load directory if it isn't the root dir", DiaLoggerLevel.WARN);
         }
-        interrupt();
     }
 
     public void loadDirectory() {
-        this.start();
+        if (!this.isAlive()) {
+            this.start();
+        }
+        this.interrupt();
+    }
+
+    public void joinDirs() {
+        for (SapphireDir dir : dirs) {
+            try {
+                dir.join();
+            } catch (InterruptedException e) {
+                DiaLogger.log("Couldn't join directory '" + dir.getPath() + "'", DiaLoggerLevel.ERROR);
+                DiaLogger.log(e.getMessage(), DiaLoggerLevel.ERROR);
+            }
+        }
     }
 
     private static SapphireDir recursiveFolderDive(SapphireDir parent, File rootPath) {

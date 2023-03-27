@@ -74,7 +74,7 @@ public class DiaLogger extends Thread {
         diaLogger.earlyEntryBuffer = new ArrayList<>();
         diaLogger.earlyLevelBuffer = new ArrayList<>();
         diaLogger.currentLevel = DiaLoggerLevel.DEBUG;
-        diaLogger.dirty = true;
+        diaLogger.dirty = true; // Es otaku y no se lava nunca, lo inicializamos siempre en manchao sisi
 
         // Clear log file for new session
         // REVISE: Maybe better to keep ALL log entries for other sessions or creating log file depending on the day
@@ -91,7 +91,6 @@ public class DiaLogger extends Thread {
         DiaLogger.diaLogger.literals.put(DiaLoggerLevel.WARN, "WARNING");
         DiaLogger.diaLogger.literals.put(DiaLoggerLevel.ERROR, "ERROR");
         DiaLogger.diaLogger.literals.put(DiaLoggerLevel.CRITICAL, "CRITICAL");
-        DiaLogger.log("--------New Session--------", DiaLoggerLevel.CRITICAL);
 
         diaLogger.start();
         diaLogger.isRunning = true;

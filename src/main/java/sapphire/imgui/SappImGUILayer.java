@@ -49,8 +49,8 @@ public class SappImGUILayer {
         this.glfwWindow = windowPtr;
         this.windows = new HashMap<>();
         this.dockId = -1;
-        this.dirty = true;
         this.dirty = false;
+        this.dirtyFont = false;
         this.windowsToAdd = new ArrayList<>();
         this.lastFocusedFile = null;
     }

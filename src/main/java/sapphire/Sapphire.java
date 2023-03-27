@@ -166,8 +166,9 @@ public class Sapphire {
         settings.init();
         imGUILayer.init();
         run();
-        DiaLogger.close();
+        project.closeProject();
         imGUILayer.destroyImGui();
+        DiaLogger.close();
     }
 
     public void run() {
@@ -180,6 +181,7 @@ public class Sapphire {
             if (glfwGetWindowAttrib(window.getGlfwWindow(), GLFW_FOCUSED) != 0) {
                 /*if (dt >= 0) {
                 }*/
+                this.project.checkForChanges(dt);
                 this.imGUILayer.update();
             }
             this.window.endFrame();
