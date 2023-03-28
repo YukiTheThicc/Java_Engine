@@ -2,8 +2,6 @@ package diamondEngine;
 
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
-import sapphire.Sapphire;
-import sapphire.imgui.SappImGUILayer;
 
 import java.util.ArrayList;
 
