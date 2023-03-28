@@ -77,8 +77,4 @@ public class ProjectWindow extends ImguiWindow {
             ImGui.spacing();
         }
     }
-
-    private void drawFile() {
-
-    }
 }

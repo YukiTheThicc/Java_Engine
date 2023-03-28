@@ -6,6 +6,7 @@ import diamondEngine.diaRenderer.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
 import sapphire.imgui.SappImGUILayer;
+import sapphire.utils.SappDefaultLiterals;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -110,42 +111,7 @@ public class Sapphire {
     }
 
     public void defaultLiterals() {
-        literals.put("file", "File");
-        literals.put("window", "Window");
-        literals.put("new_file", "New file");
-        literals.put("open_file", "Open file");
-        literals.put("save_file", "Save file");
-        literals.put("save_as", "Save as...");
-        literals.put("open_project", "Open project");
-        literals.put("export_project", "Export project");
-        literals.put("settings", "Settings");
-        literals.put("active_windows", "Active windows");
-        literals.put("assets", "Assets");
-        literals.put("sprites", "Sprites");
-        literals.put("tiles", "Tiles");
-        literals.put("sounds", "Sounds");
-        literals.put("entity_properties", "Entity properties");
-        literals.put("env_hierarchy", "Environments");
-        literals.put("apply", "Apply");
-        literals.put("accept", "Accept");
-        literals.put("ok", "Ok");
-        literals.put("close", "Close");
-        literals.put("cancel", "Cancel");
-        literals.put("yes", "Yes");
-        literals.put("no", "No");
-        literals.put("confirm_save", "Save?");
-        literals.put("sure_to_save_log", "Save log to new file?");
-        literals.put("clear", "Clear");
-        literals.put("severity", "Severity");
-        literals.put("lang", "Language");
-        literals.put("dont_ask_again", "Don't ask this again");
-        literals.put("save_log", "Save log");
-        literals.put("general_settings", "General");
-        literals.put("style_settings", "Styles");
-        literals.put("font", "Font");
-        literals.put("create_project", "Create project");
-        literals.put("no_project_file", "No project configuration has been found on the directory");
-        literals.put("dir_not_empty", "Cannot create a project on this directory, choose an empty directoryw");
+        this.literals = SappDefaultLiterals.generateDefaults();
     }
 
     public static Sapphire get() {
@@ -155,7 +121,7 @@ public class Sapphire {
         return sapphire;
     }
 
-    public void start() {
+    public void launch() {
         // Initialize general front end an Engine
         DiaLogger.init();
         DiaUtils.init();

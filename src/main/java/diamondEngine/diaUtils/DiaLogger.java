@@ -64,36 +64,38 @@ public class DiaLogger extends Thread {
 
     // METHODS
     public static void init() {
-        diaLogger = new DiaLogger();
-        diaLogger.log = new File("log.txt");
-        diaLogger.literals = new HashMap<>();
-        diaLogger.sdf = new SimpleDateFormat("hh:mm:ss.SSS");
-        diaLogger.observers = new ArrayList<>();
-        diaLogger.entryBuffer = new ArrayList<>();
-        diaLogger.levelBuffer = new ArrayList<>();
-        diaLogger.earlyEntryBuffer = new ArrayList<>();
-        diaLogger.earlyLevelBuffer = new ArrayList<>();
-        diaLogger.currentLevel = DiaLoggerLevel.DEBUG;
-        diaLogger.dirty = true; // Es otaku y no se lava nunca, lo inicializamos siempre en manchao sisi
+        if (diaLogger == null) {
+            diaLogger = new DiaLogger();
+            diaLogger.log = new File("log.txt");
+            diaLogger.literals = new HashMap<>();
+            diaLogger.sdf = new SimpleDateFormat("hh:mm:ss.SSS");
+            diaLogger.observers = new ArrayList<>();
+            diaLogger.entryBuffer = new ArrayList<>();
+            diaLogger.levelBuffer = new ArrayList<>();
+            diaLogger.earlyEntryBuffer = new ArrayList<>();
+            diaLogger.earlyLevelBuffer = new ArrayList<>();
+            diaLogger.currentLevel = DiaLoggerLevel.DEBUG;
+            diaLogger.dirty = true; // Es otaku y no se lava nunca, lo inicializamos siempre en manchao sisi
 
-        // Clear log file for new session
-        // REVISE: Maybe better to keep ALL log entries for other sessions or creating log file depending on the day
-        try {
-            PrintWriter writer = new PrintWriter(DiaLogger.diaLogger.log);
-            writer.print("");
-            writer.close();
-        } catch (IOException e) {
-            System.err.println("FAILED WHILE CLEARING LOG: '" + DiaLogger.diaLogger.log.getAbsolutePath() + "'");
+            // Clear log file for new session
+            // REVISE: Maybe better to keep ALL log entries for other sessions or creating log file depending on the day
+            try {
+                PrintWriter writer = new PrintWriter(DiaLogger.diaLogger.log);
+                writer.print("");
+                writer.close();
+            } catch (IOException e) {
+                System.err.println("FAILED WHILE CLEARING LOG: '" + DiaLogger.diaLogger.log.getAbsolutePath() + "'");
+            }
+
+            DiaLogger.diaLogger.literals.put(DiaLoggerLevel.INFO, "INFO");
+            DiaLogger.diaLogger.literals.put(DiaLoggerLevel.DEBUG, "DEBUG");
+            DiaLogger.diaLogger.literals.put(DiaLoggerLevel.WARN, "WARNING");
+            DiaLogger.diaLogger.literals.put(DiaLoggerLevel.ERROR, "ERROR");
+            DiaLogger.diaLogger.literals.put(DiaLoggerLevel.CRITICAL, "CRITICAL");
+
+            diaLogger.start();
+            diaLogger.isRunning = true;
         }
-
-        DiaLogger.diaLogger.literals.put(DiaLoggerLevel.INFO, "INFO");
-        DiaLogger.diaLogger.literals.put(DiaLoggerLevel.DEBUG, "DEBUG");
-        DiaLogger.diaLogger.literals.put(DiaLoggerLevel.WARN, "WARNING");
-        DiaLogger.diaLogger.literals.put(DiaLoggerLevel.ERROR, "ERROR");
-        DiaLogger.diaLogger.literals.put(DiaLoggerLevel.CRITICAL, "CRITICAL");
-
-        diaLogger.start();
-        diaLogger.isRunning = true;
     }
 
     private static String getTime() {
