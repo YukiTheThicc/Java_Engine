@@ -1,6 +1,7 @@
 package sapphire;
 
 import com.google.gson.JsonObject;
+import diamondEngine.Diamond;
 import diamondEngine.Window;
 import diamondEngine.diaRenderer.Texture;
 import diamondEngine.diaUtils.DiaLogger;
@@ -26,12 +27,14 @@ public class Sapphire {
     private static Sapphire sapphire = null;
     private final Window window;
     private SappImGUILayer imGUILayer;
-    private boolean running;
-    private float dt;
     private SapphireSettings settings;
     private SapphireProject project;
     private HashMap<String, String> literals;
     private HashMap<String, Texture> icons;
+    private Diamond diaInstance;
+    private boolean diaRunning;
+    private boolean running;
+    private float dt;
 
     // CONSTRUCTORS
     private Sapphire() {
@@ -41,6 +44,8 @@ public class Sapphire {
         this.running = false;
         this.literals = new HashMap<>();
         this.icons = new HashMap<>();
+        this.diaInstance = Diamond.get();
+        this.diaRunning = false;
         this.project = null;
         this.dt = 0f;
     }
@@ -69,7 +74,6 @@ public class Sapphire {
         }
         return Sapphire.get().icons.get("_blank.png");
     }
-
 
     public SapphireProject getProject() {
         return project;
@@ -100,7 +104,7 @@ public class Sapphire {
     }
 
     private void loadIcons() {
-        ArrayList<File> icons = DiaUtils.getFilesInDir("sapphire/res/icons/16", "png");
+        ArrayList<File> icons = DiaUtils.getFilesInDir("sapphire/res/icons", "png");
         for (File icon : icons) {
             Texture iconTex = new Texture();
             iconTex.load(icon.getAbsolutePath());
@@ -132,29 +136,30 @@ public class Sapphire {
         settings.init();
         imGUILayer.init();
         run();
-        project.closeProject();
+        if (project != null) project.closeProject();
         imGUILayer.destroyImGui();
         DiaLogger.close();
     }
 
     public void run() {
-        this.running = true;
+        running = true;
         float bt = (float) glfwGetTime();
         float et;
-        while (this.running) {
-            this.window.pollEvents();
-            this.window.startFrame();
-            if (glfwGetWindowAttrib(window.getGlfwWindow(), GLFW_FOCUSED) != 0) {
-                /*if (dt >= 0) {
-                }*/
-                this.project.checkForChanges(dt);
-                this.imGUILayer.update();
+        while (running) {
+            window.pollEvents();
+            window.startFrame();
+
+            if (dt >= 0) {
+                imGUILayer.update();
+                if (diaRunning) {
+                    diaInstance.update();
+                }
             }
-            this.window.endFrame();
+            window.endFrame();
             et = (float) glfwGetTime();
             dt = et - bt;
             bt = et;
-            this.running = !this.shouldClose();
+            running = !shouldClose();
         }
     }
 }

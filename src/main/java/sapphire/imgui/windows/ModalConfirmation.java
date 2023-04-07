@@ -4,7 +4,9 @@ import diamondEngine.Window;
 import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
-import sapphire.SapphireObserver;
+import sapphire.events.SappEvent;
+import sapphire.events.SappEventType;
+import sapphire.events.SappObserver;
 import sapphire.Sapphire;
 import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
@@ -18,11 +20,11 @@ public class ModalConfirmation extends ImguiWindow {
     private final String message;
     private final String affirmative;
     private final String negative;
-    private final SapphireObserver parent;
+    private final SappObserver parent;
     private ImBoolean askAgain;
 
     // CONSTRUCTORS
-    public ModalConfirmation(String id, String title, String message, String affirmative, String negative, SapphireObserver parent) {
+    public ModalConfirmation(String id, String title, String message, String affirmative, String negative, SappObserver parent) {
         super(id, title, false);
         this.result = false;
         this.message = message;
@@ -30,12 +32,12 @@ public class ModalConfirmation extends ImguiWindow {
         this.negative = negative;
         this.askAgain = new ImBoolean(true);
         this.parent = parent;
-        this.setSizeX(250f);
-        this.setSizeY(100f);
+        this.setSizeX(Sapphire.get().getSettings().getFontSize() * 25);
+        this.setSizeY(Sapphire.get().getSettings().getFontSize() * 10);
         this.setActive(true);
     }
 
-    public ModalConfirmation(String id, String title, String message, SapphireObserver parent) {
+    public ModalConfirmation(String id, String title, String message, SappObserver parent) {
         super(id, title, false);
         this.result = false;
         this.message = message;
@@ -43,8 +45,8 @@ public class ModalConfirmation extends ImguiWindow {
         this.negative = Sapphire.getLiteral("no");
         this.askAgain = new ImBoolean(true);
         this.parent = parent;
-        this.setSizeX(250f);
-        this.setSizeY(100f);
+        this.setSizeX(Sapphire.get().getSettings().getFontSize() * 25);
+        this.setSizeY(Sapphire.get().getSettings().getFontSize() * 10);
         this.setActive(true);
     }
 
@@ -72,12 +74,12 @@ public class ModalConfirmation extends ImguiWindow {
 
             if (ImGui.button(affirmative)) {
                 result = true;
-                parent.onNotify();
+                parent.onNotify(new SappEvent(SappEventType.Confirm));
             }
             ImGui.sameLine();
             if (ImGui.button(negative)) {
                 result = false;
-                parent.onNotify();
+                parent.onNotify(new SappEvent(SappEventType.Cancel));
             }
 
             SappImGui.align(AlignX.RIGHT, AlignY.BOTTOM, SappImGui.textSize(Sapphire.getLiteral("dont_ask_again")) + ImGui.getFontSize() + ImGui.getStyle().getFramePaddingX() * 2, ImGui.getFontSize() + ImGui.getStyle().getFramePaddingY() * 2);

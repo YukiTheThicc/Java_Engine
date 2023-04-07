@@ -9,7 +9,8 @@ import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
 import imgui.type.ImInt;
-import sapphire.SapphireObserver;
+import sapphire.events.SappEvent;
+import sapphire.events.SappObserver;
 import sapphire.Sapphire;
 import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
@@ -21,7 +22,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
-public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, SapphireObserver {
+public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, SappObserver {
 
     private static final int DEFAULT_LINES = 50;
 
@@ -142,7 +143,7 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
     }
 
     @Override
-    public void onNotify() {
+    public void onNotify(SappEvent event) {
         DiaLogger.log("Save log modal window response received");
         if (confWindow != null) {
             if (confWindow.result()) {

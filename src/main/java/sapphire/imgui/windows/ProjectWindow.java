@@ -6,6 +6,7 @@ import diamondEngine.diaUtils.DiaUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiSelectableFlags;
 import sapphire.Sapphire;
+import sapphire.SapphireActions;
 import sapphire.SapphireDir;
 import sapphire.SapphireProject;
 import sapphire.imgui.AlignX;
@@ -68,9 +69,8 @@ public class ProjectWindow extends ImguiWindow {
 
                 if (ImGui.selectable(file.getName(), false, ImGuiSelectableFlags.AllowDoubleClick)) selected = file.getName();
                 if (ImGui.isMouseDoubleClicked(GLFW_MOUSE_BUTTON_LEFT) && selected != null) {
-                    layer.addWindow(new FileWindow(file.getName(), file));
+                    if (!file.getName().equals(SapphireProject.PROJECT_FILE)) layer.addWindow(new FileWindow(file.getName(), file));
                 }
-
             }
 
             ImGui.treePop();

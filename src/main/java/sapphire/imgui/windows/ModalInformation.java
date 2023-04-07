@@ -22,8 +22,8 @@ public class ModalInformation extends ImguiWindow{
         this.result = false;
         this.message = message;
         this.ok = Sapphire.getLiteral("ok");
-        this.setSizeX(250f);
-        this.setSizeY(100f);
+        this.setSizeX(Sapphire.get().getSettings().getFontSize() * 25);
+        this.setSizeY(Sapphire.get().getSettings().getFontSize() * 10);
         this.setActive(true);
     }
 

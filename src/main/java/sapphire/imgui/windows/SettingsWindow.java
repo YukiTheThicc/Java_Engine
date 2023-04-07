@@ -15,9 +15,6 @@ import sapphire.imgui.AlignY;
 import sapphire.imgui.SappImGUILayer;
 import sapphire.imgui.SappImGui;
 
-import java.io.File;
-import java.util.ArrayList;
-
 public class SettingsWindow extends ImguiWindow {
 
     public SettingsWindow() {

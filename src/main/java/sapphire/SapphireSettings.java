@@ -201,6 +201,7 @@ public class SapphireSettings {
                     }
                 }
                 this.currentLang = lang;
+                DiaLogger.log("Successfully changed language to '" + lang + "'");
             } catch (IOException e) {
                 DiaLogger.log("Failed to load language map from '" + path.getAbsolutePath() + "'", DiaLoggerLevel.ERROR);
             }
@@ -250,6 +251,7 @@ public class SapphireSettings {
             showPreferences = temp.getShowPreferences();
             currentLang = temp.getCurrentLang();
             lastProject = temp.getLastProject();
+            fontSize = temp.getFontSize();
             changeLangTo(currentLang);
 
             if (!lastProject.isEmpty() && new File(lastProject).isDirectory()) {

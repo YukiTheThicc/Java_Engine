@@ -20,22 +20,17 @@ public class SapphireProject {
     // CONSTANTS
     public static final String PROJECT_FILE = "project.sapp";
     public static final String ENVS_DIR = "envs";
-    private static final float WATCH_DEBOUNCE = 0.25f;
 
     // ATTRIBUTES
     private List<File> openedFiles;
     private List<DiaEnvironment> environments;
-    private WatchService watcher;
     private transient SapphireDir root;
-    private float dt;
 
     // CONSTRUCTORS
     public SapphireProject(SapphireDir root) {
         this.root = root;
         this.openedFiles = new ArrayList<>();
         this.environments = new ArrayList<>();
-        this.watcher = null;
-        this.dt = 0.0f;
     }
 
     // GETTERS & SETTERS
@@ -92,46 +87,25 @@ public class SapphireProject {
         String inFile = "";
 
         try {
-
             File projectFile = new File(dir.getAbsoluteFile() + "\\" + PROJECT_FILE);
             if (projectFile.exists()) {
                 inFile = new String(Files.readAllBytes(projectFile.toPath()));
-                watcher = FileSystems.getDefault().newWatchService();
-                dir.toPath().register(watcher, StandardWatchEventKinds.ENTRY_CREATE,
-                        StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_DELETE);
+                DiaLogger.log("Loading project file from '" + projectFile.getAbsolutePath() + "'");
             } else {
                 SappImGui.infoModal(Sapphire.getLiteral("project"), Sapphire.getLiteral("no_project_file"));
                 root = null;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (!inFile.equals("")) {
-            SapphireProject temp = gson.fromJson(inFile, SapphireProject.class);
-            root.loadDirectory();
-            environments = temp.getEnvironments();
-            openedFiles = temp.getOpenedFiles();
-            return true;
+            if (!inFile.equals("")) {
+                SapphireProject temp = gson.fromJson(inFile, SapphireProject.class);
+                root.loadDirectory();
+                environments = temp.getEnvironments();
+                openedFiles = temp.getOpenedFiles();
+                return true;
+            }
+        } catch (Exception e) {
+            DiaLogger.log("Failed to open project file: " + e.getMessage(), DiaLoggerLevel.ERROR);
         }
         return false;
-    }
-
-    /**
-     * Checha
-     * @param dt
-     */
-    public void checkForChanges(float dt) {
-
-        this.dt += dt;
-        if (this.dt > WATCH_DEBOUNCE) {
-            WatchKey key = watcher.poll();
-            if (key != null) {
-                key.reset();
-            }
-
-            this.dt -= WATCH_DEBOUNCE;
-        }
     }
 
     public void closeProject() {

@@ -15,7 +15,7 @@ public class GameViewWindow extends ImguiWindow {
     // CONSTRUCTORS
     public GameViewWindow() {
         super("game_view", "Game View");
-        this.setFlags(ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar);
+        this.setFlags(ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.MenuBar);
     }
 
     // METHODS
@@ -50,6 +50,9 @@ public class GameViewWindow extends ImguiWindow {
         imgui.internal.ImGui.setNextWindowDockID(layer.getDockId());
         ImGui.begin(this.getTitle(), this.getFlags());
 
+        // Menu bar
+        menuBar();
+
         ImGui.setCursorPos(ImGui.getCursorPosX(), ImGui.getCursorPosY());
         ImVec2 windowSize = getLargestSizeForViewport();
         ImVec2 windowPos = getCenteredPositionForViewport(windowSize);
@@ -65,5 +68,14 @@ public class GameViewWindow extends ImguiWindow {
         ImGui.image(textureId, windowSize.x, windowSize.y, 0, 1, 1, 0);
 
         ImGui.end();
+    }
+
+    private void menuBar() {
+        ImGui.beginMenuBar();
+        if (ImGui.menuItem("Play")) {
+        }
+        if (ImGui.menuItem("Stop")) {
+        }
+        ImGui.endMenuBar();
     }
 }

@@ -9,7 +9,7 @@ import imgui.type.ImInt;
 import imgui.type.ImString;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import sapphire.SapphireObserver;
+import sapphire.events.SappObserver;
 import sapphire.Sapphire;
 import sapphire.imgui.windows.ModalConfirmation;
 import sapphire.imgui.windows.ImguiWindow;
@@ -268,7 +268,7 @@ public class SappImGui {
         return false;
     }
 
-    public static ImguiWindow confirmModal(String title, String message, String aff, String neg, SapphireObserver parent) {
+    public static ImguiWindow confirmModal(String title, String message, String aff, String neg, SappObserver parent) {
         String id = title.toLowerCase().replace(" ", "_");
         ImguiWindow modal =  Sapphire.get().getImGUILayer().getWindows().get(id);
         if (modal == null) {
@@ -279,7 +279,7 @@ public class SappImGui {
         return modal;
     }
 
-    public static ImguiWindow confirmModal(String title, String message, SapphireObserver parent) {
+    public static ImguiWindow confirmModal(String title, String message, SappObserver parent) {
         String id = title.toLowerCase().replace(" ", "_");
         ImguiWindow modal =  Sapphire.get().getImGUILayer().getWindows().get(id);
         if (modal == null) {
