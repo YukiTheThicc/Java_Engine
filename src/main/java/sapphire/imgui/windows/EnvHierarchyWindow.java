@@ -2,20 +2,24 @@ package sapphire.imgui.windows;
 
 import diamondEngine.DiaEnvironment;
 import diamondEngine.Diamond;
-import diamondEngine.diaRenderer.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
 import sapphire.Sapphire;
+import sapphire.SapphireEvents;
+import sapphire.events.SappEvent;
+import sapphire.events.SappEventType;
 import sapphire.imgui.SappImGUILayer;
+import sapphire.imgui.components.SappImageButton;
 
 public class EnvHierarchyWindow extends ImguiWindow {
 
     // ATTRIBUTES
-    private Diamond currentInstance;
+    private final SappImageButton newRootEnvButton;
 
     public EnvHierarchyWindow() {
         super("env_hierarchy", "Environment Hierarchy");
+        this.newRootEnvButton = new SappImageButton(Sapphire.getIcon("2d.png"), Sapphire.getLiteral("create_root_env"));
     }
 
     @Override
@@ -35,21 +39,13 @@ public class EnvHierarchyWindow extends ImguiWindow {
     }
 
     private void drawEmptyEnvsPrompt() {
-
-        Texture tex = Sapphire.getIcon("add.png");
-        ImGui.beginGroup();
-        if (ImGui.imageButton(tex.getId(), tex.getWidth(), tex.getHeight())) {
-            // Button is clicked
-        }
-        ImGui.sameLine();
-        if (ImGui.button(Sapphire.getLiteral("create_root_env"))) Diamond.get().addEmptyEnvironment();
-        ImGui.endGroup();
-
+        if (newRootEnvButton.draw()) SapphireEvents.notify(new SappEvent(SappEventType.New_root_env));
     }
 
     private void drawNestedEntities() {
 
         for (DiaEnvironment env : Diamond.get().getEnvironments()) {
+            itemContextMenu();
             if (ImGui.treeNode(env.getName())) {
 
                 ImGui.treePop();
@@ -68,7 +64,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
     }
 
     private void itemContextMenu() {
-        if (ImGui.beginPopupContextItem("env_menu")) {
+        if (ImGui.beginPopupContextItem("env_item")) {
             if (ImGui.menuItem(Sapphire.getLiteral("create_entity"))) {
                 DiaLogger.log("Selected item context menu on '" + Sapphire.getLiteral("create_entity") + "'");
             }

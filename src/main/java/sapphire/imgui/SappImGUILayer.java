@@ -99,7 +99,6 @@ public class SappImGUILayer {
 
         initCallbacks(io);
         updateFonts(io);
-        initWindows();
 
         // Set up clipboard functionality
         io.setSetClipboardTextFn(new ImStrConsumer() {
@@ -123,6 +122,7 @@ public class SappImGUILayer {
 
         imGuiGlfw.init(glfwWindow, true);
         imGuiGl3.init("#version 330 core");
+        initWindows();
     }
 
     private void initCallbacks(ImGuiIO io) {
@@ -188,7 +188,13 @@ public class SappImGUILayer {
     }
 
     private void initWindows() {
-        // For now windows are going to be statically added in the init function
+        /*
+         * For now windows are going to be statically added in the init function. A new ImGui frame is created to allow
+         * the use of ImGUI functionalities when creating the windows
+         */
+
+        startFrame();
+
         // WINDOWS
         gameView = new GameViewWindow();
         ImguiWindow newWindow = new SettingsWindow();
@@ -219,6 +225,8 @@ public class SappImGUILayer {
                 }
             }
         }
+
+        endFrame();
     }
 
     public void addWindow(ImguiWindow window) {
@@ -273,6 +281,7 @@ public class SappImGUILayer {
                 windows.get(window).imgui(this);
             }
         }
+
         endFrame();
 
         if (dirty) {

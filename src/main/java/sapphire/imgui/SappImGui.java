@@ -3,6 +3,10 @@ package sapphire.imgui;
 import diamondEngine.diaRenderer.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
+import imgui.ImGuiIO;
+import imgui.ImVec2;
+import imgui.ImVec4;
+import imgui.flag.ImGuiButtonFlags;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
 import imgui.type.ImInt;
@@ -169,10 +173,11 @@ public class SappImGui {
     /**
      * Sets the ImGUI cursor to be aligned on both axis given the desired alignment and total size of the elements to be
      * aligned on both axis, within the window the function is called.
+     *
      * @param alignX Enum value of the horizontal alignment
      * @param alignY Enum value of the vertical alignment
-     * @param sizeX Size on the horizontal axis to offset the cursor
-     * @param sizeY Size on the vertical axis to offset the cursor
+     * @param sizeX  Size on the horizontal axis to offset the cursor
+     * @param sizeY  Size on the vertical axis to offset the cursor
      */
     public static void align(AlignX alignX, AlignY alignY, float sizeX, float sizeY) {
 
@@ -188,7 +193,7 @@ public class SappImGui {
                 x = ImGui.getStyle().getWindowPaddingX();
                 break;
             case CENTER:
-                x = regionX/2 - sizeX/2;
+                x = regionX / 2 - sizeX / 2;
                 break;
             case RIGHT:
                 x = regionX - sizeX - ImGui.getStyle().getWindowPaddingX();
@@ -200,7 +205,7 @@ public class SappImGui {
                 y = titleBarY;
                 break;
             case CENTER:
-                y = regionY/2 - sizeY/2;
+                y = regionY / 2 - sizeY / 2;
                 break;
             case BOTTOM:
                 y = regionY - sizeY - ImGui.getStyle().getWindowPaddingY();
@@ -270,7 +275,7 @@ public class SappImGui {
 
     public static ImguiWindow confirmModal(String title, String message, String aff, String neg, SappObserver parent) {
         String id = title.toLowerCase().replace(" ", "_");
-        ImguiWindow modal =  Sapphire.get().getImGUILayer().getWindows().get(id);
+        ImguiWindow modal = Sapphire.get().getImGUILayer().getWindows().get(id);
         if (modal == null) {
             modal = new ModalConfirmation(id, title, message, aff, neg, parent);
             Sapphire.get().getImGUILayer().addWindow(modal);
@@ -281,7 +286,7 @@ public class SappImGui {
 
     public static ImguiWindow confirmModal(String title, String message, SappObserver parent) {
         String id = title.toLowerCase().replace(" ", "_");
-        ImguiWindow modal =  Sapphire.get().getImGUILayer().getWindows().get(id);
+        ImguiWindow modal = Sapphire.get().getImGUILayer().getWindows().get(id);
         if (modal == null) {
             modal = new ModalConfirmation(id, title, message, parent);
             Sapphire.get().getImGUILayer().addWindow(modal);
@@ -292,18 +297,13 @@ public class SappImGui {
 
     public static ImguiWindow infoModal(String title, String message) {
         String id = title.toLowerCase().replace(" ", "_");
-        ImguiWindow modal =  Sapphire.get().getImGUILayer().getWindows().get(id);
+        ImguiWindow modal = Sapphire.get().getImGUILayer().getWindows().get(id);
         if (modal == null) {
             modal = new ModalInformation(id, title, message);
             Sapphire.get().getImGUILayer().addWindow(modal);
         }
         modal.setActive(true);
         return modal;
-    }
-
-    public static boolean imageButton(Texture image, String label) {
-        ImGui.text(label);
-        return ImGui.imageButton(image.getId(), image.getWidth(), image.getHeight());
     }
 
     public static void iconText(Texture image, String text) {

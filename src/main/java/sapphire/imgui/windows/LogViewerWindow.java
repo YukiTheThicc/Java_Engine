@@ -69,7 +69,6 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
         }
 
         // Logger options part
-        ImGui.pushStyleColor(ImGuiCol.ChildBg, 50, 50, 50, 255);
         if (ImGui.beginChild("options", 200f, 0f)) {
 
             ImGui.sameLine();
@@ -95,7 +94,6 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
         }
 
         ImGui.endChild();
-        ImGui.popStyleColor();
         ImGui.sameLine();
 
         // Log viewer part

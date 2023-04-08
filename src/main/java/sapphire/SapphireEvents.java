@@ -1,6 +1,8 @@
 package sapphire;
 
+import sapphire.events.SappEvent;
 import sapphire.events.SappObserver;
+import sapphire.events.handlers.EnvWindowEventHandler;
 import sapphire.events.handlers.MenuEventHandler;
 
 import java.util.ArrayList;
@@ -18,9 +20,16 @@ public class SapphireEvents {
     // METHODS
     public static void init() {
         observers.add(new MenuEventHandler());
+        observers.add(new EnvWindowEventHandler());
     }
 
     public static void addObserver(SappObserver observer) {
         observers.add(observer);
+    }
+
+    public static void notify(SappEvent event) {
+        for (SappObserver observer : observers) {
+            observer.onNotify(event);
+        }
     }
 }

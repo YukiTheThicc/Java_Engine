@@ -44,14 +44,12 @@ public class ProfilerWindow extends ImguiWindow {
         ImGui.separator();
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
         ImGui.text(Sapphire.getLiteral("current_threads"));
-        ImGui.pushStyleColor(ImGuiCol.ChildBg, 50, 50, 50, 255);
         if (ImGui.beginChild("options")) {
             for (Thread thread : threadSet) {
                 ImGui.text(thread.getName() + ": " + thread.getState());
             }
         }
         ImGui.endChild();
-        ImGui.popStyleColor();
         ImGui.end();
     }
 }

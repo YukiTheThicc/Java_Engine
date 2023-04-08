@@ -5,6 +5,9 @@ import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiWindowFlags;
 import org.joml.Vector2f;
+import sapphire.SapphireEvents;
+import sapphire.events.SappEvent;
+import sapphire.events.SappEventType;
 import sapphire.imgui.SappImGUILayer;
 
 public class GameViewWindow extends ImguiWindow {
@@ -14,8 +17,9 @@ public class GameViewWindow extends ImguiWindow {
 
     // CONSTRUCTORS
     public GameViewWindow() {
-        super("game_view", "Game View");
-        this.setFlags(ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.MenuBar);
+        super("game_view", "##Game View");
+        this.setFlags(ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.MenuBar |
+                ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize);
     }
 
     // METHODS
@@ -73,6 +77,7 @@ public class GameViewWindow extends ImguiWindow {
     private void menuBar() {
         ImGui.beginMenuBar();
         if (ImGui.menuItem("Play")) {
+            SapphireEvents.notify(new SappEvent(SappEventType.Play));
         }
         if (ImGui.menuItem("Stop")) {
         }

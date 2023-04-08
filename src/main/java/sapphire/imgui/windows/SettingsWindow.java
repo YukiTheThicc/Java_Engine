@@ -40,7 +40,6 @@ public class SettingsWindow extends ImguiWindow {
                 SapphireSettings settings = Sapphire.get().getSettings();
                 if (ImGui.beginTabBar(this.getTitle(), this.getFlags())) {
                     generalSettingsTab(settings);
-                    styleSettingsTab(settings);
                     ImGui.endTabBar();
                 }
 
@@ -82,20 +81,6 @@ public class SettingsWindow extends ImguiWindow {
             if (newLang != null) {
                 settings.changeLangTo(newLang);
             }
-            ImGui.endTabItem();
-        }
-    }
-
-    private void styleSettingsTab(SapphireSettings settings) {
-        if (ImGui.beginTabItem(Sapphire.getLiteral("style_settings"))) {
-
-            String[] colors = {};
-            colors = settings.getColors().keySet().toArray(colors);
-            ImInt index = new ImInt();
-            if (ImGui.combo(Sapphire.getLiteral("Color"), index, colors)) {
-                DiaLogger.log("Selected color: " + colors[index.get()]);
-            }
-
             ImGui.endTabItem();
         }
     }
