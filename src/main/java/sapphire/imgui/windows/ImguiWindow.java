@@ -1,5 +1,6 @@
 package sapphire.imgui.windows;
 
+import imgui.flag.ImGuiDockNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
 import sapphire.imgui.SappImGUILayer;
@@ -8,13 +9,14 @@ public abstract class ImguiWindow {
 
     private static final float DEFAULT_SIZE_X = 400f;
     private static final float DEFAULT_SIZE_Y = 400f;
+    private static final int DEFAULT_FLAGS = ImGuiWindowFlags.NoFocusOnAppearing | ImGuiWindowFlags.NoCollapse;
 
     // ATTRIBUTES
     private float sizeX;
     private float sizeY;
-    private String id;
-    private String title;
-    private ImBoolean isActive;
+    private final String id;
+    private final String title;
+    private final ImBoolean isActive;
     private boolean shouldClose;
     private int flags;
     private final boolean isConfigurable;
@@ -33,7 +35,7 @@ public abstract class ImguiWindow {
         this.title = title;
         this.isActive = new ImBoolean(false);
         this.shouldClose = false;
-        this.flags = ImGuiWindowFlags.None;
+        this.flags = DEFAULT_FLAGS;
         this.isConfigurable = isConfigurable;
         this.sizeX = DEFAULT_SIZE_X;
         this.sizeY = DEFAULT_SIZE_Y;
@@ -50,7 +52,7 @@ public abstract class ImguiWindow {
         this.title = title;
         this.isActive = new ImBoolean(false);
         this.shouldClose = false;
-        this.flags = ImGuiWindowFlags.None;
+        this.flags = DEFAULT_FLAGS;
         this.isConfigurable = true;
         this.sizeX = DEFAULT_SIZE_X;
         this.sizeY = DEFAULT_SIZE_Y;
@@ -61,16 +63,8 @@ public abstract class ImguiWindow {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public ImBoolean isActive() {
@@ -89,7 +83,7 @@ public abstract class ImguiWindow {
      * Sets if the window should close. Sapphire will store all windows that should close in an Array after they are
      * updated, and then proceed to remove them. In this way, if a window has the capability of close itself, its always
      * removed safely.
-     * @param close
+     * @param close True if the window should be closed
      */
     public void close(boolean close) {
         this.shouldClose = close;
@@ -104,7 +98,7 @@ public abstract class ImguiWindow {
     }
 
     public void setFlags(int flags) {
-        this.flags = flags;
+        this.flags = DEFAULT_FLAGS | flags;
     }
 
     public float getSizeX() {

@@ -14,7 +14,7 @@ public class AssetsWindow extends ImguiWindow {
     public void imgui(SappImGUILayer layer) {
 
         ImGui.setNextWindowSize(400f, 400f, ImGuiCond.FirstUseEver);
-        ImGui.begin(this.getTitle());
+        ImGui.begin(this.getTitle(), this.getFlags());
 
         if (ImGui.beginTabBar(this.getTitle(), this.getFlags())) {
             if (ImGui.beginTabItem("Sprites")) {

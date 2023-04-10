@@ -4,22 +4,20 @@ import diamondEngine.Window;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiWindowFlags;
-import org.joml.Vector2f;
-import sapphire.SapphireEvents;
-import sapphire.events.SappEvent;
-import sapphire.events.SappEventType;
 import sapphire.imgui.SappImGUILayer;
+import sapphire.imgui.components.GameViewWindowControls;
 
 public class GameViewWindow extends ImguiWindow {
 
     // ATTRIBUTES
     private int leftX, rightX, topY, bottomY;
+    private final GameViewWindowControls controls = new GameViewWindowControls();
 
     // CONSTRUCTORS
     public GameViewWindow() {
-        super("game_view", "##Game View");
-        this.setFlags(ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.MenuBar |
-                ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize);
+        super("game_view", "Main View");
+        this.setFlags(ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse |
+                ImGuiWindowFlags.NoResize);
     }
 
     // METHODS
@@ -51,15 +49,13 @@ public class GameViewWindow extends ImguiWindow {
 
     public void imgui(SappImGUILayer layer) {
 
-        imgui.internal.ImGui.setNextWindowDockID(layer.getDockId());
+        ImGui.setNextWindowDockID(layer.getDockId());
         ImGui.begin(this.getTitle(), this.getFlags());
-
-        // Menu bar
-        menuBar();
 
         ImGui.setCursorPos(ImGui.getCursorPosX(), ImGui.getCursorPosY());
         ImVec2 windowSize = getLargestSizeForViewport();
         ImVec2 windowPos = getCenteredPositionForViewport(windowSize);
+
         ImGui.setCursorPos(windowPos.x, windowPos.y);
         this.setSizeX((int) windowSize.x);
         this.setSizeY((int) windowSize.y);
@@ -68,19 +64,12 @@ public class GameViewWindow extends ImguiWindow {
         bottomY = (int) (windowPos.y + ImGui.getStyle().getFramePaddingY());
         topY = (int) (windowPos.y + this.getSizeY() + ImGui.getStyle().getFramePaddingY());
 
+        // Controls
+        controls.drawControls();
+
         int textureId = Window.getFramebuffer().getTexture().getId();
         ImGui.image(textureId, windowSize.x, windowSize.y, 0, 1, 1, 0);
 
         ImGui.end();
-    }
-
-    private void menuBar() {
-        ImGui.beginMenuBar();
-        if (ImGui.menuItem("Play")) {
-            SapphireEvents.notify(new SappEvent(SappEventType.Play));
-        }
-        if (ImGui.menuItem("Stop")) {
-        }
-        ImGui.endMenuBar();
     }
 }

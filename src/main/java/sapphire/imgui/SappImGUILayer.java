@@ -2,6 +2,7 @@ package sapphire.imgui;
 
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
+import imgui.flag.ImGuiCol;
 import sapphire.Sapphire;
 import sapphire.SapphireControls;
 import sapphire.imgui.windows.*;
@@ -11,7 +12,6 @@ import imgui.*;
 import imgui.callback.ImStrConsumer;
 import imgui.callback.ImStrSupplier;
 import imgui.flag.ImGuiConfigFlags;
-import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
@@ -122,7 +122,44 @@ public class SappImGUILayer {
 
         imGuiGlfw.init(glfwWindow, true);
         imGuiGl3.init("#version 330 core");
+        setSapphireStyles();
         initWindows();
+    }
+
+    public void setSapphireStyles() {
+
+        // Colors
+        int[] SappTheme_Bg = Sapphire.getColor("SappTheme_Bg");
+        int[] SappTheme_Accent = Sapphire.getColor("SappTheme_Accent");
+        int[] SappTheme_HighLight = Sapphire.getColor("SappTheme_HighLight");
+        int[] SappTheme_Dark = Sapphire.getColor("SappTheme_Dark");
+        int[] SappTheme_Font = Sapphire.getColor("SappTheme_Font");
+        ImGui.getStyle().setColor(ImGuiCol.WindowBg, SappTheme_Bg[0], SappTheme_Bg[1], SappTheme_Bg[2], SappTheme_Bg[3]);
+        ImGui.getStyle().setColor(ImGuiCol.MenuBarBg, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.TitleBg, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.TitleBgActive, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.Tab, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.TabActive, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
+        ImGui.getStyle().setColor(ImGuiCol.TabHovered, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
+        ImGui.getStyle().setColor(ImGuiCol.TabUnfocused, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.TabUnfocusedActive, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.Button, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.ButtonActive, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
+        ImGui.getStyle().setColor(ImGuiCol.ButtonHovered, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
+        ImGui.getStyle().setColor(ImGuiCol.NavHighlight, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
+        ImGui.getStyle().setColor(ImGuiCol.ChildBg, SappTheme_Dark[0], SappTheme_Dark[1], SappTheme_Dark[2], SappTheme_Dark[3]);
+        ImGui.getStyle().setColor(ImGuiCol.Text, SappTheme_Font[0], SappTheme_Font[1], SappTheme_Font[2], SappTheme_Font[3]);
+
+        // Style
+        ImGui.getStyle().setChildRounding(0f);
+        ImGui.getStyle().setTabRounding(0f);
+        ImGui.getStyle().setWindowPadding(8f, 8f);
+        ImGui.getStyle().setTabBorderSize(0f);
+        ImGui.getStyle().setChildBorderSize(0f);
+        ImGui.getStyle().setFrameBorderSize(0f);
+        ImGui.getStyle().setWindowBorderSize(0f);
+        ImGui.getStyle().setWindowTitleAlign(0f, 0.5f);
+        ImGui.getStyle().setWindowMinSize(100f, 100f);
     }
 
     private void initCallbacks(ImGuiIO io) {
@@ -209,7 +246,7 @@ public class SappImGUILayer {
         windows.put(newWindow.getId(), newWindow);
         newWindow = new ProfilerWindow();
         windows.put(newWindow.getId(), newWindow);
-        newWindow = new ProjectWindow();
+        newWindow = new FileNavigatorWindow();
         windows.put(newWindow.getId(), newWindow);
         newWindow = new EnvPreviewWindow();
         windows.put(newWindow.getId(), newWindow);
@@ -335,10 +372,11 @@ public class SappImGUILayer {
         ImGui.setNextWindowSize(Window.getWidth(), Window.getHeight());
 
         // ImGui Styles
-        ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0.2f);
-        ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.2f);
+        ImGuiWindowClass windowClass = new ImGuiWindowClass();
+        windowClass.setDockingAlwaysTabBar(false);
+        windowClass.setDockNodeFlagsOverrideSet(16);
+        imgui.ImGui.setNextWindowClass(windowClass);
         ImGui.begin("Dockspace Outer", new ImBoolean(true), windowFlags);
-        ImGui.popStyleVar(2);
 
         // Dockspace
         dockId = ImGui.dockSpace(ImGui.getID("Dockspace"));

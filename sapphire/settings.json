@@ -1,6 +1,6 @@
 {
   "workspace": "C:\\Proyects\\Java_Engine",
-  "currentFont": "visitor",
+  "currentFont": "Prototype",
   "currentLang": "en",
   "lastProject": "C:\\Proyects\\test",
   "activeWindows": {
@@ -8,42 +8,11 @@
     "debug_sapp": true,
     "env_hierarchy": true,
     "entity_properties": true,
+    "navigator": true,
     "log_viewer": true,
     "project": true,
     "env_preview": true,
     "profiler": true
-  },
-  "colors": {
-    "DiaLogger.ERROR": [
-      200,
-      50,
-      50,
-      255
-    ],
-    "DiaLogger.DEBUG": [
-      50,
-      200,
-      50,
-      255
-    ],
-    "DiaLogger.WARN": [
-      200,
-      175,
-      50,
-      255
-    ],
-    "DiaLogger.CRITICAL": [
-      175,
-      50,
-      233,
-      255
-    ],
-    "DiaLogger.INFO": [
-      255,
-      255,
-      255,
-      255
-    ]
   },
   "showPreferences": {},
   "fontSize": 16

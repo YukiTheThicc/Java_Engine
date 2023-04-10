@@ -1,8 +1,6 @@
 package sapphire.imgui.windows;
 
 import diamondEngine.Window;
-import diamondEngine.diaUtils.DiaLogger;
-import diamondEngine.diaUtils.DiaUtils;
 import imgui.*;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiStyleVar;
@@ -36,10 +34,9 @@ public class SettingsWindow extends ImguiWindow {
             ImGui.openPopup(this.getTitle());
             if (ImGui.beginPopupModal(this.getTitle(), this.isActive(), this.getFlags())) {
 
-                ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 6, 6);
                 SapphireSettings settings = Sapphire.get().getSettings();
                 if (ImGui.beginTabBar(this.getTitle(), this.getFlags())) {
-                    generalSettingsTab(settings);
+                    generalSettingsTab(settings, layer);
                     ImGui.endTabBar();
                 }
 
@@ -52,13 +49,12 @@ public class SettingsWindow extends ImguiWindow {
                 ImGui.sameLine();
                 if (ImGui.button(Sapphire.getLiteral("close"))) this.setActive(false);
 
-                ImGui.popStyleVar(1);
                 ImGui.endPopup();
             }
         }
     }
 
-    private void generalSettingsTab(SapphireSettings settings) {
+    private void generalSettingsTab(SapphireSettings settings, SappImGUILayer layer) {
         if (ImGui.beginTabItem(Sapphire.getLiteral("general_settings"))) {
 
             // Workspace
@@ -70,7 +66,7 @@ public class SettingsWindow extends ImguiWindow {
             // Font
             String newFont = SappImGui.combo(Sapphire.getLiteral("font"), settings.getCurrentFont(), settings.getFonts());
             if (newFont != null) {
-                settings.setCurrentFont(newFont);
+                settings.setCurrentFont(newFont, layer);
             }
             ImGui.sameLine();
             ImInt fontSize = new ImInt(settings.getFontSize());

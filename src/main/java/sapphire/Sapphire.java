@@ -28,12 +28,13 @@ public class Sapphire {
     // ATTRIBUTES
     private static Sapphire sapphire = null;
     private final Window window;
-    private SappImGUILayer imGUILayer;
-    private SapphireSettings settings;
+    private final SapphireSettings settings;
+    private final HashMap<String, int[]> colors;
+    private final HashMap<String, Texture> icons;
+    private final Diamond diaInstance;
     private SapphireProject project;
     private HashMap<String, String> literals;
-    private HashMap<String, Texture> icons;
-    private Diamond diaInstance;
+    private SappImGUILayer imGUILayer;
     private boolean diaRunning;
     private boolean running;
     private float dt;
@@ -45,6 +46,7 @@ public class Sapphire {
         this.imGUILayer = null;
         this.running = false;
         this.literals = new HashMap<>();
+        this.colors = new HashMap<>();
         this.icons = new HashMap<>();
         this.diaInstance = Diamond.get();
         this.diaRunning = false;
@@ -100,6 +102,10 @@ public class Sapphire {
         return dt;
     }
 
+    public static int[] getColor(String color) {
+        return Sapphire.get().colors.get(color);
+    }
+
     // METHODS
     private boolean shouldClose() {
         return glfwWindowShouldClose(this.window.getGlfwWindow());
@@ -120,13 +126,16 @@ public class Sapphire {
         this.literals = SappDefaultLiterals.generateDefaults();
     }
 
-    public void setSapphireStyles() {
-        ImGui.getStyle().setColor(ImGuiCol.WindowBg, 30, 35, 43, 255);
-        ImGui.getStyle().setColor(ImGuiCol.MenuBarBg, 54, 75, 108, 255);
-        ImGui.getStyle().setColor(ImGuiCol.TitleBg, 54, 75, 108, 255);
-        ImGui.getStyle().setColor(ImGuiCol.TitleBgActive, 54, 75, 108, 255);
-        ImGui.getStyle().setColor(ImGuiCol.ChildBg, 16, 20, 26, 255);
-        ImGui.getStyle().setColor(ImGuiCol.Text, 218, 224, 232, 255);
+    private void defaultColors() {
+        colors.put("DiaLogger.CRITICAL", new int[]{175,50,233,255});
+        colors.put("DiaLogger.ERROR", new int[]{200,50,50,255});
+        colors.put("DiaLogger.WARN", new int[]{200,175,50,255});
+        colors.put("DiaLogger.DEBUG", new int[]{50,200,50,255});
+        colors.put("SappTheme_Bg", new int[]{30,35,45,255});
+        colors.put("SappTheme_Accent", new int[]{54,75,108,255});
+        colors.put("SappTheme_HighLight", new int[]{86,128,193,255});
+        colors.put("SappTheme_Dark", new int[]{16,20,26,255});
+        colors.put("SappTheme_Font", new int[]{218,224,232,255});
     }
 
     public static Sapphire get() {
@@ -140,14 +149,14 @@ public class Sapphire {
         // Initialize general front end an Engine
         DiaLogger.init();
         DiaUtils.init();
-        SapphireEvents.init();
+        SapphireEvents.init(imGUILayer);
         defaultLiterals();
+        defaultColors();
         window.init("Sapphire", "sapphire/icon.png");
         loadIcons();
         imGUILayer = new SappImGUILayer(this.window.getGlfwWindow());
         settings.init();
         imGUILayer.init();
-        setSapphireStyles();
         run();
         if (project != null) project.closeProject();
         imGUILayer.destroyImGui();

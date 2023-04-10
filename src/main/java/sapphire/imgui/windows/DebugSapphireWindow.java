@@ -12,7 +12,9 @@ public class DebugSapphireWindow extends ImguiWindow {
     @Override
     public void imgui(SappImGUILayer layer) {
 
-        ImGui.begin(this.getTitle());
+        ImGui.begin(this.getTitle(), this.getFlags());
         ImGui.end();
+
+        ImGui.showDemoWindow();
     }
 }

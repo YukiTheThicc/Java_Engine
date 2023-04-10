@@ -46,6 +46,9 @@ public class SappDefaultLiterals {
         literals.put("create_env", "New Environment");
         literals.put("delete_env", "Delete Environment");
         literals.put("create_entity", "Create Entity");
+        literals.put("play", "Play");
+        literals.put("stop", "Stop");
+        literals.put("create_root_env", "Create root Environment");
 
         return literals;
     }

@@ -1,6 +1,5 @@
 package sapphire.events.handlers;
 
-import diamondEngine.Diamond;
 import diamondEngine.diaUtils.DiaLogger;
 import sapphire.events.SappEvent;
 import sapphire.events.SappObserver;

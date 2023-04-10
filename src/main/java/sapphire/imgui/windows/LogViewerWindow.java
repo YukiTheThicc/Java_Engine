@@ -102,7 +102,7 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
             for (int i = 0; i < entries.length; i++) {
                 j = currentLine >= entries.length ? (currentLine + i) % entries.length : i;
                 if (entries[j] != null) {
-                    int[] color = Sapphire.get().getSettings().getColor("DiaLogger." + levels[j]);
+                    int[] color = Sapphire.getColor("DiaLogger." + levels[j]);
                     ImGui.textColored(color[0], color[1], color[2], color[3], entries[j]);
                 } else {
                     break;

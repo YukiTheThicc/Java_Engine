@@ -4,6 +4,7 @@ import com.google.gson.*;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
+import sapphire.imgui.SappImGUILayer;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -24,7 +25,6 @@ public class SapphireSettings {
     private String currentLang;
     private String lastProject;
     private HashMap<String, Boolean> activeWindows;
-    private HashMap<String, int[]> colors;
     private HashMap<String, Boolean> showPreferences;
     private transient HashMap<String, String> languages;
     private transient HashMap<String, String> fonts;
@@ -39,7 +39,6 @@ public class SapphireSettings {
         this.activeWindows = new HashMap<>();
         this.languages = new HashMap<>();
         this.languages.put(this.currentLang, "English");
-        this.colors = new HashMap<>();
         this.showPreferences = new HashMap<>();
         this.fonts = new HashMap<>();
         this.fontSize = 12;
@@ -58,28 +57,13 @@ public class SapphireSettings {
         return currentFont;
     }
 
-    public void setCurrentFont(String currentFont) {
+    public void setCurrentFont(String currentFont, SappImGUILayer layer) {
         this.currentFont = currentFont;
+
     }
 
     public HashMap<String, Boolean> getActiveWindows() {
         return activeWindows;
-    }
-
-    public HashMap<String, int[]> getColors() {
-        return colors;
-    }
-
-    public int[] getColor(String color) {
-        return colors.get(color);
-    }
-
-    public void setColor(String color, int[] value) {
-        if (value.length == 4) {
-            colors.put(color, value);
-        } else {
-            DiaLogger.log("Color values not valid");
-        }
     }
 
     public String[] getLanguages() {
@@ -131,7 +115,6 @@ public class SapphireSettings {
     public void init() {
         DiaLogger.log("Initializing settings...");
         // Initialize literal map, by default in english, and default colors
-        this.defaultColors();
         this.load();
         if (currentFont == null || currentFont.equals("")) {
             currentFont = "consola";
@@ -157,14 +140,6 @@ public class SapphireSettings {
                 DiaLogger.log("Failed to load language map from '" + langFile.getAbsolutePath() + "'", DiaLoggerLevel.ERROR);
             }
         }
-    }
-
-    private void defaultColors() {
-        colors.put("DiaLogger.CRITICAL", new int[]{175,50,233,255});
-        colors.put("DiaLogger.ERROR", new int[]{200,50,50,255});
-        colors.put("DiaLogger.WARN", new int[]{200,175,50,255});
-        colors.put("DiaLogger.DEBUG", new int[]{50,200,50,255});
-        colors.put("DiaLogger.INFO", new int[]{255,255,255,255});
     }
 
     public void setShowPreference(String window, boolean show) {
@@ -247,7 +222,6 @@ public class SapphireSettings {
             workspace = temp.getWorkspace();
             currentFont = temp.getCurrentFont();
             activeWindows = temp.getActiveWindows();
-            colors = temp.getColors();
             showPreferences = temp.getShowPreferences();
             currentLang = temp.getCurrentLang();
             lastProject = temp.getLastProject();

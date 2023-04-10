@@ -10,16 +10,16 @@ import sapphire.SapphireEvents;
 import sapphire.events.SappEvent;
 import sapphire.events.SappEventType;
 import sapphire.imgui.SappImGUILayer;
-import sapphire.imgui.components.SappImageButton;
+import sapphire.imgui.components.SappImageLabelButton;
 
 public class EnvHierarchyWindow extends ImguiWindow {
 
     // ATTRIBUTES
-    private final SappImageButton newRootEnvButton;
+    private final SappImageLabelButton newRootEnvButton;
 
     public EnvHierarchyWindow() {
         super("env_hierarchy", "Environment Hierarchy");
-        this.newRootEnvButton = new SappImageButton(Sapphire.getIcon("2d.png"), Sapphire.getLiteral("create_root_env"));
+        this.newRootEnvButton = new SappImageLabelButton(Sapphire.getIcon("2d.png"), Sapphire.getLiteral("create_root_env"), 40f, 40f);
     }
 
     @Override
