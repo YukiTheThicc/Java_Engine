@@ -1,8 +1,10 @@
 package sapphire.imgui.components;
 
 import imgui.ImGui;
+import imgui.ImGuiStyle;
 import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import sapphire.Sapphire;
 import sapphire.SapphireEvents;
@@ -36,13 +38,16 @@ public class GameViewWindowControls {
 
         ImGui.setNextWindowPos(windowPos.x, windowPos.y + offsetY);
         ImGui.setNextWindowSize(windowSize.x, sizeY);
-        ImGui.pushStyleColor(ImGuiCol.WindowBg, 50, 50, 50, 50);
+        ImGui.pushStyleColor(ImGuiCol.ChildBg, 50, 50, 50, 155);
         ImGui.pushStyleColor(ImGuiCol.Button, 0f, 0f, 0f, 0f);
-        ImGui.begin("controls", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize |
-                ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoDocking);
+        ImGui.pushStyleVar(ImGuiStyleVar.ChildRounding, 255f);
+        ImGui.begin("controls", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove |
+                ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoDocking |
+                ImGuiWindowFlags.NoBackground);
 
-
-        SappImGui.align(AlignX.CENTER, AlignY.TOP, 40f, 40f);
+        SappImGui.align(AlignX.CENTER, AlignY.TOP, 100f, 40f);
+        ImGui.beginChild("main_controls", 200f, 40f);
+        SappImGui.align(AlignX.CENTER, AlignY.CENTER, 100f, 40f);
         if (play.draw()) {
             SapphireEvents.notify(new SappEvent(SappEventType.Play));
         }
@@ -51,6 +56,9 @@ public class GameViewWindowControls {
             SapphireEvents.notify(new SappEvent(SappEventType.Stop));
         }
 
+        ImGui.endChild();
+
+        ImGui.popStyleVar(1);
         ImGui.popStyleColor(2);
         ImGui.end();
     }
