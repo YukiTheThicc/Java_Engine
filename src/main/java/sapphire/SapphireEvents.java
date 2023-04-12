@@ -3,7 +3,7 @@ package sapphire;
 import sapphire.events.SappEvent;
 import sapphire.events.SappObserver;
 import sapphire.events.handlers.EnvWindowEventHandler;
-import sapphire.events.handlers.MenuEventHandler;
+import sapphire.events.handlers.ControlsEventHandler;
 import sapphire.events.handlers.SettingsEventHandler;
 import sapphire.imgui.SappImGUILayer;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class SapphireEvents {
 
     // METHODS
     public static void init(SappImGUILayer layer) {
-        observers.add(new MenuEventHandler());
+        observers.add(new ControlsEventHandler());
         observers.add(new EnvWindowEventHandler());
         observers.add(new SettingsEventHandler(layer));
     }

@@ -9,5 +9,6 @@ public enum SappEventType {
     Add_env,
     Add_entity,
     Save_env,
-    New_root_env
+    New_root_env,
+    View_Port_Settings
 }

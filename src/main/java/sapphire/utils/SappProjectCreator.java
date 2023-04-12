@@ -43,7 +43,7 @@ public class SappProjectCreator {
                         writer.write(gson.toJson(project));
                         writer.close();
                         return project;
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         DiaLogger.log("Failed to write data to project file", DiaLoggerLevel.ERROR);
                         DiaLogger.log(e.getMessage(), DiaLoggerLevel.ERROR);
                     }

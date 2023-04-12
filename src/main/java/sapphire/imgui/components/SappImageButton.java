@@ -9,6 +9,7 @@ public class SappImageButton {
      * This class is here to retain the state of a button that doesn't change at runtime to reduce load
      */
     // ATTRIBUTES
+    private String id;
     private final Texture image;
     private float buttonOriginX;
     private final float imageSizeX;
@@ -16,6 +17,7 @@ public class SappImageButton {
 
     // CONSTRUCTORS
     public SappImageButton(Texture image) {
+        this.id = "##button-" + image.getId();
         this.image = image;
         this.buttonOriginX = ImGui.getCursorPosX();
         this.imageSizeX = image.getWidth();
@@ -23,6 +25,7 @@ public class SappImageButton {
     }
 
     public SappImageButton(Texture image, float sizeX, float sizeY) {
+        this.id = "##button-" + image.getId();
         this.image = image;
         this.buttonOriginX = ImGui.getCursorPosX();
         this.imageSizeX = sizeX;
@@ -37,7 +40,7 @@ public class SappImageButton {
         buttonOriginX = ImGui.getCursorPosX();
 
         ImGui.getStyle().setButtonTextAlign(0.75f, 0.5f);
-        if (ImGui.button("##", imageSizeX, imageSizeY)) result = true;
+        if (ImGui.button(id, imageSizeX, imageSizeY)) result = true;
 
         ImGui.sameLine();
         ImGui.setCursorPosX(buttonOriginX);

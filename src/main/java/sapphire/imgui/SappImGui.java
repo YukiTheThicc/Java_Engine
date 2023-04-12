@@ -215,6 +215,50 @@ public class SappImGui {
         ImGui.setCursorPos(x, y);
     }
 
+    /**
+     * For windowsSets the ImGUI cursor to be aligned on both axis given the desired alignment and total size of the elements to be
+     * aligned on both axis, within the window the function is called.
+     *
+     * @param alignX Enum value of the horizontal alignment
+     * @param alignY Enum value of the vertical alignment
+     * @param sizeX  Size on the horizontal axis to offset the cursor
+     * @param sizeY  Size on the vertical axis to offset the cursor
+     */
+    public static void alignNoHeader(AlignX alignX, AlignY alignY, float sizeX, float sizeY) {
+
+        ImGui.setCursorPos(0, 0);
+        float x = 0f;
+        float y = 0f;
+        float regionX = ImGui.getWindowSizeX();
+        float regionY = ImGui.getWindowSizeY();
+
+        switch (alignX) {
+            case LEFT:
+                x = ImGui.getStyle().getWindowPaddingX();
+                break;
+            case CENTER:
+                x = regionX / 2 - sizeX / 2;
+                break;
+            case RIGHT:
+                x = regionX - sizeX - ImGui.getStyle().getWindowPaddingX();
+                break;
+        }
+
+        switch (alignY) {
+            case TOP:
+                y = 0;
+                break;
+            case CENTER:
+                y = regionY / 2 - sizeY / 2;
+                break;
+            case BOTTOM:
+                y = regionY - sizeY - ImGui.getStyle().getWindowPaddingY();
+                break;
+        }
+
+        ImGui.setCursorPos(x, y);
+    }
+
     public static boolean combo(String title, ImInt index, String[] options) {
 
         ImGui.pushID(title);

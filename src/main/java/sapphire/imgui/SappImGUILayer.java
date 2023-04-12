@@ -159,7 +159,7 @@ public class SappImGUILayer {
         ImGui.getStyle().setFrameBorderSize(0f);
         ImGui.getStyle().setWindowBorderSize(0f);
         ImGui.getStyle().setWindowTitleAlign(0f, 0.5f);
-        ImGui.getStyle().setWindowMinSize(100f, 100f);
+        ImGui.getStyle().setWindowMinSize(10F, 10F);
     }
 
     private void initCallbacks(ImGuiIO io) {
