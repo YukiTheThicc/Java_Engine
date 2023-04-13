@@ -1,7 +1,7 @@
-package sapphire.events.handlers;
+package sapphire.eventsSystem.handlers;
 
-import sapphire.events.SappEvent;
-import sapphire.events.SappObserver;
+import sapphire.eventsSystem.events.SappEvent;
+import sapphire.eventsSystem.SappObserver;
 import sapphire.imgui.SappImGUILayer;
 
 public class SettingsEventHandler implements SappObserver {

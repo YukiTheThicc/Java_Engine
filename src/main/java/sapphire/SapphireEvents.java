@@ -1,10 +1,10 @@
 package sapphire;
 
-import sapphire.events.SappEvent;
-import sapphire.events.SappObserver;
-import sapphire.events.handlers.EnvWindowEventHandler;
-import sapphire.events.handlers.ControlsEventHandler;
-import sapphire.events.handlers.SettingsEventHandler;
+import sapphire.eventsSystem.events.SappEvent;
+import sapphire.eventsSystem.SappObserver;
+import sapphire.eventsSystem.handlers.EnvWindowEventHandler;
+import sapphire.eventsSystem.handlers.ControlsEventHandler;
+import sapphire.eventsSystem.handlers.SettingsEventHandler;
 import sapphire.imgui.SappImGUILayer;
 import java.util.ArrayList;
 

@@ -24,32 +24,33 @@ public class ProfilerWindow extends ImguiWindow {
     @Override
     public void imgui(SappImGUILayer layer) {
 
-        ImGui.begin(this.getTitle(), this.getFlags());
+        if (ImGui.begin(this.getTitle(), this.getFlags())) {
 
-        accTime += Sapphire.get().getDt();
-        if (accTime > 0.1f) {
-            fps = (int) (1 / Sapphire.get().getDt());
-            accTime -= 0.1f;
-        }
-
-        ImGui.columns(2);
-        ImGui.text("FPS: ");
-        ImGui.sameLine();
-        ImGui.text(String.valueOf(fps));
-        ImGui.text(layer.getLastFocusedFile() != null ? layer.getLastFocusedFile().getTitle() : "No file opened");
-
-        ImGui.nextColumn();
-
-        ImGui.columns(1);
-        ImGui.separator();
-        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-        ImGui.text(Sapphire.getLiteral("current_threads"));
-        if (ImGui.beginChild("options")) {
-            for (Thread thread : threadSet) {
-                ImGui.text(thread.getName() + ": " + thread.getState());
+            accTime += Sapphire.get().getDt();
+            if (accTime > 0.1f) {
+                fps = (int) (1 / Sapphire.get().getDt());
+                accTime -= 0.1f;
             }
+
+            ImGui.columns(2);
+            ImGui.text("FPS: ");
+            ImGui.sameLine();
+            ImGui.text(String.valueOf(fps));
+            ImGui.text(layer.getLastFocusedFile() != null ? layer.getLastFocusedFile().getTitle() : "No file opened");
+
+            ImGui.nextColumn();
+
+            ImGui.columns(1);
+            ImGui.separator();
+            Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+            ImGui.text(Sapphire.getLiteral("current_threads"));
+            if (ImGui.beginChild("options")) {
+                for (Thread thread : threadSet) {
+                    ImGui.text(thread.getName() + ": " + thread.getState());
+                }
+            }
+            ImGui.endChild();
         }
-        ImGui.endChild();
         ImGui.end();
     }
 }

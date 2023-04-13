@@ -1,16 +1,15 @@
 package sapphire.imgui.components;
 
-import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
-import imgui.ImGuiStyle;
 import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
+import imgui.type.ImBoolean;
 import sapphire.Sapphire;
 import sapphire.SapphireEvents;
-import sapphire.events.SappEvent;
-import sapphire.events.SappEventType;
+import sapphire.eventsSystem.events.SappEvent;
+import sapphire.eventsSystem.eventTypes.SappEventType;
 import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
 import sapphire.imgui.SappImGui;
@@ -22,10 +21,11 @@ public class GameViewWindowControls {
     private final SappImageButton stop;
     private final SappImageButton settings;
     private final float offsetY;
-    private final float iconSizeX = 30f;
-    private final float iconSizeY = 30f;
+    private final float iconSizeX = 48f;
+    private final float iconSizeY = 48f;
     private final float mainControlsX;
     private final float mainControlsY;
+    private final ImBoolean menuOpen = new ImBoolean(false);
     private final int flags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize |
             ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoScrollbar |
             ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.NoBackground;
@@ -34,7 +34,7 @@ public class GameViewWindowControls {
     public GameViewWindowControls() {
         this.play = new SappImageButton(Sapphire.getIcon("play.png"), iconSizeX, iconSizeY);
         this.stop = new SappImageButton(Sapphire.getIcon("stop.png"), iconSizeX, iconSizeY);
-        this.settings = new SappImageButton(Sapphire.getIcon("sapp.png"), iconSizeX, iconSizeY);
+        this.settings = new SappImageButton(Sapphire.getIcon("gear.png"), iconSizeX, iconSizeY);
         this.offsetY = ImGui.getTextLineHeightWithSpacing();
         this.mainControlsX = iconSizeX * 4 + ImGui.getStyle().getFramePaddingX() * 3;
         this.mainControlsY = iconSizeY + ImGui.getStyle().getFramePaddingX() * 2;
@@ -65,12 +65,14 @@ public class GameViewWindowControls {
         }
         ImGui.endChild();
 
-        SappImGui.alignNoHeader(AlignX.RIGHT, AlignY.CENTER, iconSizeX, iconSizeY);
-        ImGui.beginChild("settings", iconSizeX, iconSizeY);
+        SappImGui.alignNoHeader(AlignX.RIGHT, AlignY.CENTER, iconSizeX + ImGui.getStyle().getFramePaddingX() * 2, mainControlsY);
+        ImGui.beginChild("settings", iconSizeX + ImGui.getStyle().getFramePaddingX() * 2, mainControlsY);
+        SappImGui.align(AlignX.CENTER, AlignY.CENTER, iconSizeX, iconSizeY);
         if (settings.draw()) {
             SapphireEvents.notify(new SappEvent(SappEventType.View_Port_Settings));
-            gameViewSettings();
+            ImGui.openPopup("view_settings");
         }
+        gameViewSettings();
         ImGui.endChild();
 
         ImGui.popStyleVar(1);
@@ -79,10 +81,22 @@ public class GameViewWindowControls {
     }
 
     public void gameViewSettings() {
-        if (ImGui.beginPopupContextItem("view_settings")) {
-            if (ImGui.menuItem(Sapphire.getLiteral("create_env"))) {
-                DiaLogger.log("Selected env context menu on '" + Sapphire.getLiteral("create_env") + "'");
+
+        if (ImGui.beginPopup("view_settings")) {
+
+            if (ImGui.menuItem("item 1")) {
+
             }
+            if (ImGui.menuItem("item 2")) {
+
+            }
+            if (ImGui.menuItem("item 3")) {
+
+            }
+            if (ImGui.menuItem("item 4")) {
+
+            }
+
             ImGui.endPopup();
         }
     }

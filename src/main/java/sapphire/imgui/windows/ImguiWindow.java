@@ -101,6 +101,10 @@ public abstract class ImguiWindow {
         this.flags = DEFAULT_FLAGS | flags;
     }
 
+    public void setAllFlags(int flags) {
+        this.flags = flags;
+    }
+
     public float getSizeX() {
         return sizeX;
     }

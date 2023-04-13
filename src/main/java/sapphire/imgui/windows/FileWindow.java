@@ -4,6 +4,7 @@ import diamondEngine.diaUtils.DiaUtils;
 import imgui.ImGui;
 import imgui.extension.texteditor.TextEditor;
 import imgui.flag.ImGuiCond;
+import imgui.flag.ImGuiWindowFlags;
 import sapphire.imgui.SappImGUILayer;
 
 import java.io.*;
@@ -26,6 +27,7 @@ public class FileWindow extends ImguiWindow {
         this.setActive(true);
         textEditor.setText(new String(DiaUtils.readAllBytes(file), StandardCharsets.UTF_8));
         dirty = false;
+        this.setAllFlags(ImGuiWindowFlags.None);
     }
 
     // GETTERS & SETTERS
@@ -43,10 +45,13 @@ public class FileWindow extends ImguiWindow {
 
         ImGui.setNextWindowSize(450f, 600f, ImGuiCond.FirstUseEver);
         imgui.internal.ImGui.setNextWindowDockID(layer.getDockId(), ImGuiCond.FirstUseEver);
-        ImGui.begin(this.getTitle() + (dirty ? "*" : "") + "###" + this.getTitle(), this.isActive(), this.getFlags());
-        textEditor.render(this.getTitle());
-        if (textEditor.isTextChanged()) dirty = true;
-        if (ImGui.isWindowFocused()) layer.setLastFocusedFile(this);
+
+        if (ImGui.begin(this.getTitle() + (dirty ? "*" : "") + "###" + this.getTitle(), this.isActive(), this.getFlags())) {
+            textEditor.render(this.getTitle());
+            if (textEditor.isTextChanged()) dirty = true;
+            if (ImGui.isWindowFocused()) layer.setLastFocusedFile(this);
+        }
+
         ImGui.end();
         if (!this.isActive().get()) {
             this.close(true);

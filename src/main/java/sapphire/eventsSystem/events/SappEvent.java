@@ -1,4 +1,6 @@
-package sapphire.events;
+package sapphire.eventsSystem.events;
+
+import sapphire.eventsSystem.eventTypes.SappEventType;
 
 public class SappEvent {
 

@@ -31,15 +31,16 @@ public class FileNavigatorWindow extends ImguiWindow {
     @Override
     public void imgui(SappImGUILayer layer) {
 
-        ImGui.begin(this.getTitle(), this.getFlags());
-        SapphireProject project = Sapphire.get().getProject();
-        if (project != null && project.getRoot() != null) {
-            if (project.getRoot().isAlive()) {
-                SappImGui.align(AlignX.CENTER, AlignY.CENTER, SappImGui.textSize(Sapphire.getLiteral("loading")), ImGui.getFontSize());
-                ImGui.text(Sapphire.getLiteral("loading"));
-            } else {
-                ImGui.setNextItemOpen(true);
-                drawDir(project.getRoot(), layer);
+        if (ImGui.begin(this.getTitle(), this.getFlags())) {
+            SapphireProject project = Sapphire.get().getProject();
+            if (project != null && project.getRoot() != null) {
+                if (project.getRoot().isAlive()) {
+                    SappImGui.align(AlignX.CENTER, AlignY.CENTER, SappImGui.textSize(Sapphire.getLiteral("loading")), ImGui.getFontSize());
+                    ImGui.text(Sapphire.getLiteral("loading"));
+                } else {
+                    ImGui.setNextItemOpen(true);
+                    drawDir(project.getRoot(), layer);
+                }
             }
         }
         ImGui.end();

@@ -49,27 +49,29 @@ public class GameViewWindow extends ImguiWindow {
 
     public void imgui(SappImGUILayer layer) {
 
-        ImGui.setNextWindowDockID(layer.getDockId());
-        ImGui.begin(this.getTitle(), this.getFlags());
+        if (ImGui.begin(this.getTitle(), this.getFlags())) {
+            ImGui.setNextWindowDockID(layer.getDockId());
 
-        ImGui.setCursorPos(ImGui.getCursorPosX(), ImGui.getCursorPosY());
-        ImVec2 windowSize = getLargestSizeForViewport();
-        ImVec2 windowPos = getCenteredPositionForViewport(windowSize);
+            ImGui.setCursorPos(ImGui.getCursorPosX(), ImGui.getCursorPosY());
+            ImVec2 windowSize = getLargestSizeForViewport();
+            ImVec2 windowPos = getCenteredPositionForViewport(windowSize);
 
-        ImGui.setCursorPos(windowPos.x, windowPos.y);
-        this.setSizeX((int) windowSize.x);
-        this.setSizeY((int) windowSize.y);
-        leftX = (int) (windowPos.x + ImGui.getStyle().getFramePaddingX() * 2);
-        rightX = (int) (windowPos.x + ImGui.getStyle().getFramePaddingX() * 2);
-        bottomY = (int) (windowPos.y + ImGui.getStyle().getFramePaddingY());
-        topY = (int) (windowPos.y + this.getSizeY() + ImGui.getStyle().getFramePaddingY());
+            ImGui.setCursorPos(windowPos.x, windowPos.y);
+            this.setSizeX((int) windowSize.x);
+            this.setSizeY((int) windowSize.y);
+            leftX = (int) (windowPos.x + ImGui.getStyle().getFramePaddingX() * 2);
+            rightX = (int) (windowPos.x + ImGui.getStyle().getFramePaddingX() * 2);
+            bottomY = (int) (windowPos.y + ImGui.getStyle().getFramePaddingY());
+            topY = (int) (windowPos.y + this.getSizeY() + ImGui.getStyle().getFramePaddingY());
 
-        // Controls
-        controls.drawControls();
+            // Controls
+            controls.drawControls();
 
-        int textureId = Window.getFramebuffer().getTexture().getId();
-        ImGui.image(textureId, windowSize.x, windowSize.y, 0, 1, 1, 0);
+            int textureId = Window.getFramebuffer().getTexture().getId();
+            ImGui.image(textureId, windowSize.x, windowSize.y, 0, 1, 1, 0);
 
+
+        }
         ImGui.end();
     }
 }

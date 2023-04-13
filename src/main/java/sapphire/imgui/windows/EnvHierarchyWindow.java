@@ -7,8 +7,8 @@ import imgui.ImGui;
 import imgui.flag.ImGuiCond;
 import sapphire.Sapphire;
 import sapphire.SapphireEvents;
-import sapphire.events.SappEvent;
-import sapphire.events.SappEventType;
+import sapphire.eventsSystem.events.SappEvent;
+import sapphire.eventsSystem.eventTypes.SappEventType;
 import sapphire.imgui.SappImGUILayer;
 import sapphire.imgui.components.SappImageLabelButton;
 
@@ -26,13 +26,14 @@ public class EnvHierarchyWindow extends ImguiWindow {
     public void imgui(SappImGUILayer layer) {
 
         ImGui.setNextWindowSize(400f, 400f, ImGuiCond.FirstUseEver);
-        ImGui.begin(this.getTitle(), this.getFlags());
-        mainContextMenu();
+        if (ImGui.begin(this.getTitle(), this.getFlags())) {
+            mainContextMenu();
 
-        if (Diamond.get().getEnvironments().isEmpty()) {
-            drawEmptyEnvsPrompt();
-        } else {
-            drawNestedEntities();
+            if (Diamond.get().getEnvironments().isEmpty()) {
+                drawEmptyEnvsPrompt();
+            } else {
+                drawNestedEntities();
+            }
         }
 
         ImGui.end();

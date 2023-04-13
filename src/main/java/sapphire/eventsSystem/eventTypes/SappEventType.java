@@ -1,4 +1,4 @@
-package sapphire.events;
+package sapphire.eventsSystem.eventTypes;
 
 public enum SappEventType {
     User_event,
