@@ -17,16 +17,29 @@ import sapphire.imgui.windows.ModalInformation;
 
 public class SappImGui {
 
-    private static final float DEFAULT_COLUMN_WIDTH = 100f;
-    private static final float DEFAULT_CONF_WINDOW_WIDTH = 250f;
-    private static final float DEFAULT_CONF_WINDOW_HEIGHT = 100f;
+    public static float BIG_ICON_SIZE;
+    public static float MEDIUM_ICON_SIZE;
+    public static float SMALL_ICON_SIZE;
+    public static float BIG_COLUMN_SIZE;
+    public static float MEDIUM_COLUMN_SIZE;
+    public static float SMALL_COLUMN_SIZE;
+
+    public static void init() {
+        float fontSize = Sapphire.get().getSettings().getFontSize();
+        BIG_ICON_SIZE = fontSize * 2.5f;
+        MEDIUM_ICON_SIZE = fontSize * 2f;
+        SMALL_ICON_SIZE = fontSize * 1.5f;
+        BIG_COLUMN_SIZE = fontSize * 30;
+        MEDIUM_COLUMN_SIZE = fontSize * 20;
+        SMALL_COLUMN_SIZE = fontSize * 10;
+    }
 
     public static void drawVec2Control(String label, Vector2f values) {
-        drawVec2Control(label, values, 0.0f, DEFAULT_COLUMN_WIDTH);
+        drawVec2Control(label, values, 0.0f, MEDIUM_COLUMN_SIZE);
     }
 
     public static void drawVec2Control(String label, Vector2f values, float resetValue) {
-        drawVec2Control(label, values, resetValue, DEFAULT_COLUMN_WIDTH);
+        drawVec2Control(label, values, resetValue, MEDIUM_COLUMN_SIZE);
     }
 
     public static void drawVec2Control(String label, Vector2f values, float resetValue, float columnWidth) {
@@ -90,7 +103,7 @@ public class SappImGui {
         ImGui.pushID(label);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, DEFAULT_COLUMN_WIDTH);
+        ImGui.setColumnWidth(0, MEDIUM_COLUMN_SIZE);
         ImGui.text(label);
         ImGui.nextColumn();
 
@@ -107,7 +120,7 @@ public class SappImGui {
         ImGui.pushID(label);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, DEFAULT_COLUMN_WIDTH);
+        ImGui.setColumnWidth(0, MEDIUM_COLUMN_SIZE);
         ImGui.text(label);
         ImGui.nextColumn();
 
@@ -125,7 +138,7 @@ public class SappImGui {
         ImGui.pushID(label);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, DEFAULT_COLUMN_WIDTH);
+        ImGui.setColumnWidth(0, MEDIUM_COLUMN_SIZE);
         ImGui.text(label);
         ImGui.nextColumn();
 
@@ -145,8 +158,8 @@ public class SappImGui {
         ImGui.pushID(label);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, DEFAULT_COLUMN_WIDTH);
-        ImGui.text(label);
+        ImGui.setColumnWidth(0, SMALL_COLUMN_SIZE);
+        ImGui.textWrapped(label);
         ImGui.nextColumn();
 
         ImString out = new ImString(text, 256);
@@ -255,32 +268,15 @@ public class SappImGui {
         ImGui.setCursorPos(x, y);
     }
 
-    public static boolean combo(String title, ImInt index, String[] options) {
-
-        ImGui.pushID(title);
-        ImGui.columns(2);
-        ImGui.setColumnWidth(0, DEFAULT_COLUMN_WIDTH);
-        ImGui.text(title);
-        ImGui.nextColumn();
-
-        if (ImGui.combo("##" + title, index, options)) {
-            ImGui.popID();
-            return true;
-        }
-        ImGui.columns(1);
-        ImGui.popID();
-        return false;
-    }
-
     public static String combo(String title, String selected, String[] options) {
 
         String result = null;
         ImGui.pushID(title);
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, DEFAULT_COLUMN_WIDTH);
-        ImGui.text(title);
+        ImGui.setColumnWidth(0, SMALL_COLUMN_SIZE);
+        ImGui.textWrapped(title);
         ImGui.nextColumn();
-        if (ImGui.beginCombo(title, selected)) {
+        if (ImGui.beginCombo("##" + title, selected)) {
             for (String option : options) {
                 ImGui.pushID(option);
                 if (ImGui.selectable(option)) {
@@ -349,5 +345,9 @@ public class SappImGui {
     public static void iconText(Texture image, String text) {
         ImGui.image(image.getId(), image.getWidth(), image.getHeight());
         ImGui.text(text);
+    }
+
+    public static void toolTip() {
+
     }
 }

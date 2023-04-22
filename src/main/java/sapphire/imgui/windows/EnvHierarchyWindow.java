@@ -7,8 +7,8 @@ import imgui.ImGui;
 import imgui.flag.ImGuiCond;
 import sapphire.Sapphire;
 import sapphire.SapphireEvents;
-import sapphire.eventsSystem.events.SappEvent;
-import sapphire.eventsSystem.eventTypes.SappEventType;
+import sapphire.eventsSystem.SappEvent;
+import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.SappImGUILayer;
 import sapphire.imgui.components.SappImageLabelButton;
 

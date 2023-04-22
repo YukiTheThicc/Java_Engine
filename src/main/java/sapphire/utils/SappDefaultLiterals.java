@@ -40,6 +40,7 @@ public class SappDefaultLiterals {
         literals.put("general_settings", "General");
         literals.put("style_settings", "Styles");
         literals.put("font", "Font");
+        literals.put("font_size", "Size");
         literals.put("create_project", "Create project");
         literals.put("no_project_file", "No project configuration has been found on the directory");
         literals.put("dir_not_empty", "Cannot create a project on this directory, choose an empty directory");
@@ -49,6 +50,9 @@ public class SappDefaultLiterals {
         literals.put("play", "Play");
         literals.put("stop", "Stop");
         literals.put("create_root_env", "Create root Environment");
+        literals.put("font_change_after_reboot", "Font size changes will take effect after rebooting Sapphire");
+        literals.put("examine", "Examine");
+        literals.put("workspace", "Workspace");
 
         return literals;
     }

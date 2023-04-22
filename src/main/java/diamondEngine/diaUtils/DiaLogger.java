@@ -92,6 +92,7 @@ public class DiaLogger extends Thread {
             DiaLogger.diaLogger.literals.put(DiaLoggerLevel.WARN, "WARNING");
             DiaLogger.diaLogger.literals.put(DiaLoggerLevel.ERROR, "ERROR");
             DiaLogger.diaLogger.literals.put(DiaLoggerLevel.CRITICAL, "CRITICAL");
+            DiaLogger.diaLogger.literals.put(DiaLoggerLevel.SAPP_DEBUG, "SAPP_DEBUG");
 
             diaLogger.start();
             diaLogger.isRunning = true;

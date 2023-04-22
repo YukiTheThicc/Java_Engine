@@ -5,5 +5,7 @@ public enum DiaLoggerLevel {
     ERROR,
     WARN,
     DEBUG,
-    INFO
+    SAPP_DEBUG,
+    INFO,
+    SAPP_INFO
 }

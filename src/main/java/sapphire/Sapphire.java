@@ -131,6 +131,7 @@ public class Sapphire {
         colors.put("DiaLogger.ERROR", new int[]{200,50,50,255});
         colors.put("DiaLogger.WARN", new int[]{200,175,50,255});
         colors.put("DiaLogger.DEBUG", new int[]{50,200,50,255});
+        colors.put("DiaLogger.SAPP_DEBUG", new int[]{54,75,108,255});
         colors.put("SappTheme_Bg", new int[]{30,35,45,255});
         colors.put("SappTheme_Accent", new int[]{54,75,108,255});
         colors.put("SappTheme_HighLight", new int[]{86,128,193,255});

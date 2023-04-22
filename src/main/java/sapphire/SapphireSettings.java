@@ -4,7 +4,7 @@ import com.google.gson.*;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
-import sapphire.imgui.SappImGUILayer;
+import imgui.ImFont;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -27,7 +27,8 @@ public class SapphireSettings {
     private HashMap<String, Boolean> activeWindows;
     private HashMap<String, Boolean> showPreferences;
     private transient HashMap<String, String> languages;
-    private transient HashMap<String, String> fonts;
+    private transient ArrayList<ImFont> fonts;              // Actual list of all the added fonts
+    private transient String[] fontsList;                   // String with the names for the fonts, so they don't need to be calculated each frame for the combo
     private int fontSize;
 
     // CONSTRUCTORS
@@ -40,7 +41,7 @@ public class SapphireSettings {
         this.languages = new HashMap<>();
         this.languages.put(this.currentLang, "English");
         this.showPreferences = new HashMap<>();
-        this.fonts = new HashMap<>();
+        this.fonts = new ArrayList<>();
         this.fontSize = 12;
     }
 
@@ -57,9 +58,8 @@ public class SapphireSettings {
         return currentFont;
     }
 
-    public void setCurrentFont(String currentFont, SappImGUILayer layer) {
+    public void setCurrentFont(String currentFont) {
         this.currentFont = currentFont;
-
     }
 
     public HashMap<String, Boolean> getActiveWindows() {
@@ -84,14 +84,16 @@ public class SapphireSettings {
         return showPreferences;
     }
 
-    public String[] getFonts() {
-        String[] fonts = new String[1];
-        fonts = this.fonts.keySet().toArray(fonts);
-        return fonts;
+    public String[] getFontsList() {
+        return fontsList;
     }
 
-    public String getFont(String font) {
-        return this.fonts.get(font);
+    public void setFontsList(String[] fontsList) {
+        this.fontsList = fontsList;
+    }
+
+    public ArrayList<ImFont> getFonts() {
+        return fonts;
     }
 
     public int getFontSize() {
@@ -100,7 +102,6 @@ public class SapphireSettings {
 
     public void setFontSize(int fontSize) {
         this.fontSize = fontSize;
-        Sapphire.get().getImGUILayer().isDirtyFont();
     }
 
     public String getLastProject() {
@@ -120,12 +121,6 @@ public class SapphireSettings {
             currentFont = "consola";
         }
 
-        ArrayList<File> fonts = DiaUtils.getFilesInDir("sapphire/fonts", "ttf");
-        for (File font : fonts) {
-            String fontName = font.getName().substring(0, font.getName().lastIndexOf('.'));
-            this.fonts.put(fontName, font.getAbsolutePath());
-        }
-
         ArrayList<File> langFiles = DiaUtils.getFilesInDir("sapphire/lang", "json");
         for (File langFile : langFiles) {
             try {
@@ -140,6 +135,10 @@ public class SapphireSettings {
                 DiaLogger.log("Failed to load language map from '" + langFile.getAbsolutePath() + "'", DiaLoggerLevel.ERROR);
             }
         }
+    }
+
+    public void addFont(ImFont font) {
+        this.fonts.add(font);
     }
 
     public void setShowPreference(String window, boolean show) {

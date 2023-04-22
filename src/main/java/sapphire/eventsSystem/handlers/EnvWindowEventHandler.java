@@ -2,7 +2,7 @@ package sapphire.eventsSystem.handlers;
 
 import diamondEngine.Diamond;
 import diamondEngine.diaUtils.DiaLogger;
-import sapphire.eventsSystem.events.SappEvent;
+import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappObserver;
 
 public class EnvWindowEventHandler implements SappObserver {

@@ -1,13 +1,13 @@
 package sapphire.eventsSystem.handlers;
 
-import sapphire.eventsSystem.events.SappEvent;
+import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappObserver;
 import sapphire.imgui.SappImGUILayer;
 
 public class SettingsEventHandler implements SappObserver {
 
     // ATTRIBUTES
-    private SappImGUILayer layer;
+    private final SappImGUILayer layer;
 
     // CONSTRUCTORS
     public SettingsEventHandler(SappImGUILayer layer) {
@@ -19,4 +19,6 @@ public class SettingsEventHandler implements SappObserver {
     public void onNotify(SappEvent event) {
 
     }
+
+
 }

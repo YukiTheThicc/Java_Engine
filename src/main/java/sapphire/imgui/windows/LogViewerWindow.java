@@ -1,5 +1,6 @@
 package sapphire.imgui.windows;
 
+import diamondEngine.Window;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaLoggerObserver;
@@ -8,13 +9,15 @@ import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
 import imgui.type.ImInt;
-import sapphire.eventsSystem.events.SappEvent;
+import sapphire.eventsSystem.SappEvent;
+import sapphire.eventsSystem.SappEventType;
 import sapphire.eventsSystem.SappObserver;
 import sapphire.Sapphire;
 import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
 import sapphire.imgui.SappImGUILayer;
 import sapphire.imgui.SappImGui;
+import sapphire.imgui.components.SappImageButton;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,8 +34,10 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
     private DiaLoggerLevel[] levels;
     private ModalConfirmation confWindow;
     private final String[] availableLevels;
+    private SappImageButton optionsButton;
     private int currentLine;
     private int lines;
+    private float toolbarWidth;
 
     // CONSTRUCTORS
     public LogViewerWindow() {
@@ -46,6 +51,8 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
         }
         this.currentLine = 0;
         this.autoScroll = new ImBoolean(true);
+        this.optionsButton = new SappImageButton(Sapphire.getIcon("gear.png"), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE);
+        this.toolbarWidth = SappImGui.SMALL_ICON_SIZE + ImGui.getStyle().getFramePaddingX() * 2;
         this.setFlags(ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoScrollbar);
         DiaLogger.addObserver(this);
     }
@@ -59,67 +66,78 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
 
     @Override
     public void imgui(SappImGUILayer layer) {
-
         if (ImGui.begin(this.getTitle(), this.getFlags())) {
-
             if (ImGui.beginPopup("Options")) {
                 ImGui.checkbox("Auto-scroll", this.autoScroll);
                 ImGui.endPopup();
             }
-
-            // Logger options part
-            if (ImGui.beginChild("options", 200f, 0f)) {
-
-                ImGui.sameLine();
-                ImInt index = new ImInt(DiaLogger.getCurrentLevel().ordinal());
-                if (SappImGui.combo(Sapphire.getLiteral("severity"), index, availableLevels, 80f)) {
-                    DiaLogger.changeLevel(DiaLoggerLevel.values()[index.get()]);
-                    DiaLogger.log("Changed log level to: " + DiaLogger.getCurrentLevel());
-                }
-
-                ImInt lines = new ImInt(this.lines);
-                if (ImGui.inputInt(Sapphire.getLiteral("log_lines"), lines)) changeLineCount(lines.get());
-
-                float clearX = SappImGui.textSize(Sapphire.getLiteral("clear")) + ImGui.getStyle().getCellPaddingX() * 5;
-                float clearY = ImGui.getFontSize() + ImGui.getStyle().getCellPaddingY() * 2;
-                SappImGui.align(AlignX.LEFT, AlignY.BOTTOM, clearX, clearY);
-                if (ImGui.button(Sapphire.getLiteral("clear"))) clear();
-                ImGui.sameLine();
-                String title = Sapphire.getLiteral("save_log");
-                String message = Sapphire.getLiteral("sure_to_save_log");
-                if (ImGui.button(title)) {
-                    confWindow = (ModalConfirmation) SappImGui.confirmModal(title, message, this);
-                }
-            }
-
-            ImGui.endChild();
+            loggerOptions();
+            toolbar();
             ImGui.sameLine();
-
-            // Log viewer part
-            if (ImGui.beginChild("scrolling", 0f, 0f, false, ImGuiWindowFlags.HorizontalScrollbar)) {
-                int j;
-                for (int i = 0; i < entries.length; i++) {
-                    j = currentLine >= entries.length ? (currentLine + i) % entries.length : i;
-                    if (entries[j] != null) {
-                        int[] color = Sapphire.getColor("DiaLogger." + levels[j]);
-                        ImGui.textColored(color[0], color[1], color[2], color[3], entries[j]);
-                    } else {
-                        break;
-                    }
-                }
-
-                // Keep up at the bottom of the scroll region if we were already at the bottom at the beginning of the frame.
-                // Using a scrollbar or mouse-wheel will take away from the bottom edge.
-                if (ImGui.getScrollY() >= ImGui.getScrollMaxY()) ImGui.setScrollHereY(1.0f);
-            }
-            ImGui.endChild();
-            ImGui.sameLine();
+            log();
         }
-
         ImGui.end();
     }
 
-    public void changeLineCount(int newCount) {
+    private void toolbar() {
+        if (ImGui.beginChild("toolbar", toolbarWidth, 0f, false)) {
+            if (optionsButton.draw()) {ImGui.openPopup("logger_options"); DiaLogger.log("Pressed Logger Options");}
+        }
+        ImGui.endChild();
+    }
+
+    private void log() {
+        if (ImGui.beginChild("scrolling", 0f, 0f, false, ImGuiWindowFlags.HorizontalScrollbar)) {
+            int j;
+            for (int i = 0; i < entries.length; i++) {
+                j = currentLine >= entries.length ? (currentLine + i) % entries.length : i;
+                if (entries[j] != null) {
+                    int[] color = Sapphire.getColor("DiaLogger." + levels[j]);
+                    ImGui.textColored(color[0], color[1], color[2], color[3], entries[j]);
+                } else {
+                    break;
+                }
+            }
+            if (ImGui.getScrollY() >= ImGui.getScrollMaxY()) ImGui.setScrollHereY(1.0f);
+        }
+        ImGui.endChild();
+    }
+
+    private void loggerOptions() {
+
+        ImGui.setNextWindowSize(this.getSizeX(), this.getSizeY());
+        ImGui.setNextWindowPos(Window.getPosition().x + (Window.getWidth() - this.getSizeX()) / 2,
+                Window.getPosition().y + (Window.getHeight() - this.getSizeY()) / 2);
+        if (ImGui.beginPopupModal("logger_options", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize |
+                ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)) {
+
+            ImGui.sameLine();
+            ImInt index = new ImInt(DiaLogger.getCurrentLevel().ordinal());
+            if (SappImGui.combo(Sapphire.getLiteral("severity"), index, availableLevels, 125f)) {
+                DiaLogger.changeLevel(DiaLoggerLevel.values()[index.get()]);
+                DiaLogger.log("Changed log level to: " + DiaLogger.getCurrentLevel());
+            }
+
+            /*
+            ImInt lines = new ImInt(this.lines);
+            if (ImGui.inputInt(Sapphire.getLiteral("log_lines"), lines)) changeLineCount(lines.get());*/
+
+            float clearX = SappImGui.textSize(Sapphire.getLiteral("save_log")) + SappImGui.textSize(Sapphire.getLiteral("clear")) + ImGui.getStyle().getCellPaddingX() * 5;
+            float clearY = ImGui.getFontSize() + ImGui.getStyle().getCellPaddingY() * 2;
+            SappImGui.align(AlignX.CENTER, AlignY.BOTTOM, clearX, clearY);
+            if (ImGui.button(Sapphire.getLiteral("clear"))) clear();
+            ImGui.sameLine();
+            String title = Sapphire.getLiteral("save_log");
+            String message = Sapphire.getLiteral("sure_to_save_log");
+            if (ImGui.button(title)) {
+                confWindow = (ModalConfirmation) SappImGui.confirmModal(title, message, this);
+            }
+
+            ImGui.endPopup();
+        }
+    }
+
+    private void changeLineCount(int newCount) {
 
         String[] oldEntries = entries.clone();
         DiaLoggerLevel[] oldLevels = levels.clone();

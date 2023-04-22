@@ -111,7 +111,6 @@ public class DiaUtils {
      */
     public static String[] selectFiles() {
 
-        DiaLogger.log("Selecting files...");
         String result = tinyfd_openFileDialog("", null, null, null, true);
         if (result != null && !result.isEmpty()) {
             return result.split("\\|");

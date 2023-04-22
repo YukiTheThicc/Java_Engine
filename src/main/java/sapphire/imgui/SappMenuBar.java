@@ -3,6 +3,9 @@ package sapphire.imgui;
 import imgui.ImGui;
 import sapphire.Sapphire;
 import sapphire.SapphireActions;
+import sapphire.SapphireEvents;
+import sapphire.eventsSystem.SappEvent;
+import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.windows.ImguiWindow;
 import diamondEngine.diaUtils.DiaLogger;
 
@@ -15,6 +18,7 @@ public class SappMenuBar {
 
             // File menu items
             if (ImGui.menuItem(Sapphire.getLiteral("new_file"), "Ctrl+N")) {
+                SapphireEvents.notify(new SappEvent(SappEventType.New_file));
                 SapphireActions.newFile(layer);
             }
             ImGui.separator();

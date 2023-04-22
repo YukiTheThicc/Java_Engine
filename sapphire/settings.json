@@ -1,6 +1,6 @@
 {
   "workspace": "C:\\Proyects\\Java_Engine",
-  "currentFont": "Prototype",
+  "currentFont": "OxygenMono-Regular.otf",
   "currentLang": "en",
   "lastProject": "C:\\Proyects\\test",
   "activeWindows": {
@@ -15,5 +15,5 @@
     "profiler": true
   },
   "showPreferences": {},
-  "fontSize": 16
+  "fontSize": 18
 }

@@ -1,9 +1,9 @@
 package sapphire.imgui.windows;
 
 import diamondEngine.Window;
+import diamondEngine.diaUtils.DiaUtils;
 import imgui.*;
 import imgui.flag.ImGuiCond;
-import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImInt;
 import sapphire.Sapphire;
@@ -60,17 +60,27 @@ public class SettingsWindow extends ImguiWindow {
             // Workspace
             settings.setWorkspace(SappImGui.inputText(Sapphire.getLiteral("workspace"), settings.getWorkspace()));
             ImGui.sameLine();
-            ImGui.button("##");
+            if (ImGui.button(Sapphire.getLiteral("examine"))) {
+                DiaUtils.selectDirectory(Sapphire.getLiteral("choose_workspace"), settings.getWorkspace());
+            }
             ImGui.separator();
 
             // Font
-            String newFont = SappImGui.combo(Sapphire.getLiteral("font"), settings.getCurrentFont(), settings.getFonts());
+            String newFont = SappImGui.combo(Sapphire.getLiteral("font"), settings.getCurrentFont(), settings.getFontsList());
             if (newFont != null) {
-                settings.setCurrentFont(newFont, layer);
+                layer.changeFont(newFont);
             }
+
             ImGui.sameLine();
             ImInt fontSize = new ImInt(settings.getFontSize());
-            if (ImGui.inputInt(Sapphire.getLiteral("font"), fontSize)) settings.setFontSize(fontSize.get());
+            if (ImGui.inputInt("##", fontSize)) {
+                settings.setFontSize(fontSize.get());
+            }
+            if (ImGui.isItemHovered()) {
+                ImGui.beginTooltip();
+                ImGui.text(Sapphire.getLiteral("font_change_after_reboot"));
+                ImGui.endTooltip();
+            }
 
             // Language
             String newLang = SappImGui.combo(Sapphire.getLiteral("lang"), settings.getCurrentLang(), settings.getLanguages());

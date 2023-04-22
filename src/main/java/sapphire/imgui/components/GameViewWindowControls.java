@@ -5,11 +5,10 @@ import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
-import imgui.type.ImBoolean;
 import sapphire.Sapphire;
 import sapphire.SapphireEvents;
-import sapphire.eventsSystem.events.SappEvent;
-import sapphire.eventsSystem.eventTypes.SappEventType;
+import sapphire.eventsSystem.SappEvent;
+import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
 import sapphire.imgui.SappImGui;
@@ -21,11 +20,10 @@ public class GameViewWindowControls {
     private final SappImageButton stop;
     private final SappImageButton settings;
     private final float offsetY;
-    private final float iconSizeX = 48f;
-    private final float iconSizeY = 48f;
+    private final float iconSizeX = SappImGui.BIG_ICON_SIZE;
+    private final float iconSizeY = SappImGui.BIG_ICON_SIZE;
     private final float mainControlsX;
     private final float mainControlsY;
-    private final ImBoolean menuOpen = new ImBoolean(false);
     private final int flags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize |
             ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoScrollbar |
             ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.NoBackground;
@@ -69,7 +67,6 @@ public class GameViewWindowControls {
         ImGui.beginChild("settings", iconSizeX + ImGui.getStyle().getFramePaddingX() * 2, mainControlsY);
         SappImGui.align(AlignX.CENTER, AlignY.CENTER, iconSizeX, iconSizeY);
         if (settings.draw()) {
-            SapphireEvents.notify(new SappEvent(SappEventType.View_Port_Settings));
             ImGui.openPopup("view_settings");
         }
         gameViewSettings();

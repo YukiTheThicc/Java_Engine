@@ -1,9 +1,10 @@
 package sapphire;
 
-import sapphire.eventsSystem.events.SappEvent;
+import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappObserver;
 import sapphire.eventsSystem.handlers.EnvWindowEventHandler;
 import sapphire.eventsSystem.handlers.ControlsEventHandler;
+import sapphire.eventsSystem.handlers.MenuEventHandler;
 import sapphire.eventsSystem.handlers.SettingsEventHandler;
 import sapphire.imgui.SappImGUILayer;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 public class SapphireEvents {
 
     // ATTRIBUTES
-    private static ArrayList<SappObserver> observers = new ArrayList<>();
+    private static final ArrayList<SappObserver> observers = new ArrayList<>();
 
     // GETTERS & SETTERS
     public static ArrayList<SappObserver> getObservers() {
@@ -23,6 +24,7 @@ public class SapphireEvents {
         observers.add(new ControlsEventHandler());
         observers.add(new EnvWindowEventHandler());
         observers.add(new SettingsEventHandler(layer));
+        observers.add(new MenuEventHandler());
     }
 
     public static void addObserver(SappObserver observer) {

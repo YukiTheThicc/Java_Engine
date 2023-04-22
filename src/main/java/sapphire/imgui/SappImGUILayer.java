@@ -3,8 +3,10 @@ package sapphire.imgui;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
 import imgui.flag.ImGuiCol;
+import imgui.type.ImInt;
 import sapphire.Sapphire;
 import sapphire.SapphireControls;
+import sapphire.SapphireSettings;
 import sapphire.imgui.windows.*;
 import diamondEngine.Window;
 import diamondEngine.diaUtils.DiaLogger;
@@ -42,7 +44,6 @@ public class SappImGUILayer {
     private FileWindow lastFocusedFile;
     private int dockId;
     private boolean dirty;
-    private boolean dirtyFont;
 
     // CONSTRUCTORS
     public SappImGUILayer(long windowPtr) {
@@ -50,7 +51,6 @@ public class SappImGUILayer {
         this.windows = new HashMap<>();
         this.dockId = -1;
         this.dirty = false;
-        this.dirtyFont = false;
         this.windowsToAdd = new ArrayList<>();
         this.lastFocusedFile = null;
     }
@@ -64,20 +64,12 @@ public class SappImGUILayer {
         return dockId;
     }
 
-    public void setDirty(boolean dirty) {
-        this.dirty = dirty;
-    }
-
     public FileWindow getLastFocusedFile() {
         return lastFocusedFile;
     }
 
     public void setLastFocusedFile(FileWindow lastFocusedFile) {
         this.lastFocusedFile = lastFocusedFile;
-    }
-
-    public void isDirtyFont() {
-        dirtyFont = true;
     }
 
     // METHODS
@@ -98,7 +90,7 @@ public class SappImGUILayer {
         io.setBackendPlatformName("imgui_java_impl_glfw");
 
         initCallbacks(io);
-        updateFonts(io);
+        addAvailableFonts(io);
 
         // Set up clipboard functionality
         io.setSetClipboardTextFn(new ImStrConsumer() {
@@ -123,43 +115,51 @@ public class SappImGUILayer {
         imGuiGlfw.init(glfwWindow, true);
         imGuiGl3.init("#version 330 core");
         setSapphireStyles();
+        SappImGui.init();
         initWindows();
+        changeFont(Sapphire.get().getSettings().getCurrentFont());
     }
 
-    public void setSapphireStyles() {
+    private void initWindows() {
+        /*
+         * For now windows are going to be statically added in the init function. A new ImGui frame is created to allow
+         * the use of ImGUI functionalities when creating the windows
+         */
 
-        // Colors
-        int[] SappTheme_Bg = Sapphire.getColor("SappTheme_Bg");
-        int[] SappTheme_Accent = Sapphire.getColor("SappTheme_Accent");
-        int[] SappTheme_HighLight = Sapphire.getColor("SappTheme_HighLight");
-        int[] SappTheme_Dark = Sapphire.getColor("SappTheme_Dark");
-        int[] SappTheme_Font = Sapphire.getColor("SappTheme_Font");
-        ImGui.getStyle().setColor(ImGuiCol.WindowBg, SappTheme_Bg[0], SappTheme_Bg[1], SappTheme_Bg[2], SappTheme_Bg[3]);
-        ImGui.getStyle().setColor(ImGuiCol.MenuBarBg, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
-        ImGui.getStyle().setColor(ImGuiCol.TitleBg, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
-        ImGui.getStyle().setColor(ImGuiCol.TitleBgActive, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
-        ImGui.getStyle().setColor(ImGuiCol.Tab, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
-        ImGui.getStyle().setColor(ImGuiCol.TabActive, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
-        ImGui.getStyle().setColor(ImGuiCol.TabHovered, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
-        ImGui.getStyle().setColor(ImGuiCol.TabUnfocused, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
-        ImGui.getStyle().setColor(ImGuiCol.TabUnfocusedActive, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
-        ImGui.getStyle().setColor(ImGuiCol.Button, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
-        ImGui.getStyle().setColor(ImGuiCol.ButtonActive, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
-        ImGui.getStyle().setColor(ImGuiCol.ButtonHovered, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
-        ImGui.getStyle().setColor(ImGuiCol.NavHighlight, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
-        ImGui.getStyle().setColor(ImGuiCol.ChildBg, SappTheme_Dark[0], SappTheme_Dark[1], SappTheme_Dark[2], SappTheme_Dark[3]);
-        ImGui.getStyle().setColor(ImGuiCol.Text, SappTheme_Font[0], SappTheme_Font[1], SappTheme_Font[2], SappTheme_Font[3]);
+        startFrame();
 
-        // Style
-        ImGui.getStyle().setChildRounding(0f);
-        ImGui.getStyle().setTabRounding(0f);
-        ImGui.getStyle().setWindowPadding(8f, 8f);
-        ImGui.getStyle().setTabBorderSize(0f);
-        ImGui.getStyle().setChildBorderSize(0f);
-        ImGui.getStyle().setFrameBorderSize(0f);
-        ImGui.getStyle().setWindowBorderSize(0f);
-        ImGui.getStyle().setWindowTitleAlign(0f, 0.5f);
-        ImGui.getStyle().setWindowMinSize(10F, 10F);
+        // WINDOWS
+        gameView = new GameViewWindow();
+        ImguiWindow newWindow = new SettingsWindow();
+        windows.put(newWindow.getId(), newWindow);
+        newWindow = new EntityPropertiesWindow();
+        windows.put(newWindow.getId(), newWindow);
+        newWindow = new AssetsWindow();
+        windows.put(newWindow.getId(), newWindow);
+        newWindow = new EnvHierarchyWindow();
+        windows.put(newWindow.getId(), newWindow);
+        newWindow = new LogViewerWindow();
+        windows.put(newWindow.getId(), newWindow);
+        newWindow = new ProfilerWindow();
+        windows.put(newWindow.getId(), newWindow);
+        newWindow = new FileNavigatorWindow();
+        windows.put(newWindow.getId(), newWindow);
+        newWindow = new EnvPreviewWindow();
+        windows.put(newWindow.getId(), newWindow);
+        newWindow = new DebugSapphireWindow();
+        windows.put(newWindow.getId(), newWindow);
+
+        /* Settings for the windows are loaded. At the time of writing this code, only one setting is stored, being if
+         * the window is active or not. Because of this, the window settings are stored as a simple map*/
+        for (String windowId : Sapphire.get().getSettings().getActiveWindows().keySet()) {
+            for (String window : windows.keySet()) {
+                if (windows.get(window).getId().equals(windowId)) {
+                    windows.get(window).setActive(Sapphire.get().getSettings().getActiveWindows().get(windowId));
+                }
+            }
+        }
+
+        endFrame();
     }
 
     private void initCallbacks(ImGuiIO io) {
@@ -224,46 +224,127 @@ public class SappImGUILayer {
         });
     }
 
-    private void initWindows() {
-        /*
-         * For now windows are going to be statically added in the init function. A new ImGui frame is created to allow
-         * the use of ImGUI functionalities when creating the windows
-         */
+    private void setSapphireStyles() {
 
-        startFrame();
+        // Colors
+        int[] SappTheme_Bg = Sapphire.getColor("SappTheme_Bg");
+        int[] SappTheme_Accent = Sapphire.getColor("SappTheme_Accent");
+        int[] SappTheme_HighLight = Sapphire.getColor("SappTheme_HighLight");
+        int[] SappTheme_Dark = Sapphire.getColor("SappTheme_Dark");
+        int[] SappTheme_Font = Sapphire.getColor("SappTheme_Font");
+        ImGui.getStyle().setColor(ImGuiCol.WindowBg, SappTheme_Bg[0], SappTheme_Bg[1], SappTheme_Bg[2], SappTheme_Bg[3]);
+        ImGui.getStyle().setColor(ImGuiCol.MenuBarBg, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.TitleBg, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.TitleBgActive, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.Tab, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.TabActive, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
+        ImGui.getStyle().setColor(ImGuiCol.TabHovered, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
+        ImGui.getStyle().setColor(ImGuiCol.TabUnfocused, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.TabUnfocusedActive, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.Button, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.ButtonActive, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
+        ImGui.getStyle().setColor(ImGuiCol.ButtonHovered, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
+        ImGui.getStyle().setColor(ImGuiCol.NavHighlight, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
+        ImGui.getStyle().setColor(ImGuiCol.ChildBg, SappTheme_Dark[0], SappTheme_Dark[1], SappTheme_Dark[2], SappTheme_Dark[3]);
+        ImGui.getStyle().setColor(ImGuiCol.Text, SappTheme_Font[0], SappTheme_Font[1], SappTheme_Font[2], SappTheme_Font[3]);
 
-        // WINDOWS
-        gameView = new GameViewWindow();
-        ImguiWindow newWindow = new SettingsWindow();
-        windows.put(newWindow.getId(), newWindow);
-        newWindow = new EntityPropertiesWindow();
-        windows.put(newWindow.getId(), newWindow);
-        newWindow = new AssetsWindow();
-        windows.put(newWindow.getId(), newWindow);
-        newWindow = new EnvHierarchyWindow();
-        windows.put(newWindow.getId(), newWindow);
-        newWindow = new LogViewerWindow();
-        windows.put(newWindow.getId(), newWindow);
-        newWindow = new ProfilerWindow();
-        windows.put(newWindow.getId(), newWindow);
-        newWindow = new FileNavigatorWindow();
-        windows.put(newWindow.getId(), newWindow);
-        newWindow = new EnvPreviewWindow();
-        windows.put(newWindow.getId(), newWindow);
-        newWindow = new DebugSapphireWindow();
-        windows.put(newWindow.getId(), newWindow);
+        // Style
+        ImGui.getStyle().setChildRounding(0f);
+        ImGui.getStyle().setTabRounding(0f);
+        ImGui.getStyle().setWindowPadding(8f, 8f);
+        ImGui.getStyle().setTabBorderSize(0f);
+        ImGui.getStyle().setChildBorderSize(0f);
+        ImGui.getStyle().setFrameBorderSize(0f);
+        ImGui.getStyle().setWindowBorderSize(0f);
+        ImGui.getStyle().setWindowTitleAlign(0f, 0.5f);
+        ImGui.getStyle().setWindowMinSize(10f, 10f);
+    }
 
-        /* Settings for the windows are loaded. At the time of writing this code, only one setting is stored, being if
-         * the window is active or not. Because of this, the window settings are stored as a simple map*/
-        for (String windowId : Sapphire.get().getSettings().getActiveWindows().keySet()) {
-            for (String window : windows.keySet()) {
-                if (windows.get(window).getId().equals(windowId)) {
-                    windows.get(window).setActive(Sapphire.get().getSettings().getActiveWindows().get(windowId));
-                }
+    private void addAvailableFonts(imgui.ImGuiIO io) {
+
+        ArrayList<File> fontFiles = DiaUtils.getFilesInDir("sapphire/fonts", "ttf");
+        fontFiles.addAll(DiaUtils.getFilesInDir("sapphire/fonts", "otf"));
+        SapphireSettings settings = Sapphire.get().getSettings();
+        if (!fontFiles.isEmpty()) {
+
+            String[] fontsList = new String[fontFiles.size()];
+            int i = 0;
+            for (File file : fontFiles) {
+
+                final ImFontAtlas fontAtlas = io.getFonts();
+                final ImFontConfig fontConfig = new ImFontConfig();
+                fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesDefault());
+                fontConfig.setPixelSnapH(true);
+
+                ImFont font = fontAtlas.addFontFromFileTTF(file.getAbsolutePath(), settings.getFontSize(), fontConfig);
+                settings.addFont(font);
+                fontsList[i] = file.getName();
+                fontConfig.destroy(); // After all fonts were added we don't need this config more
+                i++;
+            }
+            settings.setFontsList(fontsList);
+        } else {
+            DiaLogger.log("Failed to load any font files from Sapphire fonts dir");
+        }
+    }
+
+    private void endFrame() {
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glClearColor(0f, 0f, 0f, 1f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        // After Dear ImGui prepared a draw data, we use it in the LWJGL3 renderer.
+        // At that moment ImGui will be rendered to the current OpenGL context.
+        ImGui.render();
+        imGuiGl3.renderDrawData(ImGui.getDrawData());
+
+        long backupWindowPtr = glfwGetCurrentContext();
+        ImGui.updatePlatformWindows();
+        ImGui.renderPlatformWindowsDefault();
+        glfwMakeContextCurrent(backupWindowPtr);
+    }
+
+    private void setupDockSpace() {
+        int windowFlags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar |
+                ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove |
+                ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
+
+        ImGuiViewport mainViewport = ImGui.getMainViewport();
+        ImGui.setNextWindowPos(mainViewport.getWorkPosX(), mainViewport.getWorkPosY());
+        ImGui.setNextWindowSize(mainViewport.getWorkSizeX() * 2, mainViewport.getWorkSizeY());
+        ImGui.setNextWindowViewport(mainViewport.getID());
+        Vector2f windowPos = Window.getPosition();
+        ImGui.setNextWindowPos(windowPos.x, windowPos.y);
+        ImGui.setNextWindowSize(Window.getWidth(), Window.getHeight());
+
+        // ImGui Styles
+        ImGuiWindowClass windowClass = new ImGuiWindowClass();
+        windowClass.setDockingAlwaysTabBar(false);
+        windowClass.setDockNodeFlagsOverrideSet(16);
+        imgui.ImGui.setNextWindowClass(windowClass);
+        ImGui.begin("Dockspace Outer", new ImBoolean(true), windowFlags);
+
+        // Dockspace
+        dockId = ImGui.dockSpace(ImGui.getID("Dockspace"));
+        imgui.ImGui.setNextWindowDockID(dockId);
+        SappMenuBar.imgui(this);
+
+        ImGui.end();
+    }
+
+    private void startFrame() {
+        imGuiGlfw.newFrame();
+        ImGui.newFrame();
+    }
+
+    public void changeFont(String fontName) {
+        SapphireSettings settings = Sapphire.get().getSettings();
+        settings.setCurrentFont(fontName);
+        for (ImFont font : settings.getFonts()) {
+            if (font.getDebugName().split(",")[0].equals(fontName)) {
+                ImGui.getIO().setFontDefault(font);
             }
         }
-
-        endFrame();
     }
 
     public void addWindow(ImguiWindow window) {
@@ -275,31 +356,6 @@ public class SappImGUILayer {
                 DiaLogger.log("Tried to open an already opened window: '" + window.getId() + "'");
             }
         }
-    }
-
-    public void updateFonts(imgui.ImGuiIO io) {
-        ArrayList<File> fontFiles = DiaUtils.getFilesInDir("sapphire/fonts", "ttf");
-        if (!fontFiles.isEmpty()) {
-            for (File file : fontFiles) {
-                final ImFontAtlas fontAtlas = io.getFonts();
-                final ImFontConfig fontConfig = new ImFontConfig(); // Natively allocated object, should be explicitly destroyed
-
-                // Glyphs could be added per-font as well as per config used globally like here
-                fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesDefault());
-
-                // Fonts merge example
-                fontConfig.setPixelSnapH(true);
-                fontAtlas.addFontFromFileTTF(file.getAbsolutePath(), Sapphire.get().getSettings().getFontSize(), fontConfig);
-                fontConfig.destroy(); // After all fonts were added we don't need this config more
-            }
-        } else {
-            DiaLogger.log("Failed to load any font files from Sapphire fonts dir");
-        }
-    }
-
-    private void startFrame() {
-        imGuiGlfw.newFrame();
-        ImGui.newFrame();
     }
 
     public void update() {
@@ -331,58 +387,10 @@ public class SappImGUILayer {
             windowsToAdd.clear();
             this.dirty = false;
         }
-
-        if (dirtyFont) {
-            updateFonts(imgui.ImGui.getIO());
-            dirtyFont = false;
-        }
-    }
-
-    private void endFrame() {
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glClearColor(0f, 0f, 0f, 1f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        // After Dear ImGui prepared a draw data, we use it in the LWJGL3 renderer.
-        // At that moment ImGui will be rendered to the current OpenGL context.
-        ImGui.render();
-        imGuiGl3.renderDrawData(ImGui.getDrawData());
-
-        long backupWindowPtr = glfwGetCurrentContext();
-        ImGui.updatePlatformWindows();
-        ImGui.renderPlatformWindowsDefault();
-        glfwMakeContextCurrent(backupWindowPtr);
     }
 
     public void destroyImGui() {
         imGuiGl3.dispose();
         ImGui.destroyContext();
-    }
-
-    private void setupDockSpace() {
-        int windowFlags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar |
-                ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove |
-                ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
-
-        ImGuiViewport mainViewport = ImGui.getMainViewport();
-        ImGui.setNextWindowPos(mainViewport.getWorkPosX(), mainViewport.getWorkPosY());
-        ImGui.setNextWindowSize(mainViewport.getWorkSizeX() * 2, mainViewport.getWorkSizeY());
-        ImGui.setNextWindowViewport(mainViewport.getID());
-        Vector2f windowPos = Window.getPosition();
-        ImGui.setNextWindowPos(windowPos.x, windowPos.y);
-        ImGui.setNextWindowSize(Window.getWidth(), Window.getHeight());
-
-        // ImGui Styles
-        ImGuiWindowClass windowClass = new ImGuiWindowClass();
-        windowClass.setDockingAlwaysTabBar(false);
-        windowClass.setDockNodeFlagsOverrideSet(16);
-        imgui.ImGui.setNextWindowClass(windowClass);
-        ImGui.begin("Dockspace Outer", new ImBoolean(true), windowFlags);
-
-        // Dockspace
-        dockId = ImGui.dockSpace(ImGui.getID("Dockspace"));
-        imgui.ImGui.setNextWindowDockID(dockId);
-        SappMenuBar.imgui(this);
-
-        ImGui.end();
     }
 }
