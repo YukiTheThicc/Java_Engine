@@ -45,37 +45,39 @@ public class Grid extends Component {
     // METHODS
     @Override
     public void update(float dt) {
-        Camera camera = GameViewWindow.editorCamera;
-        Vector2f cameraPos = camera.pos;
-        Vector2f projectionSize = camera.getProjectionSize();
+        if (draw) {
+            Camera camera = GameViewWindow.editorCamera;
+            Vector2f cameraPos = camera.pos;
+            Vector2f projectionSize = camera.getProjectionSize();
 
-        if (camera.getZoom() <= 4) {
-            float firstX = ((int) (cameraPos.x / cellX) - 1) * cellX;
-            float firstY = ((int) (cameraPos.y / cellY) - 1) * cellY;
+            if (camera.getZoom() <= 4) {
+                float firstX = ((int) (cameraPos.x / cellX) - 1) * cellX;
+                float firstY = ((int) (cameraPos.y / cellY) - 1) * cellY;
 
-            int numHLines = (int) ((projectionSize.y * camera.getZoom()) / cellY) + 2;
-            int numVLines = (int) ((projectionSize.x * camera.getZoom()) / cellX) + 2;
+                int numHLines = (int) ((projectionSize.y * camera.getZoom()) / cellY) + 2;
+                int numVLines = (int) ((projectionSize.x * camera.getZoom()) / cellX) + 2;
 
-            float width = (int) (projectionSize.x * camera.getZoom()) + cellX * 2;
-            float height = (int) (projectionSize.y * camera.getZoom()) + cellY * 2;
+                float width = (int) (projectionSize.x * camera.getZoom()) + cellX * 2;
+                float height = (int) (projectionSize.y * camera.getZoom()) + cellY * 2;
 
-            Vector3f color = new Vector3f(0.66f, 0.66f, 0.66f);
+                Vector3f color = new Vector3f(0.66f, 0.66f, 0.66f);
 
-            int maxLines = Math.max(numVLines, numHLines);
+                int maxLines = Math.max(numVLines, numHLines);
 
-            float x = 0;
-            float y = 0;
-            int i = 0;
-            for (i = 0; i < maxLines; i++) {
-                x = firstX + (cellX * i);
-                y = firstY + (cellY * i);
+                float x = 0;
+                float y = 0;
+                int i = 0;
+                for (i = 0; i < maxLines; i++) {
+                    x = firstX + (cellX * i);
+                    y = firstY + (cellY * i);
 
-                if (i < numHLines) {
-                    DebugRenderer.addLine(new Vector2f(firstX, y), new Vector2f(width + firstX + 1, y), color);
-                }
+                    if (i < numHLines) {
+                        DebugRenderer.addLine(new Vector2f(firstX, y), new Vector2f(width + firstX + 1, y), color);
+                    }
 
-                if (i < numVLines) {
-                    DebugRenderer.addLine(new Vector2f(x, firstY), new Vector2f(x, height + firstY + 1), color);
+                    if (i < numVLines) {
+                        DebugRenderer.addLine(new Vector2f(x, firstY), new Vector2f(x, height + firstY + 1), color);
+                    }
                 }
             }
         }

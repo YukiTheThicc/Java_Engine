@@ -50,6 +50,8 @@ public class EnvHierarchyWindow extends ImguiWindow {
 
         for (DiaEnvironment env : Diamond.get().getEnvironments()) {
             if (ImGui.treeNode(env.getName())) {
+
+                itemContextMenu(env);
                 if (!env.getEntities().isEmpty() && ImGui.treeNode("Entities")) {
                     for (DiaEntity entity : env.getEntities()) {
                         ImGui.text(entity.toString());
@@ -63,7 +65,6 @@ public class EnvHierarchyWindow extends ImguiWindow {
 
                 ImGui.treePop();
             }
-            itemContextMenu(env);
         }
     }
 

@@ -106,6 +106,14 @@ public class Sapphire {
         return Sapphire.get().colors.get(color);
     }
 
+    public boolean isDiaRunning() {
+        return diaRunning;
+    }
+
+    public void setDiaRunning(boolean diaRunning) {
+        this.diaRunning = diaRunning;
+    }
+
     // METHODS
     private boolean shouldClose() {
         return glfwWindowShouldClose(this.window.getGlfwWindow());
