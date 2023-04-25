@@ -20,6 +20,10 @@ public class SapphireProject {
     // CONSTANTS
     public static final String PROJECT_FILE = "project.sapp";
     public static final String ENVS_DIR = "envs";
+    public static final String RES_DIR = "res";
+    public static final String TEX_DIR = "res/tex";
+    public static final String SFX_DIR = "res/sfx";
+    public static final String MUSIC_DIR = "res/mus";
 
     // ATTRIBUTES
     private List<File> openedFiles;

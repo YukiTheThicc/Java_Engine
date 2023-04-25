@@ -1,9 +1,11 @@
 package sapphire.imgui.windows;
 
 import diamondEngine.Window;
+import diamondEngine.diaComponents.Camera;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiWindowFlags;
+import org.joml.Vector2f;
 import sapphire.imgui.SappImGUILayer;
 import sapphire.imgui.components.GameViewWindowControls;
 
@@ -11,6 +13,7 @@ public class GameViewWindow extends ImguiWindow {
 
     // ATTRIBUTES
     private int leftX, rightX, topY, bottomY;
+    public static Camera editorCamera;
     private final GameViewWindowControls controls = new GameViewWindowControls();
 
     // CONSTRUCTORS
@@ -18,6 +21,7 @@ public class GameViewWindow extends ImguiWindow {
         super("game_view", "Main View");
         this.setFlags(ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse |
                 ImGuiWindowFlags.NoResize);
+        GameViewWindow.editorCamera = new Camera(new Vector2f(0, 0));
     }
 
     // METHODS

@@ -11,6 +11,7 @@ public class Diamond {
     // ATTRIBUTES
     private static Diamond diamond = null;
     private ArrayList<DiaEnvironment> environments;
+    private int emptyEnvs = 0;
 
     // CONSTRUCTORS
     private Diamond() {
@@ -39,7 +40,8 @@ public class Diamond {
     }
 
     public void addEmptyEnvironment() {
-        this.environments.add(new DiaEnvironment("New Environment"));
+        environments.add(new DiaEnvironment("New Environment" + (emptyEnvs != 0 ? " " + emptyEnvs : "")));
+        emptyEnvs++;
     }
 
     public void update() {

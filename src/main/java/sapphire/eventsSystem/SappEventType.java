@@ -8,6 +8,7 @@ public enum SappEventType {
     Cancel,
     Add_env,
     Add_entity,
+    Add_component,
     Save_env,
     New_root_env,
     Change_font,

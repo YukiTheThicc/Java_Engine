@@ -144,8 +144,6 @@ public class SappImGUILayer {
         windows.put(newWindow.getId(), newWindow);
         newWindow = new FileNavigatorWindow();
         windows.put(newWindow.getId(), newWindow);
-        newWindow = new EnvPreviewWindow();
-        windows.put(newWindow.getId(), newWindow);
         newWindow = new DebugSapphireWindow();
         windows.put(newWindow.getId(), newWindow);
 

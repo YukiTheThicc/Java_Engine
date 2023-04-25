@@ -1,7 +1,10 @@
 package sapphire.imgui.windows;
 
+import diamondEngine.DiaEntity;
 import diamondEngine.DiaEnvironment;
 import diamondEngine.Diamond;
+import diamondEngine.diaComponents.Component;
+import diamondEngine.diaComponents.Grid;
 import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
@@ -46,29 +49,36 @@ public class EnvHierarchyWindow extends ImguiWindow {
     private void drawNestedEntities() {
 
         for (DiaEnvironment env : Diamond.get().getEnvironments()) {
-            itemContextMenu();
             if (ImGui.treeNode(env.getName())) {
+                if (!env.getEntities().isEmpty() && ImGui.treeNode("Entities")) {
+                    for (DiaEntity entity : env.getEntities()) {
+                        ImGui.text(entity.toString());
+                    }
+                    ImGui.treePop();
+                }
+
+                for (Component component : env.getComponents()) {
+                    component.imgui();
+                }
 
                 ImGui.treePop();
             }
+            itemContextMenu(env);
         }
     }
 
     private void mainContextMenu() {
         if (ImGui.beginPopupContextItem("env_menu")) {
-            if (ImGui.menuItem(Sapphire.getLiteral("create_env"))) {
-               DiaLogger.log("Selected env context menu on '" + Sapphire.getLiteral("create_env") + "'");
-            }
+            if (ImGui.menuItem(Sapphire.getLiteral("create_env"))) SapphireEvents.notify(new SappEvent(SappEventType.Add_env));
             ImGui.endPopup();
         }
-
     }
 
-    private void itemContextMenu() {
-        if (ImGui.beginPopupContextItem("env_item")) {
-            if (ImGui.menuItem(Sapphire.getLiteral("create_entity"))) {
-                DiaLogger.log("Selected item context menu on '" + Sapphire.getLiteral("create_entity") + "'");
-            }
+    private void itemContextMenu(DiaEnvironment env) {
+        if (ImGui.beginPopupContextItem(env.getName() + "env_item")) {
+            if (ImGui.menuItem(Sapphire.getLiteral("add_grid"))) SapphireEvents.notify(new SappEvent(SappEventType.Add_component,
+                    env,
+                    new Grid(32)));
             ImGui.endPopup();
         }
     }

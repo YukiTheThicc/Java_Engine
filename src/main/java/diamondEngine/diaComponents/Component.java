@@ -1,6 +1,7 @@
 package diamondEngine.diaComponents;
 
 import diamondEngine.DiaEntity;
+import imgui.ImGui;
 
 public abstract class Component {
 
@@ -17,5 +18,9 @@ public abstract class Component {
     }
 
     // METHODS
+    public abstract void update(float dt);
 
+    public void imgui() {
+        ImGui.text(this.getClass().getSimpleName());
+    }
 }
