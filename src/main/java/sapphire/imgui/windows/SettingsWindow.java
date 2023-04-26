@@ -7,14 +7,19 @@ import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImInt;
 import sapphire.Sapphire;
+import sapphire.SapphireEvents;
 import sapphire.SapphireSettings;
-import sapphire.imgui.AlignX;
-import sapphire.imgui.AlignY;
+import sapphire.eventsSystem.SappEvent;
+import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.SappImGUILayer;
 import sapphire.imgui.SappImGui;
 
 public class SettingsWindow extends ImguiWindow {
 
+    // ATTRIBUTES
+    private boolean settingsChanged = false;
+
+    // CONSTRUCTORS
     public SettingsWindow() {
         super("settings", "Settings", false);
         this.setFlags(ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove |
@@ -24,33 +29,33 @@ public class SettingsWindow extends ImguiWindow {
         this.setSizeY(600f);
     }
 
+    // METHODS
     @Override
     public void imgui(SappImGUILayer layer) {
 
         ImGui.setNextWindowSize(this.getSizeX(), this.getSizeY(), ImGuiCond.Always);
         if (this.isActive().get()) {
+
             ImGui.setNextWindowPos(Window.getPosition().x + (Window.getWidth() - this.getSizeX()) / 2,
                     Window.getPosition().y + (Window.getHeight() - this.getSizeY()) / 2);
             ImGui.openPopup(this.getTitle());
+            SapphireSettings settings = Sapphire.get().getSettings();
             if (ImGui.beginPopupModal(this.getTitle(), this.isActive(), this.getFlags())) {
-
-                SapphireSettings settings = Sapphire.get().getSettings();
                 if (ImGui.beginTabBar(this.getTitle(), this.getFlags())) {
                     generalSettingsTab(settings, layer);
                     ImGui.endTabBar();
                 }
-
-                // Calculate close and accept buttons position
-                float sizeX = SappImGui.textSize(Sapphire.getLiteral("apply")) + SappImGui.textSize(Sapphire.getLiteral("close")) + ImGui.getStyle().getFramePaddingX() * 6;
-                float sizeY = ImGui.getFontSize() + ImGui.getStyle().getFramePaddingY() * 2;
-
-                SappImGui.align(AlignX.RIGHT, AlignY.BOTTOM, sizeX, sizeY);
-                if (ImGui.button(Sapphire.getLiteral("apply"))) settings.save();
-                ImGui.sameLine();
-                if (ImGui.button(Sapphire.getLiteral("close"))) this.setActive(false);
-
+                checkChanges(settings);
                 ImGui.endPopup();
             }
+        }
+    }
+
+    private void checkChanges(SapphireSettings settings) {
+        if (settingsChanged) {
+            SapphireEvents.notify(new SappEvent(SappEventType.Settings_changed));
+            settings.save();
+            settingsChanged = false;
         }
     }
 
@@ -61,7 +66,7 @@ public class SettingsWindow extends ImguiWindow {
             settings.setWorkspace(SappImGui.inputText(Sapphire.getLiteral("workspace"), settings.getWorkspace()));
             ImGui.sameLine();
             if (ImGui.button(Sapphire.getLiteral("examine"))) {
-                DiaUtils.selectDirectory(Sapphire.getLiteral("choose_workspace"), settings.getWorkspace());
+                settings.setWorkspace(DiaUtils.selectDirectory(Sapphire.getLiteral("choose_workspace"), settings.getWorkspace()));
             }
             ImGui.separator();
 
@@ -69,13 +74,16 @@ public class SettingsWindow extends ImguiWindow {
             String newFont = SappImGui.combo(Sapphire.getLiteral("font"), settings.getCurrentFont(), settings.getFontsList());
             if (newFont != null) {
                 layer.changeFont(newFont);
+                settingsChanged = true;
             }
 
             ImGui.sameLine();
             ImInt fontSize = new ImInt(settings.getFontSize());
             if (ImGui.inputInt("##", fontSize)) {
                 settings.setFontSize(fontSize.get());
+                settingsChanged = true;
             }
+
             if (ImGui.isItemHovered()) {
                 ImGui.beginTooltip();
                 ImGui.text(Sapphire.getLiteral("font_change_after_reboot"));
@@ -86,6 +94,7 @@ public class SettingsWindow extends ImguiWindow {
             String newLang = SappImGui.combo(Sapphire.getLiteral("lang"), settings.getCurrentLang(), settings.getLanguages());
             if (newLang != null) {
                 settings.changeLangTo(newLang);
+                settingsChanged = true;
             }
             ImGui.endTabItem();
         }

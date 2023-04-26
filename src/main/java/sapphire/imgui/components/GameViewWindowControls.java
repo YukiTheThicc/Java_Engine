@@ -47,7 +47,7 @@ public class GameViewWindowControls {
         ImGui.setNextWindowPos(windowPos.x, windowPos.y + offsetY);
         ImGui.setNextWindowSize(windowSize.x, mainControlsY);
         ImGui.pushStyleColor(ImGuiCol.ChildBg, 50, 50, 50, 125);
-        ImGui.pushStyleColor(ImGuiCol.Button, 0f, 0f, 0f, 0f);
+        ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
         ImGui.pushStyleVar(ImGuiStyleVar.ChildRounding, 255f);
         ImGui.begin("controls", flags);
 
@@ -84,16 +84,6 @@ public class GameViewWindowControls {
             if (ImGui.menuItem("item 1")) {
 
             }
-            if (ImGui.menuItem("item 2")) {
-
-            }
-            if (ImGui.menuItem("item 3")) {
-
-            }
-            if (ImGui.menuItem("item 4")) {
-
-            }
-
             ImGui.endPopup();
         }
     }

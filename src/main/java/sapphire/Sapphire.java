@@ -67,9 +67,7 @@ public class Sapphire {
     }
 
     public static String getLiteral(String literal) {
-        if (Sapphire.get().literals.get(literal) != null) {
-            return Sapphire.get().literals.get(literal);
-        }
+        if (Sapphire.get().literals.get(literal) != null) return Sapphire.get().literals.get(literal);
         return literal + ": " + UNKNOWN_LITERAL;
     }
 
@@ -104,7 +102,8 @@ public class Sapphire {
     }
 
     public static int[] getColor(String color) {
-        return Sapphire.get().colors.get(color);
+        if (Sapphire.get().colors.get(color) != null) return Sapphire.get().colors.get(color);
+        return Sapphire.get().colors.get("default");
     }
 
     public boolean isDiaRunning() {
@@ -141,11 +140,25 @@ public class Sapphire {
         colors.put("DiaLogger.WARN", new int[]{200,175,50,255});
         colors.put("DiaLogger.DEBUG", new int[]{50,200,50,255});
         colors.put("DiaLogger.SAPP_DEBUG", new int[]{54,75,108,255});
-        colors.put("SappTheme_Bg", new int[]{30,35,45,255});
-        colors.put("SappTheme_Accent", new int[]{54,75,108,255});
-        colors.put("SappTheme_HighLight", new int[]{86,128,193,255});
-        colors.put("SappTheme_Dark", new int[]{16,20,26,255});
-        colors.put("SappTheme_Font", new int[]{218,224,232,255});
+
+        // main theme
+        colors.put("default", new int[]{125,0,125,255});
+        colors.put("light_grey", new int[]{111,120,133,255});
+        colors.put("grey", new int[]{62,71,86,255});
+        colors.put("main_bg", new int[]{30,35,43,255});
+        colors.put("dark_bg", new int[]{16,20,26,255});
+        colors.put("highlight", new int[]{86,128,193,255});
+        colors.put("accent", new int[]{54,75,108,255});
+        colors.put("inactive", new int[]{34,48,76,255});
+
+        // Detail/Icon colors
+        colors.put("detail_highLight", new int[]{29,190,224,255});
+        colors.put("detail_accent", new int[]{25,119,139,255});
+        colors.put("detail_dark", new int[]{33,66,84,255});
+        colors.put("detail_bg", new int[]{31,42,55,255});
+
+        // Others
+        colors.put("font", new int[]{218,224,232,255});
     }
 
     public static Sapphire get() {

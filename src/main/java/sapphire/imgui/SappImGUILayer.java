@@ -3,10 +3,14 @@ package sapphire.imgui;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
 import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiStyleVar;
 import imgui.type.ImInt;
 import sapphire.Sapphire;
 import sapphire.SapphireControls;
+import sapphire.SapphireEvents;
 import sapphire.SapphireSettings;
+import sapphire.eventsSystem.SappEvent;
+import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.windows.*;
 import diamondEngine.Window;
 import diamondEngine.diaUtils.DiaLogger;
@@ -20,6 +24,7 @@ import imgui.glfw.ImGuiImplGlfw;
 import imgui.type.ImBoolean;
 import imgui.internal.ImGui;
 import org.joml.Vector2f;
+import sapphire.utils.SappStyles;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,6 +49,7 @@ public class SappImGUILayer {
     private FileWindow lastFocusedFile;
     private int dockId;
     private boolean dirty;
+    private boolean fontChanged = false;
 
     // CONSTRUCTORS
     public SappImGUILayer(long windowPtr) {
@@ -114,7 +120,7 @@ public class SappImGUILayer {
 
         imGuiGlfw.init(glfwWindow, true);
         imGuiGl3.init("#version 330 core");
-        setSapphireStyles();
+        SappStyles.setSapphireStyles();
         SappImGui.init();
         initWindows();
         changeFont(Sapphire.get().getSettings().getCurrentFont());
@@ -222,42 +228,6 @@ public class SappImGUILayer {
         });
     }
 
-    private void setSapphireStyles() {
-
-        // Colors
-        int[] SappTheme_Bg = Sapphire.getColor("SappTheme_Bg");
-        int[] SappTheme_Accent = Sapphire.getColor("SappTheme_Accent");
-        int[] SappTheme_HighLight = Sapphire.getColor("SappTheme_HighLight");
-        int[] SappTheme_Dark = Sapphire.getColor("SappTheme_Dark");
-        int[] SappTheme_Font = Sapphire.getColor("SappTheme_Font");
-        ImGui.getStyle().setColor(ImGuiCol.WindowBg, SappTheme_Bg[0], SappTheme_Bg[1], SappTheme_Bg[2], SappTheme_Bg[3]);
-        ImGui.getStyle().setColor(ImGuiCol.MenuBarBg, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
-        ImGui.getStyle().setColor(ImGuiCol.TitleBg, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
-        ImGui.getStyle().setColor(ImGuiCol.TitleBgActive, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
-        ImGui.getStyle().setColor(ImGuiCol.Tab, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
-        ImGui.getStyle().setColor(ImGuiCol.TabActive, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
-        ImGui.getStyle().setColor(ImGuiCol.TabHovered, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
-        ImGui.getStyle().setColor(ImGuiCol.TabUnfocused, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
-        ImGui.getStyle().setColor(ImGuiCol.TabUnfocusedActive, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
-        ImGui.getStyle().setColor(ImGuiCol.Button, SappTheme_Accent[0], SappTheme_Accent[1], SappTheme_Accent[2], SappTheme_Accent[3]);
-        ImGui.getStyle().setColor(ImGuiCol.ButtonActive, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
-        ImGui.getStyle().setColor(ImGuiCol.ButtonHovered, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
-        ImGui.getStyle().setColor(ImGuiCol.NavHighlight, SappTheme_HighLight[0], SappTheme_HighLight[1], SappTheme_HighLight[2], SappTheme_HighLight[3]);
-        ImGui.getStyle().setColor(ImGuiCol.ChildBg, SappTheme_Dark[0], SappTheme_Dark[1], SappTheme_Dark[2], SappTheme_Dark[3]);
-        ImGui.getStyle().setColor(ImGuiCol.Text, SappTheme_Font[0], SappTheme_Font[1], SappTheme_Font[2], SappTheme_Font[3]);
-
-        // Style
-        ImGui.getStyle().setChildRounding(0f);
-        ImGui.getStyle().setTabRounding(0f);
-        ImGui.getStyle().setWindowPadding(8f, 8f);
-        ImGui.getStyle().setTabBorderSize(0f);
-        ImGui.getStyle().setChildBorderSize(0f);
-        ImGui.getStyle().setFrameBorderSize(0f);
-        ImGui.getStyle().setWindowBorderSize(0f);
-        ImGui.getStyle().setWindowTitleAlign(0f, 0.5f);
-        ImGui.getStyle().setWindowMinSize(10f, 10f);
-    }
-
     private void addAvailableFonts(imgui.ImGuiIO io) {
 
         ArrayList<File> fontFiles = DiaUtils.getFilesInDir("sapphire/fonts", "ttf");
@@ -303,6 +273,7 @@ public class SappImGUILayer {
     }
 
     private void setupDockSpace() {
+
         int windowFlags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar |
                 ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove |
                 ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
@@ -315,12 +286,9 @@ public class SappImGUILayer {
         ImGui.setNextWindowPos(windowPos.x, windowPos.y);
         ImGui.setNextWindowSize(Window.getWidth(), Window.getHeight());
 
-        // ImGui Styles
-        ImGuiWindowClass windowClass = new ImGuiWindowClass();
-        windowClass.setDockingAlwaysTabBar(false);
-        windowClass.setDockNodeFlagsOverrideSet(16);
-        imgui.ImGui.setNextWindowClass(windowClass);
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 8);
         ImGui.begin("Dockspace Outer", new ImBoolean(true), windowFlags);
+        ImGui.popStyleVar();
 
         // Dockspace
         dockId = ImGui.dockSpace(ImGui.getID("Dockspace"));
@@ -333,6 +301,10 @@ public class SappImGUILayer {
     private void startFrame() {
         imGuiGlfw.newFrame();
         ImGui.newFrame();
+        if (fontChanged) {
+            SapphireEvents.notify(new SappEvent(SappEventType.Font_changed));
+            fontChanged = false;
+        }
     }
 
     public void changeFont(String fontName) {
@@ -341,6 +313,7 @@ public class SappImGUILayer {
         for (ImFont font : settings.getFonts()) {
             if (font.getDebugName().split(",")[0].equals(fontName)) {
                 ImGui.getIO().setFontDefault(font);
+                fontChanged = true;
             }
         }
     }

@@ -1,9 +1,14 @@
 package sapphire.imgui.components;
 
 import diamondEngine.diaRenderer.Texture;
+import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
+import sapphire.SapphireEvents;
+import sapphire.eventsSystem.SappEvent;
+import sapphire.eventsSystem.SappEventType;
+import sapphire.eventsSystem.SappObserver;
 
-public class SappImageLabelButton {
+public class SappImageLabelButton implements SappObserver {
 
     /**
      * This class is here to retain the state of a button that doesn't change at runtime to reduce load
@@ -11,10 +16,11 @@ public class SappImageLabelButton {
     // ATTRIBUTES
     private final Texture image;
     private final String label;
-    private final float buttonSizeX;
+    private float buttonSizeX;
     private float buttonOriginX;
     private final float imageSizeX;
     private final float imageSizeY;
+    private boolean recalculate = false;
 
     // CONSTRUCTORS
     public SappImageLabelButton(Texture image, String label) {
@@ -24,6 +30,7 @@ public class SappImageLabelButton {
         this.buttonOriginX = ImGui.getCursorPosX();
         this.imageSizeX = image.getWidth();
         this.imageSizeY = image.getHeight();
+        SapphireEvents.addObserver(this);
     }
 
     public SappImageLabelButton(Texture image, String label, float sizeX, float sizeY) {
@@ -33,6 +40,7 @@ public class SappImageLabelButton {
         this.buttonOriginX = ImGui.getCursorPosX();
         this.imageSizeX = sizeX;
         this.imageSizeY = sizeY;
+        SapphireEvents.addObserver(this);
     }
 
     // METHODS
@@ -43,7 +51,6 @@ public class SappImageLabelButton {
         ImGui.beginGroup();
         buttonOriginX = ImGui.getCursorPosX();
 
-        ImGui.getStyle().setButtonTextAlign(0.75f, 0.5f);
         if (ImGui.button(label, buttonSizeX, imageSizeY)) result = true;
 
         ImGui.sameLine();
@@ -52,6 +59,14 @@ public class SappImageLabelButton {
 
         ImGui.endGroup();
         ImGui.popID();
+
         return result;
+
+    }
+    @Override
+    public void onNotify(SappEvent event) {
+        if (event.type == SappEventType.Font_changed) {
+            buttonSizeX = imageSizeX + ImGui.calcTextSize(label).x + ImGui.getStyle().getFramePaddingX() * 4;
+        }
     }
 }

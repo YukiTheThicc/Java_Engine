@@ -6,6 +6,8 @@ import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaLoggerObserver;
 import diamondEngine.diaUtils.DiaUtils;
 import imgui.ImGui;
+import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
 import imgui.type.ImInt;
@@ -52,7 +54,7 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
         this.currentLine = 0;
         this.autoScroll = new ImBoolean(true);
         this.optionsButton = new SappImageButton(Sapphire.getIcon("gear.png"), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE);
-        this.toolbarWidth = SappImGui.SMALL_ICON_SIZE + ImGui.getStyle().getFramePaddingX() * 2;
+        this.toolbarWidth = SappImGui.SMALL_ICON_SIZE;
         this.setFlags(ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoScrollbar);
         DiaLogger.addObserver(this);
     }
@@ -71,7 +73,6 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
                 ImGui.checkbox("Auto-scroll", this.autoScroll);
                 ImGui.endPopup();
             }
-            loggerOptions();
             toolbar();
             ImGui.sameLine();
             log();
@@ -80,9 +81,18 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
     }
 
     private void toolbar() {
+        ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
+        ImGui.pushStyleColor(ImGuiCol.ChildBg, 0, 0, 0, 0);
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 8, 8);
+        loggerOptions();
         if (ImGui.beginChild("toolbar", toolbarWidth, 0f, false)) {
-            if (optionsButton.draw()) {ImGui.openPopup("logger_options"); DiaLogger.log("Pressed Logger Options");}
+            if (optionsButton.draw()) {
+                ImGui.openPopup("logger_options");
+                DiaLogger.log("Pressed Logger Options");
+            }
         }
+        ImGui.popStyleColor(2);
+        ImGui.popStyleVar(1);
         ImGui.endChild();
     }
 
@@ -104,10 +114,6 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
     }
 
     private void loggerOptions() {
-
-        ImGui.setNextWindowSize(this.getSizeX(), this.getSizeY());
-        ImGui.setNextWindowPos(Window.getPosition().x + (Window.getWidth() - this.getSizeX()) / 2,
-                Window.getPosition().y + (Window.getHeight() - this.getSizeY()) / 2);
         if (ImGui.beginPopupModal("logger_options", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize |
                 ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)) {
 

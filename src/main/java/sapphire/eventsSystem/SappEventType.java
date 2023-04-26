@@ -2,6 +2,8 @@ package sapphire.eventsSystem;
 
 public enum SappEventType {
     User_event,
+    Settings_changed,
+    Font_changed,
     Play,
     Stop,
     Confirm,
