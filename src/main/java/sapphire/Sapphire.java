@@ -3,6 +3,7 @@ package sapphire;
 import com.google.gson.JsonObject;
 import diamondEngine.Diamond;
 import diamondEngine.Window;
+import diamondEngine.diaRenderer.DebugRenderer;
 import diamondEngine.diaRenderer.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
@@ -185,6 +186,9 @@ public class Sapphire {
                 if (diaRunning) {
                     diaInstance.update();
                 }
+
+                DebugRenderer.beginFrame();
+                DebugRenderer.draw();
             }
             window.endFrame();
             et = (float) glfwGetTime();
