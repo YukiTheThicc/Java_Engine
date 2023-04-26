@@ -1,6 +1,7 @@
 # Project exclude paths
 *
 
+!/diamond/
 !/src/
 !/assets/
 !/gradle/
