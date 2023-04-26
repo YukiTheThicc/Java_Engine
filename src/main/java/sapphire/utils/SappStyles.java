@@ -7,7 +7,6 @@ import sapphire.Sapphire;
 public class SappStyles {
 
     public static void setSapphireStyles() {
-
         // Colors
         int[] dark_bg = Sapphire.getColor("dark_bg");
         int[] main_bg = Sapphire.getColor("main_bg");
