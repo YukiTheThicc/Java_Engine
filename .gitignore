@@ -1,7 +1,6 @@
 # Project exclude paths
 *
 
-!/diamond
 !/diamond/
 !/src/
 !/assets/
