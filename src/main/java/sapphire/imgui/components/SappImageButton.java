@@ -2,6 +2,8 @@ package sapphire.imgui.components;
 
 import diamondEngine.diaRenderer.Texture;
 import imgui.ImGui;
+import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiStyleVar;
 
 public class SappImageButton {
 
@@ -33,9 +35,41 @@ public class SappImageButton {
     }
 
     // METHODS
+    public boolean draw(boolean active) {
+
+        boolean result = false;
+
+        if (!active) {
+            ImGui.pushStyleVar(ImGuiStyleVar.Alpha, ImGui.getStyle().getAlpha() * 0.5f);
+            ImGui.pushStyleVar(ImGuiStyleVar.DisabledAlpha, 1.0f);
+            ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 0,0,0,0);
+            ImGui.pushStyleColor(ImGuiCol.ButtonActive, 0,0,0,0);
+        }
+
+        ImGui.beginGroup();
+        buttonOriginX = ImGui.getCursorPosX();
+
+        ImGui.getStyle().setButtonTextAlign(0.75f, 0.5f);
+        if (ImGui.button(id, imageSizeX, imageSizeY)) result = active;
+
+        ImGui.sameLine();
+        ImGui.setCursorPosX(buttonOriginX);
+        ImGui.image(image.getId(), imageSizeX, imageSizeY, 0, 1, 1, 0);
+
+        ImGui.endGroup();
+
+        if (!active) {
+            ImGui.popStyleVar(2);
+            ImGui.popStyleColor(2);
+        }
+
+        return result;
+    }
+
     public boolean draw() {
 
         boolean result = false;
+
         ImGui.beginGroup();
         buttonOriginX = ImGui.getCursorPosX();
 
@@ -47,6 +81,7 @@ public class SappImageButton {
         ImGui.image(image.getId(), imageSizeX, imageSizeY, 0, 1, 1, 0);
 
         ImGui.endGroup();
+
         return result;
     }
 }

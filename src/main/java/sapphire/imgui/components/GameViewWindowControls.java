@@ -43,6 +43,7 @@ public class GameViewWindowControls {
 
         ImVec2 windowPos = ImGui.getWindowPos();
         ImVec2 windowSize = ImGui.getWindowSize();
+        boolean isDiasRunning = Sapphire.get().isDiaRunning();
 
         ImGui.setNextWindowPos(windowPos.x, windowPos.y + offsetY);
         ImGui.setNextWindowSize(windowSize.x, mainControlsY);
@@ -54,11 +55,12 @@ public class GameViewWindowControls {
         SappImGui.alignNoHeader(AlignX.CENTER, AlignY.TOP, mainControlsX, mainControlsY);
         ImGui.beginChild("main_controls", mainControlsX, mainControlsY);
         SappImGui.align(AlignX.CENTER, AlignY.CENTER, iconSizeX * 2 + ImGui.getStyle().getFramePaddingX(), iconSizeY);
-        if (play.draw()) {
+
+        if (play.draw(!isDiasRunning)) {
             SapphireEvents.notify(new SappEvent(SappEventType.Play));
         }
         ImGui.sameLine();
-        if (stop.draw()) {
+        if (stop.draw(isDiasRunning)) {
             SapphireEvents.notify(new SappEvent(SappEventType.Stop));
         }
         ImGui.endChild();

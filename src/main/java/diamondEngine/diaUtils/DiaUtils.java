@@ -25,7 +25,7 @@ public class DiaUtils {
     // METHODS
     public static void init() {
         DiaUtils.sdf = new SimpleDateFormat("hh:mm:ss.SSS");
-        DiaLogger.log("Initializing Diamond utilities...");
+        DiaLogger.log(DiaUtils.class, "Initializing Diamond utilities...");
     }
 
     public static String getTime() {
@@ -50,14 +50,14 @@ public class DiaUtils {
      */
     public static File saveFile(String defaultFile) {
 
-        DiaLogger.log("Creating file...");
+        DiaLogger.log(DiaUtils.class, "Creating file...");
         String path = tinyfd_saveFileDialog("", defaultFile, null, "");
         File file = null;
         if (path != null && !path.isEmpty()) {
             file = new File(path);
             try {
                 if (file.createNewFile()) {
-                    DiaLogger.log("Overwriting file '" + file.getAbsolutePath() + "'");
+                    DiaLogger.log(DiaUtils.class, "Overwriting file '" + file.getAbsolutePath() + "'");
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -75,16 +75,16 @@ public class DiaUtils {
         if (file != null && file.exists() && file.isFile()) {
             if (lines != null && lines.length > 0) {
                 try {
-                    DiaLogger.log("Trying save to file...");
+                    DiaLogger.log(DiaUtils.class, "Trying save to file...");
                     Files.write(file.toPath(), Arrays.asList(lines), StandardCharsets.UTF_8);
                 } catch (IOException e) {
-                    DiaLogger.log("Failed save to file: '" + file.getAbsolutePath() + "'", DiaLoggerLevel.ERROR);
+                    DiaLogger.log(DiaUtils.class, "Failed save to file: '" + file.getAbsolutePath() + "'", DiaLoggerLevel.ERROR);
                 }
             } else {
-                DiaLogger.log("Null or empty lines", DiaLoggerLevel.ERROR);
+                DiaLogger.log(DiaUtils.class, "Null or empty lines", DiaLoggerLevel.ERROR);
             }
         } else {
-            DiaLogger.log("Invalid file", DiaLoggerLevel.ERROR);
+            DiaLogger.log(DiaUtils.class, "Invalid file", DiaLoggerLevel.ERROR);
         }
     }
 
@@ -99,7 +99,7 @@ public class DiaUtils {
             try {
                 data = Files.readAllBytes(Paths.get(file.getPath()));
             } catch (IOException e) {
-                DiaLogger.log("Failed to load data from file '" + file.getPath() + "'", DiaLoggerLevel.ERROR);
+                DiaLogger.log(DiaUtils.class, "Failed to load data from file '" + file.getPath() + "'", DiaLoggerLevel.ERROR);
             }
         }
         return data;
@@ -124,7 +124,7 @@ public class DiaUtils {
      */
     public static String selectFile() {
 
-        DiaLogger.log("Selecting files...");
+        DiaLogger.log(DiaUtils.class, "Selecting files...");
         String result = tinyfd_openFileDialog("", null, null, null, false);
         if (result != null && !result.isEmpty()) {
             return result;
@@ -140,7 +140,7 @@ public class DiaUtils {
      */
     public static String selectDirectory(String title, String defaultPath) {
 
-        DiaLogger.log("Selecting files...");
+        DiaLogger.log(DiaUtils.class, "Selecting files...");
         String result = tinyfd_selectFolderDialog(title, defaultPath);
         if (result != null && !result.isEmpty()) {
             return result;

@@ -108,6 +108,10 @@ public class DiaLogger extends Thread {
      *
      * @param message Message to log.
      */
+    public static void log(Class<?> callerClass, String message) {
+        DiaLogger.log(callerClass, message, DiaLoggerLevel.DEBUG);
+    }
+
     public static void log(String message) {
         DiaLogger.log(message, DiaLoggerLevel.DEBUG);
     }
@@ -119,6 +123,12 @@ public class DiaLogger extends Thread {
      * @param message Message to log.
      * @param level   Level of severity.
      */
+    public static void log(Class<?> callerClass, String message, DiaLoggerLevel level) {
+        diaLogger.entryBuffer.add("[" + DiaLogger.getTime() + "][" + level + "][" + callerClass.getSimpleName() + "] " + message);
+        diaLogger.levelBuffer.add(level);
+        diaLogger.dirty = true;
+    }
+
     public static void log(String message, DiaLoggerLevel level) {
         diaLogger.entryBuffer.add("[" + DiaLogger.getTime() + "][" + level + "] " + message);
         diaLogger.levelBuffer.add(level);
@@ -147,7 +157,7 @@ public class DiaLogger extends Thread {
                 }
             }
         } else {
-            log("Unable to dump log buffers into observers, entry and level buffers are of different sizes: " + diaLogger.entryBuffer.size() + " / " + diaLogger.levelBuffer.size(), DiaLoggerLevel.ERROR);
+            log(DiaLogger.class, "Unable to dump log buffers into observers, entry and level buffers are of different sizes: " + diaLogger.entryBuffer.size() + " / " + diaLogger.levelBuffer.size(), DiaLoggerLevel.ERROR);
         }
     }
 
@@ -192,7 +202,7 @@ public class DiaLogger extends Thread {
     @Override
     public void run() {
         try {
-            DiaLogger.log("Running logger thread...");
+            DiaLogger.log(DiaLogger.class, "Running logger thread...");
             while (isRunning) {
                 if (dirty) {
                     if (entryBuffer.size() == levelBuffer.size()) {

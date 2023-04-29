@@ -93,10 +93,10 @@ public class Texture {
                 // RGB Image
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, x.get(0), y.get(0), 0, GL_RGB, GL_UNSIGNED_BYTE, image);
             } else {
-                DiaLogger.log("Failed to load texture, unexpected number of channels", DiaLoggerLevel.ERROR);
+                DiaLogger.log(Texture.class, "Failed to load texture, unexpected number of channels", DiaLoggerLevel.ERROR);
             }
         } else {
-            DiaLogger.log("Failed to load texture from '" + path + "'", DiaLoggerLevel.ERROR);
+            DiaLogger.log(Texture.class, "Failed to load texture from '" + path + "'", DiaLoggerLevel.ERROR);
         }
         stbi_image_free(image);
     }

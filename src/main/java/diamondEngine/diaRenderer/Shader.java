@@ -84,14 +84,14 @@ public class Shader {
             this.vertex = new String(Files.readAllBytes(Paths.get(vertexPath)));
         } catch (IOException e) {
             e.printStackTrace();
-            DiaLogger.log(name + ": Failed while trying to load vertex shader from '" + vertexPath + "'", DiaLoggerLevel.ERROR);
+            DiaLogger.log(Shader.class, name + ": Failed while trying to load vertex shader from '" + vertexPath + "'", DiaLoggerLevel.ERROR);
         }
 
         try {
             this.fragment = new String(Files.readAllBytes(Paths.get(fragmentPath)));
         } catch (IOException e) {
             e.printStackTrace();
-            DiaLogger.log(name + ": Failed while trying to load vertex shader from '" + fragmentPath + "'", DiaLoggerLevel.ERROR);
+            DiaLogger.log(Shader.class, name + ": Failed while trying to load vertex shader from '" + fragmentPath + "'", DiaLoggerLevel.ERROR);
         }
     }
 
@@ -109,7 +109,7 @@ public class Shader {
         glCompileShader(vertexId);
         if (glGetShaderi(vertexId, GL_COMPILE_STATUS) == GL_FALSE) {
             int length = glGetShaderi(vertexId, GL_INFO_LOG_LENGTH);
-            DiaLogger.log("Failed vertex shader compilation for '" + name + "': " + glGetShaderInfoLog(vertexId, length), DiaLoggerLevel.ERROR);
+            DiaLogger.log(Shader.class, "Failed vertex shader compilation for '" + name + "': " + glGetShaderInfoLog(vertexId, length), DiaLoggerLevel.ERROR);
             failed = true;
         }
 
@@ -119,7 +119,7 @@ public class Shader {
         glCompileShader(fragmentId);
         if (glGetShaderi(fragmentId, GL_COMPILE_STATUS) == GL_FALSE) {
             int length = glGetShaderi(fragmentId, GL_INFO_LOG_LENGTH);
-            DiaLogger.log("Failed fragment shader compilation for '" + name + "': " + glGetShaderInfoLog(vertexId, length), DiaLoggerLevel.ERROR);
+            DiaLogger.log(Shader.class, "Failed fragment shader compilation for '" + name + "': " + glGetShaderInfoLog(vertexId, length), DiaLoggerLevel.ERROR);
             failed = true;
         }
 
@@ -132,7 +132,7 @@ public class Shader {
             if (glGetProgrami(programId, GL_LINK_STATUS) == GL_FALSE) {
                 programId = -1;
                 int length = glGetProgrami(programId, GL_INFO_LOG_LENGTH);
-                DiaLogger.log("Failed while trying to link shader program '" + name + "': " + glGetProgramInfoLog(programId, length), DiaLoggerLevel.ERROR);
+                DiaLogger.log(Shader.class, "Failed while trying to link shader program '" + name + "': " + glGetProgramInfoLog(programId, length), DiaLoggerLevel.ERROR);
             }
         }
     }
