@@ -9,6 +9,7 @@ import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
 import imgui.flag.ImGuiCol;
 import imgui.internal.ImGui;
+import sapphire.imgui.SappDrawable;
 import sapphire.imgui.SappImGUILayer;
 import sapphire.utils.SappDefaultLiterals;
 
@@ -36,6 +37,7 @@ public class Sapphire {
     private SapphireProject project;
     private HashMap<String, String> literals;
     private SappImGUILayer imGUILayer;
+    private SappDrawable activeObject;
     private boolean diaRunning;
     private boolean running;
     private float dt;
@@ -114,6 +116,14 @@ public class Sapphire {
         this.diaRunning = diaRunning;
     }
 
+    public static SappDrawable getActiveObject() {
+        return Sapphire.get().activeObject;
+    }
+
+    public static void setActiveObject(SappDrawable activeObject) {
+        Sapphire.get().activeObject = activeObject;
+    }
+
     // METHODS
     private boolean shouldClose() {
         return glfwWindowShouldClose(this.window.getGlfwWindow());
@@ -176,6 +186,7 @@ public class Sapphire {
         defaultLiterals();
         defaultColors();
         window.init("Sapphire", "sapphire/icon.png");
+        diaInstance.init();
         loadIcons();
         imGUILayer = new SappImGUILayer(this.window.getGlfwWindow());
         settings.init();
@@ -191,19 +202,18 @@ public class Sapphire {
         float bt = (float) glfwGetTime();
         float et;
         while (running) {
+
             window.pollEvents();
-            window.startFrame();
-
+            diaInstance.getCurrentEnv().startFrame();
             if (dt >= 0) {
-                imGUILayer.update();
-                if (diaRunning) {
-                    diaInstance.update();
-                }
-
-                DebugRenderer.beginFrame();
-                DebugRenderer.draw();
+                diaInstance.update(dt);
             }
+            DebugRenderer.beginFrame();
+            DebugRenderer.draw();
+            diaInstance.getCurrentEnv().endFrame();
+
             window.endFrame();
+            imGUILayer.update();
             et = (float) glfwGetTime();
             dt = et - bt;
             bt = et;

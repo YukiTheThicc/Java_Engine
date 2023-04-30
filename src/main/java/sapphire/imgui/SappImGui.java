@@ -120,12 +120,12 @@ public class SappImGui {
         ImGui.pushID(label);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, MEDIUM_COLUMN_SIZE);
+        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 2);
         ImGui.text(label);
         ImGui.nextColumn();
 
         int[] valArr = {value};
-        ImGui.dragInt("##dragFloat", valArr, 0.1f);
+        ImGui.dragInt("##dragInt", valArr, 0.1f);
 
         ImGui.columns(1);
         ImGui.popID();

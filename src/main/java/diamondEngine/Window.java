@@ -170,13 +170,10 @@ public class Window {
     }
 
     public void startFrame() {
-        this.framebuffer.bind();
-        glClearColor(0.1f, 0.1f, 0.1f, 1f);
-        glClear(GL_COLOR_BUFFER_BIT);
+
     }
 
     public void endFrame() {
-        this.framebuffer.unBind();
         glfwSwapBuffers(glfwWindow);
     }
 

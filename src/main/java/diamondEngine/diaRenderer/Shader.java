@@ -114,8 +114,8 @@ public class Shader {
         }
 
         // Fragment shader
-        fragmentId = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(fragmentId, vertex);
+        fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragmentId, fragment);
         glCompileShader(fragmentId);
         if (glGetShaderi(fragmentId, GL_COMPILE_STATUS) == GL_FALSE) {
             int length = glGetShaderi(fragmentId, GL_INFO_LOG_LENGTH);
@@ -132,7 +132,7 @@ public class Shader {
             if (glGetProgrami(programId, GL_LINK_STATUS) == GL_FALSE) {
                 programId = -1;
                 int length = glGetProgrami(programId, GL_INFO_LOG_LENGTH);
-                DiaLogger.log(Shader.class, "Failed while trying to link shader program '" + name + "': " + glGetProgramInfoLog(programId, length), DiaLoggerLevel.ERROR);
+                DiaLogger.log(Shader.class, "Failed while trying to link shader program '" + name + "': \n" + glGetProgramInfoLog(programId, length), DiaLoggerLevel.ERROR);
             }
         }
     }

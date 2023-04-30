@@ -2,9 +2,7 @@ package sapphire.imgui;
 
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
-import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
-import imgui.type.ImInt;
 import sapphire.Sapphire;
 import sapphire.SapphireControls;
 import sapphire.SapphireEvents;
@@ -138,7 +136,7 @@ public class SappImGUILayer {
         gameView = new GameViewWindow();
         ImguiWindow newWindow = new SettingsWindow();
         windows.put(newWindow.getId(), newWindow);
-        newWindow = new EntityPropertiesWindow();
+        newWindow = new InspectorWindow();
         windows.put(newWindow.getId(), newWindow);
         newWindow = new AssetsWindow();
         windows.put(newWindow.getId(), newWindow);

@@ -12,7 +12,8 @@
     "log_viewer": true,
     "project": true,
     "env_preview": true,
-    "profiler": true
+    "profiler": true,
+    "inspector": true
   },
   "showPreferences": {},
   "fontSize": 18

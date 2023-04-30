@@ -11,6 +11,7 @@ public enum SappEventType {
     Add_env,
     Add_entity,
     Add_component,
+    Selected_object,
     Save_env,
     New_root_env,
     Change_font,

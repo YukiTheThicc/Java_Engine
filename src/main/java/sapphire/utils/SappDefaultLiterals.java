@@ -53,6 +53,9 @@ public class SappDefaultLiterals {
         literals.put("font_change_after_reboot", "Font size changes will take effect after rebooting Sapphire");
         literals.put("examine", "Examine");
         literals.put("workspace", "Workspace");
+        literals.put("inspector_window", "Inspector");
+        literals.put("cell_width", "Cell width");
+        literals.put("cell_height", "Cell height");
 
         return literals;
     }

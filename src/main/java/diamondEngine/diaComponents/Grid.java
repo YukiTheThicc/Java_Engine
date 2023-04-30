@@ -1,8 +1,11 @@
 package diamondEngine.diaComponents;
 
 import diamondEngine.diaRenderer.DebugRenderer;
+import diamondEngine.diaUtils.DiaLogger;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import sapphire.Sapphire;
+import sapphire.imgui.SappImGui;
 import sapphire.imgui.windows.GameViewWindow;
 
 public class Grid extends Component {
@@ -14,15 +17,17 @@ public class Grid extends Component {
 
     // CONSTRUCTORS
     public Grid(int cell) {
+        super();
         this.cellX = cell;
         this.cellY = cell;
-        this.draw = false;
+        this.draw = true;
     }
 
     public Grid(int cellX, int cellY) {
+        super();
         this.cellX = cellX;
         this.cellY = cellY;
-        this.draw = false;
+        this.draw = true;
     }
 
     // GETTERS & SETTERS
@@ -60,7 +65,7 @@ public class Grid extends Component {
                 float width = (int) (projectionSize.x * camera.getZoom()) + cellX * 2;
                 float height = (int) (projectionSize.y * camera.getZoom()) + cellY * 2;
 
-                Vector3f color = new Vector3f(0.66f, 0.66f, 0.66f);
+                Vector3f color = new Vector3f(0.688f, 0.688f, 0.688f);
 
                 int maxLines = Math.max(numVLines, numHLines);
 
@@ -81,5 +86,11 @@ public class Grid extends Component {
                 }
             }
         }
+    }
+
+    @Override
+    public void imgui() {
+        cellX = SappImGui.dragInt(Sapphire.getLiteral("cell_width"), cellX);
+        cellY = SappImGui.dragInt(Sapphire.getLiteral("cell_height"), cellY);
     }
 }

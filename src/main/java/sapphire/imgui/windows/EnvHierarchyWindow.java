@@ -5,7 +5,6 @@ import diamondEngine.DiaEnvironment;
 import diamondEngine.Diamond;
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaComponents.Grid;
-import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
 import sapphire.Sapphire;
@@ -60,7 +59,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
                 }
 
                 for (Component component : env.getComponents()) {
-                    component.imgui();
+                    if (component.selectable()) SapphireEvents.notify(new SappEvent(SappEventType.Selected_object, component));
                 }
 
                 ImGui.treePop();
@@ -77,10 +76,11 @@ public class EnvHierarchyWindow extends ImguiWindow {
 
     private void itemContextMenu(DiaEnvironment env) {
         if (ImGui.beginPopupContextItem(env.getName() + "env_item")) {
-            if (ImGui.menuItem(Sapphire.getLiteral("add_grid"))) SapphireEvents.notify(new SappEvent(SappEventType.Add_component,
-                    env,
-                    new Grid(32)));
+            if (ImGui.menuItem(Sapphire.getLiteral("add_grid"))) SapphireEvents.notify(
+                    new SappEvent(SappEventType.Add_component, env, new Grid(1)));
             ImGui.endPopup();
         }
     }
+
+
 }

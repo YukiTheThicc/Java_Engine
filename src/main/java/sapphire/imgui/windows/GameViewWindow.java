@@ -1,5 +1,6 @@
 package sapphire.imgui.windows;
 
+import diamondEngine.Diamond;
 import diamondEngine.Window;
 import diamondEngine.diaComponents.Camera;
 import imgui.ImGui;
@@ -71,10 +72,8 @@ public class GameViewWindow extends ImguiWindow {
             // Controls
             controls.drawControls();
 
-            int textureId = Window.getFramebuffer().getTexture().getId();
+            int textureId = Diamond.get().getCurrentEnv().getFrame().getTexture().getId();
             ImGui.image(textureId, windowSize.x, windowSize.y, 0, 1, 1, 0);
-
-
         }
         ImGui.end();
     }
