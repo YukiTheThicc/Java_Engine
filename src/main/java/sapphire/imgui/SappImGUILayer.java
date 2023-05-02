@@ -129,7 +129,6 @@ public class SappImGUILayer {
          * For now windows are going to be statically added in the init function. A new ImGui frame is created to allow
          * the use of ImGUI functionalities when creating the windows
          */
-
         startFrame();
 
         // WINDOWS
@@ -149,6 +148,8 @@ public class SappImGUILayer {
         newWindow = new FileNavigatorWindow();
         windows.put(newWindow.getId(), newWindow);
         newWindow = new DebugSapphireWindow();
+        windows.put(newWindow.getId(), newWindow);
+        newWindow = new EditorCameraWindow();
         windows.put(newWindow.getId(), newWindow);
 
         /* Settings for the windows are loaded. At the time of writing this code, only one setting is stored, being if

@@ -2,7 +2,8 @@ package sapphire;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import diamondEngine.DiaEnvironment;
+import diamondEngine.Environment;
+import diamondEngine.Diamond;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
@@ -27,23 +28,17 @@ public class SapphireProject {
 
     // ATTRIBUTES
     private List<File> openedFiles;
-    private List<DiaEnvironment> environments;
     private transient SapphireDir root;
 
     // CONSTRUCTORS
     public SapphireProject(SapphireDir root) {
         this.root = root;
         this.openedFiles = new ArrayList<>();
-        this.environments = new ArrayList<>();
     }
 
     // GETTERS & SETTERS
     public List<File> getOpenedFiles() {
         return openedFiles;
-    }
-
-    public List<DiaEnvironment> getEnvironments() {
-        return environments;
     }
 
     public SapphireDir getRoot() {
@@ -55,24 +50,27 @@ public class SapphireProject {
     }
 
     // METHODS
-
     /**
      * Saves current settings into the settings.json file.
      */
     public void save() {
 
-        DiaLogger.log("Saving Sapphire settings...");
+        DiaLogger.log("Saving Project...");
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .enableComplexMapKeySerialization()
                 .create();
         try {
             Files.createDirectories(Paths.get("sapphire"));
-            FileWriter writer = new FileWriter("sapphire/settings.json");
+            FileWriter writer = new FileWriter(root.getPath() + "/" + PROJECT_FILE);
             writer.write(gson.toJson(this));
             writer.close();
+            for (Environment env : Diamond.get().getEnvironments()) {
+                env.save(root.getPath().getAbsolutePath()  + "/" + ENVS_DIR);
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            DiaLogger.log(this.getClass(), "Failed to save project file: ", DiaLoggerLevel.ERROR);
+            DiaLogger.log(e.getMessage(), DiaLoggerLevel.ERROR);
         }
     }
 
@@ -102,12 +100,13 @@ public class SapphireProject {
             if (!inFile.equals("")) {
                 SapphireProject temp = gson.fromJson(inFile, SapphireProject.class);
                 root.loadDirectory();
-                environments = temp.getEnvironments();
                 openedFiles = temp.getOpenedFiles();
+
+                DiaUtils.getFilesInDir(dir.getAbsoluteFile() + "\\" + ENVS_DIR);
                 return true;
             }
         } catch (Exception e) {
-            DiaLogger.log("Failed to open project file: " + e.getMessage(), DiaLoggerLevel.ERROR);
+            DiaLogger.log(this.getClass(), "Failed to open project file: " + e.getMessage(), DiaLoggerLevel.ERROR);
         }
         return false;
     }

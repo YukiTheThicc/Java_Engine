@@ -3,10 +3,13 @@ package sapphire.imgui.windows;
 import diamondEngine.Diamond;
 import diamondEngine.Window;
 import diamondEngine.diaComponents.Camera;
+import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.diaUtils.DiaMath;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiWindowFlags;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 import sapphire.imgui.SappImGUILayer;
 import sapphire.imgui.components.GameViewWindowControls;
 
@@ -22,7 +25,26 @@ public class GameViewWindow extends ImguiWindow {
         super("game_view", "Main View");
         this.setFlags(ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse |
                 ImGuiWindowFlags.NoResize);
-        GameViewWindow.editorCamera = new Camera(new Vector2f(0, 0));
+        Vector2i pm = DiaMath.getFractionFromFloat((float) Diamond.get().getCurrentEnv().getFrameY() / Diamond.get().getCurrentEnv().getFrameX());
+        DiaLogger.log("" + pm);
+        GameViewWindow.editorCamera = new Camera(new Vector2f(), pm.x, pm.y);
+    }
+
+    // GETTERS & SETTERS
+    public int getLeftX() {
+        return leftX;
+    }
+
+    public int getRightX() {
+        return rightX;
+    }
+
+    public int getTopY() {
+        return topY;
+    }
+
+    public int getBottomY() {
+        return bottomY;
     }
 
     // METHODS
@@ -31,12 +53,12 @@ public class GameViewWindow extends ImguiWindow {
         ImVec2 windowSize = new ImVec2();
         ImGui.getContentRegionAvail(windowSize);
         float aspectWidth = windowSize.x;
-        float aspectHeight = aspectWidth / Window.getTargetAspectRatio();
+        float aspectHeight = aspectWidth / Diamond.get().getCurrentEnv().getAspectRatio();
 
         if (aspectHeight > windowSize.y) {
             // We must switch to pillarbox mode
             aspectHeight = windowSize.y;
-            aspectWidth = aspectHeight * Window.getTargetAspectRatio();
+            aspectWidth = aspectHeight * Diamond.get().getCurrentEnv().getAspectRatio();;
         }
 
         return new ImVec2(aspectWidth, aspectHeight);
@@ -54,6 +76,7 @@ public class GameViewWindow extends ImguiWindow {
 
     public void imgui(SappImGUILayer layer) {
 
+        editorCamera.changeProjection();
         if (ImGui.begin(this.getTitle(), this.getFlags())) {
             ImGui.setNextWindowDockID(layer.getDockId());
 

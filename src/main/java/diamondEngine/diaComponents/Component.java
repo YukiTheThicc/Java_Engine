@@ -36,6 +36,9 @@ public abstract class Component implements SappDrawable {
     }
 
     public boolean selectable() {
-        return ImGui.selectable(this.getClass().getSimpleName());
+        ImGui.pushID("##" + uid);
+        boolean result = ImGui.selectable(this.getClass().getSimpleName());
+        ImGui.popID();
+        return result;
     }
 }

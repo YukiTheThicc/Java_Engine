@@ -229,8 +229,7 @@ public class SapphireSettings {
 
             if (!lastProject.isEmpty() && new File(lastProject).isDirectory()) {
                 SapphireProject project = new SapphireProject(new SapphireDir(lastProject));
-                project.load();
-                Sapphire.get().setProject(project);
+                if (project.load()) Sapphire.get().setProject(project);
             }
         }
     }

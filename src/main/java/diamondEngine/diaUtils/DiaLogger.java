@@ -197,6 +197,11 @@ public class DiaLogger extends Thread {
     public static void close() {
         DiaLogger.diaLogger.isRunning = false;
         DiaLogger.diaLogger.interrupt();
+        try {
+            DiaLogger.diaLogger.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

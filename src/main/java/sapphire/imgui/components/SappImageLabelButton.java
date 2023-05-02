@@ -1,7 +1,6 @@
 package sapphire.imgui.components;
 
 import diamondEngine.diaRenderer.Texture;
-import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
 import sapphire.SapphireEvents;
 import sapphire.eventsSystem.SappEvent;
@@ -20,7 +19,6 @@ public class SappImageLabelButton implements SappObserver {
     private float buttonOriginX;
     private final float imageSizeX;
     private final float imageSizeY;
-    private boolean recalculate = false;
 
     // CONSTRUCTORS
     public SappImageLabelButton(Texture image, String label) {

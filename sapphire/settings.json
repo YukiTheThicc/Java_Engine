@@ -1,20 +1,18 @@
 {
-  "workspace": "C:\\Proyects\\Java_Engine",
-  "currentFont": "consola.ttf",
+  "workspace": "C:\\Proyects",
+  "currentFont": "OxygenMono-Regular.otf",
   "currentLang": "en",
   "lastProject": "C:\\Proyects\\test",
   "activeWindows": {
+    "editor_camera": true,
     "assets": true,
     "debug_sapp": true,
     "env_hierarchy": true,
-    "entity_properties": true,
     "navigator": true,
     "log_viewer": true,
-    "project": true,
-    "env_preview": true,
-    "profiler": true,
-    "inspector": true
+    "inspector": true,
+    "profiler": true
   },
   "showPreferences": {},
-  "fontSize": 18
+  "fontSize": 16
 }

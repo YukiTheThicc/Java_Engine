@@ -1,12 +1,13 @@
 package sapphire.imgui.windows;
 
 import diamondEngine.DiaEntity;
-import diamondEngine.DiaEnvironment;
+import diamondEngine.Environment;
 import diamondEngine.Diamond;
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaComponents.Grid;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
+import imgui.flag.ImGuiTreeNodeFlags;
 import sapphire.Sapphire;
 import sapphire.SapphireEvents;
 import sapphire.eventsSystem.SappEvent;
@@ -15,6 +16,9 @@ import sapphire.imgui.SappImGUILayer;
 import sapphire.imgui.components.SappImageLabelButton;
 
 public class EnvHierarchyWindow extends ImguiWindow {
+
+    private final int NODE_FLAGS = ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.Selected |
+            ImGuiTreeNodeFlags.OpenOnArrow |ImGuiTreeNodeFlags.OpenOnDoubleClick;
 
     // ATTRIBUTES
     private final SappImageLabelButton newRootEnvButton;
@@ -47,9 +51,12 @@ public class EnvHierarchyWindow extends ImguiWindow {
 
     private void drawNestedEntities() {
 
-        for (DiaEnvironment env : Diamond.get().getEnvironments()) {
-            if (ImGui.treeNode(env.getName())) {
-
+        for (Environment env : Diamond.get().getEnvironments()) {
+            ImGui.pushID(env.getUid());
+            if (ImGui.treeNodeEx(env.getName(), NODE_FLAGS)) {
+                if (ImGui.isItemClicked()) {
+                    SapphireEvents.notify(new SappEvent(SappEventType.Selected_object, null, env));
+                }
                 itemContextMenu(env);
                 if (!env.getEntities().isEmpty() && ImGui.treeNode("Entities")) {
                     for (DiaEntity entity : env.getEntities()) {
@@ -59,11 +66,14 @@ public class EnvHierarchyWindow extends ImguiWindow {
                 }
 
                 for (Component component : env.getComponents()) {
-                    if (component.selectable()) SapphireEvents.notify(new SappEvent(SappEventType.Selected_object, component));
+                    if (component.selectable()) {
+                        SapphireEvents.notify(new SappEvent(SappEventType.Selected_object, component));
+                    }
                 }
 
                 ImGui.treePop();
             }
+            ImGui.popID();
         }
     }
 
@@ -74,13 +84,11 @@ public class EnvHierarchyWindow extends ImguiWindow {
         }
     }
 
-    private void itemContextMenu(DiaEnvironment env) {
+    private void itemContextMenu(Environment env) {
         if (ImGui.beginPopupContextItem(env.getName() + "env_item")) {
             if (ImGui.menuItem(Sapphire.getLiteral("add_grid"))) SapphireEvents.notify(
-                    new SappEvent(SappEventType.Add_component, env, new Grid(1)));
+                    new SappEvent(SappEventType.Add_component, env, new Grid(32)));
             ImGui.endPopup();
         }
     }
-
-
 }

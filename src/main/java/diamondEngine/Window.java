@@ -29,7 +29,6 @@ public class Window {
     private static Window window = null;
     private long audioContext;
     private long audioDevice;
-    private Framebuffer framebuffer;
 
     // CONSTRUCTORS
     private Window() {
@@ -61,10 +60,6 @@ public class Window {
         return glfwWindow;
     }
 
-    public static float getTargetAspectRatio() {
-        return 16.0f / 9.0f;
-    }
-
     public static void setWidth(int width) {
         get().width = width;
     }
@@ -84,10 +79,6 @@ public class Window {
         pos.x = window.posX.get(0);
         pos.y = window.posY.get(0);
         return pos;
-    }
-
-    public static Framebuffer getFramebuffer() {
-        return get().framebuffer;
     }
 
     // METHODS
@@ -143,13 +134,7 @@ public class Window {
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         glfwShowWindow(glfwWindow);
 
-        /*
-         * For now there is only one framebuffer and it is attached to the window itself.
-         * TODO: find a better solution so the framebuffer/s are detached from the window and multiple can exist at any
-         *  given time.
-         */
-        this.framebuffer = new Framebuffer(this.width, this.height);
-        glViewport((int)getPosition().x, (int)getPosition().y, width, height);
+        glViewport(0, 0, width, height);
 
         GLFWImage.Buffer image = DiaUtils.loadGLFWImage(iconPath);
         if (image != null) {

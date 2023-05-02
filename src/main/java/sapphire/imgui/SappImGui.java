@@ -4,6 +4,7 @@ import diamondEngine.diaRenderer.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiInputTextFlags;
 import imgui.flag.ImGuiStyleVar;
 import imgui.type.ImInt;
 import imgui.type.ImString;
@@ -35,11 +36,11 @@ public class SappImGui {
     }
 
     public static void drawVec2Control(String label, Vector2f values) {
-        drawVec2Control(label, values, 0.0f, MEDIUM_COLUMN_SIZE);
+        drawVec2Control(label, values, 0.0f, ImGui.getWindowWidth() / 3);
     }
 
     public static void drawVec2Control(String label, Vector2f values, float resetValue) {
-        drawVec2Control(label, values, resetValue, MEDIUM_COLUMN_SIZE);
+        drawVec2Control(label, values, resetValue, ImGui.getWindowWidth() / 3);
     }
 
     public static void drawVec2Control(String label, Vector2f values, float resetValue, float columnWidth) {
@@ -103,7 +104,7 @@ public class SappImGui {
         ImGui.pushID(label);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, MEDIUM_COLUMN_SIZE);
+        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
         ImGui.text(label);
         ImGui.nextColumn();
 
@@ -120,7 +121,7 @@ public class SappImGui {
         ImGui.pushID(label);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 2);
+        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
         ImGui.text(label);
         ImGui.nextColumn();
 
@@ -138,7 +139,7 @@ public class SappImGui {
         ImGui.pushID(label);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, MEDIUM_COLUMN_SIZE);
+        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
         ImGui.text(label);
         ImGui.nextColumn();
 
@@ -154,11 +155,52 @@ public class SappImGui {
         return res;
     }
 
+    public static int inputInt(String label, int value) {
+        ImGui.pushID(label);
+
+        ImGui.columns(2);
+        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
+        ImGui.textWrapped(label);
+        ImGui.nextColumn();
+
+        ImInt i = new ImInt(value);
+        if (ImGui.inputInt("##" + label, i)) {
+            ImGui.columns(1);
+            ImGui.popID();
+            return i.get();
+        }
+
+        ImGui.columns(1);
+        ImGui.popID();
+
+        return value;
+    }
+
+    public static boolean inputInt(String label, ImInt value) {
+        ImGui.pushID(label);
+
+        ImGui.columns(2);
+        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
+        ImGui.textWrapped(label);
+        ImGui.nextColumn();
+
+        if (ImGui.inputInt("##" + label, value)) {
+            ImGui.columns(1);
+            ImGui.popID();
+            return true;
+        }
+
+        ImGui.columns(1);
+        ImGui.popID();
+
+        return false;
+    }
+
     public static String inputText(String label, String text) {
         ImGui.pushID(label);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, SMALL_COLUMN_SIZE);
+        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
         ImGui.textWrapped(label);
         ImGui.nextColumn();
 
@@ -173,6 +215,39 @@ public class SappImGui {
         ImGui.popID();
 
         return text;
+    }
+
+    public static boolean inputText(String label, ImString text) {
+        ImGui.pushID(label);
+
+        ImGui.columns(2);
+        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
+        ImGui.textWrapped(label);
+        ImGui.nextColumn();
+
+        if (ImGui.inputText("##" + label, text)) {
+            ImGui.columns(1);
+            ImGui.popID();
+            return true;
+        }
+
+        ImGui.columns(1);
+        ImGui.popID();
+
+        return false;
+    }
+
+    public static void textLabel(String label, String text) {
+        ImGui.pushID(label);
+
+        ImGui.columns(2);
+        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
+        ImGui.textWrapped(label);
+        ImGui.nextColumn();
+
+        ImGui.textWrapped(text);
+        ImGui.columns(1);
+        ImGui.popID();
     }
 
     public static float textSize(String text) {
@@ -273,7 +348,7 @@ public class SappImGui {
         String result = null;
         ImGui.pushID(title);
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, SMALL_COLUMN_SIZE);
+        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
         ImGui.textWrapped(title);
         ImGui.nextColumn();
         if (ImGui.beginCombo("##" + title, selected)) {
@@ -340,11 +415,6 @@ public class SappImGui {
         }
         modal.setActive(true);
         return modal;
-    }
-
-    public static void iconText(Texture image, String text) {
-        ImGui.image(image.getId(), image.getWidth(), image.getHeight());
-        ImGui.text(text);
     }
 
     public static void toolTip() {

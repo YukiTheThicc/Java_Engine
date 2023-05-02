@@ -8,12 +8,16 @@ import sapphire.eventsSystem.SappObserver;
 import sapphire.imgui.SappDrawable;
 
 public class EnvWindowEventHandler implements SappObserver {
+
     @Override
     public void onNotify(SappEvent event) {
         switch(event.type) {
             case New_root_env:
             case Add_env:
                 Diamond.get().addEmptyEnvironment();
+                if (Sapphire.get().getProject() != null) {
+                    Sapphire.get().getProject().save();
+                }
                 break;
             case Add_component:
                 if (event.env != null && event.payload instanceof Component) {

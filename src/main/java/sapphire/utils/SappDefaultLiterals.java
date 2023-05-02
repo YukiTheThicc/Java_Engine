@@ -56,6 +56,15 @@ public class SappDefaultLiterals {
         literals.put("inspector_window", "Inspector");
         literals.put("cell_width", "Cell width");
         literals.put("cell_height", "Cell height");
+        literals.put("editor_camera", "Editor camera");
+        literals.put("zoom", "Zoom");
+        literals.put("position", "Position");
+        literals.put("name", "Name");
+        literals.put("frame_width", "Frame width");
+        literals.put("frame_height", "Frame height");
+        literals.put("file_already_exists", "File already exists");
+        literals.put("projection_size", "Projection size");
+        literals.put("camera", "Camera");
 
         return literals;
     }

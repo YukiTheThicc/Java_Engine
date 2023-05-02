@@ -1,6 +1,9 @@
 package diamondEngine.diaUtils;
 
 import org.joml.Vector2f;
+import org.joml.Vector2i;
+
+import java.math.BigInteger;
 
 public class DiaMath {
 
@@ -38,5 +41,19 @@ public class DiaMath {
 
     public static boolean compareVector2f(Vector2f vec1, Vector2f vec2) {
         return compareFloat(vec1.x, vec2.x) && compareFloat(vec1.y, vec2.y);
+    }
+
+    public static Vector2i getFractionFromFloat(float n) {
+        Vector2i fraction = new Vector2i(-1, -1);
+        if (n > 0f && n < 1f) {
+            BigInteger numerator = BigInteger.valueOf((long) (n * Math.pow(10, 6)));
+            BigInteger denominator = BigInteger.valueOf((long) Math.pow(10, 6));
+            BigInteger gcd = numerator.gcd(denominator);
+            numerator = numerator.divide(gcd);
+            denominator = denominator.divide(gcd);
+            fraction.x = numerator.intValue();
+            fraction.y = denominator.intValue();
+        }
+        return fraction;
     }
 }

@@ -1,22 +1,22 @@
 package sapphire.eventsSystem;
 
-import diamondEngine.DiaEnvironment;
+import diamondEngine.Environment;
 
 public class SappEvent {
 
     // ATTRIBUTES
     public SappEventType type;
-    public DiaEnvironment env;
+    public Environment env;
     public Object payload;
 
     // CONSTRUCTORS
-    public SappEvent(SappEventType type, DiaEnvironment env, Object payload) {
+    public SappEvent(SappEventType type, Environment env, Object payload) {
         this.type = type;
         this.env = env;
         this.payload = payload;
     }
 
-    public SappEvent(SappEventType type, DiaEnvironment env) {
+    public SappEvent(SappEventType type, Environment env) {
         this.type = type;
         this.env = env;
         this.payload = null;
