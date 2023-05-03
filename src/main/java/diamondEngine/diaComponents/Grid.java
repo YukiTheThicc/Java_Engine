@@ -1,9 +1,8 @@
 package diamondEngine.diaComponents;
 
 import diamondEngine.Diamond;
-import diamondEngine.Environment;
 import diamondEngine.diaRenderer.DebugRenderer;
-import diamondEngine.diaUtils.DiaLogger;
+import imgui.type.ImInt;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import sapphire.Sapphire;
@@ -15,22 +14,20 @@ public class Grid extends Component {
     // ATTRIBUTES
     private int cellX;
     private int cellY;
+    private float cellNX;
+    private float cellNY;
     private int numHLines = 0;
     private int numVLines = 0;
-    private float firstX;
-    private float firstY;
-    private float width;
-    private float height;
     private boolean draw;
-    private final Vector3f color = new Vector3f(0.688f, 0.688f, 0.688f);
-    private final Vector3f colorR = new Vector3f(1f, 0F, 0f);
-    private final Vector3f colorG = new Vector3f(0f, 1f, 0f);
+    private final Vector3f color = new Vector3f(0.333f, 0.333f, 0.333f);
 
     // CONSTRUCTORS
     public Grid(int cell) {
         super();
         this.cellX = cell;
         this.cellY = cell;
+        this.cellNX = (float) cellX / Diamond.currentEnv.getFrameX();
+        this.cellNY = (float) cellY / Diamond.currentEnv.getFrameY();
         this.draw = true;
     }
 
@@ -38,6 +35,8 @@ public class Grid extends Component {
         super();
         this.cellX = cellX;
         this.cellY = cellY;
+        this.cellNX = (float) cellX / Diamond.currentEnv.getFrameX();
+        this.cellNY = (float) cellY / Diamond.currentEnv.getFrameY();
         this.draw = true;
     }
 
@@ -64,28 +63,24 @@ public class Grid extends Component {
         if (draw) {
             Camera camera = GameViewWindow.editorCamera;
             Vector2f cameraPos = camera.pos;
-            Vector2f projectionSize = camera.getProjectionSize();
+            Vector2f pSize = camera.getPSize();
 
-            DebugRenderer.addLine(new Vector2f(0, 0), new Vector2f(1, 1), colorR);
+            if (camera.getZoom() <= 16) {
 
-            if (camera.getZoom() <= 4) {
-
-                firstX = ((float) Math.floor(cameraPos.x / cellX)) * cellY;
-                firstY = ((float) Math.floor(cameraPos.y / cellY)) * cellY;
-
-                numHLines = (int) ((projectionSize.y * camera.getZoom()) / cellY) + 2;
-                numVLines = (int) ((projectionSize.x * camera.getZoom()) / cellX) + 2;
-
-                width = (projectionSize.x * camera.getZoom()) + (cellX * 5);
-                height = (projectionSize.y * camera.getZoom()) + (cellY * 5);
+                float firstX = ((float) Math.floor(cameraPos.x / cellNX)) * cellNX;
+                float firstY = ((float) Math.floor(cameraPos.y / cellNY)) * cellNY;
+                float width = ((pSize.x * camera.getZoom()) / cellNX) + 2;
+                float height = ((pSize.y * camera.getZoom()) / cellNY) + 2;
+                numVLines = (int) (camera.getZoom() / cellNX);
+                numHLines = (int) (numVLines * Diamond.currentEnv.getAspectRatio());
 
                 int maxLines = Math.max(numVLines, numHLines);
 
                 float x = 0;
                 float y = 0;
                 for (int i = 0; i < maxLines; i++) {
-                    x = firstX + (cellX * i);
-                    y = firstY + (cellY * i);
+                    x = firstX + (cellNX * i);
+                    y = firstY + (cellNY * i);
 
                     if (i < numHLines) {
                         DebugRenderer.addLine(new Vector2f(firstX, y), new Vector2f(width + firstX, y), color);
@@ -99,15 +94,25 @@ public class Grid extends Component {
         }
     }
 
+    public void cameraChanged(int cellX, int cellY) {
+        this.cellY = cellY;
+        this.cellX = cellX;
+        cellNX = (float) cellX / Diamond.currentEnv.getFrameX();
+        cellNY = (float) cellY / Diamond.currentEnv.getFrameY();
+    }
+
     @Override
     public void imgui() {
-        cellX = SappImGui.dragInt(Sapphire.getLiteral("cell_width"), cellX);
-        cellY = SappImGui.dragInt(Sapphire.getLiteral("cell_height"), cellY);
+        ImInt cellX = new ImInt(this.cellX);
+        ImInt cellY = new ImInt(this.cellY);
+        if (SappImGui.dragInt(Sapphire.getLiteral("cell_height"), cellY)) {
+            cameraChanged(cellX.get(), cellY.get());
+        }
+        if (SappImGui.dragInt(Sapphire.getLiteral("cell_width"), cellX)) {
+            cameraChanged(cellX.get(), cellY.get());
+        }
         SappImGui.textLabel("numHLines", "" + numHLines);
         SappImGui.textLabel("numVLines", "" + numVLines);
-        SappImGui.textLabel("firstX", "" + firstX);
-        SappImGui.textLabel("firstY", "" + firstY);
-        SappImGui.textLabel("width", "" + width);
-        SappImGui.textLabel("height", "" + height);
+        SappImGui.textLabel("Debug lines", "" + DebugRenderer.getLinesSize());
     }
 }

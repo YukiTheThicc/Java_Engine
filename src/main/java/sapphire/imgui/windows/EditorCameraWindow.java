@@ -23,7 +23,8 @@ public class EditorCameraWindow extends ImguiWindow {
 
             editorCamera.setZoom(SappImGui.dragFloat(Sapphire.getLiteral("zoom"), editorCamera.getZoom()));
             SappImGui.drawVec2Control(Sapphire.getLiteral("position"), editorCamera.pos);
-            SappImGui.textLabel(Sapphire.getLiteral("projection_size"), editorCamera.getProjectionSize().toString());
+            SappImGui.drawVec2Control(Sapphire.getLiteral("projection_size"), editorCamera.getPSize());
+            SappImGui.drawMatrix4f(Sapphire.getLiteral("projection_matrix"), editorCamera.getProjMatrix());
         }
         ImGui.end();
     }

@@ -37,8 +37,8 @@ public class Environment implements SappDrawable {
 
     // CONSTANTS
     public static final String ENVS_EXT = ".denv";
-    public static final int DEFAULT_FRAME_X = 256;
-    public static final int DEFAULT_FRAME_Y = 224;
+    public static final int DEFAULT_FRAME_X = 480;
+    public static final int DEFAULT_FRAME_Y = 270;
 
     // ATTRIBUTES
     private transient long uid;
@@ -150,10 +150,8 @@ public class Environment implements SappDrawable {
     public void changeFrame(int frameX, int frameY) {
         this.frameX = frameX;
         this.frameY = frameY;
+        frame.destroy();
         frame = new Framebuffer(frameX, frameY);
-        Vector2i ratio = DiaMath.getFractionFromFloat(getAspectRatio());
-        mainCamera.setpWidth(ratio.x);
-        mainCamera.setpHeight(ratio.y);
     }
 
     public float getAspectRatio() {
@@ -270,15 +268,17 @@ public class Environment implements SappDrawable {
         SappImGui.textLabel("Framebuffer", "" + frame.getFboId());
         ImString newName = new ImString(name, 256);
         if (SappImGui.inputText(Sapphire.getLiteral("name"), newName)) {
-            boolean fileExists = changeName(
-                    Sapphire.get().getProject().getRoot().getPath().getAbsolutePath() + "/" + SapphireProject.ENVS_DIR,
-                    newName.get()
-            );
-            if (fileExists) {
-                float imgSize = ImGui.getFontSize() + ImGui.getStyle().getFramePaddingY() * 2;
-                ImGui.sameLine();
-                ImGui.image(Sapphire.getIcon("info.png").getId(), imgSize, imgSize, 0, 1, 1, 0);
-                if (ImGui.isItemHovered()) ImGui.setTooltip(Sapphire.getLiteral("file_already_exists"));
+            if (Sapphire.get().getProject() != null) {
+                boolean fileExists = changeName(
+                        Sapphire.get().getProject().getRoot().getPath().getAbsolutePath() + "/" + SapphireProject.ENVS_DIR,
+                        newName.get()
+                );
+                if (fileExists) {
+                    float imgSize = ImGui.getFontSize() + ImGui.getStyle().getFramePaddingY() * 2;
+                    ImGui.sameLine();
+                    ImGui.image(Sapphire.getIcon("info.png").getId(), imgSize, imgSize, 0, 1, 1, 0);
+                    if (ImGui.isItemHovered()) ImGui.setTooltip(Sapphire.getLiteral("file_already_exists"));
+                }
             }
         }
 

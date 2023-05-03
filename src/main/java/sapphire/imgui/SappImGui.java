@@ -3,11 +3,10 @@ package sapphire.imgui;
 import diamondEngine.diaRenderer.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
-import imgui.flag.ImGuiCol;
-import imgui.flag.ImGuiInputTextFlags;
-import imgui.flag.ImGuiStyleVar;
+import imgui.flag.*;
 import imgui.type.ImInt;
 import imgui.type.ImString;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import sapphire.eventsSystem.SappObserver;
@@ -35,6 +34,58 @@ public class SappImGui {
         SMALL_COLUMN_SIZE = fontSize * 10;
     }
 
+    public static void drawMatrix4f(String label, Matrix4f matrix) {
+        ImGui.pushID(label);
+        ImGui.columns(2);
+        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
+        ImGui.textWrapped(label);
+        ImGui.nextColumn();
+        ImGui.beginTable("##", 4);
+
+        ImGui.tableNextColumn();
+        ImGui.text("" + matrix.m00());
+        ImGui.tableNextColumn();
+        ImGui.text("" + matrix.m01());
+        ImGui.tableNextColumn();
+        ImGui.text("" + matrix.m02());
+        ImGui.tableNextColumn();
+        ImGui.text("" + matrix.m03());
+
+        ImGui.tableNextRow();
+        ImGui.tableNextColumn();
+        ImGui.text("" + matrix.m10());
+        ImGui.tableNextColumn();
+        ImGui.text("" + matrix.m11());
+        ImGui.tableNextColumn();
+        ImGui.text("" + matrix.m12());
+        ImGui.tableNextColumn();
+        ImGui.text("" + matrix.m13());
+
+        ImGui.tableNextRow();
+        ImGui.tableNextColumn();
+        ImGui.text("" + matrix.m20());
+        ImGui.tableNextColumn();
+        ImGui.text("" + matrix.m21());
+        ImGui.tableNextColumn();
+        ImGui.text("" + matrix.m22());
+        ImGui.tableNextColumn();
+        ImGui.text("" + matrix.m23());
+
+        ImGui.tableNextRow();
+        ImGui.tableNextColumn();
+        ImGui.text("" + matrix.m30());
+        ImGui.tableNextColumn();
+        ImGui.text("" + matrix.m31());
+        ImGui.tableNextColumn();
+        ImGui.text("" + matrix.m32());
+        ImGui.tableNextColumn();
+        ImGui.text("" + matrix.m33());
+        ImGui.endTable();
+
+        ImGui.columns(1);
+        ImGui.popID();
+    }
+
     public static void drawVec2Control(String label, Vector2f values) {
         drawVec2Control(label, values, 0.0f, ImGui.getWindowWidth() / 3);
     }
@@ -48,7 +99,7 @@ public class SappImGui {
 
         ImGui.columns(2);
         ImGui.setColumnWidth(0, columnWidth);
-        ImGui.text(label);
+        ImGui.textWrapped(label);
         ImGui.nextColumn();
 
         ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 0, 0);
@@ -105,7 +156,7 @@ public class SappImGui {
 
         ImGui.columns(2);
         ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
-        ImGui.text(label);
+        ImGui.textWrapped(label);
         ImGui.nextColumn();
 
         float[] valArr = {value};
@@ -122,7 +173,7 @@ public class SappImGui {
 
         ImGui.columns(2);
         ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
-        ImGui.text(label);
+        ImGui.textWrapped(label);
         ImGui.nextColumn();
 
         int[] valArr = {value};
@@ -134,13 +185,35 @@ public class SappImGui {
         return valArr[0];
     }
 
+    public static boolean dragInt(String label, ImInt value) {
+        ImGui.pushID(label);
+
+        ImGui.columns(2);
+        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
+        ImGui.textWrapped(label);
+        ImGui.nextColumn();
+
+        int[] valArr = {value.get()};
+        if (ImGui.dragInt("##dragInt", valArr, 0.1f)) {
+            value.set(valArr[0]);
+            ImGui.columns(1);
+            ImGui.popID();
+            return true;
+        }
+
+        ImGui.columns(1);
+        ImGui.popID();
+
+        return false;
+    }
+
     public static boolean colorPicker4(String label, Vector4f color) {
         boolean res = false;
         ImGui.pushID(label);
 
         ImGui.columns(2);
         ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
-        ImGui.text(label);
+        ImGui.textWrapped(label);
         ImGui.nextColumn();
 
         float[] imColor = {color.x, color.y, color.z, color.w};
@@ -372,7 +445,7 @@ public class SappImGui {
         ImGui.pushID(title);
         ImGui.columns(2);
         ImGui.setColumnWidth(0, labelColWidth);
-        ImGui.text(title);
+        ImGui.textWrapped(title);
         ImGui.nextColumn();
 
         if (ImGui.combo("##" + title, index, options)) {

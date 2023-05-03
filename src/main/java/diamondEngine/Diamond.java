@@ -27,10 +27,6 @@ public class Diamond {
         this.environments = environments;
     }
 
-    public Environment getCurrentEnv() {
-        return currentEnv;
-    }
-
     // METHODS
     public static Diamond get() {
         if (Diamond.diamond == null) {

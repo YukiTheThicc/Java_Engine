@@ -7,7 +7,6 @@ import org.joml.Vector3f;
 import sapphire.imgui.windows.GameViewWindow;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL15.*;
@@ -39,7 +38,15 @@ public class DebugRenderer {
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(1, 3, GL_FLOAT, false, 6 * Float.BYTES, 3 * Float.BYTES);
         glEnableVertexAttribArray(1);
-        glLineWidth(1.5f);
+        glLineWidth(1f);
+    }
+
+    public static int getLinesSize() {
+        return lines.size();
+    }
+
+    public static List<Line> getLines() {
+        return lines;
     }
 
     public static void beginFrame() {
@@ -80,7 +87,7 @@ public class DebugRenderer {
 
         int index = 0;
         for (Line line : lines) {
-            for (int i=0; i < 2; i++) {
+            for (int i = 0; i < 2; i++) {
                 Vector2f position = i == 0 ? line.getFrom() : line.getTo();
                 Vector3f color = line.getColor();
 
@@ -111,7 +118,7 @@ public class DebugRenderer {
         glEnableVertexAttribArray(1);
 
         // Draw the batch
-        glDrawArrays(GL_LINES, 0, lines.size());
+        glDrawArrays(GL_LINES, 0, lines.size() * 2);
 
         // Disable Location
         glDisableVertexAttribArray(0);

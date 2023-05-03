@@ -204,13 +204,13 @@ public class Sapphire {
         while (running) {
 
             window.pollEvents();
-            diaInstance.getCurrentEnv().startFrame();
+            Diamond.currentEnv.startFrame();
             if (dt >= 0) {
                 diaInstance.update(dt);
             }
             DebugRenderer.beginFrame();
             DebugRenderer.draw();
-            diaInstance.getCurrentEnv().endFrame();
+            Diamond.currentEnv.endFrame();
 
             window.endFrame();
             imGUILayer.update();

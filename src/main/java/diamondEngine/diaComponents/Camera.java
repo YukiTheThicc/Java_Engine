@@ -7,22 +7,18 @@ import org.joml.Vector3f;
 public class Camera {
     // ATTRIBUTES
     private Matrix4f pMatrix, vMatrix, invProj, invView;
-    private float pWidth;
-    private float pHeight;
-    private Vector2f projectionSize;
+    private Vector2f pSize;
     private float zoom = 1.0f;
     public Vector2f pos;
 
     // CONSTRUCTORS
     public Camera(Vector2f pos, float pWidth, float pHeight) {
         this.pos = pos;
+        this.pSize = new Vector2f(pWidth, pHeight);
         this.pMatrix = new Matrix4f();
         this.vMatrix = new Matrix4f();
         this.invProj = new Matrix4f();
         this.invView = new Matrix4f();
-        this.pWidth = pWidth;
-        this.pHeight = pHeight;
-        this.projectionSize = new Vector2f(pWidth, pHeight);
         this.changeProjection();
     }
 
@@ -49,10 +45,6 @@ public class Camera {
         return invView;
     }
 
-    public Vector2f getProjectionSize() {
-        return projectionSize;
-    }
-
     public float getZoom() {
         return zoom;
     }
@@ -61,18 +53,14 @@ public class Camera {
         this.zoom = zoom;
     }
 
-    public void setpWidth(int pWidth) {
-        this.pWidth = pWidth;
-    }
-
-    public void setpHeight(int pHeight) {
-        this.pHeight = pHeight;
+    public Vector2f getPSize() {
+        return pSize;
     }
 
     // METHODS
     public void changeProjection() {
         pMatrix.identity();
-        pMatrix.ortho(0.0f, projectionSize.x * this.zoom, 0.0f, projectionSize.y * this.zoom, 0.0f, 100.0f);
+        pMatrix.ortho(0.0f, this.zoom * pSize.x, 0.0f, this.zoom * pSize.y, 0.0f, 100.0f);
         invProj = new Matrix4f(pMatrix).invert();
     }
 

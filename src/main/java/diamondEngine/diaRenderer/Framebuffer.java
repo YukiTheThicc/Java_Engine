@@ -8,8 +8,8 @@ import static org.lwjgl.opengl.GL30.*;
 public class Framebuffer {
 
     // ATTRIBUTES
-    private int fboId = 0;
-    private Texture texture = null;
+    private int fboId;
+    private Texture texture;
 
     // CONSTRUCTORS
     public Framebuffer(int width, int height) {
@@ -47,5 +47,12 @@ public class Framebuffer {
 
     public void unBind() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    public void destroy() {
+        glDeleteTextures(texture.getId());
+        glDeleteFramebuffers(fboId);
+        this.fboId = 0;
+        this.texture = null;
     }
 }

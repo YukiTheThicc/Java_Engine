@@ -7,6 +7,8 @@ import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaMath;
 import imgui.ImGui;
 import imgui.ImVec2;
+import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -25,9 +27,8 @@ public class GameViewWindow extends ImguiWindow {
         super("game_view", "Main View");
         this.setFlags(ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse |
                 ImGuiWindowFlags.NoResize);
-        Vector2i pm = DiaMath.getFractionFromFloat((float) Diamond.get().getCurrentEnv().getFrameY() / Diamond.get().getCurrentEnv().getFrameX());
-        DiaLogger.log("" + pm);
-        GameViewWindow.editorCamera = new Camera(new Vector2f(), pm.x, pm.y);
+        Vector2i pm = DiaMath.getFractionFromFloat((float) Diamond.currentEnv.getFrameY() / Diamond.currentEnv.getFrameX());
+        GameViewWindow.editorCamera = new Camera(new Vector2f(), 4f, 4f);
     }
 
     // GETTERS & SETTERS
@@ -53,12 +54,12 @@ public class GameViewWindow extends ImguiWindow {
         ImVec2 windowSize = new ImVec2();
         ImGui.getContentRegionAvail(windowSize);
         float aspectWidth = windowSize.x;
-        float aspectHeight = aspectWidth / Diamond.get().getCurrentEnv().getAspectRatio();
+        float aspectHeight = aspectWidth / Diamond.currentEnv.getAspectRatio();
 
         if (aspectHeight > windowSize.y) {
             // We must switch to pillarbox mode
             aspectHeight = windowSize.y;
-            aspectWidth = aspectHeight * Diamond.get().getCurrentEnv().getAspectRatio();;
+            aspectWidth = aspectHeight * Diamond.currentEnv.getAspectRatio();;
         }
 
         return new ImVec2(aspectWidth, aspectHeight);
@@ -95,7 +96,7 @@ public class GameViewWindow extends ImguiWindow {
             // Controls
             controls.drawControls();
 
-            int textureId = Diamond.get().getCurrentEnv().getFrame().getTexture().getId();
+            int textureId = Diamond.currentEnv.getFrame().getTexture().getId();
             ImGui.image(textureId, windowSize.x, windowSize.y, 0, 1, 1, 0);
         }
         ImGui.end();

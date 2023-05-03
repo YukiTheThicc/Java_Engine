@@ -51,8 +51,8 @@ public class DiaMath {
             BigInteger gcd = numerator.gcd(denominator);
             numerator = numerator.divide(gcd);
             denominator = denominator.divide(gcd);
-            fraction.x = numerator.intValue();
-            fraction.y = denominator.intValue();
+            fraction.y = numerator.intValue();
+            fraction.x = denominator.intValue();
         }
         return fraction;
     }
