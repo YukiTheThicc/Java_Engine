@@ -1,12 +1,17 @@
 package sapphire.imgui.windows;
 
+import diamondEngine.Environment;
+import diamondEngine.diaComponents.Component;
 import diamondEngine.diaRenderer.Texture;
 import diamondEngine.diaUtils.DiaUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiSelectableFlags;
 import sapphire.Sapphire;
 import sapphire.SapphireDir;
+import sapphire.SapphireEvents;
 import sapphire.SapphireProject;
+import sapphire.eventsSystem.SappEvent;
+import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
 import sapphire.imgui.SappImGUILayer;
@@ -71,6 +76,7 @@ public class FileNavigatorWindow extends ImguiWindow {
                 ImGui.sameLine();
 
                 if (ImGui.selectable(file.getName(), false, ImGuiSelectableFlags.AllowDoubleClick)) selected = file.getName();
+                fileContextMenu(file);
                 if (ImGui.isMouseDoubleClicked(GLFW_MOUSE_BUTTON_LEFT) && selected != null) {
                     if (!file.getName().equals(SapphireProject.PROJECT_FILE)) layer.addWindow(new FileWindow(file.getName(), file));
                 }
@@ -78,6 +84,14 @@ public class FileNavigatorWindow extends ImguiWindow {
 
             ImGui.treePop();
             ImGui.spacing();
+        }
+    }
+
+    private void fileContextMenu(File file) {
+        if (ImGui.beginPopupContextItem(file.getName())) {
+            if (ImGui.menuItem(Sapphire.getLiteral("delete"))) SapphireEvents.notify(
+                    new SappEvent(SappEventType.Delete_file, file));
+            ImGui.endPopup();
         }
     }
 }

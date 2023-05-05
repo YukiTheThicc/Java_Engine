@@ -50,6 +50,7 @@ public class Framebuffer {
     }
 
     public void destroy() {
+        unBind();
         glDeleteTextures(texture.getId());
         glDeleteFramebuffers(fboId);
         this.fboId = 0;

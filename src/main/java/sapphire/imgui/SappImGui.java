@@ -3,7 +3,9 @@ package sapphire.imgui;
 import diamondEngine.diaRenderer.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
+import imgui.ImGuiStorage;
 import imgui.flag.*;
+import imgui.type.ImFloat;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import org.joml.Matrix4f;
@@ -102,10 +104,10 @@ public class SappImGui {
         ImGui.textWrapped(label);
         ImGui.nextColumn();
 
-        ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 0, 0);
+        ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 0, ImGui.getStyle().getCellPaddingY());
         float lineHeight = ImGui.getFontSize() + ImGui.getStyle().getFramePaddingY() * 2.0f;
         Vector2f buttonSize = new Vector2f(lineHeight + 3.0f, lineHeight);
-        float widthEach = (ImGui.calcItemWidth() - buttonSize.x * 2.0f) / 2.0f;
+        float widthEach = (ImGui.getContentRegionAvailX() - buttonSize.x * 2.0f) / 2.0f;
 
         ImGui.pushItemWidth(widthEach);
         ImGui.pushStyleColor(ImGuiCol.Button, 0.2f, 0.7f, 0.2f, 1.0f);
@@ -126,6 +128,7 @@ public class SappImGui {
         ImGui.pushStyleColor(ImGuiCol.Button, 0.8f, 0.1f, 0.15f, 1.0f);
         ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 0.9f, 0.2f, 0.2f, 1.0f);
         ImGui.pushStyleColor(ImGuiCol.ButtonActive, 0.2f, 0.7f, 0.2f, 1.0f);
+
         if (ImGui.button("Y", buttonSize.x, buttonSize.y)) {
             values.y = resetValue;
         }
@@ -147,11 +150,11 @@ public class SappImGui {
         ImGui.popID();
     }
 
-    public static float dragFloat(String label, float value) {
+    public static boolean dragFloat(String label, ImFloat value) {
         return dragFloat(label, value, 0.025f);
     }
 
-    public static float dragFloat(String label, float value, float step) {
+    public static boolean dragFloat(String label, ImFloat value, float step) {
         ImGui.pushID(label);
 
         ImGui.columns(2);
@@ -159,30 +162,20 @@ public class SappImGui {
         ImGui.textWrapped(label);
         ImGui.nextColumn();
 
-        float[] valArr = {value};
-        ImGui.dragFloat("##dragFloat", valArr, step);
+        ImGui.pushItemWidth(ImGui.getContentRegionAvailX());
+        float[] valArr = {value.get()};
+        if (ImGui.dragFloat("##dragFloat", valArr, step)) {
+            value.set(valArr[0]);
+            ImGui.columns(1);
+            ImGui.popID();
+            return true;
+        }
+        ImGui.popItemWidth();
 
         ImGui.columns(1);
         ImGui.popID();
 
-        return valArr[0];
-    }
-
-    public static int dragInt(String label, int value) {
-        ImGui.pushID(label);
-
-        ImGui.columns(2);
-        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
-        ImGui.textWrapped(label);
-        ImGui.nextColumn();
-
-        int[] valArr = {value};
-        ImGui.dragInt("##dragInt", valArr, 0.1f);
-
-        ImGui.columns(1);
-        ImGui.popID();
-
-        return valArr[0];
+        return false;
     }
 
     public static boolean dragInt(String label, ImInt value) {
@@ -193,6 +186,7 @@ public class SappImGui {
         ImGui.textWrapped(label);
         ImGui.nextColumn();
 
+        ImGui.pushItemWidth(ImGui.getContentRegionAvailX());
         int[] valArr = {value.get()};
         if (ImGui.dragInt("##dragInt", valArr, 0.1f)) {
             value.set(valArr[0]);
@@ -200,6 +194,7 @@ public class SappImGui {
             ImGui.popID();
             return true;
         }
+        ImGui.popItemWidth();
 
         ImGui.columns(1);
         ImGui.popID();
@@ -228,27 +223,6 @@ public class SappImGui {
         return res;
     }
 
-    public static int inputInt(String label, int value) {
-        ImGui.pushID(label);
-
-        ImGui.columns(2);
-        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
-        ImGui.textWrapped(label);
-        ImGui.nextColumn();
-
-        ImInt i = new ImInt(value);
-        if (ImGui.inputInt("##" + label, i)) {
-            ImGui.columns(1);
-            ImGui.popID();
-            return i.get();
-        }
-
-        ImGui.columns(1);
-        ImGui.popID();
-
-        return value;
-    }
-
     public static boolean inputInt(String label, ImInt value) {
         ImGui.pushID(label);
 
@@ -257,37 +231,18 @@ public class SappImGui {
         ImGui.textWrapped(label);
         ImGui.nextColumn();
 
+        ImGui.pushItemWidth(ImGui.getContentRegionAvailX());
         if (ImGui.inputInt("##" + label, value)) {
             ImGui.columns(1);
             ImGui.popID();
             return true;
         }
+        ImGui.popItemWidth();
 
         ImGui.columns(1);
         ImGui.popID();
 
         return false;
-    }
-
-    public static String inputText(String label, String text) {
-        ImGui.pushID(label);
-
-        ImGui.columns(2);
-        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
-        ImGui.textWrapped(label);
-        ImGui.nextColumn();
-
-        ImString out = new ImString(text, 256);
-        if (ImGui.inputText("##" + label, out)) {
-            ImGui.columns(1);
-            ImGui.popID();
-            return out.get();
-        }
-
-        ImGui.columns(1);
-        ImGui.popID();
-
-        return text;
     }
 
     public static boolean inputText(String label, ImString text) {
@@ -298,11 +253,13 @@ public class SappImGui {
         ImGui.textWrapped(label);
         ImGui.nextColumn();
 
+        ImGui.pushItemWidth(ImGui.getContentRegionAvailX());
         if (ImGui.inputText("##" + label, text)) {
             ImGui.columns(1);
             ImGui.popID();
             return true;
         }
+        ImGui.popItemWidth();
 
         ImGui.columns(1);
         ImGui.popID();

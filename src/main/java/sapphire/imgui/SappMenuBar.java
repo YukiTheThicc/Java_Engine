@@ -2,7 +2,6 @@ package sapphire.imgui;
 
 import imgui.ImGui;
 import sapphire.Sapphire;
-import sapphire.SapphireActions;
 import sapphire.SapphireEvents;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
@@ -17,39 +16,30 @@ public class SappMenuBar {
         if (ImGui.beginMenu(Sapphire.getLiteral("file"))) {
 
             // File menu items
-            if (ImGui.menuItem(Sapphire.getLiteral("new_file"), "Ctrl+N")) {
+            if (ImGui.menuItem(Sapphire.getLiteral("new_file"), "Ctrl+N"))
                 SapphireEvents.notify(new SappEvent(SappEventType.New_file));
-                SapphireActions.newFile(layer);
-            }
             ImGui.separator();
 
-            if (ImGui.menuItem(Sapphire.getLiteral("open_file"), "Ctrl+O")) {
-                SapphireActions.openFile(layer);
-            }
-            if (ImGui.menuItem(Sapphire.getLiteral("save_file"), "Ctrl+S")) {
-                SapphireActions.saveFile(layer);
-            }
-            if (ImGui.menuItem(Sapphire.getLiteral("save_as"), "Ctrl+Alt+S")) {
-                SapphireActions.saveFileAs(layer);
-            }
+            if (ImGui.menuItem(Sapphire.getLiteral("open_file"), "Ctrl+O"))
+                SapphireEvents.notify(new SappEvent(SappEventType.Open_file));
+            if (ImGui.menuItem(Sapphire.getLiteral("save_file"), "Ctrl+S"))
+                SapphireEvents.notify(new SappEvent(SappEventType.Save_file));
+            if (ImGui.menuItem(Sapphire.getLiteral("save_as"), "Ctrl+Alt+S"))
+                SapphireEvents.notify(new SappEvent(SappEventType.Save_as));
+            if (ImGui.menuItem(Sapphire.getLiteral("import_env"))) ;
             ImGui.separator();
 
             // Project menu items
-            if (ImGui.menuItem(Sapphire.getLiteral("create_project"))) {
-                SapphireActions.createProject();
-            }
-            if (ImGui.menuItem(Sapphire.getLiteral("open_project"))) {
-                SapphireActions.openProject();
-            }
-            if (ImGui.menuItem(Sapphire.getLiteral("export_project"))) {
-                SapphireActions.exportProject(layer);
-            }
+            if (ImGui.menuItem(Sapphire.getLiteral("create_project")))
+                SapphireEvents.notify(new SappEvent(SappEventType.Create_project));
+            if (ImGui.menuItem(Sapphire.getLiteral("open_project")))
+                SapphireEvents.notify(new SappEvent(SappEventType.Open_project));
+            if (ImGui.menuItem(Sapphire.getLiteral("export_project")))
+                SapphireEvents.notify(new SappEvent(SappEventType.Export_project));
 
             ImGui.separator();
-            if (ImGui.menuItem(Sapphire.getLiteral("settings"))) {
-                DiaLogger.log("Trying to open settings modal window");
-                layer.getWindows().get("settings").setActive(true);
-            }
+            if (ImGui.menuItem(Sapphire.getLiteral("settings")))
+                SapphireEvents.notify(new SappEvent(SappEventType.Settings));
             ImGui.endMenu();
         }
     }

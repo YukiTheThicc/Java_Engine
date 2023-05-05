@@ -65,6 +65,10 @@ public class SappDefaultLiterals {
         literals.put("file_already_exists", "File already exists");
         literals.put("projection_size", "Projection size");
         literals.put("camera", "Camera");
+        literals.put("delete", "Delete");
+        literals.put("add_grid", "Add grid");
+        literals.put("projection_matrix", "Projection matrix");
+        literals.put("import_env", "Import environment");
 
         return literals;
     }

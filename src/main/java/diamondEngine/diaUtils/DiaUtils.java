@@ -28,10 +28,18 @@ public class DiaUtils {
         DiaLogger.log(DiaUtils.class, "Initializing Diamond utilities...");
     }
 
+    /**
+     * Returns the current time formatted
+     * @return Current time formatted
+     */
     public static String getTime() {
         return DiaUtils.sdf.format(Calendar.getInstance().getTime());
     }
 
+    /**
+     * Gets the system os name
+     * @return OS name
+     */
     public static String getOS() {
         return System.getProperty("os.name");
     }
@@ -49,7 +57,6 @@ public class DiaUtils {
      * @return String with the path for the new file or null.
      */
     public static File saveFile(String defaultFile) {
-
         DiaLogger.log(DiaUtils.class, "Creating file...");
         String path = tinyfd_saveFileDialog("", defaultFile, null, "");
         File file = null;
@@ -75,7 +82,6 @@ public class DiaUtils {
         if (file != null && file.exists() && file.isFile()) {
             if (lines != null && lines.length > 0) {
                 try {
-                    DiaLogger.log(DiaUtils.class, "Trying save to file...");
                     Files.write(file.toPath(), Arrays.asList(lines), StandardCharsets.UTF_8);
                 } catch (IOException e) {
                     DiaLogger.log(DiaUtils.class, "Failed save to file: '" + file.getAbsolutePath() + "'", DiaLoggerLevel.ERROR);
@@ -110,7 +116,6 @@ public class DiaUtils {
      * @return Array of strings containing the paths of the selected files.
      */
     public static String[] selectFiles() {
-
         String result = tinyfd_openFileDialog("", null, null, null, true);
         if (result != null && !result.isEmpty()) {
             return result.split("\\|");
@@ -123,8 +128,6 @@ public class DiaUtils {
      * @return String containing the path of the selected file.
      */
     public static String selectFile() {
-
-        DiaLogger.log(DiaUtils.class, "Selecting files...");
         String result = tinyfd_openFileDialog("", null, null, null, false);
         if (result != null && !result.isEmpty()) {
             return result;
@@ -139,8 +142,6 @@ public class DiaUtils {
      * @return String containing the path of the selected file.
      */
     public static String selectDirectory(String title, String defaultPath) {
-
-        DiaLogger.log(DiaUtils.class, "Selecting files...");
         String result = tinyfd_selectFolderDialog(title, defaultPath);
         if (result != null && !result.isEmpty()) {
             return result;
@@ -164,7 +165,6 @@ public class DiaUtils {
      * @return ArrayList of retrieved files.
      */
     public static ArrayList<File> getFilesInDir(String directory, String extension) {
-
         File dir = new File(directory);
         ArrayList<File> retrievedFiles = new ArrayList<>();
         File[] files = dir.listFiles();
@@ -190,7 +190,6 @@ public class DiaUtils {
      * @return List if found folders
      */
     public static ArrayList<File> getFoldersInDir(String directory) {
-
         File dir = new File(directory);
         ArrayList<File> retrievedFiles = new ArrayList<>();
         File[] files = dir.listFiles();
@@ -206,7 +205,6 @@ public class DiaUtils {
     }
 
     public static GLFWImage.Buffer loadGLFWImage(String path) {
-
         GLFWImage.Buffer imageBuffer = null;
         ByteBuffer buffer;
         try (MemoryStack stack = MemoryStack.stackPush()) {

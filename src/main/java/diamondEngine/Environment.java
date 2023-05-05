@@ -11,15 +11,13 @@ import diamondEngine.diaUtils.DiaMath;
 import diamondEngine.diaUtils.serializers.ComponentSerializer;
 import diamondEngine.diaUtils.serializers.EntitySerializer;
 import imgui.ImGui;
-import imgui.ImVec2;
+import imgui.type.ImFloat;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import sapphire.Sapphire;
 import sapphire.SapphireProject;
-import sapphire.imgui.AlignX;
-import sapphire.imgui.AlignY;
 import sapphire.imgui.SappDrawable;
 import sapphire.imgui.SappImGui;
 
@@ -41,18 +39,21 @@ public class Environment implements SappDrawable {
     public static final int DEFAULT_FRAME_Y = 270;
 
     // ATTRIBUTES
-    private transient long uid;
-    private int frameX;
-    private int frameY;
     private String parent;
     private Camera mainCamera;
-    private transient Framebuffer frame;
-    private List<Environment> children;
-    private List<DiaEntity> entities;
-    private List<Component> components;
-
+    private final List<Environment> children;
+    private final List<Entity> entities;
+    private final List<Component> components;
     private String name;
+    private transient List<Entity> entitiesToRemove;
+    private transient List<Component> componentsToRemove;
+    private transient Framebuffer frame;
+    private int frameX;
+    private int frameY;
     private boolean isInitialized;
+    private transient long uid;
+    private transient boolean isDirty = false;
+    private transient boolean toRemove = false;
 
     // CONSTRUCTORS
     public Environment(String name) {
@@ -67,6 +68,8 @@ public class Environment implements SappDrawable {
         this.children = new ArrayList<>();
         this.entities = new ArrayList<>();
         this.components = new ArrayList<>();
+        this.entitiesToRemove = new ArrayList<>();
+        this.componentsToRemove = new ArrayList<>();
     }
 
     public Environment(String name, String parent) {
@@ -96,7 +99,7 @@ public class Environment implements SappDrawable {
         return parent;
     }
 
-    public List<DiaEntity> getEntities() {
+    public List<Entity> getEntities() {
         return entities;
     }
 
@@ -128,6 +131,18 @@ public class Environment implements SappDrawable {
         return frameY;
     }
 
+    public void setDirty() {
+        isDirty = true;
+    }
+
+    public void setToRemove() {
+        this.toRemove = true;
+    }
+
+    public boolean isToRemove() {
+        return toRemove;
+    }
+
     // METHODS
     public void init() {
         frame = new Framebuffer(frameX, frameY);
@@ -144,6 +159,27 @@ public class Environment implements SappDrawable {
     public void addComponent(Component component) {
         if (component != null) {
             components.add(component);
+        }
+    }
+
+
+    public void removeComponent(Component component) {
+        if (component != null) {
+            componentsToRemove.add(component);
+            this.isDirty = true;
+        }
+    }
+
+    public void addEntity(Entity entity) {
+        if (entity != null) {
+            entities.add(entity);
+        }
+    }
+
+    public void removeEntity(Entity entity) {
+        if (entity != null) {
+            this.entitiesToRemove.add(entity);
+            this.isDirty = true;
         }
     }
 
@@ -181,22 +217,6 @@ public class Environment implements SappDrawable {
         return false;
     }
 
-    public void addEntity(DiaEntity entity) {
-        if (entity != null) {
-            entities.add(entity);
-        }
-    }
-
-    public void update(float dt) {
-
-        mainCamera.changeProjection();
-        for (Environment child : children) child.update(dt);
-        for (Component component : components) component.update(dt);
-        for (DiaEntity e : entities) {
-            e.update(dt);
-        }
-    }
-
     public void startFrame() {
 
         this.frame.bind();
@@ -208,11 +228,32 @@ public class Environment implements SappDrawable {
         this.frame.unBind();
     }
 
+    public void update(float dt) {
+
+        if (isDirty) {
+            for (Entity e : entitiesToRemove) {
+                entities.remove(e);
+            }
+            for (Component c : componentsToRemove) {
+                components.remove(c);
+            }
+            entitiesToRemove.clear();
+            components.clear();
+            isDirty = false;
+        }
+        mainCamera.changeProjection();
+        for (Environment child : children) child.update(dt);
+        for (Component component : components) component.update(dt);
+        for (Entity e : entities) {
+            e.update(dt);
+        }
+    }
+
     public void save(String path) {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .registerTypeAdapter(Component.class, new ComponentSerializer())
-                .registerTypeAdapter(DiaEntity.class, new EntitySerializer())
+                .registerTypeAdapter(Entity.class, new EntitySerializer())
                 .enableComplexMapKeySerialization()
                 .create();
 
@@ -230,7 +271,7 @@ public class Environment implements SappDrawable {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .registerTypeAdapter(Component.class, new ComponentSerializer())
-                .registerTypeAdapter(DiaEntity.class, new EntitySerializer())
+                .registerTypeAdapter(Entity.class, new EntitySerializer())
                 .enableComplexMapKeySerialization()
                 .create();
         String inFile = "";
@@ -242,7 +283,7 @@ public class Environment implements SappDrawable {
         if (!inFile.equals("")) {
             long maxEntityId = -1;
             long maxCompId = -1;
-            DiaEntity[] entities = gson.fromJson(inFile, DiaEntity[].class);
+            Entity[] entities = gson.fromJson(inFile, Entity[].class);
             for (int i = 0; i < entities.length; i++) {
                 addEntity(entities[i]);
 
@@ -289,7 +330,8 @@ public class Environment implements SappDrawable {
 
         ImGui.text(Sapphire.getLiteral("camera"));
         ImGui.separator();
-        mainCamera.setZoom(SappImGui.dragFloat(Sapphire.getLiteral("zoom"), mainCamera.getZoom()));
+        ImFloat zoom = new ImFloat(mainCamera.getZoom());
+        if (SappImGui.dragFloat(Sapphire.getLiteral("zoom"), zoom)) mainCamera.setZoom(zoom.get());
         SappImGui.drawVec2Control(Sapphire.getLiteral("position"), mainCamera.pos);
     }
 

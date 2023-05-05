@@ -6,10 +6,14 @@ import org.joml.Vector3f;
 
 public class Camera {
     // ATTRIBUTES
-    private Matrix4f pMatrix, vMatrix, invProj, invView;
+    private Matrix4f pMatrix;
+    private Matrix4f vMatrix;
+    private Matrix4f invProj;
+    private Matrix4f invView;
     private Vector2f pSize;
-    private float zoom = 1.0f;
     public Vector2f pos;
+    private float zoom = 1.0f;
+
 
     // CONSTRUCTORS
     public Camera(Vector2f pos, float pWidth, float pHeight) {
@@ -28,12 +32,11 @@ public class Camera {
     }
 
     public Matrix4f getViewMatrix() {
-        Vector3f cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);
+        Vector3f cameraFront = new Vector3f(0.0f, 0.5f, -1.0f);
         Vector3f cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);
         vMatrix.identity();
-        vMatrix.lookAt(new Vector3f(pos.x, pos.y, 20.0f),
-                cameraFront.add(pos.x, pos.y, 0.0f), cameraUp);
-        invView =  new Matrix4f(vMatrix).invert();
+        vMatrix.lookAt(new Vector3f(pos.x, pos.y, 20.0f), cameraFront.add(pos.x, pos.y, 0.0f), cameraUp);
+        invView = new Matrix4f(vMatrix).invert();
         return vMatrix;
     }
 

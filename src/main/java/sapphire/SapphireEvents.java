@@ -2,10 +2,7 @@ package sapphire;
 
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappObserver;
-import sapphire.eventsSystem.handlers.EnvWindowEventHandler;
-import sapphire.eventsSystem.handlers.ControlsEventHandler;
-import sapphire.eventsSystem.handlers.MenuEventHandler;
-import sapphire.eventsSystem.handlers.SettingsEventHandler;
+import sapphire.eventsSystem.handlers.*;
 import sapphire.imgui.SappImGUILayer;
 import java.util.ArrayList;
 
@@ -24,7 +21,8 @@ public class SapphireEvents {
         observers.add(new ControlsEventHandler());
         observers.add(new EnvWindowEventHandler());
         observers.add(new SettingsEventHandler(layer));
-        observers.add(new MenuEventHandler());
+        observers.add(new MenuEventHandler(layer));
+        observers.add(new FileNavigatorEventHandler());
     }
 
     public static void addObserver(SappObserver observer) {

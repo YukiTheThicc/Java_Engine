@@ -4,7 +4,7 @@ import diamondEngine.diaComponents.Component;
 
 import java.util.ArrayList;
 
-public class DiaEntity {
+public class Entity {
 
     // ATTRIBUTES
     private long uid;

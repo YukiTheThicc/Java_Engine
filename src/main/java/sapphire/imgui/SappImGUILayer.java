@@ -4,7 +4,7 @@ import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
 import imgui.flag.ImGuiStyleVar;
 import sapphire.Sapphire;
-import sapphire.SapphireControls;
+import sapphire.SapphireKeyControls;
 import sapphire.SapphireEvents;
 import sapphire.SapphireSettings;
 import sapphire.eventsSystem.SappEvent;
@@ -174,7 +174,7 @@ public class SappImGUILayer {
                 io.setKeysDown(key, false);
             }
 
-            SapphireControls.processControls(io);
+            SapphireKeyControls.processControls(io);
 
             io.addConfigFlags(ImGuiConfigFlags.NavNoCaptureKeyboard);
 

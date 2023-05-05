@@ -6,6 +6,7 @@ import imgui.*;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImInt;
+import imgui.type.ImString;
 import sapphire.Sapphire;
 import sapphire.SapphireEvents;
 import sapphire.SapphireSettings;
@@ -63,7 +64,8 @@ public class SettingsWindow extends ImguiWindow {
         if (ImGui.beginTabItem(Sapphire.getLiteral("general_settings"))) {
 
             // Workspace
-            settings.setWorkspace(SappImGui.inputText(Sapphire.getLiteral("workspace"), settings.getWorkspace()));
+            ImString workspace = new ImString(settings.getWorkspace());
+            if (SappImGui.inputText(Sapphire.getLiteral("workspace"), workspace)) settings.setWorkspace(workspace.get());
             ImGui.sameLine();
             if (ImGui.button(Sapphire.getLiteral("examine"))) {
                 settings.setWorkspace(DiaUtils.selectDirectory(Sapphire.getLiteral("choose_workspace"), settings.getWorkspace()));

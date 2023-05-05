@@ -182,7 +182,6 @@ public class Sapphire {
         // Initialize general front end an Engine
         DiaLogger.init();
         DiaUtils.init();
-        SapphireEvents.init(imGUILayer);
         defaultLiterals();
         defaultColors();
         window.init("Sapphire", "sapphire/icon.png");
@@ -191,6 +190,7 @@ public class Sapphire {
         imGUILayer = new SappImGUILayer(this.window.getGlfwWindow());
         settings.init();
         imGUILayer.init();
+        SapphireEvents.init(imGUILayer);
         run();
         if (project != null) project.closeProject();
         imGUILayer.destroyImGui();

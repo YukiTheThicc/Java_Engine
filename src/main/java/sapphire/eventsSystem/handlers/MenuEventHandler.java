@@ -1,8 +1,6 @@
 package sapphire.eventsSystem.handlers;
 
-import diamondEngine.Diamond;
 import diamondEngine.diaUtils.DiaLogger;
-import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
 import sapphire.Sapphire;
 import sapphire.SapphireDir;
@@ -12,42 +10,49 @@ import sapphire.eventsSystem.SappObserver;
 import sapphire.imgui.SappImGUILayer;
 import sapphire.imgui.windows.FileWindow;
 import sapphire.utils.SappProjectCreator;
-
 import java.io.File;
 
 public class MenuEventHandler implements SappObserver {
+
+    // ATTRIBUTES
+    private SappImGUILayer layer;
+
+    // CONSTRUCTORS
+    public MenuEventHandler(SappImGUILayer layer) {
+        this.layer = layer;
+    }
+
     @Override
     public void onNotify(SappEvent event) {
         switch(event.type) {
             case New_file:
-                DiaLogger.log("Clicked on New_root_env", DiaLoggerLevel.SAPP_DEBUG);
-                Diamond.get().addEmptyEnvironment();
+                newFile();
                 break;
             case Open_file:
-                DiaLogger.log("Clicked on Add_env", DiaLoggerLevel.SAPP_DEBUG);
+                openFile();
                 break;
             case Save_file:
-                DiaLogger.log("Clicked on Add_entity", DiaLoggerLevel.SAPP_DEBUG);
+                saveFile();
                 break;
             case Save_as:
-                DiaLogger.log("Clicked on Add_entity", DiaLoggerLevel.SAPP_DEBUG);
+                saveFileAs();
                 break;
             case Create_project:
-                DiaLogger.log("Clicked on Add_entity", DiaLoggerLevel.SAPP_DEBUG);
+                createProject();
                 break;
             case Open_project:
-                DiaLogger.log("Clicked on Add_entity", DiaLoggerLevel.SAPP_DEBUG);
+                openProject();
                 break;
             case Export_project:
-                DiaLogger.log("Clicked on Add_entity", DiaLoggerLevel.SAPP_DEBUG);
+                exportProject();
                 break;
             case Settings:
-                DiaLogger.log("Clicked on Add_entity", DiaLoggerLevel.SAPP_DEBUG);
+                layer.getWindows().get("settings").setActive(true);
                 break;
         }
     }
 
-    private static void newFile(SappImGUILayer layer) {
+    private void newFile() {
         String fileName = Sapphire.getLiteral("new_file");
         if (layer.getWindows().get(fileName) != null) {
             // If the new file name has a number, retrieve that number and add 1 to it. If not, add ' 1' to the
@@ -63,7 +68,7 @@ public class MenuEventHandler implements SappObserver {
         layer.addWindow(new FileWindow(fileName, new File("")));
     }
 
-    private static void openFile(SappImGUILayer layer) {
+    private void openFile() {
         String[] paths = DiaUtils.selectFiles();
         if (paths != null) {
             for (String path : paths) {
@@ -74,13 +79,13 @@ public class MenuEventHandler implements SappObserver {
         }
     }
 
-    private static void saveFile(SappImGUILayer layer) {
+    private void saveFile() {
         if (layer.getLastFocusedFile() != null) {
             layer.getLastFocusedFile().saveFile();
         }
     }
 
-    private static void saveFileAs(SappImGUILayer layer) {
+    private void saveFileAs() {
         FileWindow focusedFile = layer.getLastFocusedFile();
         if (focusedFile != null) {
             File file = DiaUtils.saveFile(focusedFile.getFile().getAbsolutePath());
@@ -91,7 +96,7 @@ public class MenuEventHandler implements SappObserver {
         }
     }
 
-    private static void createProject() {
+    private void createProject() {
         String path = DiaUtils.selectDirectory(Sapphire.getLiteral("create_project"), Sapphire.get().getSettings().getWorkspace());
         if (path != null && !path.isEmpty()) {
             DiaLogger.log("Creating project in '" + path + "'");
@@ -102,7 +107,7 @@ public class MenuEventHandler implements SappObserver {
         }
     }
 
-    private static void openProject() {
+    private void openProject() {
         String path = DiaUtils.selectDirectory(Sapphire.getLiteral("open_project"), Sapphire.get().getSettings().getWorkspace());
         if (path != null && !path.isEmpty()) {
             DiaLogger.log("Opening project '" + path + "'");
@@ -113,7 +118,7 @@ public class MenuEventHandler implements SappObserver {
         }
     }
 
-    private static void exportProject(SappImGUILayer layer) {
+    private void exportProject() {
 
     }
 }

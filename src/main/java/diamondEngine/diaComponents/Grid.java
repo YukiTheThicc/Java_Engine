@@ -65,14 +65,14 @@ public class Grid extends Component {
             Vector2f cameraPos = camera.pos;
             Vector2f pSize = camera.getPSize();
 
-            if (camera.getZoom() <= 16) {
+            if (camera.getZoom() <= 4) {
 
-                float firstX = ((float) Math.floor(cameraPos.x / cellNX)) * cellNX;
-                float firstY = ((float) Math.floor(cameraPos.y / cellNY)) * cellNY;
-                float width = ((pSize.x * camera.getZoom()) / cellNX) + 2;
-                float height = ((pSize.y * camera.getZoom()) / cellNY) + 2;
-                numVLines = (int) (camera.getZoom() / cellNX);
-                numHLines = (int) (numVLines * Diamond.currentEnv.getAspectRatio());
+                float firstX = ((int) Math.floor(cameraPos.x / cellNX)) * cellNX;
+                float firstY = ((int) Math.floor(cameraPos.y / cellNY)) * cellNY;
+                numHLines = (int)(pSize.x * camera.getZoom() /cellNX) + 2;
+                numVLines = (int)(pSize.y * camera.getZoom() / cellNY) + 2;
+                float width = (int)(pSize.x * camera.getZoom());
+                float height = (int)(pSize.y * camera.getZoom());
 
                 int maxLines = Math.max(numVLines, numHLines);
 

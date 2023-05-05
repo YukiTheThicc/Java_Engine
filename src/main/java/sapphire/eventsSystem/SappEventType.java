@@ -22,5 +22,7 @@ public enum SappEventType {
     Create_project,
     Open_project,
     Export_project,
-    Settings
+    Settings,
+    Delete_object,
+    Delete_file
 }

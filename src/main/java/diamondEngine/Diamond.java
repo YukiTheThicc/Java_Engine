@@ -11,11 +11,14 @@ public class Diamond {
     public static Environment currentEnv = null;
     private static Diamond diamond = null;
     private ArrayList<Environment> environments;
+    private final ArrayList<Environment> environmentsToRemove;
+    private boolean isDirty = false;
     private int emptyEnvs = 0;
 
     // CONSTRUCTORS
     private Diamond() {
         this.environments = new ArrayList<>();
+        this.environmentsToRemove = new ArrayList<>();
     }
 
     // GETTERS & SETTERS
@@ -25,6 +28,10 @@ public class Diamond {
 
     public void setEnvironments(ArrayList<Environment> environments) {
         this.environments = environments;
+    }
+
+    public void setDirty() {
+        isDirty = true;
     }
 
     // METHODS
@@ -54,11 +61,23 @@ public class Diamond {
         emptyEnvs++;
     }
 
+    public void removeEnv(Environment env) {
+        this.environmentsToRemove.add(env);
+        this.isDirty = true;
+    }
+
     public void addEnvironment(Environment env) {
         environments.add(env);
     }
 
     public void update(float dt) {
+        if (isDirty) {
+            for (Environment env : environmentsToRemove) {
+                environments.remove(env);
+            }
+            environmentsToRemove.clear();
+            isDirty = false;
+        }
         for(Environment env : environments) {
             env.update(dt);
         }
