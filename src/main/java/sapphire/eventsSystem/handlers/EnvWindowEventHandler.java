@@ -34,9 +34,6 @@ public class EnvWindowEventHandler implements SappObserver {
 
     private void handleNewEnv() {
         Diamond.get().addEmptyEnvironment();
-        if (Sapphire.get().getProject() != null) {
-            Sapphire.get().getProject().save();
-        }
     }
 
     private void handleAddComponent(SappEvent event) {
@@ -65,6 +62,7 @@ public class EnvWindowEventHandler implements SappObserver {
         if (event.env != null && event.payload == null) {
             // An environment has been removed
             Diamond.get().removeEnv(event.env);
+            Sapphire.get().getProject().save();
             if (Sapphire.getActiveObject() == event.env) Sapphire.setActiveObject(null);
         } else if (event.env != null) {
             if (event.payload instanceof Entity) {

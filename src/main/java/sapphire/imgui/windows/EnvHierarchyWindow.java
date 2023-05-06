@@ -54,7 +54,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
         for (Environment env : Diamond.get().getEnvironments()) {
             ImGui.pushID(env.getUid());
 
-            if (ImGui.treeNodeEx(env.getName(), NODE_FLAGS)) {
+            if (ImGui.treeNodeEx(env.getName() + (env.isModified() ? " *" : ""), NODE_FLAGS)) {
                 if (ImGui.isItemClicked()) {
                     SapphireEvents.notify(new SappEvent(SappEventType.Selected_object, null, env));
                 }

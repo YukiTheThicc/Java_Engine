@@ -79,7 +79,6 @@ public class SappImGUILayer {
     // METHODS
     public void init() {
 
-        DiaLogger.log("Initializing ImGUI...");
         ImGui.createContext();
         final ImGuiIO io = ImGui.getIO();
 

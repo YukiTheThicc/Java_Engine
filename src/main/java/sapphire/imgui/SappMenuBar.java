@@ -16,17 +16,15 @@ public class SappMenuBar {
         if (ImGui.beginMenu(Sapphire.getLiteral("file"))) {
 
             // File menu items
-            if (ImGui.menuItem(Sapphire.getLiteral("new_file"), "Ctrl+N"))
-                SapphireEvents.notify(new SappEvent(SappEventType.New_file));
+            if (ImGui.menuItem(Sapphire.getLiteral("new_env"), "Ctrl+N"))
+                SapphireEvents.notify(new SappEvent(SappEventType.Add_env));
             ImGui.separator();
-
-            if (ImGui.menuItem(Sapphire.getLiteral("open_file"), "Ctrl+O"))
-                SapphireEvents.notify(new SappEvent(SappEventType.Open_file));
-            if (ImGui.menuItem(Sapphire.getLiteral("save_file"), "Ctrl+S"))
-                SapphireEvents.notify(new SappEvent(SappEventType.Save_file));
-            if (ImGui.menuItem(Sapphire.getLiteral("save_as"), "Ctrl+Alt+S"))
-                SapphireEvents.notify(new SappEvent(SappEventType.Save_as));
-            if (ImGui.menuItem(Sapphire.getLiteral("import_env"))) ;
+            if (ImGui.menuItem(Sapphire.getLiteral("import_env"), "Ctrl+I"))
+                SapphireEvents.notify(new SappEvent(SappEventType.Import_env));
+            if (ImGui.menuItem(Sapphire.getLiteral("save_env"), "Ctrl+S"))
+                SapphireEvents.notify(new SappEvent(SappEventType.Save_env));
+            if (ImGui.menuItem(Sapphire.getLiteral("save_env_as"), "Ctrl+Alt+S"))
+                SapphireEvents.notify(new SappEvent(SappEventType.Save_env_as));
             ImGui.separator();
 
             // Project menu items

@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,21 +40,25 @@ public class Environment implements SappDrawable {
     public static final int DEFAULT_FRAME_Y = 270;
 
     // ATTRIBUTES
-    private String parent;
+    private Environment parent;
     private Camera mainCamera;
-    private final List<Environment> children;
-    private final List<Entity> entities;
-    private final List<Component> components;
     private String name;
-    private transient List<Entity> entitiesToRemove;
-    private transient List<Component> componentsToRemove;
-    private transient Framebuffer frame;
+    private String originFile;
+    private List<Environment> children;
+    private List<Entity> entities;
+    private List<Component> components;
     private int frameX;
     private int frameY;
     private boolean isInitialized;
+
+    // Runtime attributes
+    private transient List<Entity> entitiesToRemove;
+    private transient List<Component> componentsToRemove;
+    private transient Framebuffer frame;
     private transient long uid;
     private transient boolean isDirty = false;
     private transient boolean toRemove = false;
+    private transient boolean isModified = true;
 
     // CONSTRUCTORS
     public Environment(String name) {
@@ -62,6 +67,7 @@ public class Environment implements SappDrawable {
         this.frameY = DEFAULT_FRAME_Y;
         this.parent = null;
         this.name = name;
+        this.originFile = null;
         this.isInitialized = false;
         Vector2i pm = DiaMath.getFractionFromFloat((float) frameX / frameY);
         this.mainCamera = new Camera(new Vector2f(), pm.x, pm.y);
@@ -72,18 +78,21 @@ public class Environment implements SappDrawable {
         this.componentsToRemove = new ArrayList<>();
     }
 
-    public Environment(String name, String parent) {
+    public Environment(String name, Environment parent) {
         this.uid = Diamond.genId();
         this.frameX = DEFAULT_FRAME_X;
         this.frameY = DEFAULT_FRAME_Y;
         this.parent = parent;
         this.name = name;
+        this.originFile = null;
         this.isInitialized = false;
         Vector2i pm = DiaMath.getFractionFromFloat((float) frameX / frameY);
         this.mainCamera = new Camera(new Vector2f(), pm.x, pm.y);
         this.children = new ArrayList<>();
         this.entities = new ArrayList<>();
         this.components = new ArrayList<>();
+        this.entitiesToRemove = new ArrayList<>();
+        this.componentsToRemove = new ArrayList<>();
     }
 
     // GETTERS & SETTERS
@@ -91,12 +100,20 @@ public class Environment implements SappDrawable {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public List<Environment> getChildren() {
         return children;
     }
 
-    public String getParent() {
+    public Environment getParent() {
         return parent;
+    }
+
+    public void setParent(Environment parent) {
+        this.parent = parent;
     }
 
     public List<Entity> getEntities() {
@@ -143,43 +160,61 @@ public class Environment implements SappDrawable {
         return toRemove;
     }
 
+    public String getOriginFile() {
+        return originFile;
+    }
+
+    public void setOriginFile(String originFile) {
+        this.originFile = originFile;
+    }
+
+    public boolean isModified() {
+        return isModified;
+    }
+
     // METHODS
     public void init() {
         frame = new Framebuffer(frameX, frameY);
         isInitialized = true;
+        isModified = true;
     }
 
     public void addChild(Environment environment) {
         if (environment != null) {
             if (!environment.isInitialized) environment.init();
             children.add(environment);
+            environment.setParent(this);
+            isModified = true;
         }
     }
 
     public void addComponent(Component component) {
         if (component != null) {
             components.add(component);
+            isModified = true;
         }
     }
-
 
     public void removeComponent(Component component) {
         if (component != null) {
             componentsToRemove.add(component);
-            this.isDirty = true;
+            isDirty = true;
+            isModified = true;
         }
     }
 
     public void addEntity(Entity entity) {
         if (entity != null) {
             entities.add(entity);
+            isModified = true;
         }
     }
 
     public void removeEntity(Entity entity) {
         if (entity != null) {
-            this.entitiesToRemove.add(entity);
-            this.isDirty = true;
+            entitiesToRemove.add(entity);
+            isDirty = true;
+            isModified = true;
         }
     }
 
@@ -192,29 +227,6 @@ public class Environment implements SappDrawable {
 
     public float getAspectRatio() {
         return (float) frameX / frameY;
-    }
-
-    private boolean changeName(String path, String newName) {
-        File file = new File(path + "/" + name + ENVS_EXT);
-        File newFile = new File(path + "/" + newName + ENVS_EXT);
-
-        if (!newFile.exists()) {
-            if (file.exists()) {
-                if (!newName.isEmpty()) {
-                    if (file.renameTo(newFile)) {
-                        DiaLogger.log(this.getClass(), "Changed environment name from '" + name + "' to '" + newName + "'", DiaLoggerLevel.INFO);
-                        name = newName;
-                    } else {
-                        DiaLogger.log(this.getClass(), "Failed to rename environment '" + name + "'", DiaLoggerLevel.ERROR);
-                    }
-                }
-            } else {
-                DiaLogger.log(this.getClass(), "Couldn't find file for environment '" + name + "'", DiaLoggerLevel.ERROR);
-            }
-        } else {
-            return true;
-        }
-        return false;
     }
 
     public void startFrame() {
@@ -250,20 +262,23 @@ public class Environment implements SappDrawable {
     }
 
     public void save(String path) {
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .registerTypeAdapter(Component.class, new ComponentSerializer())
-                .registerTypeAdapter(Entity.class, new EntitySerializer())
-                .enableComplexMapKeySerialization()
-                .create();
+        if (isModified) {
+            Gson gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .registerTypeAdapter(Component.class, new ComponentSerializer())
+                    .registerTypeAdapter(Entity.class, new EntitySerializer())
+                    .enableComplexMapKeySerialization()
+                    .create();
 
-        try {
-            Files.createDirectories(Paths.get(path));
-            FileWriter writer = new FileWriter(path + "/" + name + ENVS_EXT);
-            writer.write(gson.toJson(this));
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                originFile = path;
+                FileWriter writer = new FileWriter(path);
+                writer.write(gson.toJson(this));
+                writer.close();
+                isModified = false;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -276,27 +291,17 @@ public class Environment implements SappDrawable {
                 .create();
         String inFile = "";
         try {
-            inFile = new String(Files.readAllBytes(Paths.get(path + "/" + name + ENVS_EXT)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (!inFile.equals("")) {
-            long maxEntityId = -1;
-            long maxCompId = -1;
-            Entity[] entities = gson.fromJson(inFile, Entity[].class);
-            for (int i = 0; i < entities.length; i++) {
-                addEntity(entities[i]);
-
-                for (Component c : entities[i].getComponents()) {
-                    if (c.getUid() > maxCompId) {
-                        maxCompId = c.getUid();
-                    }
-                }
-
-                if (entities[i].getUid() > maxEntityId) {
-                    maxEntityId = entities[i].getUid();
-                }
+            inFile = new String(Files.readAllBytes(Paths.get(path)));
+            if (!inFile.equals("")) {
+                Environment loadedEnv = gson.fromJson(inFile, Environment.class);
+                entities = loadedEnv.getEntities();
+                components = loadedEnv.getComponents();
+                name = loadedEnv.getName();
+                originFile = loadedEnv.getOriginFile();
+                isModified = false;
             }
+        } catch (Exception e) {
+            DiaLogger.log(this.getClass(), "Failed to load environment from '" + path + "'\n\t" + e.getMessage(), DiaLoggerLevel.ERROR);
         }
     }
 
@@ -309,29 +314,30 @@ public class Environment implements SappDrawable {
         SappImGui.textLabel("Framebuffer", "" + frame.getFboId());
         ImString newName = new ImString(name, 256);
         if (SappImGui.inputText(Sapphire.getLiteral("name"), newName)) {
-            if (Sapphire.get().getProject() != null) {
-                boolean fileExists = changeName(
-                        Sapphire.get().getProject().getRoot().getPath().getAbsolutePath() + "/" + SapphireProject.ENVS_DIR,
-                        newName.get()
-                );
-                if (fileExists) {
-                    float imgSize = ImGui.getFontSize() + ImGui.getStyle().getFramePaddingY() * 2;
-                    ImGui.sameLine();
-                    ImGui.image(Sapphire.getIcon("info.png").getId(), imgSize, imgSize, 0, 1, 1, 0);
-                    if (ImGui.isItemHovered()) ImGui.setTooltip(Sapphire.getLiteral("file_already_exists"));
-                }
+            if (Sapphire.get().getProject() != null && !newName.isEmpty()) {
+                name = newName.get();
+                isModified = true;
             }
         }
 
         ImInt newWidth = new ImInt(frameX);
-        if (SappImGui.inputInt(Sapphire.getLiteral("frame_width"), newWidth)) changeFrame(newWidth.get(), frameY);
+        if (SappImGui.inputInt(Sapphire.getLiteral("frame_width"), newWidth)) {
+            changeFrame(newWidth.get(), frameY);
+            isModified = true;
+        }
         ImInt newHeight = new ImInt(frameY);
-        if (SappImGui.inputInt(Sapphire.getLiteral("frame_height"), newHeight)) changeFrame(frameX, newHeight.get());
+        if (SappImGui.inputInt(Sapphire.getLiteral("frame_height"), newHeight)) {
+            changeFrame(frameX, newHeight.get());
+            isModified = true;
+        }
 
         ImGui.text(Sapphire.getLiteral("camera"));
         ImGui.separator();
         ImFloat zoom = new ImFloat(mainCamera.getZoom());
-        if (SappImGui.dragFloat(Sapphire.getLiteral("zoom"), zoom)) mainCamera.setZoom(zoom.get());
+        if (SappImGui.dragFloat(Sapphire.getLiteral("zoom"), zoom)) {
+            mainCamera.setZoom(zoom.get());
+            isModified = true;
+        }
         SappImGui.drawVec2Control(Sapphire.getLiteral("position"), mainCamera.pos);
     }
 

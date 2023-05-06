@@ -69,6 +69,9 @@ public class SappDefaultLiterals {
         literals.put("add_grid", "Add grid");
         literals.put("projection_matrix", "Projection matrix");
         literals.put("import_env", "Import environment");
+        literals.put("save_env", "Save environment");
+        literals.put("save_env_as", "Save environment as...");
+        literals.put("new_env", "New environment");
 
         return literals;
     }

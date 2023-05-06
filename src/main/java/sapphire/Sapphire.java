@@ -124,6 +124,11 @@ public class Sapphire {
         Sapphire.get().activeObject = activeObject;
     }
 
+    public static String getProjectDir() {
+        if (Sapphire.get().project != null) return Sapphire.get().project.getRoot().getPath().getAbsolutePath();
+        return  "";
+    }
+
     // METHODS
     private boolean shouldClose() {
         return glfwWindowShouldClose(this.window.getGlfwWindow());
@@ -179,7 +184,7 @@ public class Sapphire {
     }
 
     public void launch() {
-        // Initialize general front end an Engine
+        // Initialize general front end and Engine
         DiaLogger.init();
         DiaUtils.init();
         defaultLiterals();

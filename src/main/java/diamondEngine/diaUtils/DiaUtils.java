@@ -52,20 +52,22 @@ public class DiaUtils {
         return saveFile("");
     }
 
+    public static File saveFile(String defaultFile) {
+        return saveFile(defaultFile, "");
+    }
+
     /**
      * Opens native OS to save a file. Returns null when the file has not been selected (cancelled or failed)
      * @return String with the path for the new file or null.
      */
-    public static File saveFile(String defaultFile) {
-        DiaLogger.log(DiaUtils.class, "Creating file...");
-        String path = tinyfd_saveFileDialog("", defaultFile, null, "");
+    public static File saveFile(String defaultFile, String fileType) {
+        String path = tinyfd_saveFileDialog("", defaultFile, null, fileType);
         File file = null;
         if (path != null && !path.isEmpty()) {
             file = new File(path);
             try {
-                if (file.createNewFile()) {
-                    DiaLogger.log(DiaUtils.class, "Overwriting file '" + file.getAbsolutePath() + "'");
-                }
+                if (file.createNewFile()) DiaLogger.log(DiaUtils.class,
+                        "Overwriting file '" + file.getAbsolutePath() + "'");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

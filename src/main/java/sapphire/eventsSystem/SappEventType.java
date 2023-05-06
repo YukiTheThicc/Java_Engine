@@ -24,5 +24,7 @@ public enum SappEventType {
     Export_project,
     Settings,
     Delete_object,
-    Delete_file
+    Delete_file,
+    Import_env,
+    Save_env_as
 }

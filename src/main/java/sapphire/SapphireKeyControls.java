@@ -15,12 +15,14 @@ public class SapphireKeyControls {
 
     public static void processControls(ImGuiIO io) {
         io.getKeysDown(keyPressed);
-        if (io.getKeyCtrl() && keyPressed[GLFW_KEY_S])
-            SapphireEvents.notify(new SappEvent(SappEventType.Save_file));
-        if (io.getKeyCtrl() && keyPressed[GLFW_KEY_O])
-            SapphireEvents.notify(new SappEvent(SappEventType.Open_file));
         if (io.getKeyCtrl() && keyPressed[GLFW_KEY_N])
-            SapphireEvents.notify(new SappEvent(SappEventType.New_file));
+            SapphireEvents.notify(new SappEvent(SappEventType.Add_env));
+        if (io.getKeyCtrl() && keyPressed[GLFW_KEY_I])
+            SapphireEvents.notify(new SappEvent(SappEventType.Import_env));
+        if (io.getKeyCtrl() && keyPressed[GLFW_KEY_S])
+            SapphireEvents.notify(new SappEvent(SappEventType.Save_env));
+        if (io.getKeyCtrl() && io.getKeyAlt() && keyPressed[GLFW_KEY_S])
+            SapphireEvents.notify(new SappEvent(SappEventType.Save_env_as));
         Arrays.fill(keyPressed, false);
     }
 }

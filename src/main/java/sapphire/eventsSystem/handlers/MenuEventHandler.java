@@ -1,5 +1,7 @@
 package sapphire.eventsSystem.handlers;
 
+import diamondEngine.Diamond;
+import diamondEngine.Environment;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
 import sapphire.Sapphire;
@@ -45,6 +47,15 @@ public class MenuEventHandler implements SappObserver {
                 break;
             case Export_project:
                 exportProject();
+                break;
+            case Import_env:
+                importEnv();
+                break;
+            case Save_env:
+                saveEnv();
+                break;
+            case Save_env_as:
+                saveEnvAs();
                 break;
             case Settings:
                 layer.getWindows().get("settings").setActive(true);
@@ -120,5 +131,43 @@ public class MenuEventHandler implements SappObserver {
 
     private void exportProject() {
 
+    }
+
+    private void importEnv() {
+        String path = DiaUtils.selectFile();
+        if (path != null && !path.isEmpty()) {
+            Environment env = new Environment("IMPORTED ENV");
+            env.init();
+            env.load(path);
+            Diamond.get().addEnvironment(env);
+            if (Sapphire.get().getProject() != null) Sapphire.get().getProject().save();
+        }
+    }
+
+    private void saveEnv() {
+        Environment env = Sapphire.getActiveObject() instanceof Environment ? (Environment) Sapphire.getActiveObject() : null;
+        if (env != null) {
+            File file = null;
+            if (env.getOriginFile() != null) {
+                file = new File(env.getOriginFile());
+            } else {
+                file = DiaUtils.saveFile(Sapphire.getProjectDir() + "/" + SapphireProject.ENVS_DIR, Environment.ENVS_EXT);
+            }
+
+            if (file != null && file.isFile()) {
+                env.save(file.getAbsolutePath());
+                if (Sapphire.get().getProject() != null) Sapphire.get().getProject().save();
+            }
+        }
+    }
+
+    private void saveEnvAs() {
+        Environment env = Sapphire.getActiveObject() instanceof Environment ? (Environment) Sapphire.getActiveObject() : null;
+        if (env != null) {
+            File file = DiaUtils.saveFile(Sapphire.getProjectDir() + "/" + SapphireProject.ENVS_DIR, Environment.ENVS_EXT);
+            if (file != null && file.isFile()) {
+                env.save(file.getAbsolutePath());
+            }
+        }
     }
 }
