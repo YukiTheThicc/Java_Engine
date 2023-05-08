@@ -18,11 +18,8 @@ public class SapphireEvents {
 
     // METHODS
     public static void init(SappImGUILayer layer) {
-        observers.add(new ControlsEventHandler());
-        observers.add(new EnvWindowEventHandler());
-        observers.add(new SettingsEventHandler(layer));
+        observers.add(new WindowsEventHandler());
         observers.add(new MenuEventHandler(layer));
-        observers.add(new FileNavigatorEventHandler());
     }
 
     public static void addObserver(SappObserver observer) {

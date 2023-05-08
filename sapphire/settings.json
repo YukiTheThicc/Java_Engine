@@ -1,12 +1,12 @@
 {
-  "workspace": "C:\\Proyects",
+  "workspace": "C:\\Proyects\\",
   "currentFont": "OxygenMono-Regular.otf",
   "currentLang": "en",
-  "lastProject": "C:\\Proyects\\test",
+  "lastProject": "C:\\Proyects\\Diamond test",
   "activeWindows": {
     "editor_camera": true,
     "assets": true,
-    "debug_sapp": true,
+    "debug_sapp": false,
     "env_hierarchy": true,
     "navigator": true,
     "log_viewer": true,

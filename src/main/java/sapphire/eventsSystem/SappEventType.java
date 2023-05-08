@@ -26,5 +26,6 @@ public enum SappEventType {
     Delete_object,
     Delete_file,
     Import_env,
-    Save_env_as
+    Save_env_as,
+    Add_asset
 }

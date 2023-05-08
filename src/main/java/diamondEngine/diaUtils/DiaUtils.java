@@ -1,5 +1,6 @@
 package diamondEngine.diaUtils;
 
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.system.MemoryStack;
 
@@ -125,12 +126,24 @@ public class DiaUtils {
         return null;
     }
 
+    public static String selectFile() {
+        return selectFile("", "", "");
+    }
+
+    public static String selectFile(String title) {
+        return selectFile(title, "", "");
+    }
+
+    public static String selectFile(String title, String defaultPath) {
+        return selectFile(title, defaultPath, "");
+    }
+
     /**
      * Opens a single file selection dialog
      * @return String containing the path of the selected file.
      */
-    public static String selectFile() {
-        String result = tinyfd_openFileDialog("", null, null, null, false);
+    public static String selectFile(String title, String defaultPath, String filter) {
+        String result = tinyfd_openFileDialog(title, defaultPath, null, filter, false);
         if (result != null && !result.isEmpty()) {
             return result;
         }

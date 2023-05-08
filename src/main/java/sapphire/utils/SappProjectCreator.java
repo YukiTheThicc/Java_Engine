@@ -18,13 +18,15 @@ import java.nio.file.Paths;
 
 public class SappProjectCreator {
 
-    private static final String DEFAULT_PROJECT_INFO = "{'name' : 'New Project'}";
-
     public static SapphireProject create(String path) {
         File dir = new File(path);
         if (dir.isDirectory() && DiaUtils.getFilesInDir(path).isEmpty() && DiaUtils.getFoldersInDir(path).isEmpty()) {
             File sappProject = new File(path + "\\" + SapphireProject.PROJECT_FILE);
             File envsDir = new File(path + "\\" + SapphireProject.ENVS_DIR);
+            File resDir = new File(path + "\\" + SapphireProject.RES_DIR);
+            File texDir = new File(path + "\\" + SapphireProject.TEX_DIR);
+            File sfxDir = new File(path + "\\" + SapphireProject.SFX_DIR);
+            File musDir = new File(path + "\\" + SapphireProject.MUSIC_DIR);
             try {
                 if (sappProject.createNewFile()) {
                     try {
@@ -34,6 +36,10 @@ public class SappProjectCreator {
                                 .create();
 
                         Files.createDirectory(envsDir.toPath());
+                        Files.createDirectory(resDir.toPath());
+                        Files.createDirectory(texDir.toPath());
+                        Files.createDirectory(sfxDir.toPath());
+                        Files.createDirectory(musDir.toPath());
 
                         SapphireDir root = new SapphireDir(path);
                         root.loadDirectory();

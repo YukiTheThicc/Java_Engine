@@ -3,12 +3,18 @@ package sapphire.eventsSystem.handlers;
 import diamondEngine.Entity;
 import diamondEngine.Diamond;
 import diamondEngine.diaComponents.Component;
+import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.diaUtils.DiaLoggerLevel;
+import diamondEngine.diaUtils.DiaUtils;
 import sapphire.Sapphire;
+import sapphire.SapphireProject;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappObserver;
 import sapphire.imgui.SappDrawable;
 
-public class EnvWindowEventHandler implements SappObserver {
+import java.io.File;
+
+public class WindowsEventHandler implements SappObserver {
 
     @Override
     public void onNotify(SappEvent event) {
@@ -28,6 +34,18 @@ public class EnvWindowEventHandler implements SappObserver {
                 break;
             case Delete_object:
                 handleDeleteObj(event);
+                break;
+            case Delete_file:
+                handleDeleteFile(event);
+                break;
+            case Play:
+                Sapphire.get().setDiaRunning(true);
+                break;
+            case Stop:
+                Sapphire.get().setDiaRunning(false);
+                break;
+            case Add_asset:
+                handleAddAsset();
                 break;
         }
     }
@@ -72,5 +90,21 @@ public class EnvWindowEventHandler implements SappObserver {
             }
             if (Sapphire.getActiveObject() == event.payload) Sapphire.setActiveObject(null);
         }
+    }
+
+    private void handleDeleteFile(SappEvent event) {
+        if (event.payload instanceof File) {
+            if (((File) event.payload).delete()) {
+                DiaLogger.log("Deleting file '" + ((File) event.payload).getAbsoluteFile() + "'");
+            } else {
+                DiaLogger.log(this.getClass(), "Failed to delete file '" + ((File) event.payload).getAbsoluteFile() + "'", DiaLoggerLevel.WARN);
+            }
+        }
+    }
+
+    private void handleAddAsset() {
+        DiaLogger.log(Sapphire.getProjectDir() + "/" + SapphireProject.SFX_DIR + "/");
+        String assetPath = DiaUtils.selectFile("", Sapphire.getProjectDir() + "/" + SapphireProject.SFX_DIR + "/");
+
     }
 }

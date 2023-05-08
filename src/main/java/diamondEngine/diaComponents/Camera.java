@@ -10,10 +10,11 @@ public class Camera {
     private Matrix4f vMatrix;
     private Matrix4f invProj;
     private Matrix4f invView;
+    private Vector3f front;
+    private Vector3f up;
     private Vector2f pSize;
     public Vector2f pos;
     private float zoom = 1.0f;
-
 
     // CONSTRUCTORS
     public Camera(Vector2f pos, float pWidth, float pHeight) {
@@ -23,6 +24,8 @@ public class Camera {
         this.vMatrix = new Matrix4f();
         this.invProj = new Matrix4f();
         this.invView = new Matrix4f();
+        this.front = new Vector3f(0.0f, 0.0f, -1.0f);
+        this.up = new Vector3f(0.0f, 1.0f, 0.0f);
         this.changeProjection();
     }
 
@@ -32,10 +35,9 @@ public class Camera {
     }
 
     public Matrix4f getViewMatrix() {
-        Vector3f cameraFront = new Vector3f(0.0f, 0.5f, -1.0f);
-        Vector3f cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);
         vMatrix.identity();
-        vMatrix.lookAt(new Vector3f(pos.x, pos.y, 20.0f), cameraFront.add(pos.x, pos.y, 0.0f), cameraUp);
+        Vector3f cameraFront = new Vector3f(front);
+        vMatrix.lookAt(new Vector3f(pos.x, pos.y, 20.0f), cameraFront.add(pos.x, pos.y, 0.0f), up);
         invView = new Matrix4f(vMatrix).invert();
         return vMatrix;
     }
@@ -58,6 +60,14 @@ public class Camera {
 
     public Vector2f getPSize() {
         return pSize;
+    }
+
+    public Vector3f getFront() {
+        return front;
+    }
+
+    public Vector3f getUp() {
+        return up;
     }
 
     // METHODS

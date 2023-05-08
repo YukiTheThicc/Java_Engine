@@ -64,8 +64,10 @@ public class SettingsWindow extends ImguiWindow {
         if (ImGui.beginTabItem(Sapphire.getLiteral("general_settings"))) {
 
             // Workspace
-            ImString workspace = new ImString(settings.getWorkspace());
-            if (SappImGui.inputText(Sapphire.getLiteral("workspace"), workspace)) settings.setWorkspace(workspace.get());
+            ImString workspace = new ImString(settings.getWorkspace(), 256);
+            if (SappImGui.inputText(Sapphire.getLiteral("workspace"), workspace))  {
+                if (!workspace.isEmpty()) settings.setWorkspace(workspace.get());
+            }
             ImGui.sameLine();
             if (ImGui.button(Sapphire.getLiteral("examine"))) {
                 settings.setWorkspace(DiaUtils.selectDirectory(Sapphire.getLiteral("choose_workspace"), settings.getWorkspace()));

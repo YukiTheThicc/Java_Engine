@@ -41,7 +41,6 @@ public class Environment implements SappDrawable {
 
     // ATTRIBUTES
     private Environment parent;
-    private Camera mainCamera;
     private String name;
     private String originFile;
     private List<Environment> children;
@@ -70,7 +69,6 @@ public class Environment implements SappDrawable {
         this.originFile = null;
         this.isInitialized = false;
         Vector2i pm = DiaMath.getFractionFromFloat((float) frameX / frameY);
-        this.mainCamera = new Camera(new Vector2f(), pm.x, pm.y);
         this.children = new ArrayList<>();
         this.entities = new ArrayList<>();
         this.components = new ArrayList<>();
@@ -87,7 +85,6 @@ public class Environment implements SappDrawable {
         this.originFile = null;
         this.isInitialized = false;
         Vector2i pm = DiaMath.getFractionFromFloat((float) frameX / frameY);
-        this.mainCamera = new Camera(new Vector2f(), pm.x, pm.y);
         this.children = new ArrayList<>();
         this.entities = new ArrayList<>();
         this.components = new ArrayList<>();
@@ -253,7 +250,6 @@ public class Environment implements SappDrawable {
             components.clear();
             isDirty = false;
         }
-        mainCamera.changeProjection();
         for (Environment child : children) child.update(dt);
         for (Component component : components) component.update(dt);
         for (Entity e : entities) {
@@ -330,15 +326,6 @@ public class Environment implements SappDrawable {
             changeFrame(frameX, newHeight.get());
             isModified = true;
         }
-
-        ImGui.text(Sapphire.getLiteral("camera"));
-        ImGui.separator();
-        ImFloat zoom = new ImFloat(mainCamera.getZoom());
-        if (SappImGui.dragFloat(Sapphire.getLiteral("zoom"), zoom)) {
-            mainCamera.setZoom(zoom.get());
-            isModified = true;
-        }
-        SappImGui.drawVec2Control(Sapphire.getLiteral("position"), mainCamera.pos);
     }
 
     @Override
