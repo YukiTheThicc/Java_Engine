@@ -8,8 +8,8 @@ import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import sapphire.Sapphire;
-import sapphire.SapphireEvents;
-import sapphire.SapphireSettings;
+import sapphire.SappEvents;
+import sapphire.SappSettings;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.SappImGUILayer;
@@ -40,7 +40,7 @@ public class SettingsWindow extends ImguiWindow {
             ImGui.setNextWindowPos(Window.getPosition().x + (Window.getWidth() - this.getSizeX()) / 2,
                     Window.getPosition().y + (Window.getHeight() - this.getSizeY()) / 2);
             ImGui.openPopup(this.getTitle());
-            SapphireSettings settings = Sapphire.get().getSettings();
+            SappSettings settings = Sapphire.get().getSettings();
             if (ImGui.beginPopupModal(this.getTitle(), this.isActive(), this.getFlags())) {
                 if (ImGui.beginTabBar(this.getTitle(), this.getFlags())) {
                     generalSettingsTab(settings, layer);
@@ -52,15 +52,15 @@ public class SettingsWindow extends ImguiWindow {
         }
     }
 
-    private void checkChanges(SapphireSettings settings) {
+    private void checkChanges(SappSettings settings) {
         if (settingsChanged) {
-            SapphireEvents.notify(new SappEvent(SappEventType.Settings_changed));
+            SappEvents.notify(new SappEvent(SappEventType.Settings_changed));
             settings.save();
             settingsChanged = false;
         }
     }
 
-    private void generalSettingsTab(SapphireSettings settings, SappImGUILayer layer) {
+    private void generalSettingsTab(SappSettings settings, SappImGUILayer layer) {
         if (ImGui.beginTabItem(Sapphire.getLiteral("general_settings"))) {
 
             // Workspace

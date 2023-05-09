@@ -1,15 +1,13 @@
 package sapphire.imgui.windows;
 
-import diamondEngine.Environment;
-import diamondEngine.diaComponents.Component;
 import diamondEngine.diaRenderer.Texture;
 import diamondEngine.diaUtils.DiaUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiSelectableFlags;
 import sapphire.Sapphire;
-import sapphire.SapphireDir;
-import sapphire.SapphireEvents;
-import sapphire.SapphireProject;
+import sapphire.SappDir;
+import sapphire.SappEvents;
+import sapphire.SappProject;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.AlignX;
@@ -37,7 +35,7 @@ public class FileNavigatorWindow extends ImguiWindow {
     public void imgui(SappImGUILayer layer) {
 
         if (ImGui.begin(this.getTitle(), this.getFlags())) {
-            SapphireProject project = Sapphire.get().getProject();
+            SappProject project = Sapphire.get().getProject();
             if (project != null && project.getRoot() != null) {
                 if (project.getRoot().isAlive()) {
                     SappImGui.align(AlignX.CENTER, AlignY.CENTER, SappImGui.textSize(Sapphire.getLiteral("loading")), ImGui.getFontSize());
@@ -51,7 +49,7 @@ public class FileNavigatorWindow extends ImguiWindow {
         ImGui.end();
     }
 
-    private void drawDir(SapphireDir dir, SappImGUILayer layer) {
+    private void drawDir(SappDir dir, SappImGUILayer layer) {
         Texture tex = Sapphire.getIcon("dir.png");
         ImGui.image(tex.getId(), DEFAULT_ICON_X, DEFAULT_ICON_Y, 0, 1, 1, 0);
         ImGui.sameLine();
@@ -61,7 +59,7 @@ public class FileNavigatorWindow extends ImguiWindow {
 
         if (ImGui.treeNode(dir.getPath().getName())) {
 
-            for (SapphireDir nestedDir : dir.getDirs()) {
+            for (SappDir nestedDir : dir.getDirs()) {
                 drawDir(nestedDir, layer);
             }
 
@@ -78,7 +76,7 @@ public class FileNavigatorWindow extends ImguiWindow {
                 if (ImGui.selectable(file.getName(), false, ImGuiSelectableFlags.AllowDoubleClick)) selected = file.getName();
                 fileContextMenu(file);
                 if (ImGui.isMouseDoubleClicked(GLFW_MOUSE_BUTTON_LEFT) && selected != null) {
-                    if (!file.getName().equals(SapphireProject.PROJECT_FILE)) layer.addWindow(new FileWindow(file.getName(), file));
+                    if (!file.getName().equals(SappProject.PROJECT_FILE)) layer.addWindow(new FileWindow(file.getName(), file));
                 }
             }
 
@@ -89,7 +87,7 @@ public class FileNavigatorWindow extends ImguiWindow {
 
     private void fileContextMenu(File file) {
         if (ImGui.beginPopupContextItem(file.getName())) {
-            if (ImGui.menuItem(Sapphire.getLiteral("delete"))) SapphireEvents.notify(
+            if (ImGui.menuItem(Sapphire.getLiteral("delete"))) SappEvents.notify(
                     new SappEvent(SappEventType.Delete_file, file));
             ImGui.endPopup();
         }

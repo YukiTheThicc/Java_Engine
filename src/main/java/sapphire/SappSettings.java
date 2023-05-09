@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SapphireSettings {
+public class SappSettings {
 
     // CONSTANTS
     private static final String DEFAULT_LANG = "en";
@@ -32,7 +32,7 @@ public class SapphireSettings {
     private int fontSize;
 
     // CONSTRUCTORS
-    public SapphireSettings() {
+    public SappSettings() {
         this.workspace = "";
         this.currentFont = "";
         this.lastProject = "";
@@ -217,7 +217,7 @@ public class SapphireSettings {
         }
         if (!inFile.equals("")) {
 
-            SapphireSettings temp = gson.fromJson(inFile, SapphireSettings.class);
+            SappSettings temp = gson.fromJson(inFile, SappSettings.class);
             workspace = temp.getWorkspace();
             currentFont = temp.getCurrentFont();
             activeWindows = temp.getActiveWindows();
@@ -228,7 +228,7 @@ public class SapphireSettings {
             changeLangTo(currentLang);
 
             if (!lastProject.isEmpty() && new File(lastProject).isDirectory()) {
-                SapphireProject project = new SapphireProject(new SapphireDir(lastProject));
+                SappProject project = new SappProject(new SappDir(lastProject));
                 if (project.load()) Sapphire.get().setProject(project);
             }
         }

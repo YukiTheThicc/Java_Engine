@@ -6,27 +6,26 @@ import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
 import sapphire.Sapphire;
-import sapphire.SapphireDir;
-import sapphire.SapphireProject;
+import sapphire.SappDir;
+import sapphire.SappProject;
 import sapphire.imgui.SappImGui;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class SappProjectCreator {
 
-    public static SapphireProject create(String path) {
+    public static SappProject create(String path) {
         File dir = new File(path);
         if (dir.isDirectory() && DiaUtils.getFilesInDir(path).isEmpty() && DiaUtils.getFoldersInDir(path).isEmpty()) {
-            File sappProject = new File(path + "\\" + SapphireProject.PROJECT_FILE);
-            File envsDir = new File(path + "\\" + SapphireProject.ENVS_DIR);
-            File resDir = new File(path + "\\" + SapphireProject.RES_DIR);
-            File texDir = new File(path + "\\" + SapphireProject.TEX_DIR);
-            File sfxDir = new File(path + "\\" + SapphireProject.SFX_DIR);
-            File musDir = new File(path + "\\" + SapphireProject.MUSIC_DIR);
+            File sappProject = new File(path + "\\" + SappProject.PROJECT_FILE);
+            File envsDir = new File(path + "\\" + SappProject.ENVS_DIR);
+            File resDir = new File(path + "\\" + SappProject.RES_DIR);
+            File texDir = new File(path + "\\" + SappProject.TEX_DIR);
+            File sfxDir = new File(path + "\\" + SappProject.SFX_DIR);
+            File musDir = new File(path + "\\" + SappProject.MUSIC_DIR);
             try {
                 if (sappProject.createNewFile()) {
                     try {
@@ -41,9 +40,9 @@ public class SappProjectCreator {
                         Files.createDirectory(sfxDir.toPath());
                         Files.createDirectory(musDir.toPath());
 
-                        SapphireDir root = new SapphireDir(path);
+                        SappDir root = new SappDir(path);
                         root.loadDirectory();
-                        SapphireProject project = new SapphireProject(root);
+                        SappProject project = new SappProject(root);
 
                         FileWriter writer = new FileWriter(sappProject.getAbsolutePath());
                         writer.write(gson.toJson(project));

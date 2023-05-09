@@ -1,6 +1,6 @@
 package sapphire;
 
-public class SapphireMain {
+public class SappMain {
 
     public static void main(String[] args) {
         Sapphire sapphire = Sapphire.get();

@@ -22,8 +22,8 @@ public class EditorCameraWindow extends ImguiWindow {
 
         if (ImGui.begin(this.getTitle(), this.getFlags())) {
 
-            ImFloat zoom = new ImFloat(editorCamera.getZoom());
-            if (SappImGui.dragFloat(Sapphire.getLiteral("zoom"), zoom)) editorCamera.setZoom(zoom.get());
+            ImFloat zoom = new ImFloat(editorCamera.zoom);
+            if (SappImGui.dragFloat(Sapphire.getLiteral("zoom"), zoom)) editorCamera.zoom = zoom.get();
             SappImGui.drawVec2Control(Sapphire.getLiteral("position"), editorCamera.pos);
             SappImGui.drawVec2Control(Sapphire.getLiteral("projection_size"), editorCamera.getPSize());
             SappImGui.drawVec3Control(Sapphire.getLiteral("camera_front"), editorCamera.getFront());

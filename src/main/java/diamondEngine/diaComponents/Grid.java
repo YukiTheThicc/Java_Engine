@@ -18,6 +18,8 @@ public class Grid extends Component {
     private float cellNY;
     private int numHLines = 0;
     private int numVLines = 0;
+    private float width = 0;
+    private float height = 0;
     private boolean draw;
     private final Vector3f color = new Vector3f(0.333f, 0.333f, 0.333f);
 
@@ -64,15 +66,17 @@ public class Grid extends Component {
             Camera camera = GameViewWindow.editorCamera;
             Vector2f cameraPos = camera.pos;
             Vector2f pSize = camera.getPSize();
+            float adjustX = Diamond.currentEnv.getWinSizeAdjustX();
+            float adjustY = Diamond.currentEnv.getWinSizeAdjustY();
 
-            if (camera.getZoom() <= 4) {
+            if (camera.zoom <= 4) {
 
-                float firstX = ((int) Math.floor(cameraPos.x / cellNX)) * cellNX;
-                float firstY = ((int) Math.floor(cameraPos.y / cellNY)) * cellNY;
-                numHLines = (int)(pSize.x * camera.getZoom() /cellNX) + 2;
-                numVLines = (int)(pSize.y * camera.getZoom() / cellNY) + 2;
-                float width = (int)(pSize.x * camera.getZoom());
-                float height = (int)(pSize.y * camera.getZoom());
+                float firstX = cameraPos.x;
+                float firstY = cameraPos.y;
+                numHLines = (int) ((camera.zoom / cellNY) * pSize.y / adjustY) + 2;
+                numVLines = (int) ((camera.zoom / cellNX) * pSize.x / adjustX) + 2;
+                width = camera.zoom * pSize.x / adjustX;
+                height = camera.zoom * pSize.y / adjustY;
 
                 int maxLines = Math.max(numVLines, numHLines);
 
@@ -113,6 +117,13 @@ public class Grid extends Component {
         }
         SappImGui.textLabel("numHLines", "" + numHLines);
         SappImGui.textLabel("numVLines", "" + numVLines);
+        SappImGui.textLabel("Width", "" + width);
+        SappImGui.textLabel("Height", "" + height);
         SappImGui.textLabel("Debug lines", "" + DebugRenderer.getLinesSize());
+    }
+
+    @Override
+    public Component copy() {
+        return new Grid(this.cellX, this.cellY);
     }
 }

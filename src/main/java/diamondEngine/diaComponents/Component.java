@@ -5,9 +5,6 @@ import diamondEngine.Diamond;
 import imgui.ImGui;
 import imgui.flag.ImGuiStyleVar;
 import sapphire.Sapphire;
-import sapphire.SapphireEvents;
-import sapphire.eventsSystem.SappEvent;
-import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.SappDrawable;
 
 public abstract class Component implements SappDrawable {
@@ -60,4 +57,6 @@ public abstract class Component implements SappDrawable {
 
         return result;
     }
+
+    public abstract Component copy();
 }

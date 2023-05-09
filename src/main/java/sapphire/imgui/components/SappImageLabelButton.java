@@ -2,7 +2,7 @@ package sapphire.imgui.components;
 
 import diamondEngine.diaRenderer.Texture;
 import imgui.ImGui;
-import sapphire.SapphireEvents;
+import sapphire.SappEvents;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
 import sapphire.eventsSystem.SappObserver;
@@ -28,7 +28,7 @@ public class SappImageLabelButton implements SappObserver {
         this.buttonOriginX = ImGui.getCursorPosX();
         this.imageSizeX = image.getWidth();
         this.imageSizeY = image.getHeight();
-        SapphireEvents.addObserver(this);
+        SappEvents.addObserver(this);
     }
 
     public SappImageLabelButton(Texture image, String label, float sizeX, float sizeY) {
@@ -38,7 +38,7 @@ public class SappImageLabelButton implements SappObserver {
         this.buttonOriginX = ImGui.getCursorPosX();
         this.imageSizeX = sizeX;
         this.imageSizeY = sizeY;
-        SapphireEvents.addObserver(this);
+        SappEvents.addObserver(this);
     }
 
     // METHODS

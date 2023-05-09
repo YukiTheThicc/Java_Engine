@@ -14,7 +14,7 @@ public class Camera {
     private Vector3f up;
     private Vector2f pSize;
     public Vector2f pos;
-    private float zoom = 1.0f;
+    public float zoom = 1.0f;
 
     // CONSTRUCTORS
     public Camera(Vector2f pos, float pWidth, float pHeight) {
@@ -48,14 +48,6 @@ public class Camera {
 
     public Matrix4f getInvView() {
         return invView;
-    }
-
-    public float getZoom() {
-        return zoom;
-    }
-
-    public void setZoom(float zoom) {
-        this.zoom = zoom;
     }
 
     public Vector2f getPSize() {

@@ -7,8 +7,6 @@ import diamondEngine.diaRenderer.DebugRenderer;
 import diamondEngine.diaRenderer.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
-import imgui.flag.ImGuiCol;
-import imgui.internal.ImGui;
 import sapphire.imgui.SappDrawable;
 import sapphire.imgui.SappImGUILayer;
 import sapphire.utils.SappDefaultLiterals;
@@ -30,11 +28,11 @@ public class Sapphire {
     // ATTRIBUTES
     private static Sapphire sapphire = null;
     private final Window window;
-    private final SapphireSettings settings;
+    private final SappSettings settings;
     private final HashMap<String, int[]> colors;
     private final HashMap<String, Texture> icons;
     private final Diamond diaInstance;
-    private SapphireProject project;
+    private SappProject project;
     private HashMap<String, String> literals;
     private SappImGUILayer imGUILayer;
     private SappDrawable activeObject;
@@ -45,7 +43,7 @@ public class Sapphire {
     // CONSTRUCTORS
     private Sapphire() {
         this.window = Window.get();
-        this.settings = new SapphireSettings();
+        this.settings = new SappSettings();
         this.imGUILayer = null;
         this.running = false;
         this.literals = new HashMap<>();
@@ -58,7 +56,7 @@ public class Sapphire {
     }
 
     // GETTERS & SETTERS
-    public SapphireSettings getSettings() {
+    public SappSettings getSettings() {
         return settings;
     }
 
@@ -80,11 +78,11 @@ public class Sapphire {
         return Sapphire.get().icons.get("_blank.png");
     }
 
-    public SapphireProject getProject() {
+    public SappProject getProject() {
         return project;
     }
 
-    public void setProject(SapphireProject project) {
+    public void setProject(SappProject project) {
         this.project = project;
         if (project.getRoot() != null) {
             settings.setLastProject(project.getRoot().getPath().getAbsolutePath());
@@ -195,7 +193,7 @@ public class Sapphire {
         imGUILayer = new SappImGUILayer(this.window.getGlfwWindow());
         settings.init();
         imGUILayer.init();
-        SapphireEvents.init(imGUILayer);
+        SappEvents.init(imGUILayer);
         run();
         if (project != null) project.closeProject();
         imGUILayer.destroyImGui();

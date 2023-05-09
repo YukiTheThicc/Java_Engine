@@ -28,7 +28,7 @@ public class GameViewWindow extends ImguiWindow {
         this.setFlags(ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse |
                 ImGuiWindowFlags.NoResize);
         Vector2i pm = DiaMath.getFractionFromFloat((float) Diamond.currentEnv.getFrameY() / Diamond.currentEnv.getFrameX());
-        GameViewWindow.editorCamera = new Camera(new Vector2f(), 4f, 4f);
+        GameViewWindow.editorCamera = new Camera(new Vector2f(), 5f, 5f);
     }
 
     // GETTERS & SETTERS
@@ -73,6 +73,10 @@ public class GameViewWindow extends ImguiWindow {
         float viewportY = (windowSize.y / 2.0f) - (aspectSize.y / 2.0f);
 
         return new ImVec2(viewportX + ImGui.getCursorPosX(), viewportY + ImGui.getCursorPosY());
+    }
+
+    private void drawAxisLines() {
+
     }
 
     public void imgui(SappImGUILayer layer) {

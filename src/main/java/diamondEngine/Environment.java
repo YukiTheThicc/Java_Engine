@@ -2,7 +2,6 @@ package diamondEngine;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import diamondEngine.diaComponents.Camera;
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaRenderer.Framebuffer;
 import diamondEngine.diaUtils.DiaLogger;
@@ -10,22 +9,16 @@ import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaMath;
 import diamondEngine.diaUtils.serializers.ComponentSerializer;
 import diamondEngine.diaUtils.serializers.EntitySerializer;
-import imgui.ImGui;
-import imgui.type.ImFloat;
 import imgui.type.ImInt;
 import imgui.type.ImString;
-import org.joml.Vector2f;
 import org.joml.Vector2i;
 import sapphire.Sapphire;
-import sapphire.SapphireProject;
 import sapphire.imgui.SappDrawable;
 import sapphire.imgui.SappImGui;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +48,8 @@ public class Environment implements SappDrawable {
     private transient List<Component> componentsToRemove;
     private transient Framebuffer frame;
     private transient long uid;
+    private transient float winSizeAdjustX = 1.0f;
+    private transient float winSizeAdjustY = 1.0f;
     private transient boolean isDirty = false;
     private transient boolean toRemove = false;
     private transient boolean isModified = true;
@@ -74,6 +69,8 @@ public class Environment implements SappDrawable {
         this.components = new ArrayList<>();
         this.entitiesToRemove = new ArrayList<>();
         this.componentsToRemove = new ArrayList<>();
+        this.winSizeAdjustX = (float) Window.getWidth() / frameX;
+        this.winSizeAdjustY = (float) Window.getHeight() / frameY;
     }
 
     public Environment(String name, Environment parent) {
@@ -90,6 +87,8 @@ public class Environment implements SappDrawable {
         this.components = new ArrayList<>();
         this.entitiesToRemove = new ArrayList<>();
         this.componentsToRemove = new ArrayList<>();
+        this.winSizeAdjustX = (float) Window.getWidth() / frameX;
+        this.winSizeAdjustY = (float) Window.getHeight() / frameY;
     }
 
     // GETTERS & SETTERS
@@ -169,6 +168,14 @@ public class Environment implements SappDrawable {
         return isModified;
     }
 
+    public float getWinSizeAdjustX() {
+        return winSizeAdjustX;
+    }
+
+    public float getWinSizeAdjustY() {
+        return winSizeAdjustY;
+    }
+
     // METHODS
     public void init() {
         frame = new Framebuffer(frameX, frameY);
@@ -218,6 +225,8 @@ public class Environment implements SappDrawable {
     public void changeFrame(int frameX, int frameY) {
         this.frameX = frameX;
         this.frameY = frameY;
+        this.winSizeAdjustX = (float) Window.getWidth() / frameX;
+        this.winSizeAdjustY = (float) Window.getHeight() / frameY;
         frame.destroy();
         frame = new Framebuffer(frameX, frameY);
     }

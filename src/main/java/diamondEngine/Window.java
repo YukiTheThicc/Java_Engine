@@ -32,8 +32,8 @@ public class Window {
 
     // CONSTRUCTORS
     private Window() {
-        this.width = 1600;
-        this.height = 900;
+        this.width = 1440;
+        this.height = 810;
         stackPush();
         this.posX = stackCallocInt(1);
         stackPush();

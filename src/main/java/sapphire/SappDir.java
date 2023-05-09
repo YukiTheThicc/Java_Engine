@@ -8,16 +8,16 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SapphireDir extends Thread{
+public class SappDir extends Thread{
 
     // ATTRIBUTES
     private File path;
-    private SapphireDir dir;
-    private List<SapphireDir> dirs;
+    private SappDir dir;
+    private List<SappDir> dirs;
     private List<File> files;
 
     // CONSTRUCTORS
-    public SapphireDir(SapphireDir parent, String path) {
+    public SappDir(SappDir parent, String path) {
         this.path = new File(path);
         this.files = new ArrayList<>();
         this.dirs = new ArrayList<>();
@@ -25,7 +25,7 @@ public class SapphireDir extends Thread{
         this.setName("Directory Loader");
     }
 
-    public SapphireDir(String path) {
+    public SappDir(String path) {
         this.path = new File(path);
         this.files = new ArrayList<>();
         this.dirs = new ArrayList<>();
@@ -34,19 +34,19 @@ public class SapphireDir extends Thread{
     }
 
     // GETTERS & SETTERS
-    public SapphireDir getDir() {
+    public SappDir getDir() {
         return dir;
     }
 
-    public void setDir(SapphireDir dir) {
+    public void setDir(SappDir dir) {
         this.dir = dir;
     }
 
-    public List<SapphireDir> getDirs() {
+    public List<SappDir> getDirs() {
         return dirs;
     }
 
-    public void setDirs(List<SapphireDir> dirs) {
+    public void setDirs(List<SappDir> dirs) {
         this.dirs = dirs;
     }
 
@@ -91,7 +91,7 @@ public class SapphireDir extends Thread{
     }
 
     public void joinDirs() {
-        for (SapphireDir dir : dirs) {
+        for (SappDir dir : dirs) {
             try {
                 dir.join();
             } catch (InterruptedException e) {
@@ -101,8 +101,8 @@ public class SapphireDir extends Thread{
         }
     }
 
-    private static SapphireDir recursiveFolderDive(SapphireDir parent, File rootPath) {
-        SapphireDir dir = new SapphireDir(parent, rootPath.getAbsolutePath());
+    private static SappDir recursiveFolderDive(SappDir parent, File rootPath) {
+        SappDir dir = new SappDir(parent, rootPath.getAbsolutePath());
         for (File file : DiaUtils.getFoldersInDir(dir.getPath().getAbsolutePath())) {
             dir.getDirs().add(recursiveFolderDive(dir, file));
         }

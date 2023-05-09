@@ -4,9 +4,9 @@ import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
 import imgui.flag.ImGuiStyleVar;
 import sapphire.Sapphire;
-import sapphire.SapphireKeyControls;
-import sapphire.SapphireEvents;
-import sapphire.SapphireSettings;
+import sapphire.SappKeyControls;
+import sapphire.SappEvents;
+import sapphire.SappSettings;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.windows.*;
@@ -86,7 +86,7 @@ public class SappImGUILayer {
             Files.createDirectories(Paths.get("sapphire"));
             io.setIniFilename("sapphire/imgui.ini");
         } catch (IOException e) {
-            DiaLogger.log("Failed to set ImGui ini file", DiaLoggerLevel.ERROR);
+            DiaLogger.log(this.getClass(), "Failed to set ImGui ini file", DiaLoggerLevel.ERROR);
         }
         io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
         io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
@@ -140,7 +140,7 @@ public class SappImGUILayer {
         windows.put(newWindow.getId(), newWindow);
         newWindow = new EnvHierarchyWindow();
         windows.put(newWindow.getId(), newWindow);
-        newWindow = new LogViewerWindow();
+        newWindow = new LogWindow();
         windows.put(newWindow.getId(), newWindow);
         newWindow = new ProfilerWindow();
         windows.put(newWindow.getId(), newWindow);
@@ -173,7 +173,7 @@ public class SappImGUILayer {
                 io.setKeysDown(key, false);
             }
 
-            SapphireKeyControls.processControls(io);
+            SappKeyControls.processControls(io);
 
             io.addConfigFlags(ImGuiConfigFlags.NavNoCaptureKeyboard);
 
@@ -230,7 +230,7 @@ public class SappImGUILayer {
 
         ArrayList<File> fontFiles = DiaUtils.getFilesInDir("sapphire/fonts", "ttf");
         fontFiles.addAll(DiaUtils.getFilesInDir("sapphire/fonts", "otf"));
-        SapphireSettings settings = Sapphire.get().getSettings();
+        SappSettings settings = Sapphire.get().getSettings();
         if (!fontFiles.isEmpty()) {
 
             String[] fontsList = new String[fontFiles.size()];
@@ -300,13 +300,13 @@ public class SappImGUILayer {
         imGuiGlfw.newFrame();
         ImGui.newFrame();
         if (fontChanged) {
-            SapphireEvents.notify(new SappEvent(SappEventType.Font_changed));
+            SappEvents.notify(new SappEvent(SappEventType.Font_changed));
             fontChanged = false;
         }
     }
 
     public void changeFont(String fontName) {
-        SapphireSettings settings = Sapphire.get().getSettings();
+        SappSettings settings = Sapphire.get().getSettings();
         settings.setCurrentFont(fontName);
         for (ImFont font : settings.getFonts()) {
             if (font.getDebugName().split(",")[0].equals(fontName)) {

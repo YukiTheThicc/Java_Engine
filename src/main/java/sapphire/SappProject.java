@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import diamondEngine.Environment;
 import diamondEngine.Diamond;
-import diamondEngine.diaRenderer.Texture;
+import diamondEngine.diaUtils.DiaAssetManager;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import sapphire.imgui.SappImGui;
@@ -14,10 +14,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-public class SapphireProject {
+public class SappProject {
 
     // CONSTANTS
     public static final String PROJECT_FILE = "project.sapp";
@@ -30,13 +29,15 @@ public class SapphireProject {
     // ATTRIBUTES
     private List<File> openedFiles;
     private List<String> projectEnvFiles;
-    private transient SapphireDir root;
+    private List<String> resources;
+    private transient SappDir root;
 
     // CONSTRUCTORS
-    public SapphireProject(SapphireDir root) {
+    public SappProject(SappDir root) {
         this.root = root;
         this.openedFiles = new ArrayList<>();
         this.projectEnvFiles = new ArrayList<>();
+        this.resources = new ArrayList<>();
     }
 
     // GETTERS & SETTERS
@@ -44,11 +45,11 @@ public class SapphireProject {
         return openedFiles;
     }
 
-    public SapphireDir getRoot() {
+    public SappDir getRoot() {
         return root;
     }
 
-    public void setRoot(SapphireDir root) {
+    public void setRoot(SappDir root) {
         this.root = root;
     }
 
@@ -56,7 +57,19 @@ public class SapphireProject {
         return projectEnvFiles;
     }
 
+    public List<String> getResources() {
+        return resources;
+    }
+
     // METHODS
+    public void addResource(String path) {
+        this.resources.add(path);
+        save();
+    }
+
+    public void removeResource(String path) {
+        resources.remove(path);
+    }
     /**
      * Saves current settings into the settings.json file.
      */
@@ -107,10 +120,15 @@ public class SapphireProject {
                 root = null;
             }
             if (!inFile.equals("")) {
-                SapphireProject temp = gson.fromJson(inFile, SapphireProject.class);
+                SappProject temp = gson.fromJson(inFile, SappProject.class);
                 root.loadDirectory();
                 openedFiles = temp.getOpenedFiles();
                 projectEnvFiles = temp.getProjectEnvFiles();
+                resources = temp.getResources();
+
+                for (String asset : resources) {
+                    DiaAssetManager.loadResource(asset);
+                }
 
                 for (String envFile : temp.getProjectEnvFiles()) {
                     Environment loadedEnv = new Environment("LOADED ENV");

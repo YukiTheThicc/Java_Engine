@@ -3,11 +3,12 @@ package sapphire.eventsSystem.handlers;
 import diamondEngine.Entity;
 import diamondEngine.Diamond;
 import diamondEngine.diaComponents.Component;
+import diamondEngine.diaUtils.DiaAssetManager;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
 import sapphire.Sapphire;
-import sapphire.SapphireProject;
+import sapphire.SappProject;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappObserver;
 import sapphire.imgui.SappDrawable;
@@ -103,8 +104,8 @@ public class WindowsEventHandler implements SappObserver {
     }
 
     private void handleAddAsset() {
-        DiaLogger.log(Sapphire.getProjectDir() + "/" + SapphireProject.SFX_DIR + "/");
-        String assetPath = DiaUtils.selectFile("", Sapphire.getProjectDir() + "/" + SapphireProject.SFX_DIR + "/");
-
+        DiaLogger.log(Sapphire.getProjectDir() + "/" + SappProject.SFX_DIR + "/");
+        String assetPath = DiaUtils.selectFile("", Sapphire.getProjectDir());
+        if (DiaAssetManager.loadResource(assetPath)) Sapphire.get().getProject().addResource(assetPath);
     }
 }

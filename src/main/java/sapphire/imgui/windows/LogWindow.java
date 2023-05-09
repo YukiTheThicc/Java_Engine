@@ -1,6 +1,5 @@
 package sapphire.imgui.windows;
 
-import diamondEngine.Window;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaLoggerObserver;
@@ -12,7 +11,6 @@ import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
 import imgui.type.ImInt;
 import sapphire.eventsSystem.SappEvent;
-import sapphire.eventsSystem.SappEventType;
 import sapphire.eventsSystem.SappObserver;
 import sapphire.Sapphire;
 import sapphire.imgui.AlignX;
@@ -26,7 +24,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
-public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, SappObserver {
+public class LogWindow extends ImguiWindow implements DiaLoggerObserver, SappObserver {
 
     private static final int DEFAULT_LINES = 50;
 
@@ -42,8 +40,8 @@ public class LogViewerWindow extends ImguiWindow implements DiaLoggerObserver, S
     private float toolbarWidth;
 
     // CONSTRUCTORS
-    public LogViewerWindow() {
-        super("log_viewer", "Log Viewer");
+    public LogWindow() {
+        super("log_viewer", "Log");
         this.lines = DEFAULT_LINES;
         this.entries = new String[this.lines];
         this.levels = new DiaLoggerLevel[this.lines];
