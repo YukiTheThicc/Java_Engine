@@ -119,7 +119,19 @@ public class DiaUtils {
      * @return Array of strings containing the paths of the selected files.
      */
     public static String[] selectFiles() {
-        String result = tinyfd_openFileDialog("", null, null, null, true);
+        return selectFiles("", "", "");
+    }
+
+    public static String[] selectFiles(String title) {
+        return selectFiles(title, "", "");
+    }
+
+    public static String[] selectFiles(String title, String defaultFile) {
+        return selectFiles(title, defaultFile, "");
+    }
+
+    public static String[] selectFiles(String title, String defaultFile, String type) {
+        String result = tinyfd_openFileDialog(title, defaultFile, null, type, true);
         if (result != null && !result.isEmpty()) {
             return result.split("\\|");
         }

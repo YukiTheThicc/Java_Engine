@@ -10,7 +10,6 @@ public class DiamondEventsHandler implements DiaObserver {
     public void onNotify(DiaEvent event) {
         switch (event.type) {
             case ASSET_ADDED:
-                DiaLogger.log("Asset added");
                 break;
         }
     }

@@ -46,7 +46,7 @@ public class WindowsEventHandler implements SappObserver {
                 Sapphire.get().setDiaRunning(false);
                 break;
             case Add_asset:
-                handleAddAsset();
+                handleAddAssets();
                 break;
         }
     }
@@ -103,9 +103,11 @@ public class WindowsEventHandler implements SappObserver {
         }
     }
 
-    private void handleAddAsset() {
+    private void handleAddAssets() {
         DiaLogger.log(Sapphire.getProjectDir() + "/" + SappProject.SFX_DIR + "/");
-        String assetPath = DiaUtils.selectFile("", Sapphire.getProjectDir());
-        if (DiaAssetManager.loadResource(assetPath)) Sapphire.get().getProject().addResource(assetPath);
+        String[] assetPaths = DiaUtils.selectFiles("", Sapphire.getProjectDir());
+        for (String assetPath : assetPaths) {
+            if (DiaAssetManager.loadResource(assetPath)) Sapphire.get().getProject().addResource(assetPath);
+        }
     }
 }

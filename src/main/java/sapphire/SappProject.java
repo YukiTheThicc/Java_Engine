@@ -25,6 +25,7 @@ public class SappProject {
     public static final String TEX_DIR = "res/tex";
     public static final String SFX_DIR = "res/sfx";
     public static final String MUSIC_DIR = "res/mus";
+    public static final String SPRITES_DIR = "res/spr";
 
     // ATTRIBUTES
     private List<File> openedFiles;
@@ -70,6 +71,7 @@ public class SappProject {
     public void removeResource(String path) {
         resources.remove(path);
     }
+
     /**
      * Saves current settings into the settings.json file.
      */
@@ -124,7 +126,9 @@ public class SappProject {
                 root.loadDirectory();
                 openedFiles = temp.getOpenedFiles();
                 projectEnvFiles = temp.getProjectEnvFiles();
+                if (projectEnvFiles == null) projectEnvFiles = new ArrayList<>();
                 resources = temp.getResources();
+                if (resources == null) resources = new ArrayList<>();
 
                 for (String asset : resources) {
                     DiaAssetManager.loadResource(asset);
