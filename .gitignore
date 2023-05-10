@@ -1,9 +1,13 @@
 # Project exclude paths
 *
 
+!/sapphire/
 !/diamond/
 !/src/
 !/assets/
 !/gradle/
 !/libs/
 build.gradle
+
+log.txt
+sapphire/imgui.ini
