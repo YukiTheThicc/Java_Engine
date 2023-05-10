@@ -1,0 +1,10 @@
+# Project exclude paths
+.gradle
+.idea
+build
+gradlew
+gradlew.bat
+log.txt
+settings.gradle
+
+sapphire/imgui.ini

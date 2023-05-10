@@ -1,0 +1,31 @@
+{
+  "lang": "Español",
+  "literals": {
+    "cancel": "Cancelar",
+    "no": "No",
+    "save_file": "Guardar archivo",
+    "sprites": "Sprites",
+    "active_windows": "Ventanas activas",
+    "tiles": "Tiles",
+    "file": "Archivo",
+    "assets": "Activos",
+    "sounds": "Sonidos",
+    "entity_properties": "Propiedades de entidad",
+    "lang": "Lenguage",
+    "close": "Cerrar",
+    "confirm_save": "¿Estas seguro de querer guardar?",
+    "severity": "Severidad",
+    "settings": "Configuración",
+    "apply": "Aplicar",
+    "yes": "Sí",
+    "env_hierarchy": "Jerarquía de entornos",
+    "clear": "Limpiar",
+    "new_file": "Nuevo archivo",
+    "export_project": "Exportar proyecto",
+    "dont_ask_again": "No me vuelvas a preguntar",
+    "open_project": "Abrir proyecto",
+    "open_file": "Abrir archivo",
+    "save_log": "Guardar log",
+    "window": "Ventana"
+  }
+}
