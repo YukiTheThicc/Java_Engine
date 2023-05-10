@@ -2,7 +2,6 @@ package diamondEngine;
 
 import diamondEngine.diaUtils.DiaUtils;
 import org.lwjgl.glfw.GLFWImage;
-import diamondEngine.diaRenderer.Framebuffer;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.openal.AL;
@@ -32,8 +31,8 @@ public class Window {
 
     // CONSTRUCTORS
     private Window() {
-        this.width = 1600;
-        this.height = 900;
+        this.width = 1200;
+        this.height = 800;
         stackPush();
         this.posX = stackCallocInt(1);
         stackPush();
