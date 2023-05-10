@@ -36,7 +36,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 
-public class SappImGUILayer {
+public class SappImGuiLayer {
 
     private final long glfwWindow;
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
@@ -45,12 +45,13 @@ public class SappImGUILayer {
     private ArrayList<ImguiWindow> windowsToAdd;
     private GameViewWindow gameView;
     private FileWindow lastFocusedFile;
+    private ImFont smallFont;
     private int dockId;
     private boolean dirty;
     private boolean fontChanged = false;
 
     // CONSTRUCTORS
-    public SappImGUILayer(long windowPtr) {
+    public SappImGuiLayer(long windowPtr) {
         this.glfwWindow = windowPtr;
         this.windows = new HashMap<>();
         this.dockId = -1;
@@ -74,6 +75,10 @@ public class SappImGUILayer {
 
     public void setLastFocusedFile(FileWindow lastFocusedFile) {
         this.lastFocusedFile = lastFocusedFile;
+    }
+
+    public ImFont getSmallFont() {
+        return smallFont;
     }
 
     // METHODS
@@ -244,6 +249,8 @@ public class SappImGUILayer {
 
                 ImFont font = fontAtlas.addFontFromFileTTF(file.getAbsolutePath(), settings.getFontSize(), fontConfig);
                 settings.addFont(font);
+                ImFont smallFont = fontAtlas.addFontFromFileTTF(file.getAbsolutePath(), settings.getFontSize() - 4, fontConfig);
+                settings.addSmallFont(smallFont);
                 fontsList[i] = file.getName();
                 fontConfig.destroy(); // After all fonts were added we don't need this config more
                 i++;
@@ -311,6 +318,7 @@ public class SappImGUILayer {
         for (ImFont font : settings.getFonts()) {
             if (font.getDebugName().split(",")[0].equals(fontName)) {
                 ImGui.getIO().setFontDefault(font);
+                smallFont = settings.getSmallFonts().get(settings.getFonts().indexOf(font));
                 fontChanged = true;
             }
         }

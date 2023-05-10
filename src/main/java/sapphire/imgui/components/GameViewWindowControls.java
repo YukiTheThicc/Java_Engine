@@ -16,9 +16,9 @@ import sapphire.imgui.SappImGui;
 public class GameViewWindowControls {
 
     // ATTRIBUTES
-    private final SappImageButton play;
-    private final SappImageButton stop;
-    private final SappImageButton settings;
+    private final ImageButton play;
+    private final ImageButton stop;
+    private final ImageButton settings;
     private final float offsetY;
     private final float iconSizeX = SappImGui.BIG_ICON_SIZE;
     private final float iconSizeY = SappImGui.BIG_ICON_SIZE;
@@ -30,9 +30,9 @@ public class GameViewWindowControls {
 
     // CONSTRUCTORS
     public GameViewWindowControls() {
-        this.play = new SappImageButton(Sapphire.getIcon("play.png"), iconSizeX, iconSizeY);
-        this.stop = new SappImageButton(Sapphire.getIcon("stop.png"), iconSizeX, iconSizeY);
-        this.settings = new SappImageButton(Sapphire.getIcon("gear.png"), iconSizeX, iconSizeY);
+        this.play = new ImageButton(Sapphire.getIcon("play.png"), iconSizeX, iconSizeY);
+        this.stop = new ImageButton(Sapphire.getIcon("stop.png"), iconSizeX, iconSizeY);
+        this.settings = new ImageButton(Sapphire.getIcon("gear.png"), iconSizeX, iconSizeY);
         this.offsetY = ImGui.getTextLineHeightWithSpacing();
         this.mainControlsX = iconSizeX * 4 + ImGui.getStyle().getFramePaddingX() * 3;
         this.mainControlsY = iconSizeY + ImGui.getStyle().getFramePaddingX() * 2;

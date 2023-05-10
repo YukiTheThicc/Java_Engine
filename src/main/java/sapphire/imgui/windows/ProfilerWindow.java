@@ -1,9 +1,8 @@
 package sapphire.imgui.windows;
 
 import imgui.ImGui;
-import imgui.flag.ImGuiCol;
 import sapphire.Sapphire;
-import sapphire.imgui.SappImGUILayer;
+import sapphire.imgui.SappImGuiLayer;
 
 import java.util.Set;
 
@@ -22,7 +21,7 @@ public class ProfilerWindow extends ImguiWindow {
 
     // METHODS
     @Override
-    public void imgui(SappImGUILayer layer) {
+    public void imgui(SappImGuiLayer layer) {
 
         if (ImGui.begin(this.getTitle(), this.getFlags())) {
 

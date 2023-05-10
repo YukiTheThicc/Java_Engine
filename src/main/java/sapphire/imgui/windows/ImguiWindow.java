@@ -1,9 +1,8 @@
 package sapphire.imgui.windows;
 
-import imgui.flag.ImGuiDockNodeFlags;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
-import sapphire.imgui.SappImGUILayer;
+import sapphire.imgui.SappImGuiLayer;
 
 public abstract class ImguiWindow {
 
@@ -122,7 +121,7 @@ public abstract class ImguiWindow {
     }
 
     // METHODS
-    public abstract void imgui(SappImGUILayer layer);
+    public abstract void imgui(SappImGuiLayer layer);
 
     @Override
     public boolean equals(Object obj) {

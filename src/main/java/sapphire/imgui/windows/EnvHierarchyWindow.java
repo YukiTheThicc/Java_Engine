@@ -12,8 +12,8 @@ import sapphire.Sapphire;
 import sapphire.SappEvents;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
-import sapphire.imgui.SappImGUILayer;
-import sapphire.imgui.components.SappImageLabelButton;
+import sapphire.imgui.SappImGuiLayer;
+import sapphire.imgui.components.ImageLabelButton;
 
 public class EnvHierarchyWindow extends ImguiWindow {
 
@@ -21,15 +21,15 @@ public class EnvHierarchyWindow extends ImguiWindow {
             ImGuiTreeNodeFlags.OpenOnArrow |ImGuiTreeNodeFlags.OpenOnDoubleClick;
 
     // ATTRIBUTES
-    private final SappImageLabelButton newRootEnvButton;
+    private final ImageLabelButton newRootEnvButton;
 
     public EnvHierarchyWindow() {
         super("env_hierarchy", "Environment Hierarchy");
-        this.newRootEnvButton = new SappImageLabelButton(Sapphire.getIcon("2d.png"), Sapphire.getLiteral("create_root_env"), 40f, 40f);
+        this.newRootEnvButton = new ImageLabelButton(Sapphire.getIcon("2d.png"), Sapphire.getLiteral("create_root_env"), 40f, 40f);
     }
 
     @Override
-    public void imgui(SappImGUILayer layer) {
+    public void imgui(SappImGuiLayer layer) {
 
         ImGui.setNextWindowSize(400f, 400f, ImGuiCond.FirstUseEver);
         if (ImGui.begin(this.getTitle(), this.getFlags())) {

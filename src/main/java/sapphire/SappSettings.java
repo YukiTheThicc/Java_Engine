@@ -28,6 +28,7 @@ public class SappSettings {
     private HashMap<String, Boolean> showPreferences;
     private transient HashMap<String, String> languages;
     private transient ArrayList<ImFont> fonts;              // Actual list of all the added fonts
+    private transient ArrayList<ImFont> smallFonts;         // List of the small version of the fonts
     private transient String[] fontsList;                   // String with the names for the fonts, so they don't need to be calculated each frame for the combo
     private int fontSize;
 
@@ -42,6 +43,7 @@ public class SappSettings {
         this.languages.put(this.currentLang, "English");
         this.showPreferences = new HashMap<>();
         this.fonts = new ArrayList<>();
+        this.smallFonts = new ArrayList<>();
         this.fontSize = 12;
     }
 
@@ -112,6 +114,10 @@ public class SappSettings {
         this.lastProject = lastProject;
     }
 
+    public ArrayList<ImFont> getSmallFonts() {
+        return smallFonts;
+    }
+
     // METHODS
     public void init() {
         DiaLogger.log("Initializing settings...");
@@ -139,6 +145,10 @@ public class SappSettings {
 
     public void addFont(ImFont font) {
         this.fonts.add(font);
+    }
+
+    public void addSmallFont(ImFont font) {
+        this.smallFonts.add(font);
     }
 
     public void setShowPreference(String window, boolean show) {

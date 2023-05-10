@@ -1,10 +1,9 @@
 package sapphire;
 
-import diamondEngine.diaEvents.DiaEvents;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappObserver;
 import sapphire.eventsSystem.handlers.*;
-import sapphire.imgui.SappImGUILayer;
+import sapphire.imgui.SappImGuiLayer;
 import java.util.ArrayList;
 
 public class SappEvents {
@@ -18,10 +17,9 @@ public class SappEvents {
     }
 
     // METHODS
-    public static void init(SappImGUILayer layer) {
+    public static void init(SappImGuiLayer layer) {
         observers.add(new WindowsEventHandler());
         observers.add(new MenuEventHandler(layer));
-        DiaEvents.addObserver(new DiamondEventsHandler());
     }
 
     public static void addObserver(SappObserver observer) {

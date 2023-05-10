@@ -5,7 +5,7 @@ import imgui.ImGui;
 import imgui.extension.texteditor.TextEditor;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiWindowFlags;
-import sapphire.imgui.SappImGUILayer;
+import sapphire.imgui.SappImGuiLayer;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -41,7 +41,7 @@ public class FileWindow extends ImguiWindow {
 
     // METHODS
     @Override
-    public void imgui(SappImGUILayer layer) {
+    public void imgui(SappImGuiLayer layer) {
 
         ImGui.setNextWindowSize(450f, 600f, ImGuiCond.FirstUseEver);
         imgui.internal.ImGui.setNextWindowDockID(layer.getDockId(), ImGuiCond.FirstUseEver);

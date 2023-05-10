@@ -1,7 +1,7 @@
 package sapphire.imgui.windows;
 
 import imgui.ImGui;
-import sapphire.imgui.SappImGUILayer;
+import sapphire.imgui.SappImGuiLayer;
 
 public class DebugSapphireWindow extends ImguiWindow {
 
@@ -10,7 +10,7 @@ public class DebugSapphireWindow extends ImguiWindow {
     }
 
     @Override
-    public void imgui(SappImGUILayer layer) {
+    public void imgui(SappImGuiLayer layer) {
         ImGui.showMetricsWindow();
     }
 }

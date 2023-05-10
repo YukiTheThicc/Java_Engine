@@ -12,7 +12,7 @@ import sapphire.SappEvents;
 import sapphire.SappSettings;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
-import sapphire.imgui.SappImGUILayer;
+import sapphire.imgui.SappImGuiLayer;
 import sapphire.imgui.SappImGui;
 
 public class SettingsWindow extends ImguiWindow {
@@ -32,7 +32,7 @@ public class SettingsWindow extends ImguiWindow {
 
     // METHODS
     @Override
-    public void imgui(SappImGUILayer layer) {
+    public void imgui(SappImGuiLayer layer) {
 
         ImGui.setNextWindowSize(this.getSizeX(), this.getSizeY(), ImGuiCond.Always);
         if (this.isActive().get()) {
@@ -60,7 +60,7 @@ public class SettingsWindow extends ImguiWindow {
         }
     }
 
-    private void generalSettingsTab(SappSettings settings, SappImGUILayer layer) {
+    private void generalSettingsTab(SappSettings settings, SappImGuiLayer layer) {
         if (ImGui.beginTabItem(Sapphire.getLiteral("general_settings"))) {
 
             // Workspace

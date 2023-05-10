@@ -63,7 +63,6 @@ public class Environment implements SappDrawable {
         this.name = name;
         this.originFile = null;
         this.isInitialized = false;
-        Vector2i pm = DiaMath.getFractionFromFloat((float) frameX / frameY);
         this.children = new ArrayList<>();
         this.entities = new ArrayList<>();
         this.components = new ArrayList<>();
@@ -81,7 +80,6 @@ public class Environment implements SappDrawable {
         this.name = name;
         this.originFile = null;
         this.isInitialized = false;
-        Vector2i pm = DiaMath.getFractionFromFloat((float) frameX / frameY);
         this.children = new ArrayList<>();
         this.entities = new ArrayList<>();
         this.components = new ArrayList<>();

@@ -1,42 +1,58 @@
 package sapphire.imgui.windows;
 
+import diamondEngine.Template;
 import diamondEngine.diaAudio.Sound;
+import diamondEngine.diaEvents.DiaEvent;
+import diamondEngine.diaEvents.DiaEvents;
+import diamondEngine.diaEvents.DiaObserver;
+import diamondEngine.diaRenderer.Shader;
 import diamondEngine.diaRenderer.Texture;
 import diamondEngine.diaUtils.DiaAssetManager;
 import imgui.ImGui;
-import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiCond;
 import sapphire.Sapphire;
 import sapphire.SappEvents;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
-import sapphire.imgui.SappImGUILayer;
+import sapphire.imgui.SappImGuiLayer;
 import sapphire.imgui.SappImGui;
-import sapphire.imgui.components.SappImageButton;
+import sapphire.imgui.components.AssetImageButton;
+import sapphire.imgui.components.ImageButton;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-public class AssetsWindow extends ImguiWindow {
+public class AssetsWindow extends ImguiWindow implements DiaObserver {
 
     // ATTRIBUTES
     private float toolbarWidth;
-    private final SappImageButton addAssetButton;
-    private final SappImageButton removeAssetButton;
-    private final SappImageButton copyAssetButton;
-    private final int buttonSize = ImGui.getFontSize() * 5;
-    private final int imageSize = ImGui.getFontSize() * 4;
+    private final ImageButton addAssetButton;
+    private final ImageButton removeAssetButton;
+    private final ImageButton copyAssetButton;
+    private final List<AssetImageButton> shaderButtons;
+    private final List<AssetImageButton> textureButtons;
+    private final List<AssetImageButton> soundButtons;
+    private final List<AssetImageButton> templateButtons;
 
+    // CONSTRUCTORS
     public AssetsWindow() {
         super("assets", "Assets");
         this.toolbarWidth = SappImGui.SMALL_ICON_SIZE + ImGui.getStyle().getFramePaddingX() * 4;
-        this.addAssetButton = new SappImageButton(Sapphire.getIcon("add.png"), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE);
-        this.removeAssetButton = new SappImageButton(Sapphire.getIcon("trash.png"), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE);
-        this.copyAssetButton = new SappImageButton(Sapphire.getIcon("copy.png"), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE);
+        this.addAssetButton = new ImageButton(Sapphire.getIcon("add.png"), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE);
+        this.removeAssetButton = new ImageButton(Sapphire.getIcon("trash.png"), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE);
+        this.copyAssetButton = new ImageButton(Sapphire.getIcon("copy.png"), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE);
+        this.shaderButtons = new ArrayList<>();
+        this.textureButtons = new ArrayList<>();
+        this.soundButtons = new ArrayList<>();
+        this.templateButtons = new ArrayList<>();
+        DiaEvents.addObserver(this);
+        getFirstElements();
     }
 
+    // METHODS
     @Override
-    public void imgui(SappImGUILayer layer) {
+    public void imgui(SappImGuiLayer layer) {
 
         ImGui.setNextWindowSize(400f, 400f, ImGuiCond.FirstUseEver);
         if (ImGui.begin(this.getTitle(), this.getFlags())) {
@@ -64,21 +80,17 @@ public class AssetsWindow extends ImguiWindow {
         ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
         if (addAssetButton.draw()) SappEvents.notify(new SappEvent(SappEventType.Add_asset));
         if (removeAssetButton.draw());
-        if (copyAssetButton.draw());
+        //if (copyAssetButton.draw());
         ImGui.popStyleColor(1);
     }
 
     private void drawSoundTab() {
         if (ImGui.beginTabItem("Sounds")) {
-
-            for (Sound s : DiaAssetManager.getAllSounds()) {
-                ImGui.pushID(s.getPath());
-                File tmp = new File(s.getPath());
-                ImGui.selectable(tmp.getName());
+            for (AssetImageButton b : soundButtons) {
+                b.draw();
                 if (ImGui.getContentRegionAvailX() > 500) {
                     ImGui.sameLine();
                 }
-                ImGui.popID();
             }
             ImGui.endTabItem();
         }
@@ -86,25 +98,42 @@ public class AssetsWindow extends ImguiWindow {
 
     private void drawTextureTab() {
         if (ImGui.beginTabItem("Textures")) {
-
-            for (Texture t : DiaAssetManager.getAllTextures()) {
-                ImGui.pushID(t.getPath());
-                drawTexture(t);
+            for (AssetImageButton b : textureButtons) {
+                b.draw();
                 if (ImGui.getContentRegionAvailX() > 500) {
                     ImGui.sameLine();
                 }
-                ImGui.popID();
             }
             ImGui.endTabItem();
         }
     }
 
-    private void drawTexture(Texture tex) {
-        ImVec2 origin = ImGui.getCursorPos();
-        ImGui.button("##" + tex.getPath(), buttonSize, buttonSize);
-        ImGui.sameLine();
-        float ratio = (float) tex.getHeight() / tex.getWidth();
-        ImGui.setCursorPos(origin.x + ((float) buttonSize - imageSize) / 2, origin.y);
-        ImGui.image(tex.getId(), imageSize, imageSize * ratio, 0, 1, 1, 0);
+    private void getFirstElements() {
+        for (Texture t : DiaAssetManager.getAllTextures()) {
+            textureButtons.add(new AssetImageButton(t));
+        }
+
+        for (Sound so : DiaAssetManager.getAllSounds()) {
+
+        }
+    }
+
+    @Override
+    public void onNotify(DiaEvent event) {
+        switch(event.type) {
+            case ASSET_ADDED:
+                if (event.payload instanceof Shader) {
+
+                } else if (event.payload instanceof Texture) {
+                    textureButtons.add(new AssetImageButton((Texture) event.payload));
+                } else if (event.payload instanceof Sound) {
+
+                } else if (event.payload instanceof Template) {
+
+                }
+                break;
+            case ASSET_REMOVED:
+                break;
+        }
     }
 }

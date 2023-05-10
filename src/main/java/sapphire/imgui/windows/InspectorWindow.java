@@ -12,7 +12,7 @@ public class InspectorWindow extends ImguiWindow {
     }
 
     @Override
-    public void imgui(SappImGUILayer layer) {
+    public void imgui(SappImGuiLayer layer) {
 
         ImGui.setNextWindowSize(400f, 400f, ImGuiCond.FirstUseEver);
         if (ImGui.begin(this.getTitle(), this.getFlags())) {

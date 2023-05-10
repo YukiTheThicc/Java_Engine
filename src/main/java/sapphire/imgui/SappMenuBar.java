@@ -11,7 +11,7 @@ import diamondEngine.diaUtils.DiaLogger;
 public class SappMenuBar {
 
     // MENUS
-    private static void fileMenu (SappImGUILayer layer) {
+    private static void fileMenu (SappImGuiLayer layer) {
         // FILES Menu
         if (ImGui.beginMenu(Sapphire.getLiteral("file"))) {
 
@@ -42,7 +42,7 @@ public class SappMenuBar {
         }
     }
 
-    private static void windowsMenu(SappImGUILayer layer) {
+    private static void windowsMenu(SappImGuiLayer layer) {
         // WINDOW Menu
         if (ImGui.beginMenu(Sapphire.getLiteral("window"))) {
             if (ImGui.beginMenu(Sapphire.getLiteral("active_windows"))) {
@@ -60,7 +60,7 @@ public class SappMenuBar {
         }
     }
 
-    public static void imgui(SappImGUILayer layer) {
+    public static void imgui(SappImGuiLayer layer) {
         ImGui.beginMenuBar();
 
         fileMenu(layer);

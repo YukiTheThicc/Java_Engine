@@ -7,7 +7,7 @@ import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
 import sapphire.eventsSystem.SappObserver;
 
-public class SappImageLabelButton implements SappObserver {
+public class ImageLabelButton implements SappObserver {
 
     /**
      * This class is here to retain the state of a button that doesn't change at runtime to reduce load
@@ -21,7 +21,7 @@ public class SappImageLabelButton implements SappObserver {
     private final float imageSizeY;
 
     // CONSTRUCTORS
-    public SappImageLabelButton(Texture image, String label) {
+    public ImageLabelButton(Texture image, String label) {
         this.image = image;
         this.label = label;
         this.buttonSizeX = image.getWidth() + ImGui.calcTextSize(label).x + ImGui.getStyle().getFramePaddingX() * 4;
@@ -31,7 +31,7 @@ public class SappImageLabelButton implements SappObserver {
         SappEvents.addObserver(this);
     }
 
-    public SappImageLabelButton(Texture image, String label, float sizeX, float sizeY) {
+    public ImageLabelButton(Texture image, String label, float sizeX, float sizeY) {
         this.image = image;
         this.label = label;
         this.buttonSizeX = sizeX + ImGui.calcTextSize(label).x + ImGui.getStyle().getFramePaddingX() * 4;

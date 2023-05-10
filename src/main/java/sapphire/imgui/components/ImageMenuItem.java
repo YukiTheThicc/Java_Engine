@@ -3,7 +3,7 @@ package sapphire.imgui.components;
 import diamondEngine.diaRenderer.Texture;
 import imgui.ImGui;
 
-public class SappImageMenuItem {
+public class ImageMenuItem {
 
     /**
      * This class is here to retain the state of a menu item that doesn't change at runtime to reduce load
@@ -17,7 +17,7 @@ public class SappImageMenuItem {
     private final float imageSizeY;
 
     // CONSTRUCTORS
-    public SappImageMenuItem(Texture image, String label) {
+    public ImageMenuItem(Texture image, String label) {
         this.image = image;
         this.label = label;
         this.buttonSizeX = image.getWidth() + ImGui.calcTextSize(label).x + ImGui.getStyle().getFramePaddingX() * 4;
@@ -26,7 +26,7 @@ public class SappImageMenuItem {
         this.imageSizeY = image.getHeight();
     }
 
-    public SappImageMenuItem(Texture image, String label, float sizeX, float sizeY) {
+    public ImageMenuItem(Texture image, String label, float sizeX, float sizeY) {
         this.image = image;
         this.label = label;
         this.buttonSizeX = sizeX + ImGui.calcTextSize(label).x + ImGui.getStyle().getFramePaddingX() * 4;

@@ -15,9 +15,9 @@ import sapphire.eventsSystem.SappObserver;
 import sapphire.Sapphire;
 import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
-import sapphire.imgui.SappImGUILayer;
+import sapphire.imgui.SappImGuiLayer;
 import sapphire.imgui.SappImGui;
-import sapphire.imgui.components.SappImageButton;
+import sapphire.imgui.components.ImageButton;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class LogWindow extends ImguiWindow implements DiaLoggerObserver, SappObs
     private DiaLoggerLevel[] levels;
     private ModalConfirmation confWindow;
     private final String[] availableLevels;
-    private SappImageButton optionsButton;
+    private ImageButton optionsButton;
     private int currentLine;
     private int lines;
     private float toolbarWidth;
@@ -51,7 +51,7 @@ public class LogWindow extends ImguiWindow implements DiaLoggerObserver, SappObs
         }
         this.currentLine = 0;
         this.autoScroll = new ImBoolean(true);
-        this.optionsButton = new SappImageButton(Sapphire.getIcon("gear.png"), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE);
+        this.optionsButton = new ImageButton(Sapphire.getIcon("gear.png"), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE);
         this.toolbarWidth = SappImGui.SMALL_ICON_SIZE;
         this.setFlags(ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoScrollbar);
         DiaLogger.addObserver(this);
@@ -65,7 +65,7 @@ public class LogWindow extends ImguiWindow implements DiaLoggerObserver, SappObs
     }
 
     @Override
-    public void imgui(SappImGUILayer layer) {
+    public void imgui(SappImGuiLayer layer) {
         if (ImGui.begin(this.getTitle(), this.getFlags())) {
             if (ImGui.beginPopup("Options")) {
                 ImGui.checkbox("Auto-scroll", this.autoScroll);

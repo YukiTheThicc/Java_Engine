@@ -6,7 +6,7 @@ import imgui.flag.ImGuiWindowFlags;
 import sapphire.Sapphire;
 import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
-import sapphire.imgui.SappImGUILayer;
+import sapphire.imgui.SappImGuiLayer;
 import sapphire.imgui.SappImGui;
 
 public class ModalInformation extends ImguiWindow{
@@ -34,7 +34,7 @@ public class ModalInformation extends ImguiWindow{
 
     // METHODS
     @Override
-    public void imgui(SappImGUILayer layer) {
+    public void imgui(SappImGuiLayer layer) {
         ImGui.openPopup(getTitle());
         ImGui.setNextWindowSize(this.getSizeX(), this.getSizeY());
         ImGui.setNextWindowPos(Window.getPosition().x + (Window.getWidth() - this.getSizeX()) / 2,

@@ -5,7 +5,7 @@ import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
 
-public class SappImageButton {
+public class ImageButton {
 
     /**
      * This class is here to retain the state of a button that doesn't change at runtime to reduce load
@@ -18,7 +18,7 @@ public class SappImageButton {
     private final float imageSizeY;
 
     // CONSTRUCTORS
-    public SappImageButton(Texture image) {
+    public ImageButton(Texture image) {
         this.id = "##button-" + image.getId();
         this.image = image;
         this.buttonOriginX = ImGui.getCursorPosX();
@@ -26,7 +26,7 @@ public class SappImageButton {
         this.imageSizeY = image.getHeight();
     }
 
-    public SappImageButton(Texture image, float sizeX, float sizeY) {
+    public ImageButton(Texture image, float sizeX, float sizeY) {
         this.id = "##button-" + image.getId();
         this.image = image;
         this.buttonOriginX = ImGui.getCursorPosX();

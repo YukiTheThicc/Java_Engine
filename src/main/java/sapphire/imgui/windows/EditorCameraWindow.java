@@ -4,7 +4,7 @@ import diamondEngine.diaComponents.Camera;
 import imgui.ImGui;
 import imgui.type.ImFloat;
 import sapphire.Sapphire;
-import sapphire.imgui.SappImGUILayer;
+import sapphire.imgui.SappImGuiLayer;
 import sapphire.imgui.SappImGui;
 
 public class EditorCameraWindow extends ImguiWindow {
@@ -18,7 +18,7 @@ public class EditorCameraWindow extends ImguiWindow {
     }
 
     @Override
-    public void imgui(SappImGUILayer layer) {
+    public void imgui(SappImGuiLayer layer) {
 
         if (ImGui.begin(this.getTitle(), this.getFlags())) {
 

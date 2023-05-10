@@ -12,7 +12,7 @@ import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
-import sapphire.imgui.SappImGUILayer;
+import sapphire.imgui.SappImGuiLayer;
 import sapphire.imgui.SappImGui;
 
 import java.io.File;
@@ -32,7 +32,7 @@ public class FileNavigatorWindow extends ImguiWindow {
 
     // METHODS
     @Override
-    public void imgui(SappImGUILayer layer) {
+    public void imgui(SappImGuiLayer layer) {
 
         if (ImGui.begin(this.getTitle(), this.getFlags())) {
             SappProject project = Sapphire.get().getProject();
@@ -49,7 +49,7 @@ public class FileNavigatorWindow extends ImguiWindow {
         ImGui.end();
     }
 
-    private void drawDir(SappDir dir, SappImGUILayer layer) {
+    private void drawDir(SappDir dir, SappImGuiLayer layer) {
         Texture tex = Sapphire.getIcon("dir.png");
         ImGui.image(tex.getId(), DEFAULT_ICON_X, DEFAULT_ICON_Y, 0, 1, 1, 0);
         ImGui.sameLine();

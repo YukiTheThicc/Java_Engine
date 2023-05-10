@@ -8,7 +8,7 @@ import diamondEngine.diaRenderer.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
 import sapphire.imgui.SappDrawable;
-import sapphire.imgui.SappImGUILayer;
+import sapphire.imgui.SappImGuiLayer;
 import sapphire.utils.SappDefaultLiterals;
 
 import java.io.File;
@@ -34,7 +34,7 @@ public class Sapphire {
     private final Diamond diaInstance;
     private SappProject project;
     private HashMap<String, String> literals;
-    private SappImGUILayer imGUILayer;
+    private SappImGuiLayer imGUILayer;
     private SappDrawable activeObject;
     private boolean diaRunning;
     private boolean running;
@@ -93,7 +93,7 @@ public class Sapphire {
         }
     }
 
-    public SappImGUILayer getImGUILayer() {
+    public SappImGuiLayer getImGUILayer() {
         return imGUILayer;
     }
 
@@ -190,7 +190,7 @@ public class Sapphire {
         window.init("Sapphire", "sapphire/icon.png");
         diaInstance.init();
         loadIcons();
-        imGUILayer = new SappImGUILayer(this.window.getGlfwWindow());
+        imGUILayer = new SappImGuiLayer(this.window.getGlfwWindow());
         settings.init();
         imGUILayer.init();
         SappEvents.init(imGUILayer);

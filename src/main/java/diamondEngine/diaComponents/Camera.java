@@ -1,5 +1,6 @@
 package diamondEngine.diaComponents;
 
+import diamondEngine.Diamond;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -13,13 +14,16 @@ public class Camera {
     private Vector3f front;
     private Vector3f up;
     private Vector2f pSize;
+    private Vector2f pAdjust;
+    private Vector2f pSizeActual;
     public Vector2f pos;
     public float zoom = 1.0f;
-
     // CONSTRUCTORS
     public Camera(Vector2f pos, float pWidth, float pHeight) {
         this.pos = pos;
         this.pSize = new Vector2f(pWidth, pHeight);
+        this.pAdjust = new Vector2f(Diamond.currentEnv.getWinSizeAdjustY(), Diamond.currentEnv.getWinSizeAdjustX());
+        this.pSizeActual = new Vector2f(pSize.x / pAdjust.x, pSize.y / pAdjust.y);
         this.pMatrix = new Matrix4f();
         this.vMatrix = new Matrix4f();
         this.invProj = new Matrix4f();
@@ -62,11 +66,21 @@ public class Camera {
         return up;
     }
 
+    public Vector2f getPSizeActual() {
+        return pSizeActual;
+    }
+
     // METHODS
     public void changeProjection() {
         pMatrix.identity();
-        pMatrix.ortho(0.0f, this.zoom * pSize.x, 0.0f, this.zoom * pSize.y, 0.0f, 100.0f);
+        calculateActualPSize();
+        pMatrix.ortho(0.0f, this.zoom * pSizeActual.x, 0.0f, this.zoom * pSizeActual.y, 0.0f, 100.0f);
         invProj = new Matrix4f(pMatrix).invert();
+    }
+
+    private void calculateActualPSize() {
+        this.pSizeActual.x = pSize.x / pAdjust.x;
+        this.pSizeActual.y = pSize.y / pAdjust.y;
     }
 
     public void addZoom(float toAdd) {

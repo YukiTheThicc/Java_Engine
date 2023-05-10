@@ -9,7 +9,7 @@ import sapphire.SappDir;
 import sapphire.SappProject;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappObserver;
-import sapphire.imgui.SappImGUILayer;
+import sapphire.imgui.SappImGuiLayer;
 import sapphire.imgui.windows.FileWindow;
 import sapphire.utils.SappProjectCreator;
 import java.io.File;
@@ -17,10 +17,10 @@ import java.io.File;
 public class MenuEventHandler implements SappObserver {
 
     // ATTRIBUTES
-    private SappImGUILayer layer;
+    private SappImGuiLayer layer;
 
     // CONSTRUCTORS
-    public MenuEventHandler(SappImGUILayer layer) {
+    public MenuEventHandler(SappImGuiLayer layer) {
         this.layer = layer;
     }
 
