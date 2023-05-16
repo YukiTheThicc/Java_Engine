@@ -39,6 +39,14 @@ public class AssetImageButton {
         return id;
     }
 
+    public int getButtonSize() {
+        return buttonSize;
+    }
+
+    public float getPaddingX() {
+        return paddingX;
+    }
+
     // METHODS
     public boolean draw() {
         ImVec2 origin = ImGui.getCursorPos();

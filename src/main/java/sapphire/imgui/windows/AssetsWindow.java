@@ -100,8 +100,9 @@ public class AssetsWindow extends ImguiWindow implements DiaObserver {
         if (ImGui.beginTabItem("Textures")) {
             for (AssetImageButton b : textureButtons) {
                 b.draw();
-                if (ImGui.getContentRegionAvailX() > 500) {
-                    ImGui.sameLine();
+                if (ImGui.getContentRegionAvailX() < (float) b.getButtonSize() - b.getPaddingX()) {
+                    ImGui.newLine();
+                    ImGui.setCursorPos(ImGui.getCursorPosX(), ImGui.getCursorPosY() + b.getButtonSize());
                 }
             }
             ImGui.endTabItem();
