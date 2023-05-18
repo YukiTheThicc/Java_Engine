@@ -1,6 +1,5 @@
 package diamondEngine.diaUtils;
 
-import com.sun.org.apache.xpath.internal.functions.FuncFalse;
 import diamondEngine.Template;
 import diamondEngine.diaAudio.Sound;
 import diamondEngine.diaEvents.DiaEvent;
@@ -8,12 +7,10 @@ import diamondEngine.diaEvents.DiaEventType;
 import diamondEngine.diaEvents.DiaEvents;
 import diamondEngine.diaRenderer.Shader;
 import diamondEngine.diaRenderer.Texture;
-import sapphire.Sapphire;
 
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DiaAssetManager {
@@ -37,6 +34,7 @@ public class DiaAssetManager {
                 switch (fileExtension) {
                     case ".wav":
                     case ".mp3":
+                    case ".ogg":
                         getSound(path);
                         break;
                     case ".png":

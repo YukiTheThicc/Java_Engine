@@ -209,6 +209,7 @@ public class Sapphire {
             window.pollEvents();
             Diamond.currentEnv.startFrame();
             if (dt >= 0) {
+                diaInstance.updateAllEnvLists();
                 diaInstance.update(dt);
             }
             DebugRenderer.beginFrame();

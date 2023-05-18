@@ -20,6 +20,7 @@ import sapphire.imgui.SappImGui;
 import sapphire.imgui.components.AssetImageButton;
 import sapphire.imgui.components.ImageButton;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,7 +116,8 @@ public class AssetsWindow extends ImguiWindow implements DiaObserver {
         }
 
         for (Sound so : DiaAssetManager.getAllSounds()) {
-
+            File tmp = new File(so.getPath());
+            soundButtons.add(new AssetImageButton(so.getPath(), tmp.getName(), Sapphire.getIcon("sfx.png")));
         }
     }
 
@@ -128,7 +130,9 @@ public class AssetsWindow extends ImguiWindow implements DiaObserver {
                 } else if (event.payload instanceof Texture) {
                     textureButtons.add(new AssetImageButton((Texture) event.payload));
                 } else if (event.payload instanceof Sound) {
-
+                    Sound newSound = (Sound) event.payload;
+                    File tmp = new File(newSound.getPath());
+                    soundButtons.add(new AssetImageButton(newSound.getPath(), tmp.getName(), Sapphire.getIcon("sfx.png")));
                 } else if (event.payload instanceof Template) {
 
                 }

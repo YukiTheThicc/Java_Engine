@@ -244,8 +244,20 @@ public class Environment implements SappDrawable {
         this.frame.unBind();
     }
 
-    public void update(float dt) {
 
+    public void update(float dt) {
+        updateLists();
+        for (Environment child : children) child.update(dt);
+        for (Component component : components) component.update(dt);
+        for (Entity e : entities) {
+            e.update(dt);
+        }
+    }
+
+    /**
+     * Updates the contents of the environment
+     */
+    public void updateLists() {
         if (isDirty) {
             for (Entity e : entitiesToRemove) {
                 entities.remove(e);
@@ -256,11 +268,6 @@ public class Environment implements SappDrawable {
             entitiesToRemove.clear();
             components.clear();
             isDirty = false;
-        }
-        for (Environment child : children) child.update(dt);
-        for (Component component : components) component.update(dt);
-        for (Entity e : entities) {
-            e.update(dt);
         }
     }
 

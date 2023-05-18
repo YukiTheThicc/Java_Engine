@@ -80,6 +80,7 @@ public class SappSettings {
 
     /**
      * Return all the windows show preferences. Used only to load settings form file.
+     *
      * @return Hashmap with all the colors
      */
     private HashMap<String, Boolean> getShowPreferences() {
@@ -157,6 +158,7 @@ public class SappSettings {
 
     /**
      * Gets the preference for a confirmation window to be shown again or not
+     *
      * @param window ID of the confirmation window
      * @return Returns the stored value or true in case it does not exist
      */
@@ -221,7 +223,10 @@ public class SappSettings {
                 .create();
         String inFile = "";
         try {
-            inFile = new String(Files.readAllBytes(Paths.get("sapphire/settings.json")));
+            File settingsFile = new File("sapphire/settings.json");
+            if (settingsFile.exists() && settingsFile.isFile()) {
+                inFile = new String(Files.readAllBytes(Paths.get("sapphire/settings.json")));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

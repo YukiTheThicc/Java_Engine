@@ -122,6 +122,7 @@ public class SappProject {
                 root = null;
             }
             if (!inFile.equals("")) {
+
                 SappProject temp = gson.fromJson(inFile, SappProject.class);
                 root.loadDirectory();
                 openedFiles = temp.getOpenedFiles();

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Diamond {
 
-    private static final long UID_SEED = 1000000000;
+    private static long UID_SEED = 1000000000;
     private static long CURRENT = UID_SEED + 1;
 
     // ATTRIBUTES
@@ -32,6 +32,15 @@ public class Diamond {
 
     public void setDirty() {
         isDirty = true;
+    }
+
+    public long getUidCurrent() {
+        return  CURRENT;
+    }
+
+    public void setUidSeed(long newSeed) {
+        UID_SEED = newSeed;
+        CURRENT = UID_SEED + 1;
     }
 
     // METHODS
@@ -78,8 +87,15 @@ public class Diamond {
             environmentsToRemove.clear();
             isDirty = false;
         }
-        for(Environment env : environments) {
-            env.update(dt);
+        currentEnv.update(dt);
+    }
+
+    /**
+     * Updates the content lists of all the environments
+     */
+    public void updateAllEnvLists() {
+        for (Environment env : environments) {
+            env.updateLists();
         }
     }
 }

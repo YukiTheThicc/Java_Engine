@@ -34,6 +34,17 @@ public class AssetImageButton {
         this.imageSizeY = Math.min(imageSizeY, maxImgSizeY);
     }
 
+    public AssetImageButton(String id, String name, Texture image) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.paddingX = ((float) this.buttonSize - this.imageSizeX) / 2;
+        this.paddingYTop = ImGui.getStyle().getFramePaddingY();
+        float imageSizeY = imageSizeX * ((float) image.getHeight() / image.getWidth());
+        float maxImgSizeY = imageSizeX + paddingYTop * 2 - ImGui.getFontSize() + 4;
+        this.imageSizeY = Math.min(imageSizeY, maxImgSizeY);
+    }
+
     // GETTERS & SETTERS
     public String getId() {
         return id;

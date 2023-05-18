@@ -3,6 +3,7 @@ package sapphire.imgui;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
 import imgui.flag.ImGuiStyleVar;
+import imgui.internal.ImGuiDockNode;
 import sapphire.Sapphire;
 import sapphire.SappKeyControls;
 import sapphire.SappEvents;
@@ -43,6 +44,7 @@ public class SappImGuiLayer {
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
     private HashMap<String, ImguiWindow> windows;
     private ArrayList<ImguiWindow> windowsToAdd;
+    private ArrayList<ImguiWindow> windowsToRemove;
     private GameViewWindow gameView;
     private FileWindow lastFocusedFile;
     private ImFont smallFont;
@@ -57,6 +59,7 @@ public class SappImGuiLayer {
         this.dockId = -1;
         this.dirty = false;
         this.windowsToAdd = new ArrayList<>();
+        this.windowsToRemove = new ArrayList<>();
         this.lastFocusedFile = null;
     }
 
@@ -335,28 +338,10 @@ public class SappImGuiLayer {
         }
     }
 
-    public void update() {
-        startFrame();
-        setupDockSpace();
-
-        ArrayList<String> toRemove = new ArrayList<>();
-        this.gameView.imgui(this);
-        for (String window : windows.keySet()) {
-
-            if (windows.get(window).shouldClose()) {
-                toRemove.add(window);
-                dirty = true;
-            }
-            if (windows.get(window).isActive().get()) {
-                windows.get(window).imgui(this);
-            }
-        }
-
-        endFrame();
-
+    private void afterUpdate() {
         if (dirty) {
-            for (String window : toRemove) {
-                windows.remove(window);
+            for (ImguiWindow window : windowsToRemove) {
+                windows.remove(window.getId());
             }
             for (ImguiWindow window : windowsToAdd) {
                 windows.put(window.getId(), window);
@@ -364,6 +349,25 @@ public class SappImGuiLayer {
             windowsToAdd.clear();
             this.dirty = false;
         }
+    }
+
+    public void update() {
+        startFrame();
+        setupDockSpace();
+        ImGuiDockNode node = ImGui.dockBuilderGetCentralNode(dockId);
+        ImGui.setNextWindowDockID(node.getID());
+        this.gameView.imgui(this);
+        for (ImguiWindow window : windows.values()) {
+            if (window.shouldClose()) {
+                windowsToRemove.add(window);
+                dirty = true;
+            }
+            if (window.isActive().get()) {
+                window.imgui(this);
+            }
+        }
+        endFrame();
+        afterUpdate();
     }
 
     public void destroyImGui() {

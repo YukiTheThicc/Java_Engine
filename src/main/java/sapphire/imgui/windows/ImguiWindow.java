@@ -80,8 +80,8 @@ public abstract class ImguiWindow {
 
     /**
      * Sets if the window should close. Sapphire will store all windows that should close in an Array after they are
-     * updated, and then proceed to remove them. In this way, if a window has the capability of close itself, its always
-     * removed safely.
+     * updated, and then proceed to remove them before updating them in the next frame. This way, if a window has the
+     * capability to close itself, it will be removed safely by the ImGui layer.
      * @param close True if the window should be closed
      */
     public void close(boolean close) {
