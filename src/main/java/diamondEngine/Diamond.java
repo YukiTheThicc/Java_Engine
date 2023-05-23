@@ -3,18 +3,23 @@ package diamondEngine;
 import diamondEngine.diaEvents.DiaEvent;
 import diamondEngine.diaEvents.DiaEventType;
 import diamondEngine.diaEvents.DiaEvents;
+import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.diaUtils.DiaLoggerLevel;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Diamond {
 
-    private static long UID_SEED = 1000000000;
+    private static long UID_SEED = 0;
     private static long CURRENT = UID_SEED + 1;
 
     // ATTRIBUTES
     private static Environment currentEnv = null;
     private static Diamond diamond = null;
     private ArrayList<Environment> environments;
+    private HashMap<Long, Environment> environmentMap;
     private final ArrayList<Environment> environmentsToRemove;
     private boolean isDirty = false;
     private int emptyEnvs = 0;
@@ -84,17 +89,30 @@ public class Diamond {
     }
 
     public void removeEnv(Environment env) {
-        this.environmentsToRemove.add(env);
-        this.isDirty = true;
+        if (env != null) {
+            if (environmentMap.get(env.getUid()) != null) {
+                this.environmentsToRemove.add(env);
+                this.isDirty = true;
+            } else {
+                DiaLogger.log("Tried to remove an unlisted Environment '" + env.getName() + "' (" + env.getUid() + ")", DiaLoggerLevel.WARN);
+            }
+        }else {
+            DiaLogger.log("Tried to remove a null Environment", DiaLoggerLevel.WARN);
+        }
     }
 
     public void addEnvironment(Environment env) {
-        environments.add(env);
+        if (environmentMap.get(env.getUid()) == null) {
+            environments.add(env);
+        } else {
+            DiaLogger.log("Tried to add an environment with an already existing UID, a new ID is going to be generated", DiaLoggerLevel.WARN);
+        }
     }
 
     public void update(float dt) {
         if (isDirty) {
             for (Environment env : environmentsToRemove) {
+                environmentMap.remove(env.getUid());
                 environments.remove(env);
             }
             environmentsToRemove.clear();

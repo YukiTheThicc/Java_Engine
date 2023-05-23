@@ -58,9 +58,9 @@ public class GameViewWindowControls {
         ImGui.pushStyleVar(ImGuiStyleVar.ChildRounding, 255f);
         ImGui.begin("controls", flags);
 
-        float envNameX = SappImGui.textSize(Diamond.getCurrentEnv().getName()) + ImGui.getStyle().getFramePaddingX() * 2;
-        SappImGui.alignNoHeader(AlignX.LEFT, AlignY.TOP, envNameX, mainControlsY);
-        ImGui.beginChild("env_info", envNameX, mainControlsY);
+        float envNameX = SappImGui.textSize(Diamond.getCurrentEnv().getName()) ;
+        SappImGui.alignNoHeader(AlignX.LEFT, AlignY.TOP, envNameX + ImGui.getStyle().getFramePaddingX() * 2, mainControlsY);
+        ImGui.beginChild("env_info", envNameX + ImGui.getStyle().getFramePaddingX() * 2, mainControlsY);
             SappImGui.align(AlignX.CENTER, AlignY.CENTER, envNameX, ImGui.getFontSize());
         ImGui.text(Diamond.getCurrentEnv().getName());
         ImGui.endChild();

@@ -346,6 +346,11 @@ public class Environment implements SappDrawable {
         ImGui.text("winSizeAdjustY: " + winSizeAdjustY);
         ImGui.text(Window.getWidth() + " / " + Window.getHeight());
         ImGui.text((float) Window.getWidth() / frameX + " / " + (float) Window.getHeight() / frameY);
+        ImGui.text("Ratio: " + getRatio());
+    }
+
+    public float getRatio() {
+        return ((float) frameX / frameY) * ((float) Window.getHeight() / Window.getWidth());
     }
 
     @Override
