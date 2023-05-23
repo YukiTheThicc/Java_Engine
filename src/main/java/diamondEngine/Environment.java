@@ -9,6 +9,7 @@ import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaMath;
 import diamondEngine.diaUtils.serializers.ComponentSerializer;
 import diamondEngine.diaUtils.serializers.EntitySerializer;
+import imgui.ImGui;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import org.joml.Vector2i;
@@ -340,6 +341,11 @@ public class Environment implements SappDrawable {
             changeFrame(frameX, newHeight.get());
             isModified = true;
         }
+
+        ImGui.text("winSizeAdjustX: " + winSizeAdjustX);
+        ImGui.text("winSizeAdjustY: " + winSizeAdjustY);
+        ImGui.text(Window.getWidth() + " / " + Window.getHeight());
+        ImGui.text((float) Window.getWidth() / frameX + " / " + (float) Window.getHeight() / frameY);
     }
 
     @Override

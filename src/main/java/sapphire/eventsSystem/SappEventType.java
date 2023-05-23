@@ -27,5 +27,6 @@ public enum SappEventType {
     Delete_file,
     Import_env,
     Save_env_as,
-    Add_asset
+    Add_asset,
+    Make_current
 }

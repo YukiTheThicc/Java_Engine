@@ -95,6 +95,10 @@ public class EnvHierarchyWindow extends ImguiWindow {
     private void envContextMenu(Environment env) {
         if (ImGui.beginPopupContextItem(env.getName() + "env_item")) {
 
+            if (ImGui.menuItem(Sapphire.getLiteral("make_current"))) SappEvents.notify(
+                    new SappEvent(SappEventType.Make_current, env));
+            ImGui.separator();
+
             if (ImGui.menuItem(Sapphire.getLiteral("add_grid"))) SappEvents.notify(
                     new SappEvent(SappEventType.Add_component, env, new Grid(32)));
             ImGui.separator();

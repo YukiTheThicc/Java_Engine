@@ -72,6 +72,7 @@ public class SappDefaultLiterals {
         literals.put("save_env", "Save environment");
         literals.put("save_env_as", "Save environment as...");
         literals.put("new_env", "New environment");
+        literals.put("make_current", "Make current");
 
         return literals;
     }

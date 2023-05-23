@@ -6,24 +6,24 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class Camera {
+
     // ATTRIBUTES
-    private Matrix4f pMatrix;
-    private Matrix4f vMatrix;
+    private final Matrix4f pMatrix;
+    private final Matrix4f vMatrix;
     private Matrix4f invProj;
     private Matrix4f invView;
-    private Vector3f front;
-    private Vector3f up;
-    private Vector2f pSize;
-    private Vector2f pAdjust;
-    private Vector2f pSizeActual;
+    private final Vector3f front;
+    private final Vector3f up;
+    private final Vector2f pSize;
+    private final Vector2f pSizeActual;
     public Vector2f pos;
     public float zoom = 1.0f;
+
     // CONSTRUCTORS
     public Camera(Vector2f pos, float pWidth, float pHeight) {
         this.pos = pos;
         this.pSize = new Vector2f(pWidth, pHeight);
-        this.pAdjust = new Vector2f(Diamond.currentEnv.getWinSizeAdjustY(), Diamond.currentEnv.getWinSizeAdjustX());
-        this.pSizeActual = new Vector2f(pSize.x / pAdjust.x, pSize.y / pAdjust.y);
+        this.pSizeActual = new Vector2f(pSize.x, pSize.y);
         this.pMatrix = new Matrix4f();
         this.vMatrix = new Matrix4f();
         this.invProj = new Matrix4f();
@@ -79,11 +79,7 @@ public class Camera {
     }
 
     private void calculateActualPSize() {
-        this.pSizeActual.x = pSize.x / pAdjust.x;
-        this.pSizeActual.y = pSize.y / pAdjust.y;
-    }
-
-    public void addZoom(float toAdd) {
-        this.zoom += toAdd;
+        this.pSizeActual.x = pSize.x / Diamond.getCurrentEnv().getWinSizeAdjustY();
+        this.pSizeActual.y = pSize.y / Diamond.getCurrentEnv().getWinSizeAdjustX();
     }
 }

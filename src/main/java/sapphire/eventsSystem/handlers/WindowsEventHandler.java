@@ -2,6 +2,7 @@ package sapphire.eventsSystem.handlers;
 
 import diamondEngine.Entity;
 import diamondEngine.Diamond;
+import diamondEngine.Environment;
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaUtils.DiaAssetManager;
 import diamondEngine.diaUtils.DiaLogger;
@@ -48,6 +49,8 @@ public class WindowsEventHandler implements SappObserver {
             case Add_asset:
                 handleAddAssets();
                 break;
+            case Make_current:
+                handleMakeCurrent(event);
         }
     }
 
@@ -110,6 +113,12 @@ public class WindowsEventHandler implements SappObserver {
             for (String assetPath : assetPaths) {
                 if (DiaAssetManager.loadResource(assetPath)) Sapphire.get().getProject().addResource(assetPath);
             }
+        }
+    }
+
+    private void handleMakeCurrent(SappEvent event) {
+        if (event.env != null) {
+            Diamond.setCurrentEnv(event.env);
         }
     }
 }

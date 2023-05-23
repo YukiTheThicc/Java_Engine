@@ -23,7 +23,7 @@ public class GameViewWindow extends ImguiWindow {
         super("game_view", "Main View");
         this.setFlags(ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse |
                 ImGuiWindowFlags.NoResize);
-        Vector2i pm = DiaMath.getFractionFromFloat((float) Diamond.currentEnv.getFrameY() / Diamond.currentEnv.getFrameX());
+        Vector2i pm = DiaMath.getFractionFromFloat((float) Diamond.getCurrentEnv().getFrameY() / Diamond.getCurrentEnv().getFrameX());
         GameViewWindow.editorCamera = new Camera(new Vector2f(), 4f, 4f);
     }
 
@@ -50,12 +50,12 @@ public class GameViewWindow extends ImguiWindow {
         ImVec2 windowSize = new ImVec2();
         ImGui.getContentRegionAvail(windowSize);
         float aspectWidth = windowSize.x;
-        float aspectHeight = aspectWidth / Diamond.currentEnv.getAspectRatio();
+        float aspectHeight = aspectWidth / Diamond.getCurrentEnv().getAspectRatio();
 
         if (aspectHeight > windowSize.y) {
             // We must switch to pillarbox mode
             aspectHeight = windowSize.y;
-            aspectWidth = aspectHeight * Diamond.currentEnv.getAspectRatio();;
+            aspectWidth = aspectHeight * Diamond.getCurrentEnv().getAspectRatio();;
         }
 
         return new ImVec2(aspectWidth, aspectHeight);
@@ -96,7 +96,7 @@ public class GameViewWindow extends ImguiWindow {
             // Controls
             controls.drawControls();
 
-            int textureId = Diamond.currentEnv.getFrame().getTexture().getId();
+            int textureId = Diamond.getCurrentEnv().getFrame().getTexture().getId();
             ImGui.image(textureId, windowSize.x, windowSize.y, 0, 1, 1, 0);
         }
         ImGui.end();

@@ -1,5 +1,10 @@
 package sapphire.imgui.components;
 
+import diamondEngine.Diamond;
+import diamondEngine.diaEvents.DiaEvent;
+import diamondEngine.diaEvents.DiaEventType;
+import diamondEngine.diaEvents.DiaEvents;
+import diamondEngine.diaEvents.DiaObserver;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
@@ -9,6 +14,7 @@ import sapphire.Sapphire;
 import sapphire.SappEvents;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
+import sapphire.eventsSystem.SappObserver;
 import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
 import sapphire.imgui.SappImGui;
@@ -51,6 +57,13 @@ public class GameViewWindowControls {
         ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
         ImGui.pushStyleVar(ImGuiStyleVar.ChildRounding, 255f);
         ImGui.begin("controls", flags);
+
+        float envNameX = SappImGui.textSize(Diamond.getCurrentEnv().getName()) + ImGui.getStyle().getFramePaddingX() * 2;
+        SappImGui.alignNoHeader(AlignX.LEFT, AlignY.TOP, envNameX, mainControlsY);
+        ImGui.beginChild("env_info", envNameX, mainControlsY);
+            SappImGui.align(AlignX.CENTER, AlignY.CENTER, envNameX, ImGui.getFontSize());
+        ImGui.text(Diamond.getCurrentEnv().getName());
+        ImGui.endChild();
 
         SappImGui.alignNoHeader(AlignX.CENTER, AlignY.TOP, mainControlsX, mainControlsY);
         ImGui.beginChild("main_controls", mainControlsX, mainControlsY);

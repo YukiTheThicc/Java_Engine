@@ -1,5 +1,9 @@
 package diamondEngine;
 
+import diamondEngine.diaEvents.DiaEvent;
+import diamondEngine.diaEvents.DiaEventType;
+import diamondEngine.diaEvents.DiaEvents;
+
 import java.util.ArrayList;
 
 public class Diamond {
@@ -8,7 +12,7 @@ public class Diamond {
     private static long CURRENT = UID_SEED + 1;
 
     // ATTRIBUTES
-    public static Environment currentEnv = null;
+    private static Environment currentEnv = null;
     private static Diamond diamond = null;
     private ArrayList<Environment> environments;
     private final ArrayList<Environment> environmentsToRemove;
@@ -41,6 +45,15 @@ public class Diamond {
     public void setUidSeed(long newSeed) {
         UID_SEED = newSeed;
         CURRENT = UID_SEED + 1;
+    }
+
+    public static Environment getCurrentEnv() {
+        return currentEnv;
+    }
+
+    public static void setCurrentEnv(Environment currentEnv) {
+        Diamond.currentEnv = currentEnv;
+        DiaEvents.notify(new DiaEvent(DiaEventType.ENV_CHANGED));
     }
 
     // METHODS

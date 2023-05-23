@@ -2,6 +2,7 @@ package sapphire;
 
 import com.google.gson.JsonObject;
 import diamondEngine.Diamond;
+import diamondEngine.Environment;
 import diamondEngine.Window;
 import diamondEngine.diaRenderer.DebugRenderer;
 import diamondEngine.diaRenderer.Texture;
@@ -207,14 +208,14 @@ public class Sapphire {
         while (running) {
 
             window.pollEvents();
-            Diamond.currentEnv.startFrame();
+            Diamond.getCurrentEnv().startFrame();
             if (dt >= 0) {
                 diaInstance.updateAllEnvLists();
                 diaInstance.update(dt);
             }
             DebugRenderer.beginFrame();
             DebugRenderer.draw();
-            Diamond.currentEnv.endFrame();
+            Diamond.getCurrentEnv().endFrame();
 
             window.endFrame();
             imGUILayer.update();

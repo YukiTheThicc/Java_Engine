@@ -26,9 +26,9 @@ public class ProfilerWindow extends ImguiWindow {
         if (ImGui.begin(this.getTitle(), this.getFlags())) {
 
             accTime += Sapphire.get().getDt();
-            if (accTime > 0.1f) {
+            if (accTime > 0.05f) {
                 fps = (int) (1 / Sapphire.get().getDt());
-                accTime -= 0.1f;
+                accTime -= 0.05f;
             }
 
             ImGui.columns(2);

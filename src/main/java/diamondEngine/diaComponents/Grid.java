@@ -28,8 +28,8 @@ public class Grid extends Component {
         super();
         this.cellX = cell;
         this.cellY = cell;
-        this.cellNX = (float) cellX / Diamond.currentEnv.getFrameX();
-        this.cellNY = (float) cellY / Diamond.currentEnv.getFrameY();
+        this.cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX();
+        this.cellNY = (float) cellY / Diamond.getCurrentEnv().getFrameY();
         this.draw = true;
     }
 
@@ -37,8 +37,8 @@ public class Grid extends Component {
         super();
         this.cellX = cellX;
         this.cellY = cellY;
-        this.cellNX = (float) cellX / Diamond.currentEnv.getFrameX();
-        this.cellNY = (float) cellY / Diamond.currentEnv.getFrameY();
+        this.cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX();
+        this.cellNY = (float) cellY / Diamond.getCurrentEnv().getFrameY();
         this.draw = true;
     }
 
@@ -66,8 +66,8 @@ public class Grid extends Component {
             Camera camera = GameViewWindow.editorCamera;
             Vector2f cameraPos = camera.pos;
             Vector2f pSize = camera.getPSizeActual();
-            float adjustX = Diamond.currentEnv.getWinSizeAdjustX();
-            float adjustY = Diamond.currentEnv.getWinSizeAdjustY();
+            float adjustX = Diamond.getCurrentEnv().getWinSizeAdjustX();
+            float adjustY = Diamond.getCurrentEnv().getWinSizeAdjustY();
 
             if (camera.zoom <= 4) {
 
@@ -101,8 +101,8 @@ public class Grid extends Component {
     public void cameraChanged(int cellX, int cellY) {
         this.cellY = cellY;
         this.cellX = cellX;
-        cellNX = (float) cellX / Diamond.currentEnv.getFrameX();
-        cellNY = (float) cellY / Diamond.currentEnv.getFrameY();
+        cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX();
+        cellNY = (float) cellY / Diamond.getCurrentEnv().getFrameY();
     }
 
     @Override

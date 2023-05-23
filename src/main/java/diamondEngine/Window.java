@@ -21,7 +21,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class Window {
 
     // ATTRIBUTES
-    private int width, height;
+    private static int width, height;
     private IntBuffer posX, posY;
     private String title;
     private long glfwWindow;
@@ -44,11 +44,11 @@ public class Window {
 
     // GETTERS & SETTERS
     public static int getWidth() {
-        return get().width;
+        return width;
     }
 
     public static int getHeight() {
-        return get().height;
+        return height;
     }
 
     public String getTitle() {
@@ -60,11 +60,11 @@ public class Window {
     }
 
     public static void setWidth(int width) {
-        get().width = width;
+        Window.width = width;
     }
 
     public static void setHeight(int height) {
-        get().height = height;
+        Window.height = height;
     }
 
     public void setTitle(String title) {
@@ -78,6 +78,10 @@ public class Window {
         pos.x = window.posX.get(0);
         pos.y = window.posY.get(0);
         return pos;
+    }
+
+    public static float getAspectRatio() {
+        return (float) width / height;
     }
 
     // METHODS
