@@ -1,11 +1,22 @@
 package diamondEngine.diaUtils.serializers;
 
 import com.google.gson.*;
+import diamondEngine.Environment;
 import diamondEngine.diaComponents.Component;
 
 import java.lang.reflect.Type;
 
 public class ComponentSerializer implements JsonSerializer<Component>, JsonDeserializer<Component> {
+
+    // ATTRIBUTES
+    private Environment env;
+    
+    // CONSTRUCTORS
+    public ComponentSerializer(Environment env) {
+        this.env = env;
+    }
+
+    // METHODS
     @Override
     public JsonElement serialize(Component src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject result = new JsonObject();

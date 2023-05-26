@@ -5,26 +5,21 @@ import diamondEngine.diaComponents.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Template {
+public class Template extends DiamondObject {
 
     // ATTRIBUTES
-    private final long uid;
     private String name;
     private String entityName;
     private List<Component> components;
 
     // CONSTRUCTORS
-    public Template(String name) {
-        this.uid = Diamond.genId();
+    public Template(String name, Environment env) {
+        super(env);
         this.name = name;
         this.components = new ArrayList<>();
     }
 
     // GETTERS & SETTERS
-    public long getUid() {
-        return uid;
-    }
-
     public String getName() {
         return name;
     }
@@ -40,7 +35,7 @@ public class Template {
     // METHODS
     public Entity createEntity() {
 
-        Entity newEntity = new Entity();
+        Entity newEntity = new Entity(this.getParent());
         for (Component c : components) {
             newEntity.addComponent(c.copy());
         }
@@ -53,5 +48,10 @@ public class Template {
         for (Component c : entity.getComponents()) {
             components.add(c.copy());
         }
+    }
+
+    @Override
+    public void update(float dt) {
+
     }
 }

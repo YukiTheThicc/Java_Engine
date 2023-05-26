@@ -4,7 +4,7 @@ import diamondEngine.diaComponents.Component;
 
 import java.util.ArrayList;
 
-public class Entity {
+public class Entity extends DiamondObject{
 
     public static final String GENERATED_NAME = "GENERATED_ENTITY";
 
@@ -15,22 +15,22 @@ public class Entity {
     private boolean toSerialize;
 
     // CONSTRUCTORS
-    public Entity() {
-        this.uid = Diamond.genId();
+    public Entity(Environment env) {
+        super(env);
         this.name = GENERATED_NAME;
         this.components = new ArrayList<>();
         this.toSerialize = true;
     }
 
-    public Entity(String name) {
-        this.uid = Diamond.genId();
+    public Entity(String name, Environment env) {
+        super(env);
         this.name = name;
         this.components = new ArrayList<>();
         this.toSerialize = true;
     }
 
-    public Entity(String name, boolean toSerialize) {
-        this.uid = Diamond.genId();
+    public Entity(String name, Environment env, boolean toSerialize) {
+        super(env);
         this.name = name;
         this.components = new ArrayList<>();
         this.toSerialize = toSerialize;

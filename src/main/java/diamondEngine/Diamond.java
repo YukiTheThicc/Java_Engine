@@ -12,14 +12,11 @@ import java.util.HashMap;
 
 public class Diamond {
 
-    private static long UID_SEED = 0;
-    private static long CURRENT = UID_SEED + 1;
-
     // ATTRIBUTES
     private static Environment currentEnv = null;
     private static Diamond diamond = null;
+    private static HashMap<Long, String> environmentMap;
     private ArrayList<Environment> environments;
-    private HashMap<Long, Environment> environmentMap;
     private final ArrayList<Environment> environmentsToRemove;
     private boolean isDirty = false;
     private int emptyEnvs = 0;
@@ -35,23 +32,6 @@ public class Diamond {
         return environments;
     }
 
-    public void setEnvironments(ArrayList<Environment> environments) {
-        this.environments = environments;
-    }
-
-    public void setDirty() {
-        isDirty = true;
-    }
-
-    public long getUidCurrent() {
-        return  CURRENT;
-    }
-
-    public void setUidSeed(long newSeed) {
-        UID_SEED = newSeed;
-        CURRENT = UID_SEED + 1;
-    }
-
     public static Environment getCurrentEnv() {
         return currentEnv;
     }
@@ -61,17 +41,16 @@ public class Diamond {
         DiaEvents.notify(new DiaEvent(DiaEventType.ENV_CHANGED));
     }
 
+    public HashMap<Long, String> getEnvironmentMap() {
+        return environmentMap;
+    }
+
     // METHODS
     public static Diamond get() {
         if (Diamond.diamond == null) {
             Diamond.diamond = new Diamond();
         }
         return diamond;
-    }
-
-    public static long genId() {
-        CURRENT++;
-        return CURRENT;
     }
 
     public void init() {

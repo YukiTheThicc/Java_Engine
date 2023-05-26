@@ -6,13 +6,11 @@ import diamondEngine.diaComponents.Component;
 import diamondEngine.diaRenderer.Framebuffer;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
-import diamondEngine.diaUtils.DiaMath;
 import diamondEngine.diaUtils.serializers.ComponentSerializer;
 import diamondEngine.diaUtils.serializers.EntitySerializer;
 import imgui.ImGui;
 import imgui.type.ImInt;
 import imgui.type.ImString;
-import org.joml.Vector2i;
 import sapphire.Sapphire;
 import sapphire.imgui.SappDrawable;
 import sapphire.imgui.SappImGui;
@@ -34,6 +32,8 @@ public class Environment implements SappDrawable {
     public static final int DEFAULT_FRAME_Y = 270;
 
     // ATTRIBUTES
+    private static final long UID_SEED = 1000000000;
+    private static long CURRENT = UID_SEED + 1;
     private Environment parent;
     private String name;
     private String originFile;
@@ -57,7 +57,6 @@ public class Environment implements SappDrawable {
 
     // CONSTRUCTORS
     public Environment(String name) {
-        this.uid = Diamond.genId();
         this.frameX = DEFAULT_FRAME_X;
         this.frameY = DEFAULT_FRAME_Y;
         this.parent = null;
@@ -74,7 +73,6 @@ public class Environment implements SappDrawable {
     }
 
     public Environment(String name, Environment parent) {
-        this.uid = Diamond.genId();
         this.frameX = DEFAULT_FRAME_X;
         this.frameY = DEFAULT_FRAME_Y;
         this.parent = parent;
@@ -182,6 +180,11 @@ public class Environment implements SappDrawable {
         isModified = true;
     }
 
+    public long genId() {
+        CURRENT++;
+        return CURRENT;
+    }
+
     public void addChild(Environment environment) {
         if (environment != null) {
             if (!environment.isInitialized) environment.init();
@@ -245,7 +248,6 @@ public class Environment implements SappDrawable {
         this.frame.unBind();
     }
 
-
     public void update(float dt) {
         updateLists();
         for (Environment child : children) child.update(dt);
@@ -276,8 +278,8 @@ public class Environment implements SappDrawable {
         if (isModified) {
             Gson gson = new GsonBuilder()
                     .setPrettyPrinting()
-                    .registerTypeAdapter(Component.class, new ComponentSerializer())
-                    .registerTypeAdapter(Entity.class, new EntitySerializer())
+                    .registerTypeAdapter(Component.class, new ComponentSerializer(this))
+                    .registerTypeAdapter(Entity.class, new EntitySerializer(this))
                     .enableComplexMapKeySerialization()
                     .create();
 
@@ -296,8 +298,8 @@ public class Environment implements SappDrawable {
     public void load(String path) {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
-                .registerTypeAdapter(Component.class, new ComponentSerializer())
-                .registerTypeAdapter(Entity.class, new EntitySerializer())
+                .registerTypeAdapter(Component.class, new ComponentSerializer(this))
+                .registerTypeAdapter(Entity.class, new EntitySerializer(this))
                 .enableComplexMapKeySerialization()
                 .create();
         String inFile = "";
