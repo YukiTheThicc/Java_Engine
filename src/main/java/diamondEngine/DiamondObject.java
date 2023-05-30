@@ -3,7 +3,7 @@ package diamondEngine;
 public abstract class DiamondObject {
 
     // ATTRIBUTES
-    private Environment parent;
+    private transient Environment parent;
     private final long uid;
 
     // CONSTRUCTORS

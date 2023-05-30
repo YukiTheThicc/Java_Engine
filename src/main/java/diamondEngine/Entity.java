@@ -9,7 +9,6 @@ public class Entity extends DiamondObject{
     public static final String GENERATED_NAME = "GENERATED_ENTITY";
 
     // ATTRIBUTES
-    private long uid;
     private String name;
     private ArrayList<Component> components;
     private boolean toSerialize;
@@ -47,10 +46,6 @@ public class Entity extends DiamondObject{
 
     public ArrayList<Component> getComponents() {
         return components;
-    }
-
-    public long getUid() {
-        return uid;
     }
 
     public String getName() {

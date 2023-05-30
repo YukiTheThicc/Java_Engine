@@ -25,6 +25,7 @@ public class Diamond {
     private Diamond() {
         this.environments = new ArrayList<>();
         this.environmentsToRemove = new ArrayList<>();
+        environmentMap = new HashMap<>();
     }
 
     // GETTERS & SETTERS

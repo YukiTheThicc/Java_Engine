@@ -100,7 +100,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
             ImGui.separator();
 
             if (ImGui.menuItem(Sapphire.getLiteral("add_grid"))) SappEvents.notify(
-                    new SappEvent(SappEventType.Add_component, env, new Grid(32)));
+                    new SappEvent(SappEventType.Add_component, env, new Grid(32, env)));
             ImGui.separator();
 
             if (ImGui.menuItem(Sapphire.getLiteral("delete"))) SappEvents.notify(
@@ -112,7 +112,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
     private void entityContextMenu(Environment env) {
         if (ImGui.beginPopupContextItem(env.getName() + "entity_item")) {
             if (ImGui.menuItem(Sapphire.getLiteral("add_grid"))) SappEvents.notify(
-                    new SappEvent(SappEventType.Add_component, env, new Grid(32)));
+                    new SappEvent(SappEventType.Add_component, env, new Grid(32, env)));
             ImGui.endPopup();
         }
     }

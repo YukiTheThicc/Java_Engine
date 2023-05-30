@@ -2,7 +2,6 @@ package diamondEngine.diaComponents;
 
 import diamondEngine.DiamondObject;
 import diamondEngine.Entity;
-import diamondEngine.Diamond;
 import diamondEngine.Environment;
 import imgui.ImGui;
 import imgui.flag.ImGuiStyleVar;
@@ -12,23 +11,19 @@ import sapphire.imgui.SappDrawable;
 public abstract class Component extends DiamondObject implements SappDrawable {
 
     // ATTRIBUTES
-    private Entity parent;
+    private Entity owner;
 
     public Component(Environment env) {
        super(env);
     }
 
     // GETTERS & SETTERS
-    public Entity getParent() {
-        return parent;
+    public Entity getOwner() {
+        return owner;
     }
 
-    public void setParent(Entity parent) {
-        this.parent = parent;
-    }
-
-    public long getUid() {
-        return uid;
+    public void setOwner(Entity owner) {
+        this.owner = owner;
     }
 
     // METHODS
@@ -40,7 +35,7 @@ public abstract class Component extends DiamondObject implements SappDrawable {
 
     public boolean selectable() {
         boolean result = false;
-        ImGui.pushID(uid);
+        ImGui.pushID(this.getUid());
         ImGui.beginGroup();
         float buttonOriginX = ImGui.getCursorPosX();
 

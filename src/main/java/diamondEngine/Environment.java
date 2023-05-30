@@ -275,23 +275,21 @@ public class Environment implements SappDrawable {
     }
 
     public void save(String path) {
-        if (isModified) {
-            Gson gson = new GsonBuilder()
-                    .setPrettyPrinting()
-                    .registerTypeAdapter(Component.class, new ComponentSerializer(this))
-                    .registerTypeAdapter(Entity.class, new EntitySerializer(this))
-                    .enableComplexMapKeySerialization()
-                    .create();
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(Component.class, new ComponentSerializer(this))
+                .registerTypeAdapter(Entity.class, new EntitySerializer(this))
+                .enableComplexMapKeySerialization()
+                .create();
 
-            try {
-                originFile = path;
-                FileWriter writer = new FileWriter(path);
-                writer.write(gson.toJson(this));
-                writer.close();
-                isModified = false;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            originFile = path;
+            FileWriter writer = new FileWriter(path);
+            writer.write(gson.toJson(this));
+            writer.close();
+            isModified = false;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

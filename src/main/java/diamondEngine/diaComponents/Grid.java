@@ -1,6 +1,7 @@
 package diamondEngine.diaComponents;
 
 import diamondEngine.Diamond;
+import diamondEngine.Environment;
 import diamondEngine.diaRenderer.DebugRenderer;
 import imgui.type.ImInt;
 import org.joml.Vector2f;
@@ -24,8 +25,8 @@ public class Grid extends Component {
     private final Vector3f color = new Vector3f(0.333f, 0.333f, 0.333f);
 
     // CONSTRUCTORS
-    public Grid(int cell) {
-        super();
+    public Grid(int cell, Environment env) {
+        super(env);
         this.cellX = cell;
         this.cellY = cell;
         this.cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX();
@@ -33,8 +34,8 @@ public class Grid extends Component {
         this.draw = true;
     }
 
-    public Grid(int cellX, int cellY) {
-        super();
+    public Grid(int cellX, int cellY, Environment env) {
+        super(env);
         this.cellX = cellX;
         this.cellY = cellY;
         this.cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX();
@@ -124,6 +125,6 @@ public class Grid extends Component {
 
     @Override
     public Component copy() {
-        return new Grid(this.cellX, this.cellY);
+        return new Grid(this.cellX, this.cellY, this.getParent());
     }
 }
