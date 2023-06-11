@@ -1,7 +1,6 @@
 package diamondEngine;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaRenderer.Framebuffer;
 import diamondEngine.diaUtils.DiaLogger;
@@ -32,11 +31,11 @@ public class Environment implements SappDrawable {
     public static final int DEFAULT_FRAME_Y = 270;
 
     // ATTRIBUTES
-    private static final long UID_SEED = 1000000000;
-    private static long CURRENT = UID_SEED + 1;
+    private final long UID_SEED = 1000000000;
+    private long CURRENT = UID_SEED + 1;
     private Environment parent;
     private String name;
-    private String originFile;
+    private transient String originFile;
     private List<Environment> children;
     private List<Entity> entities;
     private List<Component> components;
@@ -48,7 +47,6 @@ public class Environment implements SappDrawable {
     private transient List<Entity> entitiesToRemove;
     private transient List<Component> componentsToRemove;
     private transient Framebuffer frame;
-    private transient long uid;
     private transient float winSizeAdjustX = 1.0f;
     private transient float winSizeAdjustY = 1.0f;
     private transient boolean isDirty = false;
@@ -119,14 +117,6 @@ public class Environment implements SappDrawable {
 
     public boolean isInitialized() {
         return isInitialized;
-    }
-
-    public void setUid(long uid) {
-        this.uid = uid;
-    }
-
-    public long getUid() {
-        return uid;
     }
 
     public Framebuffer getFrame() {
@@ -293,27 +283,44 @@ public class Environment implements SappDrawable {
         }
     }
 
-    public void load(String path) {
+    /**
+     *
+     * @param path
+     * @param env
+     * @return
+     */
+    public static Environment load(String path, Environment env) {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
-                .registerTypeAdapter(Component.class, new ComponentSerializer(this))
-                .registerTypeAdapter(Entity.class, new EntitySerializer(this))
+                .registerTypeAdapter(Environment.class, (InstanceCreator<?>) type -> env)
+                .registerTypeAdapter(Component.class, new ComponentSerializer(env))
+                .registerTypeAdapter(Entity.class, new EntitySerializer(env))
                 .enableComplexMapKeySerialization()
                 .create();
         String inFile = "";
         try {
             inFile = new String(Files.readAllBytes(Paths.get(path)));
             if (!inFile.equals("")) {
-                Environment loadedEnv = gson.fromJson(inFile, Environment.class);
-                entities = loadedEnv.getEntities();
-                components = loadedEnv.getComponents();
-                name = loadedEnv.getName();
-                originFile = loadedEnv.getOriginFile();
-                isModified = false;
+                Environment loaded = gson.fromJson(inFile, Environment.class);
+                long maxId = loaded.CURRENT;
+                for (Entity e : loaded.entities) {
+                    maxId = e.getUid() > maxId ? e.getUid() + 1 : maxId;
+                    for (Component c : e.getComponents()) {
+                        maxId = c.getUid() > maxId ? c.getUid() + 1 : maxId;
+                    }
+                }
+                for (Component c : loaded.components) {
+                    maxId = c.getUid() > maxId ? c.getUid() + 1 : maxId;
+                }
+                loaded.CURRENT = maxId;
+                loaded.originFile = path;
+                loaded.isModified = false;
+                return loaded;
             }
         } catch (Exception e) {
-            DiaLogger.log(this.getClass(), "Failed to load environment from '" + path + "'\n\t" + e.getMessage(), DiaLoggerLevel.ERROR);
+            DiaLogger.log(Environment.class, "Failed to load environment from '" + path + "'\n\t" + e.getMessage(), DiaLoggerLevel.ERROR);
         }
+        return env;
     }
 
     public void destroy() {
@@ -342,11 +349,15 @@ public class Environment implements SappDrawable {
             isModified = true;
         }
 
+        ImGui.text("Current id: " + CURRENT);
+        ImGui.text("Seed: " + UID_SEED);
+        /*
         ImGui.text("winSizeAdjustX: " + winSizeAdjustX);
         ImGui.text("winSizeAdjustY: " + winSizeAdjustY);
         ImGui.text(Window.getWidth() + " / " + Window.getHeight());
         ImGui.text((float) Window.getWidth() / frameX + " / " + (float) Window.getHeight() / frameY);
         ImGui.text("Ratio: " + getRatio());
+        */
     }
 
     public float getRatio() {

@@ -119,6 +119,7 @@ public class WindowsEventHandler implements SappObserver {
     private void handleMakeCurrent(SappEvent event) {
         if (event.env != null) {
             Diamond.setCurrentEnv(event.env);
+            Sapphire.get().getProject().setCurrentEnv(event.env.getOriginFile());
         }
     }
 }

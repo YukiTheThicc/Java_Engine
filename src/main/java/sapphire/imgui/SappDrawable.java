@@ -5,6 +5,4 @@ public interface SappDrawable {
     void imgui();
 
     boolean selectable();
-
-    long getUid();
 }

@@ -116,11 +116,7 @@ public class Grid extends Component {
         if (SappImGui.dragInt(Sapphire.getLiteral("cell_width"), cellX)) {
             cameraChanged(cellX.get(), cellY.get());
         }
-        SappImGui.textLabel("numHLines", "" + numHLines);
-        SappImGui.textLabel("numVLines", "" + numVLines);
-        SappImGui.textLabel("Width", "" + width);
-        SappImGui.textLabel("Height", "" + height);
-        SappImGui.textLabel("Debug lines", "" + DebugRenderer.getLinesSize());
+        SappImGui.textLabel("Cells", (numHLines - 1) * (numVLines - 1) + " (" + (numVLines - 1) + "x" + (numHLines - 1) + ")");
     }
 
     @Override

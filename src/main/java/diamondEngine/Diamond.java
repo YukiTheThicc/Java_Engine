@@ -6,17 +6,18 @@ import diamondEngine.diaEvents.DiaEvents;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Diamond {
 
+    // CONSTANTS
+    public static final String LIMBO_ENV_NAME = "NO ENV";
+
     // ATTRIBUTES
     private static Environment currentEnv = null;
+    private static Environment limboEnv = null;
     private static Diamond diamond = null;
-    private static HashMap<Long, String> environmentMap;
-    private ArrayList<Environment> environments;
+    private final ArrayList<Environment> environments;
     private final ArrayList<Environment> environmentsToRemove;
     private boolean isDirty = false;
     private int emptyEnvs = 0;
@@ -25,7 +26,6 @@ public class Diamond {
     private Diamond() {
         this.environments = new ArrayList<>();
         this.environmentsToRemove = new ArrayList<>();
-        environmentMap = new HashMap<>();
     }
 
     // GETTERS & SETTERS
@@ -42,10 +42,6 @@ public class Diamond {
         DiaEvents.notify(new DiaEvent(DiaEventType.ENV_CHANGED));
     }
 
-    public HashMap<Long, String> getEnvironmentMap() {
-        return environmentMap;
-    }
-
     // METHODS
     public static Diamond get() {
         if (Diamond.diamond == null) {
@@ -56,44 +52,38 @@ public class Diamond {
 
     public void init() {
         // Initialize with dummy environment to draw an empty framebuffer
-        currentEnv = new Environment("empty");
+        limboEnv = new Environment(LIMBO_ENV_NAME);
+        currentEnv = limboEnv;
         currentEnv.init();
     }
 
     public void addEmptyEnvironment() {
         Environment newEnv = new Environment("New Environment" + (emptyEnvs != 0 ? " " + emptyEnvs : ""));
         newEnv.init();
-        environments.add(newEnv);
-        currentEnv = newEnv;
+        addEnvironment(newEnv);
         emptyEnvs++;
     }
 
     public void removeEnv(Environment env) {
         if (env != null) {
-            if (environmentMap.get(env.getUid()) != null) {
-                this.environmentsToRemove.add(env);
-                this.isDirty = true;
-            } else {
-                DiaLogger.log("Tried to remove an unlisted Environment '" + env.getName() + "' (" + env.getUid() + ")", DiaLoggerLevel.WARN);
-            }
+            this.environmentsToRemove.add(env);
+            this.isDirty = true;
         }else {
-            DiaLogger.log("Tried to remove a null Environment", DiaLoggerLevel.WARN);
+            DiaLogger.log(Diamond.class, "Tried to remove a null Environment", DiaLoggerLevel.WARN);
         }
     }
 
     public void addEnvironment(Environment env) {
-        if (environmentMap.get(env.getUid()) == null) {
-            environments.add(env);
-        } else {
-            DiaLogger.log("Tried to add an environment with an already existing UID, a new ID is going to be generated", DiaLoggerLevel.WARN);
-        }
+        environments.add(env);
     }
 
     public void update(float dt) {
         if (isDirty) {
             for (Environment env : environmentsToRemove) {
-                environmentMap.remove(env.getUid());
                 environments.remove(env);
+                if (env == currentEnv) {
+                    currentEnv = limboEnv;
+                }
             }
             environmentsToRemove.clear();
             isDirty = false;

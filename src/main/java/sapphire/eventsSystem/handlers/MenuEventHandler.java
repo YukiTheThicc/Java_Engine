@@ -138,7 +138,7 @@ public class MenuEventHandler implements SappObserver {
         if (path != null && !path.isEmpty()) {
             Environment env = new Environment("IMPORTED ENV");
             env.init();
-            env.load(path);
+            env = Environment.load(path, env);
             Diamond.get().addEnvironment(env);
             if (Sapphire.get().getProject() != null) Sapphire.get().getProject().save();
         }

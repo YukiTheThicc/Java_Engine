@@ -52,7 +52,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
     private void drawNestedEntities() {
 
         for (Environment env : Diamond.get().getEnvironments()) {
-            ImGui.pushID(env.getUid());
+            ImGui.pushID(env.getOriginFile());
 
             if (ImGui.treeNodeEx(env.getName() + (env.isModified() ? " *" : ""), NODE_FLAGS)) {
                 if (ImGui.isItemClicked()) {

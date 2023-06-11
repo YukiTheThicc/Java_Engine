@@ -2,6 +2,7 @@ package sapphire;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import diamondEngine.Environment;
 import diamondEngine.Diamond;
 import diamondEngine.diaUtils.DiaAssetManager;
@@ -31,6 +32,7 @@ public class SappProject {
     private List<File> openedFiles;
     private List<String> projectEnvFiles;
     private List<String> resources;
+    private String currentEnv;
     private transient SappDir root;
 
     // CONSTRUCTORS
@@ -39,6 +41,7 @@ public class SappProject {
         this.openedFiles = new ArrayList<>();
         this.projectEnvFiles = new ArrayList<>();
         this.resources = new ArrayList<>();
+        this.currentEnv = "";
     }
 
     // GETTERS & SETTERS
@@ -60,6 +63,15 @@ public class SappProject {
 
     public List<String> getResources() {
         return resources;
+    }
+
+    public String getCurrentEnv() {
+        return currentEnv;
+    }
+
+    public void setCurrentEnv(String currentEnvId) {
+        this.currentEnv = currentEnvId;
+        save();
     }
 
     // METHODS
@@ -90,7 +102,7 @@ public class SappProject {
                 if (env.getOriginFile() != null && !env.isToRemove()) projectEnvFiles.add(env.getOriginFile());
             }
 
-            writer.write(gson.toJson(this));
+            writer.write(gson.toJson(this, SappProject.class));
             writer.close();
         } catch (IOException e) {
             DiaLogger.log(this.getClass(), "Failed to save project file: ", DiaLoggerLevel.ERROR);
@@ -130,16 +142,20 @@ public class SappProject {
                 if (projectEnvFiles == null) projectEnvFiles = new ArrayList<>();
                 resources = temp.getResources();
                 if (resources == null) resources = new ArrayList<>();
+                currentEnv = temp.getCurrentEnv();
 
                 for (String asset : resources) {
                     DiaAssetManager.loadResource(asset);
                 }
 
-                for (String envFile : temp.getProjectEnvFiles()) {
+                for (String envFile : projectEnvFiles) {
                     Environment loadedEnv = new Environment("LOADED ENV");
                     loadedEnv.init();
-                    loadedEnv.load(envFile);
+                    loadedEnv = Environment.load(envFile, loadedEnv);
                     Diamond.get().addEnvironment(loadedEnv);
+                    if (loadedEnv.getOriginFile().equals(currentEnv)) {
+                        Diamond.setCurrentEnv(loadedEnv);
+                    }
                 }
                 return true;
             }
