@@ -24,6 +24,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Asset window class. Holds the data structures and functionalities to store all the necessary data to render the
+ * buttons for available assets. To avoid a high volume of queries for retrieving the currently available assets each
+ * frame, each time an asset is loaded an event is dispatched so classes that need to update their state can do so only
+ * when strictly necessary. Implements the DiaObject interface so it can be notified.
+ */
 public class AssetsWindow extends ImguiWindow implements DiaObserver {
 
     // ATTRIBUTES
@@ -77,6 +83,9 @@ public class AssetsWindow extends ImguiWindow implements DiaObserver {
         ImGui.end();
     }
 
+    /**
+     * Renders the toolbar for the asset window
+     */
     private void toolbar() {
         ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
         if (addAssetButton.draw()) SappEvents.notify(new SappEvent(SappEventType.Add_asset));
@@ -85,18 +94,25 @@ public class AssetsWindow extends ImguiWindow implements DiaObserver {
         ImGui.popStyleColor(1);
     }
 
+    /**
+     * Draws the tab for sound assets
+     */
     private void drawSoundTab() {
         if (ImGui.beginTabItem("Sounds")) {
             for (AssetImageButton b : soundButtons) {
                 b.draw();
-                if (ImGui.getContentRegionAvailX() > 500) {
-                    ImGui.sameLine();
+                if (ImGui.getContentRegionAvailX() < (float) b.getButtonSize() - b.getPaddingX()) {
+                    ImGui.newLine();
+                    ImGui.setCursorPos(ImGui.getCursorPosX(), ImGui.getCursorPosY() + b.getButtonSize());
                 }
             }
             ImGui.endTabItem();
         }
     }
 
+    /**
+     * Draws
+     */
     private void drawTextureTab() {
         if (ImGui.beginTabItem("Textures")) {
             for (AssetImageButton b : textureButtons) {
@@ -110,6 +126,10 @@ public class AssetsWindow extends ImguiWindow implements DiaObserver {
         }
     }
 
+    /**
+     * Queries the first assets available when creating the window. Should be called when creating the window or changing
+     * the project
+     */
     private void getFirstElements() {
         for (Texture t : DiaAssetManager.getAllTextures()) {
             textureButtons.add(new AssetImageButton(t));
