@@ -68,14 +68,10 @@ public class AssetsWindow extends ImguiWindow implements DiaObserver {
             toolbar();
             ImGui.nextColumn();
             if (ImGui.beginTabBar(this.getTitle(), this.getFlags())) {
-                if (ImGui.beginTabItem("Sprites")) {
-                    ImGui.endTabItem();
-                }
-                if (ImGui.beginTabItem("Tiles")) {
-                    ImGui.endTabItem();
-                }
-                drawTextureTab();
-                drawSoundTab();
+                drawTab(Sapphire.getLiteral("textures"), textureButtons);
+                drawTab(Sapphire.getLiteral("sounds"), soundButtons);
+                drawTab(Sapphire.getLiteral("shaders"), shaderButtons);
+                drawTab(Sapphire.getLiteral("templates"), templateButtons);
                 ImGui.endTabBar();
             }
         }
@@ -95,27 +91,13 @@ public class AssetsWindow extends ImguiWindow implements DiaObserver {
     }
 
     /**
-     * Draws the tab for sound assets
+     * Draws an arbitrary assets tab for the asset window
+     * @param tabLabel Label for the asset tab
+     * @param assets List of assets to bhe drawn inside the tab
      */
-    private void drawSoundTab() {
-        if (ImGui.beginTabItem("Sounds")) {
-            for (AssetImageButton b : soundButtons) {
-                b.draw();
-                if (ImGui.getContentRegionAvailX() < (float) b.getButtonSize() - b.getPaddingX()) {
-                    ImGui.newLine();
-                    ImGui.setCursorPos(ImGui.getCursorPosX(), ImGui.getCursorPosY() + b.getButtonSize());
-                }
-            }
-            ImGui.endTabItem();
-        }
-    }
-
-    /**
-     * Draws
-     */
-    private void drawTextureTab() {
-        if (ImGui.beginTabItem("Textures")) {
-            for (AssetImageButton b : textureButtons) {
+    private void drawTab(String tabLabel, List<AssetImageButton> assets) {
+        if (assets != null && !assets.isEmpty() && ImGui.beginTabItem(tabLabel)) {
+            for (AssetImageButton b : assets) {
                 b.draw();
                 if (ImGui.getContentRegionAvailX() < (float) b.getButtonSize() - b.getPaddingX()) {
                     ImGui.newLine();

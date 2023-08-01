@@ -111,6 +111,7 @@ public class DebugRenderer {
         shader.use();
         shader.uploadMat4f("uProjection", camera.getProjMatrix());
         shader.uploadMat4f("uView", camera.getViewMatrix());
+        shader.uploadInt("uType", 0);
 
         // Bind the vao
         glBindVertexArray(vaoID);

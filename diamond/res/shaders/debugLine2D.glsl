@@ -6,11 +6,14 @@
 
     uniform mat4 uProjection;
     uniform mat4 uView;
+    uniform int uType;
 
     out vec3 fragColor;
+    out int type;
 
     void main() {
         fragColor = attrColor;
+        type = uType;
         gl_Position = uProjection * uView * vec4(attrPos, 1.0);
     }
 
@@ -22,5 +25,6 @@
     out vec4 color;
 
     void main() {
+
         color = vec4(fragColor, 1);
     }

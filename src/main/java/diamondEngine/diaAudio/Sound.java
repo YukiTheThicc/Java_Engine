@@ -30,8 +30,7 @@ public class Sound {
         stackPush();
         IntBuffer sampleRateBuffer = stackMallocInt(1);
 
-        ShortBuffer rawAudioBuffer =
-                stb_vorbis_decode_filename(filepath, channelsBuffer, sampleRateBuffer);
+        ShortBuffer rawAudioBuffer = stb_vorbis_decode_filename(filepath, channelsBuffer, sampleRateBuffer);
         if (rawAudioBuffer == null) {
             DiaLogger.log(this.getClass(), "Failed to load sound '" + filepath + "'", DiaLoggerLevel.ERROR);
             stackPop();
