@@ -44,6 +44,7 @@ public class SettingsWindow extends ImguiWindow {
             if (ImGui.beginPopupModal(this.getTitle(), this.isActive(), this.getFlags())) {
                 if (ImGui.beginTabBar(this.getTitle(), this.getFlags())) {
                     generalSettingsTab(settings, layer);
+                    debugSettingsTab(settings, layer);
                     ImGui.endTabBar();
                 }
                 checkChanges(settings);
@@ -98,6 +99,16 @@ public class SettingsWindow extends ImguiWindow {
             String newLang = SappImGui.combo(Sapphire.getLiteral("lang"), settings.getCurrentLang(), settings.getLanguages());
             if (newLang != null) {
                 settings.changeLangTo(newLang);
+                settingsChanged = true;
+            }
+            ImGui.endTabItem();
+        }
+    }
+
+    private void debugSettingsTab(SappSettings settings, SappImGuiLayer layer) {
+        if (ImGui.beginTabItem(Sapphire.getLiteral("debug_settings"))) {
+            if (ImGui.checkbox(Sapphire.getLiteral("sapphire_debug"), settings.isSappDebug()))  {
+                settings.setSappDebug(!settings.isSappDebug());
                 settingsChanged = true;
             }
             ImGui.endTabItem();

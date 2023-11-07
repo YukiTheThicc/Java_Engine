@@ -24,6 +24,7 @@ public class SappSettings {
     private String currentFont;
     private String currentLang;
     private String lastProject;
+    private boolean sappDebug;
     private HashMap<String, Boolean> activeWindows;
     private HashMap<String, Boolean> showPreferences;
     private transient HashMap<String, String> languages;
@@ -37,6 +38,7 @@ public class SappSettings {
         this.workspace = "";
         this.currentFont = "";
         this.lastProject = "";
+        this.sappDebug = false;
         this.currentLang = DEFAULT_LANG;
         this.activeWindows = new HashMap<>();
         this.languages = new HashMap<>();
@@ -117,6 +119,14 @@ public class SappSettings {
 
     public ArrayList<ImFont> getSmallFonts() {
         return smallFonts;
+    }
+
+    public boolean isSappDebug() {
+        return sappDebug;
+    }
+
+    public void setSappDebug(boolean sappDebug) {
+        this.sappDebug = sappDebug;
     }
 
     // METHODS
@@ -234,6 +244,7 @@ public class SappSettings {
 
             SappSettings temp = gson.fromJson(inFile, SappSettings.class);
             workspace = temp.getWorkspace();
+            sappDebug = temp.isSappDebug();
             currentFont = temp.getCurrentFont();
             activeWindows = temp.getActiveWindows();
             showPreferences = temp.getShowPreferences();
