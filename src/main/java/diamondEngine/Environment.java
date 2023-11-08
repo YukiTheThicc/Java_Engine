@@ -2,9 +2,11 @@ package diamondEngine;
 
 import com.google.gson.*;
 import diamondEngine.diaComponents.Component;
+import diamondEngine.diaRenderer.DebugRenderer;
 import diamondEngine.diaRenderer.Framebuffer;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
+import diamondEngine.diaUtils.DiaProfiler;
 import diamondEngine.diaUtils.serializers.ComponentSerializer;
 import diamondEngine.diaUtils.serializers.EntitySerializer;
 import imgui.ImGui;
@@ -26,7 +28,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class Environment implements SappDrawable {
 
     // CONSTANTS
-    public static final String ENVS_EXT = ".denv";
+    public static final String ENV_EXTENSION = ".denv";
     public static final int DEFAULT_FRAME_X = 480;
     public static final int DEFAULT_FRAME_Y = 270;
 
@@ -52,6 +54,8 @@ public class Environment implements SappDrawable {
     private transient boolean isDirty = false;
     private transient boolean toRemove = false;
     private transient boolean isModified = true;
+    private transient boolean debug = true;
+    private transient boolean isProfiling = true;
 
     // CONSTRUCTORS
     public Environment(String name) {
@@ -168,6 +172,13 @@ public class Environment implements SappDrawable {
         frame = new Framebuffer(frameX, frameY);
         isInitialized = true;
         isModified = true;
+        if (isProfiling) {
+            Diamond.getProfiler().addRegister("Update Lists");
+            Diamond.getProfiler().addRegister("Update Children");
+            Diamond.getProfiler().addRegister("Update Components");
+            Diamond.getProfiler().addRegister("Update Entities");
+            Diamond.getProfiler().addRegister("Debug Render");
+        }
     }
 
     public long genId() {
@@ -235,20 +246,39 @@ public class Environment implements SappDrawable {
     }
 
     public void endFrame() {
+        if (debug) {
+            Diamond.getProfiler().beginMeasurement("Debug Render");
+            DebugRenderer.beginFrame();
+            DebugRenderer.draw();
+            Diamond.getProfiler().endMeasurement("Debug Render");
+        }
         this.frame.unBind();
     }
 
+    /**
+     * Updates the environment
+     * @param dt Delta time for the main loop update
+     */
     public void update(float dt) {
+        Diamond.getProfiler().beginMeasurement("Update Lists");
         updateLists();
+        Diamond.getProfiler().endMeasurement("Update Lists");
+
+        Diamond.getProfiler().beginMeasurement("Update Children");
         for (Environment child : children) child.update(dt);
+        Diamond.getProfiler().endMeasurement("Update Children");
+
+        Diamond.getProfiler().beginMeasurement("Update Components");
         for (Component component : components) component.update(dt);
-        for (Entity e : entities) {
-            e.update(dt);
-        }
+        Diamond.getProfiler().endMeasurement("Update Components");
+
+        Diamond.getProfiler().beginMeasurement("Update Entities");
+        for (Entity e : entities) e.update(dt);
+        Diamond.getProfiler().endMeasurement("Update Entities");
     }
 
     /**
-     * Updates the contents of the environment
+     * Updates the entities and components lists of the environment
      */
     public void updateLists() {
         if (isDirty) {
@@ -284,12 +314,13 @@ public class Environment implements SappDrawable {
     }
 
     /**
-     *
-     * @param path
-     * @param env
-     * @return
+     * Loads an environment from a file passed as a parameter
+     * @param path Path of the environment file to load the new environment from
+     * @return The newly loaded environment
      */
-    public static Environment load(String path, Environment env) {
+    public static Environment load(String path) {
+        Environment env = new Environment("LOADED ENV");
+        env.init();
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .registerTypeAdapter(Environment.class, (InstanceCreator<?>) type -> env)
@@ -351,6 +382,8 @@ public class Environment implements SappDrawable {
 
         ImGui.text("Current id: " + CURRENT);
         ImGui.text("Seed: " + UID_SEED);
+
+
         /*
         ImGui.text("winSizeAdjustX: " + winSizeAdjustX);
         ImGui.text("winSizeAdjustY: " + winSizeAdjustY);

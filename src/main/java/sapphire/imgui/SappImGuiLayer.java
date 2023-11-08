@@ -2,6 +2,7 @@ package sapphire.imgui;
 
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
+import imgui.extension.implot.ImPlot;
 import imgui.flag.ImGuiStyleVar;
 import imgui.internal.ImGuiDockNode;
 import sapphire.Sapphire;
@@ -88,6 +89,7 @@ public class SappImGuiLayer {
     public void init() {
 
         ImGui.createContext();
+        ImPlot.createContext();
         final ImGuiIO io = ImGui.getIO();
 
         try {

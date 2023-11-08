@@ -5,6 +5,7 @@ import diamondEngine.diaEvents.DiaEventType;
 import diamondEngine.diaEvents.DiaEvents;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
+import diamondEngine.diaUtils.DiaProfiler;
 
 import java.util.ArrayList;
 
@@ -17,6 +18,7 @@ public class Diamond {
     private static Environment currentEnv = null;
     private static Environment limboEnv = null;
     private static Diamond diamond = null;
+    private static DiaProfiler profiler = null;
     private final ArrayList<Environment> environments;
     private final ArrayList<Environment> environmentsToRemove;
     private boolean isDirty = false;
@@ -42,6 +44,10 @@ public class Diamond {
         DiaEvents.notify(new DiaEvent(DiaEventType.ENV_CHANGED));
     }
 
+    public static DiaProfiler getProfiler() {
+        return profiler;
+    }
+
     // METHODS
     public static Diamond get() {
         if (Diamond.diamond == null) {
@@ -52,6 +58,8 @@ public class Diamond {
 
     public void init() {
         // Initialize with dummy environment to draw an empty framebuffer
+        profiler = new DiaProfiler(20);
+        profiler.addRegister("Total");
         limboEnv = new Environment(LIMBO_ENV_NAME);
         currentEnv = limboEnv;
         currentEnv.init();

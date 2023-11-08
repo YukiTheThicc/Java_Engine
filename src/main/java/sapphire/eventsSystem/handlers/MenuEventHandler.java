@@ -136,9 +136,7 @@ public class MenuEventHandler implements SappObserver {
     private void importEnv() {
         String path = DiaUtils.selectFile();
         if (path != null && !path.isEmpty()) {
-            Environment env = new Environment("IMPORTED ENV");
-            env.init();
-            env = Environment.load(path, env);
+            Environment env = Environment.load(path);
             Diamond.get().addEnvironment(env);
             if (Sapphire.get().getProject() != null) Sapphire.get().getProject().save();
         }
@@ -151,7 +149,7 @@ public class MenuEventHandler implements SappObserver {
             if (env.getOriginFile() != null) {
                 file = new File(env.getOriginFile());
             } else {
-                file = DiaUtils.saveFile(Sapphire.getProjectDir() + "/" + SappProject.ENVS_DIR, Environment.ENVS_EXT);
+                file = DiaUtils.saveFile(Sapphire.getProjectDir() + "/" + SappProject.ENVS_DIR, Environment.ENV_EXTENSION);
             }
 
             if (file != null && file.isFile()) {
@@ -164,7 +162,7 @@ public class MenuEventHandler implements SappObserver {
     private void saveEnvAs() {
         Environment env = Sapphire.getActiveObject() instanceof Environment ? (Environment) Sapphire.getActiveObject() : null;
         if (env != null) {
-            File file = DiaUtils.saveFile(Sapphire.getProjectDir() + "/" + SappProject.ENVS_DIR, Environment.ENVS_EXT);
+            File file = DiaUtils.saveFile(Sapphire.getProjectDir() + "/" + SappProject.ENVS_DIR, Environment.ENV_EXTENSION);
             if (file != null && file.isFile()) {
                 env.save(file.getAbsolutePath());
             }

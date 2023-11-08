@@ -1,22 +1,33 @@
 package sapphire.imgui.windows;
 
+import diamondEngine.Diamond;
+import diamondEngine.diaUtils.DiaProfiler;
 import imgui.ImGui;
+import imgui.ImVec2;
+import imgui.extension.implot.ImPlot;
+import imgui.extension.implot.flag.*;
+import imgui.type.ImDouble;
 import sapphire.Sapphire;
 import sapphire.imgui.SappImGuiLayer;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Set;
 
 public class ProfilerWindow extends ImguiWindow {
 
     // ATTRIBUTES
-    private int fps;
-    private float accTime;
+    private final DecimalFormat df;
+    private float maxTime;
+    private float debounceTime = 3f;
+    private float elapsedTime = 0f;
 
     // CONSTRUCTORS
     public ProfilerWindow() {
         super("profiler", "Profiler");
-        this.fps = 0;
-        this.accTime = 0;
+        this.maxTime = 0f;
+        this.df = new DecimalFormat("#.######");
+        df.setRoundingMode(RoundingMode.CEILING);
     }
 
     // METHODS
@@ -25,21 +36,42 @@ public class ProfilerWindow extends ImguiWindow {
 
         if (ImGui.begin(this.getTitle(), this.getFlags())) {
 
-            accTime += Sapphire.get().getDt();
-            if (accTime > 0.05f) {
-                fps = (int) (1 / Sapphire.get().getDt());
-                accTime -= 0.05f;
+            if (Diamond.getCurrentEnv() != null) {
+
+                DiaProfiler profiler = Diamond.getProfiler();
+                float total = profiler.getRegisters().get("Total");
+                if (total > maxTime) {
+                    maxTime = total;
+                    elapsedTime = 0f;
+                }
+
+                ImPlot.setNextPlotLimits(0, maxTime, 0, 0.5, 1);
+                if (ImPlot.beginPlot("Runtime", "Time (ms)", "",
+                        new ImVec2(ImGui.getContentRegionAvailX(), 150),
+                        ImPlotFlags.NoMousePos | ImPlotFlags.NoTitle,
+                        ImPlotAxisFlags.None,
+                        ImPlotAxisFlags.NoTickMarks | ImPlotAxisFlags.NoTickLabels | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoLabel)) {
+
+                    ImPlot.setLegendLocation(ImPlotLocation.West, ImPlotOrientation.Vertical,true);
+                    elapsedTime += Sapphire.get().getDt();
+                    ImPlot.pushColormap(ImPlotColormap.Jet);
+                    for (String register : profiler.getRegisters().keySet()) {
+                        Float[] valueX = {profiler.getRegisters().get(register)};
+                        Float[] valueY = {0f};
+                        ImPlot.plotBarsH(register, valueX, valueY, 1f, 5);
+                    }
+                    if (elapsedTime > debounceTime) {
+                        if ((maxTime - total) > total) {
+                            maxTime -= total / 2;
+                        } else {
+                            elapsedTime -= debounceTime;
+                        }
+                    }
+                    ImPlot.popColormap();
+                    ImPlot.endPlot();
+                }
             }
 
-            ImGui.columns(2);
-            ImGui.text("FPS: ");
-            ImGui.sameLine();
-            ImGui.text(String.valueOf(fps));
-            ImGui.text(layer.getLastFocusedFile() != null ? layer.getLastFocusedFile().getTitle() : "No file opened");
-
-            ImGui.nextColumn();
-
-            ImGui.columns(1);
             ImGui.separator();
             Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
             ImGui.text(Sapphire.getLiteral("current_threads"));

@@ -148,9 +148,7 @@ public class SappProject {
                 }
 
                 for (String envFile : projectEnvFiles) {
-                    Environment loadedEnv = new Environment("LOADED ENV");
-                    loadedEnv.init();
-                    loadedEnv = Environment.load(envFile, loadedEnv);
+                    Environment loadedEnv = Environment.load(envFile);
                     Diamond.get().addEnvironment(loadedEnv);
                     if (loadedEnv.getOriginFile().equals(currentEnv)) {
                         Diamond.setCurrentEnv(loadedEnv);
