@@ -72,14 +72,17 @@ public class Grid extends Component {
 
             if (camera.zoom <= 4) {
 
-                float firstX = cameraPos.x;
-                float firstY = cameraPos.y;
-                numHLines = (int) ((camera.zoom / cellNY) * pSize.y / adjustY) + 2;
-                numVLines = (int) ((camera.zoom / cellNX) * pSize.x / adjustX) + 2;
-                width = camera.zoom * pSize.x / adjustX;
-                height = camera.zoom * pSize.y / adjustY;
-
+                numHLines = (int) ((camera.zoom / cellNY) * pSize.y / adjustY) + 3;
+                numVLines = (int) ((camera.zoom / cellNX) * pSize.x / adjustX) + 3;
+                width = cellNX * 2 + camera.zoom * pSize.x / adjustX;
+                height = cellNY * 2 + camera.zoom * pSize.y / adjustY;
+                float firstX = ((int) (cameraPos.x / camera.factor / cellNX) - 1) * cellNX;
+                float firstY = ((int) (cameraPos.y / camera.factor / cellNY) - 1) * cellNY;
                 int maxLines = Math.max(numVLines, numHLines);
+
+                System.out.println(firstX + "/" + firstY);
+                System.out.println(((camera.zoom * pSize.y) / cellY));
+                System.out.println(numHLines);
 
                 float x = 0;
                 float y = 0;

@@ -2,7 +2,9 @@ package diamondEngine.diaRenderer;
 
 import diamondEngine.diaComponents.Camera;
 import diamondEngine.diaUtils.DiaAssetManager;
+import org.joml.Vector2d;
 import org.joml.Vector2f;
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 import sapphire.imgui.windows.GameViewWindow;
 

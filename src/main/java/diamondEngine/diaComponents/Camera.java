@@ -17,6 +17,7 @@ public class Camera {
     private final Vector2f pSize;
     private final Vector2f pSizeActual;
     public Vector2f pos;
+    public float factor = 4f;
     public float zoom = 1.0f;
 
     // CONSTRUCTORS
@@ -30,7 +31,7 @@ public class Camera {
         this.invView = new Matrix4f();
         this.front = new Vector3f(0.0f, 0.0f, -1.0f);
         this.up = new Vector3f(0.0f, 1.0f, 0.0f);
-        this.changeProjection();
+        this.updateOrthoProjection();
     }
 
     // GETTERS & SETTERS
@@ -41,7 +42,7 @@ public class Camera {
     public Matrix4f getViewMatrix() {
         vMatrix.identity();
         Vector3f cameraFront = new Vector3f(front);
-        vMatrix.lookAt(new Vector3f(pos.x, pos.y, 20.0f), cameraFront.add(pos.x, pos.y, 0.0f), up);
+        vMatrix.lookAt(new Vector3f(pos.x / factor, pos.y / factor, 20.0f), cameraFront.add(pos.x / factor, pos.y / factor, 0.0f), up);
         invView = new Matrix4f(vMatrix).invert();
         return vMatrix;
     }
@@ -71,11 +72,15 @@ public class Camera {
     }
 
     // METHODS
-    public void changeProjection() {
+    public void updateOrthoProjection() {
         pMatrix.identity();
         calculateActualPSize();
         pMatrix.ortho(0.0f, this.zoom * pSizeActual.x, 0.0f, this.zoom * pSizeActual.y, 0.0f, 100.0f);
         invProj = new Matrix4f(pMatrix).invert();
+    }
+
+    public void updatePerspectiveProjection() {
+
     }
 
     private void calculateActualPSize() {

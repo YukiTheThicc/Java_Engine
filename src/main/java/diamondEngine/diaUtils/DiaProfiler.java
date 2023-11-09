@@ -48,8 +48,6 @@ public class DiaProfiler {
             this.registerMeasurements.put(register, 0f);
             this.registerCounts.put(register, 0);
             this.registerCurrentMeasurements.put(register, 0L);
-        } else {
-            DiaLogger.log(this.getClass(), "Register '" + register + "' already exists", DiaLoggerLevel.WARN);
         }
     }
 

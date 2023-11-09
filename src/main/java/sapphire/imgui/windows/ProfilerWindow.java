@@ -75,7 +75,7 @@ public class ProfilerWindow extends ImguiWindow {
             ImGui.separator();
             Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
             ImGui.text(Sapphire.getLiteral("current_threads"));
-            if (ImGui.beginChild("options")) {
+            if (ImGui.beginChild("options", ImGui.getContentRegionAvailX(), 200)) {
                 for (Thread thread : threadSet) {
                     ImGui.text(thread.getName() + ": " + thread.getState());
                 }
