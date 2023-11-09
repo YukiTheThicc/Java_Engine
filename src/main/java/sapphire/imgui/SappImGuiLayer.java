@@ -1,5 +1,6 @@
 package sapphire.imgui;
 
+import diamondEngine.diaControls.MouseControlsEditor;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
 import imgui.extension.implot.ImPlot;
@@ -85,6 +86,10 @@ public class SappImGuiLayer {
         return smallFont;
     }
 
+    public GameViewWindow getGameView() {
+        return gameView;
+    }
+
     // METHODS
     public void init() {
 
@@ -125,7 +130,7 @@ public class SappImGuiLayer {
             }
         });
 
-        imGuiGlfw.init(glfwWindow, true);
+        imGuiGlfw.init(glfwWindow, false);
         imGuiGl3.init("#version 330 core");
         SappStyles.setSapphireStyles();
         SappImGui.init();
@@ -219,20 +224,20 @@ public class SappImGuiLayer {
             if (!io.getWantCaptureMouse() && mouseDown[1]) {
                 ImGui.setWindowFocus(null);
             }
-            /*
-            if (!io.getWantCaptureMouse() || viewPortWindow.getWantCaptureMouse()) {
-                MouseListener.mouseButtonCallback(w, button, action, mods);
-            }*/
+
+            if (!io.getWantCaptureMouse() || gameView.getWantCaptureMouse()) {
+                MouseControlsEditor.mouseButtonCallback(w, button, action, mods);
+            }
         });
 
         glfwSetScrollCallback(glfwWindow, (w, xOffset, yOffset) -> {
             io.setMouseWheelH(io.getMouseWheelH() + (float) xOffset);
             io.setMouseWheel(io.getMouseWheel() + (float) yOffset);
 
-            /*
-            if (!io.getWantCaptureMouse() || viewPortWindow.getWantCaptureMouse()) {
-                MouseListener.mouseScrollCallback(w, xOffset, yOffset);
-            }*/
+
+            if (!io.getWantCaptureMouse() || gameView.getWantCaptureMouse()) {
+                MouseControlsEditor.mouseScrollCallback(w, xOffset, yOffset);
+            }
         });
     }
 

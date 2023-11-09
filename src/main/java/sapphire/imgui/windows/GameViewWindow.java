@@ -2,6 +2,7 @@ package sapphire.imgui.windows;
 
 import diamondEngine.Diamond;
 import diamondEngine.diaComponents.Camera;
+import diamondEngine.diaControls.MouseControlsEditor;
 import diamondEngine.diaUtils.DiaMath;
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -45,6 +46,11 @@ public class GameViewWindow extends ImguiWindow {
     }
 
     // METHODS
+    public boolean getWantCaptureMouse() {
+        return MouseControlsEditor.getX() >= leftX && MouseControlsEditor.getX() <= rightX &&
+                MouseControlsEditor.getY() >= topY && MouseControlsEditor.getY() <= bottomY;
+    }
+
     private ImVec2 getLargestSizeForViewport() {
 
         ImVec2 windowSize = new ImVec2();
@@ -78,20 +84,23 @@ public class GameViewWindow extends ImguiWindow {
     public void imgui(SappImGuiLayer layer) {
 
         editorCamera.updateOrthoProjection();
+        ImGui.setNextWindowDockID(layer.getDockId());
         if (ImGui.begin(this.getTitle(), this.getFlags())) {
-            ImGui.setNextWindowDockID(layer.getDockId());
 
-            ImGui.setCursorPos(ImGui.getCursorPosX(), ImGui.getCursorPosY());
             ImVec2 windowSize = getLargestSizeForViewport();
-            ImVec2 windowPos = getCenteredPositionForViewport(windowSize);
+            ImVec2 viewPortPos = getCenteredPositionForViewport(windowSize);
+            ImVec2 viewPortWindowPos = ImGui.getWindowViewport().getWorkPos();
+            ImVec2 windowPos = ImGui.getWindowPos();
 
-            ImGui.setCursorPos(windowPos.x, windowPos.y);
+            ImGui.setCursorPos(viewPortPos.x, viewPortPos.y);
+
             this.setSizeX((int) windowSize.x);
             this.setSizeY((int) windowSize.y);
-            leftX = (int) (windowPos.x + ImGui.getStyle().getFramePaddingX() * 2);
-            rightX = (int) (windowPos.x + ImGui.getStyle().getFramePaddingX() * 2);
-            bottomY = (int) (windowPos.y + ImGui.getStyle().getFramePaddingY());
-            topY = (int) (windowPos.y + this.getSizeY() + ImGui.getStyle().getFramePaddingY());
+
+            leftX = (int) (windowPos.x - viewPortWindowPos.x + viewPortPos.x) ;
+            rightX = (int) (windowPos.x - viewPortWindowPos.x + viewPortPos.x + this.getSizeX());
+            topY = (int) (windowPos.y - viewPortWindowPos.y + viewPortPos.y);
+            bottomY = (int) (windowPos.y - viewPortWindowPos.y + viewPortPos.y + this.getSizeY());
 
             // Controls
             controls.drawControls();

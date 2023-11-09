@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import diamondEngine.Diamond;
 import diamondEngine.Environment;
 import diamondEngine.Window;
+import diamondEngine.diaControls.MouseControlsEditor;
 import diamondEngine.diaRenderer.DebugRenderer;
 import diamondEngine.diaRenderer.Texture;
 import diamondEngine.diaUtils.DiaLogger;
@@ -144,10 +145,6 @@ public class Sapphire {
         }
     }
 
-    public void defaultLiterals() {
-        this.literals = SappDefaultLiterals.generateDefaults();
-    }
-
     private void defaultColors() {
         colors.put("DiaLogger.CRITICAL", new int[]{175,50,233,255});
         colors.put("DiaLogger.ERROR", new int[]{200,50,50,255});
@@ -175,6 +172,10 @@ public class Sapphire {
         colors.put("font", new int[]{218,224,232,255});
     }
 
+    public void defaultLiterals() {
+        this.literals = SappDefaultLiterals.generateDefaults();
+    }
+
     public static Sapphire get() {
         if (Sapphire.sapphire == null) {
             Sapphire.sapphire = new Sapphire();
@@ -188,7 +189,10 @@ public class Sapphire {
         DiaUtils.init();
         defaultLiterals();
         defaultColors();
-        window.init("Sapphire", "sapphire/icon.png");
+        window.init("Sapphire", "sapphire/icon.png",
+                MouseControlsEditor::mousePosCallback,
+                MouseControlsEditor::mouseButtonCallback,
+                MouseControlsEditor::mouseScrollCallback);
         diaInstance.init();
         loadIcons();
         imGUILayer = new SappImGuiLayer(this.window.getGlfwWindow());

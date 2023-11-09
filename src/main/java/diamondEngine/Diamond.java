@@ -58,7 +58,7 @@ public class Diamond {
 
     public void init() {
         // Initialize with dummy environment to draw an empty framebuffer
-        profiler = new DiaProfiler(20);
+        profiler = new DiaProfiler(2);
         profiler.addRegister("Total");
         limboEnv = new Environment(LIMBO_ENV_NAME);
         currentEnv = limboEnv;

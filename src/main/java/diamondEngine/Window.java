@@ -1,15 +1,16 @@
 package diamondEngine;
 
+import diamondEngine.diaControls.MouseControlsEditor;
 import diamondEngine.diaUtils.DiaUtils;
-import org.lwjgl.glfw.GLFWImage;
+import org.lwjgl.glfw.*;
 import org.joml.Vector2f;
-import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.opengl.GL;
 import java.nio.IntBuffer;
+import java.util.concurrent.Callable;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -89,7 +90,10 @@ public class Window {
         System.out.println("Resizing");
     }
 
-    public void init(String title, String iconPath) {
+    public void init(String title, String iconPath,
+                         GLFWCursorPosCallbackI mousePosCallback,
+                         GLFWMouseButtonCallbackI mouseButtonCallback,
+                         GLFWScrollCallbackI mouseScrollCallback) {
         GLFWErrorCallback.createPrint(System.err).set();
 
         if (!glfwInit()) {
@@ -108,11 +112,9 @@ public class Window {
             throw new IllegalStateException("Failed to create GLFW window");
         }
 
-        // TODO: Setup window control callbacksglfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback);
-        //        glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
-        //        glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
-        //        glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
-
+        glfwSetCursorPosCallback(glfwWindow, mousePosCallback);
+        glfwSetMouseButtonCallback(glfwWindow, mouseButtonCallback);
+        glfwSetScrollCallback(glfwWindow, mouseScrollCallback);
         glfwSetWindowSizeCallback(glfwWindow, (w, newX, newY) -> {
             Window.setWidth(newX);
             Window.setHeight(newY);
