@@ -1,6 +1,9 @@
 package diamondEngine.diaControls;
 
+import diamondEngine.diaComponents.Camera;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 import sapphire.Sapphire;
 
 import java.util.Arrays;
@@ -79,5 +82,20 @@ public class MouseControlsEditor {
 
     public static float getY() {
         return (float) yPos;
+    }
+
+    public static Vector2f screenToWorld(Vector2f screenCoords) {
+        Vector2f normalizedScreenCords = new Vector2f(
+                screenCoords.x / Window.getWidth(),
+                screenCoords.y / Window.getHeight()
+        );
+        normalizedScreenCords.mul(2.0f).sub(new Vector2f(1.0f, 1.0f));
+        Camera camera = Container.getEnv().getCamera();
+        Vector4f tmp = new Vector4f(normalizedScreenCords.x, normalizedScreenCords.y,
+                0, 1);
+        Matrix4f inverseView = new Matrix4f(camera.getInvView());
+        Matrix4f inverseProjection = new Matrix4f(camera.getInvProj());
+        tmp.mul(inverseView.mul(inverseProjection));
+        return new Vector2f(tmp.x, tmp.y);
     }
 }
