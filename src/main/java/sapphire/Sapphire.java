@@ -2,10 +2,9 @@ package sapphire;
 
 import com.google.gson.JsonObject;
 import diamondEngine.Diamond;
-import diamondEngine.Environment;
 import diamondEngine.Window;
-import diamondEngine.diaControls.MouseControlsEditor;
-import diamondEngine.diaRenderer.DebugRenderer;
+import diamondEngine.diaControls.MouseControllerEditor;
+import diamondEngine.diaControls.MouseControls;
 import diamondEngine.diaRenderer.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
@@ -190,10 +189,11 @@ public class Sapphire {
         defaultLiterals();
         defaultColors();
         window.init("Sapphire", "sapphire/icon.png",
-                MouseControlsEditor::mousePosCallback,
-                MouseControlsEditor::mouseButtonCallback,
-                MouseControlsEditor::mouseScrollCallback);
+                MouseControls::mousePosCallback,
+                MouseControls::mouseButtonCallback,
+                MouseControls::mouseScrollCallback);
         diaInstance.init();
+        Diamond.getProfiler().addRegister("Editor Controller");
         loadIcons();
         imGUILayer = new SappImGuiLayer(this.window.getGlfwWindow());
         settings.init();
@@ -219,6 +219,8 @@ public class Sapphire {
                 diaInstance.update(dt);
             }
             Diamond.getCurrentEnv().endFrame();
+            MouseControllerEditor.update(dt);
+            MouseControls.endFrame();
             Diamond.getProfiler().endMeasurement("Total");
             Diamond.getProfiler().update(dt);
 

@@ -1,6 +1,6 @@
 package sapphire.imgui;
 
-import diamondEngine.diaControls.MouseControlsEditor;
+import diamondEngine.diaControls.MouseControls;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
 import imgui.extension.implot.ImPlot;
@@ -226,7 +226,7 @@ public class SappImGuiLayer {
             }
 
             if (!io.getWantCaptureMouse() || gameView.getWantCaptureMouse()) {
-                MouseControlsEditor.mouseButtonCallback(w, button, action, mods);
+                MouseControls.mouseButtonCallback(w, button, action, mods);
             }
         });
 
@@ -236,7 +236,7 @@ public class SappImGuiLayer {
 
 
             if (!io.getWantCaptureMouse() || gameView.getWantCaptureMouse()) {
-                MouseControlsEditor.mouseScrollCallback(w, xOffset, yOffset);
+                MouseControls.mouseScrollCallback(w, xOffset, yOffset);
             }
         });
     }

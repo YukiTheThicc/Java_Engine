@@ -1,6 +1,5 @@
 package diamondEngine;
 
-import diamondEngine.diaControls.MouseControlsEditor;
 import diamondEngine.diaUtils.DiaUtils;
 import org.lwjgl.glfw.*;
 import org.joml.Vector2f;
@@ -10,7 +9,6 @@ import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.opengl.GL;
 import java.nio.IntBuffer;
-import java.util.concurrent.Callable;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;

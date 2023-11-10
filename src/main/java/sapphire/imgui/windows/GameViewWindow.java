@@ -2,7 +2,7 @@ package sapphire.imgui.windows;
 
 import diamondEngine.Diamond;
 import diamondEngine.diaComponents.Camera;
-import diamondEngine.diaControls.MouseControlsEditor;
+import diamondEngine.diaControls.MouseControls;
 import diamondEngine.diaUtils.DiaMath;
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -47,8 +47,8 @@ public class GameViewWindow extends ImguiWindow {
 
     // METHODS
     public boolean getWantCaptureMouse() {
-        return MouseControlsEditor.getX() >= leftX && MouseControlsEditor.getX() <= rightX &&
-                MouseControlsEditor.getY() >= topY && MouseControlsEditor.getY() <= bottomY;
+        return MouseControls.getX() >= leftX && MouseControls.getX() <= rightX &&
+                MouseControls.getY() >= topY && MouseControls.getY() <= bottomY;
     }
 
     private ImVec2 getLargestSizeForViewport() {
@@ -97,10 +97,17 @@ public class GameViewWindow extends ImguiWindow {
             this.setSizeX((int) windowSize.x);
             this.setSizeY((int) windowSize.y);
 
-            leftX = (int) (windowPos.x - viewPortWindowPos.x + viewPortPos.x) ;
+            /* The actual position of the viewport is the imgui window position minus the position of the viewport
+             * window plus the padding created by calculating the pillarbox view of the viewport itself
+             */
+            leftX = (int) (windowPos.x - viewPortWindowPos.x + viewPortPos.x);
             rightX = (int) (windowPos.x - viewPortWindowPos.x + viewPortPos.x + this.getSizeX());
             topY = (int) (windowPos.y - viewPortWindowPos.y + viewPortPos.y);
             bottomY = (int) (windowPos.y - viewPortWindowPos.y + viewPortPos.y + this.getSizeY());
+
+            // Send view port pos and size data to mouse controls
+            MouseControls.setGameViewportPos(leftX, topY);
+            MouseControls.setGameViewportSize(windowSize.x, windowSize.y);
 
             // Controls
             controls.drawControls();
