@@ -2,6 +2,8 @@ package diamondEngine.diaControls;
 
 import diamondEngine.Window;
 import diamondEngine.diaComponents.Camera;
+import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.diaUtils.DiaLoggerLevel;
 import imgui.ImVec2;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -17,15 +19,15 @@ public class MouseControls {
 
     private static double scrollX, scrollY;
     private static double xPos, yPos, lastY, lastX, worldX, worldY, lastWorldX, lastWorldY;
-    private static boolean mouseButtonPressed[] = new boolean[9];
+    private static boolean[] mouseButtonPressed = new boolean[9];
     private static boolean isDragging;
     private static int mouseButtonDown = 0;
-    private static Vector2f gameViewportPos = new Vector2f();
-    private static Vector2f gameViewportSize = new Vector2f();
+    private static final Vector2f gameViewportPos = new Vector2f();
+    private static final Vector2f gameViewportSize = new Vector2f();
 
     // CALLBACKS
     public static void mousePosCallback(long window, double xpos, double ypos) {
-        if (Sapphire.get().getImGUILayer().getGameView().getWantCaptureMouse()) {
+        if (!Sapphire.get().getImGUILayer().getGameView().getWantCaptureMouse()) {
             clear();
         }
 
@@ -96,6 +98,14 @@ public class MouseControls {
         MouseControls.gameViewportSize.y = y;
     }
 
+    public static boolean mouseButtonDown(int button) {
+        if (button < mouseButtonPressed.length) {
+            return mouseButtonPressed[button];
+        } else {
+            return false;
+        }
+    }
+
     // METHODS
     public static void endFrame() {
         scrollY = 0.0;
@@ -138,6 +148,19 @@ public class MouseControls {
         normalizedScreenCords.mul(2.0f).sub(new Vector2f(1.0f, 1.0f));
         Vector4f tmp = new Vector4f(normalizedScreenCords.x, normalizedScreenCords.y,
                 0, 1);
+        Matrix4f inverseView = new Matrix4f(c.getInvView());
+        Matrix4f inverseProjection = new Matrix4f(c.getInvProj());
+        tmp.mul(inverseView.mul(inverseProjection));
+        return new Vector2f(tmp.x, tmp.y);
+    }
+
+    public static Vector2f getWorld(Camera c) {
+        float currentX = getX() - gameViewportPos.x;
+        currentX = (2.0f * (currentX / gameViewportSize.x)) - 1.0f;
+        float currentY = (getY() - gameViewportPos.y);
+        currentY = (2.0f * (1.0f - (currentY / gameViewportSize.y))) - 1;
+
+        Vector4f tmp = new Vector4f(currentX, currentY, 0, 1);
         Matrix4f inverseView = new Matrix4f(c.getInvView());
         Matrix4f inverseProjection = new Matrix4f(c.getInvProj());
         tmp.mul(inverseView.mul(inverseProjection));

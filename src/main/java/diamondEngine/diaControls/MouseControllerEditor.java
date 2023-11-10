@@ -4,6 +4,8 @@ import diamondEngine.Diamond;
 import diamondEngine.Environment;
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaControls.MouseControls;
+import diamondEngine.diaUtils.DiaLogger;
+import imgui.ImGui;
 import org.joml.Vector2f;
 import sapphire.Sapphire;
 import sapphire.imgui.windows.GameViewWindow;
@@ -27,6 +29,22 @@ public class MouseControllerEditor {
             addValue *= -Math.signum(MouseControls.getScrollY());
             GameViewWindow.editorCamera.zoom += addValue;
         }
+
+        if (MouseControls.mouseButtonDown(GLFW_MOUSE_BUTTON_MIDDLE) && dragLag > 0) {
+            clickOrigin = MouseControls.getWorld(GameViewWindow.editorCamera);
+            dragLag -= dt;
+            return;
+        } else if (MouseControls.mouseButtonDown(GLFW_MOUSE_BUTTON_MIDDLE)) {
+            Vector2f mousePos = MouseControls.getWorld(GameViewWindow.editorCamera);
+            Vector2f delta = new Vector2f(mousePos.x, mousePos.y).sub(clickOrigin);
+            GameViewWindow.editorCamera.pos.sub(delta.mul(dt).mul(dragSensitivity));
+            clickOrigin.lerp(mousePos, dt);
+        }
+
+        if (dragLag <= 0.0f && !MouseControls.mouseButtonDown(GLFW_MOUSE_BUTTON_MIDDLE)) {
+            dragLag = 0.032f;
+        }
+
         Diamond.getProfiler().endMeasurement("Editor Controller");
     }
 }

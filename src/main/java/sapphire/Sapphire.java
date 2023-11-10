@@ -212,15 +212,16 @@ public class Sapphire {
         while (running) {
 
             window.pollEvents();
+            MouseControllerEditor.update(dt);
             Diamond.getProfiler().beginMeasurement("Total");
             Diamond.getCurrentEnv().startFrame();
             if (dt >= 0) {
                 diaInstance.updateAllEnvLists();
                 diaInstance.update(dt);
             }
-            Diamond.getCurrentEnv().endFrame();
-            MouseControllerEditor.update(dt);
+
             MouseControls.endFrame();
+            Diamond.getCurrentEnv().endFrame();
             Diamond.getProfiler().endMeasurement("Total");
             Diamond.getProfiler().update(dt);
 
