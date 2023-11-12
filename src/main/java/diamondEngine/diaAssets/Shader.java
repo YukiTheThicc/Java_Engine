@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
 
-public class Shader {
+public class Shader extends Asset{
 
     // ATTRIBUTES
     private int programId;
@@ -32,7 +32,7 @@ public class Shader {
      * @param path Path of the file with the shaders sources
      */
     public Shader(String name, String path) {
-
+        super(path);
         this.name = name;
         this.programId = -1;
         try {
@@ -78,7 +78,7 @@ public class Shader {
      * @param fragmentPath Path of the file that contains the fragment shader source
      */
     public Shader(String name, String vertexPath, String fragmentPath) {
-
+        super(name);
         this.name = name;
         try {
             this.vertex = new String(Files.readAllBytes(Paths.get(vertexPath)));

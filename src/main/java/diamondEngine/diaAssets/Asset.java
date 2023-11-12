@@ -1,4 +1,17 @@
 package diamondEngine.diaAssets;
 
-public class Asset {
+public abstract class Asset {
+
+    // ATTRIBUTES
+    private final String id;
+
+    // CONTRUCTORS
+    public Asset(String id) {
+        this.id = id;
+    }
+
+    // GETTERS & SETTERS
+    public String getId() {
+        return id;
+    }
 }

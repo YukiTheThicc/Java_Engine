@@ -76,7 +76,7 @@ public class DiaAssetManager {
 
     public static Shader getShader(String name, String path) {
         File file = new File(path);
-        if (DiaAssetManager.shaders.containsKey(file.getAbsolutePath())) {
+        if (DiaAssetManager.shaders.containsKey(name)) {
             return DiaAssetManager.shaders.get(name);
         } else {
             Shader shader = new Shader(name, path);
