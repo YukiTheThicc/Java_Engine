@@ -1,6 +1,6 @@
 package sapphire.imgui.components;
 
-import diamondEngine.diaRenderer.Texture;
+import diamondEngine.diaAssets.Texture;
 import imgui.ImGui;
 
 public class ImageMenuItem {

@@ -1,5 +1,6 @@
 package diamondEngine.diaRenderer;
 
+import diamondEngine.diaAssets.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 

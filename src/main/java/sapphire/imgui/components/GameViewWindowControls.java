@@ -1,10 +1,6 @@
 package sapphire.imgui.components;
 
 import diamondEngine.Diamond;
-import diamondEngine.diaEvents.DiaEvent;
-import diamondEngine.diaEvents.DiaEventType;
-import diamondEngine.diaEvents.DiaEvents;
-import diamondEngine.diaEvents.DiaObserver;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
@@ -14,7 +10,6 @@ import sapphire.Sapphire;
 import sapphire.SappEvents;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
-import sapphire.eventsSystem.SappObserver;
 import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
 import sapphire.imgui.SappImGui;
@@ -39,7 +34,7 @@ public class GameViewWindowControls {
         this.play = new ImageButton(Sapphire.getIcon("play.png"), iconSizeX, iconSizeY);
         this.stop = new ImageButton(Sapphire.getIcon("stop.png"), iconSizeX, iconSizeY);
         this.settings = new ImageButton(Sapphire.getIcon("gear.png"), iconSizeX, iconSizeY);
-        this.offsetY = ImGui.getTextLineHeightWithSpacing();
+        this.offsetY = ImGui.getTextLineHeightWithSpacing() + ImGui.getStyle().getFramePaddingY() * 2;
         this.mainControlsX = iconSizeX * 4 + ImGui.getStyle().getFramePaddingX() * 3;
         this.mainControlsY = iconSizeY + ImGui.getStyle().getFramePaddingX() * 2;
     }

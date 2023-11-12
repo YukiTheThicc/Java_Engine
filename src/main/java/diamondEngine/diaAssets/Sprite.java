@@ -1,4 +1,4 @@
-package diamondEngine.diaRenderer;
+package diamondEngine.diaAssets;
 
 import org.joml.Vector2f;
 

@@ -1,6 +1,6 @@
 package sapphire.imgui.windows;
 
-import diamondEngine.diaRenderer.Texture;
+import diamondEngine.diaAssets.Texture;
 import diamondEngine.diaUtils.DiaUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiSelectableFlags;

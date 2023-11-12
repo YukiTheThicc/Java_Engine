@@ -5,7 +5,7 @@ import diamondEngine.Diamond;
 import diamondEngine.Window;
 import diamondEngine.diaControls.MouseControllerEditor;
 import diamondEngine.diaControls.MouseControls;
-import diamondEngine.diaRenderer.Texture;
+import diamondEngine.diaAssets.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
 import sapphire.imgui.SappDrawable;

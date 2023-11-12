@@ -1,12 +1,12 @@
 package sapphire.imgui.windows;
 
 import diamondEngine.Template;
-import diamondEngine.diaAudio.Sound;
+import diamondEngine.diaAssets.Sound;
 import diamondEngine.diaEvents.DiaEvent;
 import diamondEngine.diaEvents.DiaEvents;
 import diamondEngine.diaEvents.DiaObserver;
-import diamondEngine.diaRenderer.Shader;
-import diamondEngine.diaRenderer.Texture;
+import diamondEngine.diaAssets.Shader;
+import diamondEngine.diaAssets.Texture;
 import diamondEngine.diaUtils.DiaAssetManager;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
@@ -37,8 +37,10 @@ public class AssetsWindow extends ImguiWindow implements DiaObserver {
     private final ImageButton addAssetButton;
     private final ImageButton removeAssetButton;
     private final ImageButton copyAssetButton;
+    private AssetImageButton selectedAsset = null;
     private final List<AssetImageButton> shaderButtons;
     private final List<AssetImageButton> textureButtons;
+    private final List<AssetImageButton> spriteSheetButtons;
     private final List<AssetImageButton> soundButtons;
     private final List<AssetImageButton> templateButtons;
 
@@ -51,6 +53,7 @@ public class AssetsWindow extends ImguiWindow implements DiaObserver {
         this.copyAssetButton = new ImageButton(Sapphire.getIcon("copy.png"), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE);
         this.shaderButtons = new ArrayList<>();
         this.textureButtons = new ArrayList<>();
+        this.spriteSheetButtons = new ArrayList<>();
         this.soundButtons = new ArrayList<>();
         this.templateButtons = new ArrayList<>();
         DiaEvents.addObserver(this);
@@ -69,6 +72,7 @@ public class AssetsWindow extends ImguiWindow implements DiaObserver {
             ImGui.nextColumn();
             if (ImGui.beginTabBar(this.getTitle(), this.getFlags())) {
                 drawTab(Sapphire.getLiteral("textures"), textureButtons);
+                drawTab(Sapphire.getLiteral("sprite_sheets"), spriteSheetButtons);
                 drawTab(Sapphire.getLiteral("sounds"), soundButtons);
                 drawTab(Sapphire.getLiteral("shaders"), shaderButtons);
                 drawTab(Sapphire.getLiteral("templates"), templateButtons);

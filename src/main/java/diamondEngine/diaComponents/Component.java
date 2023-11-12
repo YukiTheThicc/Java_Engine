@@ -38,8 +38,10 @@ public abstract class Component extends DiamondObject implements SappDrawable {
         ImGui.pushID(this.getUid());
         ImGui.beginGroup();
         float buttonOriginX = ImGui.getCursorPosX();
+        // Calculate alignment position relative to the available space so the text always starts after the icon
+        float textPositionX = (ImGui.getFontSize() * 1.5f + ImGui.getTreeNodeToLabelSpacing()) / (ImGui.getContentRegionAvailX() - ImGui.getTreeNodeToLabelSpacing());
 
-        ImGui.pushStyleVar(ImGuiStyleVar.ButtonTextAlign, 0.1f, 0.5f);
+        ImGui.pushStyleVar(ImGuiStyleVar.ButtonTextAlign, textPositionX, 0.5f);
         if (ImGui.button(this.getClass().getSimpleName(), ImGui.getContentRegionAvailX(), ImGui.getFontSize() * 1.5f)) result = true;
         ImGui.popStyleVar();
 

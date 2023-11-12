@@ -1,9 +1,12 @@
 package sapphire.imgui.components;
 
-import diamondEngine.diaRenderer.Texture;
+import diamondEngine.diaAssets.Texture;
 import imgui.ImGui;
 import imgui.ImVec2;
+import sapphire.SappEvents;
 import sapphire.Sapphire;
+import sapphire.eventsSystem.SappEvent;
+import sapphire.eventsSystem.SappEventType;
 
 import java.io.File;
 
@@ -60,17 +63,16 @@ public class AssetImageButton {
     }
 
     // METHODS
-    public boolean draw() {
+    public void draw() {
         ImVec2 origin = ImGui.getCursorPos();
         ImGui.getStyle().setButtonTextAlign(0.5f, 1f);
         ImGui.pushFont(Sapphire.get().getImGUILayer().getSmallFont());
         ImGui.pushID(id);
-        boolean result = ImGui.button(label, buttonSize, buttonSize);
+        if (ImGui.button(label, buttonSize, buttonSize)) SappEvents.notify(new SappEvent(SappEventType.Asset_selected, this.id));
         ImGui.setCursorPos(origin.x + paddingX, origin.y + paddingYTop);
         ImGui.image(image.getId(), imageSizeX, imageSizeY, 0, 1, 1, 0);
         ImGui.setCursorPos(origin.x + buttonSize + paddingX * 2, origin.y);
         ImGui.popID();
         ImGui.popFont();
-        return result;
     }
 }

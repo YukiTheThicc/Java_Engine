@@ -1,12 +1,12 @@
 package diamondEngine.diaUtils;
 
 import diamondEngine.Template;
-import diamondEngine.diaAudio.Sound;
+import diamondEngine.diaAssets.Sound;
 import diamondEngine.diaEvents.DiaEvent;
 import diamondEngine.diaEvents.DiaEventType;
 import diamondEngine.diaEvents.DiaEvents;
-import diamondEngine.diaRenderer.Shader;
-import diamondEngine.diaRenderer.Texture;
+import diamondEngine.diaAssets.Shader;
+import diamondEngine.diaAssets.Texture;
 
 import java.io.File;
 import java.util.Collection;
@@ -74,7 +74,7 @@ public class DiaAssetManager {
         return wasRemoved;
     }
 
-    public static Shader addShader(String name, String path) {
+    public static Shader getShader(String name, String path) {
         File file = new File(path);
         if (DiaAssetManager.shaders.containsKey(file.getAbsolutePath())) {
             return DiaAssetManager.shaders.get(name);
@@ -92,6 +92,23 @@ public class DiaAssetManager {
     }
 
     public static Texture getTexture(String path) {
+        File file = new File(path);
+        if (textures.containsKey(file.getAbsolutePath())) {
+            return textures.get(file.getAbsolutePath());
+        } else {
+            Texture texture = new Texture();
+            texture.load(path);
+            textures.put(file.getAbsolutePath(), texture);
+            DiaEvents.notify(new DiaEvent(DiaEventType.ASSET_ADDED, texture));
+            return texture;
+        }
+    }
+
+    public static Collection<Texture> getAllSpriteSheets() {
+        return textures.values();
+    }
+
+    public static Texture getSpriteSheet(String path) {
         File file = new File(path);
         if (textures.containsKey(file.getAbsolutePath())) {
             return textures.get(file.getAbsolutePath());

@@ -28,5 +28,6 @@ public enum SappEventType {
     Import_env,
     Save_env_as,
     Add_asset,
-    Make_current
+    Make_current,
+    Asset_selected
 }

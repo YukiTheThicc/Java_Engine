@@ -1,4 +1,4 @@
-package diamondEngine.diaAudio;
+package diamondEngine.diaAssets;
 
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;

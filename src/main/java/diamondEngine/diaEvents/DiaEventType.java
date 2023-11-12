@@ -4,5 +4,5 @@ public enum DiaEventType {
     USER_EVENT,
     ASSET_ADDED,
     ASSET_REMOVED,
-    ENV_CHANGED
+    ENV_CHANGED;
 }

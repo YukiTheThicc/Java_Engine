@@ -1,4 +1,4 @@
-package diamondEngine.diaRenderer;
+package diamondEngine.diaAssets;
 
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
