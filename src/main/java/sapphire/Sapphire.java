@@ -121,7 +121,6 @@ public class Sapphire {
 
     public static void setActiveObject(SappDrawable activeObject) {
         Sapphire.get().activeObject = activeObject;
-        DiaLogger.log("selected entity");
     }
 
     public static String getProjectDir() {

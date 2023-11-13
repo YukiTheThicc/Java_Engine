@@ -318,10 +318,6 @@ public class Environment implements SappDrawable {
         }
     }
 
-    public void saveCustom(String path) {
-
-    }
-
     /**
      * Loads an environment from a file passed as a parameter
      * @param path Path of the environment file to load the new environment from
@@ -338,6 +334,7 @@ public class Environment implements SappDrawable {
                 .enableComplexMapKeySerialization()
                 .create();
         String inFile = "";
+
         try {
             inFile = new String(Files.readAllBytes(Paths.get(path)));
             if (!inFile.equals("")) {
