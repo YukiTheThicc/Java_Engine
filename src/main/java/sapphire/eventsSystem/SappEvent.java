@@ -26,32 +26,11 @@ public class SappEvent {
         this.payload = null;
     }
 
-    public SappEvent(SappEventType type, Environment env, Object payload) {
-        this.type = type;
-        this.env = env;
-        this.entity = null;
-        this.payload = payload;
-    }
-
     public SappEvent(SappEventType type, Environment env) {
         this.type = type;
         this.env = env;
         this.entity = null;
         this.payload = null;
-    }
-
-    public SappEvent(SappEventType type, Entity entity) {
-        this.type = type;
-        this.env = null;
-        this.entity = entity;
-        this.payload = null;
-    }
-
-    public SappEvent(SappEventType type, Object payload) {
-        this.type = type;
-        this.env = null;
-        this.entity = null;
-        this.payload = payload;
     }
 
     public SappEvent(SappEventType type) {

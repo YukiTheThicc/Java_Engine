@@ -68,7 +68,7 @@ public class AssetImageButton {
         ImGui.getStyle().setButtonTextAlign(0.5f, 1f);
         ImGui.pushFont(Sapphire.get().getImGUILayer().getSmallFont());
         ImGui.pushID(id);
-        if (ImGui.button(label, buttonSize, buttonSize)) SappEvents.notify(new SappEvent(SappEventType.Asset_selected, this.id));
+        if (ImGui.button(label, buttonSize, buttonSize)) SappEvents.notify(new SappEvent(SappEventType.Asset_selected, null, null, this.id));
         ImGui.setCursorPos(origin.x + paddingX, origin.y + paddingYTop);
         ImGui.image(image.getId(), imageSizeX, imageSizeY, 0, 1, 1, 0);
         ImGui.setCursorPos(origin.x + buttonSize + paddingX * 2, origin.y);

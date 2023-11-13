@@ -1,7 +1,13 @@
 package diamondEngine;
 
 import diamondEngine.diaComponents.Component;
+import imgui.ImGui;
+import imgui.flag.ImGuiStyleVar;
+import imgui.type.ImInt;
+import imgui.type.ImString;
+import sapphire.Sapphire;
 import sapphire.imgui.SappDrawable;
+import sapphire.imgui.SappImGui;
 
 import java.util.ArrayList;
 
@@ -69,10 +75,38 @@ public class Entity extends DiamondObject implements SappDrawable {
     @Override
     public void imgui() {
 
+        ImGui.text("ID: " + this.getUid());
+        SappImGui.textLabel("Name", name);
+        ImString newName = new ImString(name, 256);
+        if (SappImGui.inputText(Sapphire.getLiteral("name"), newName)) {
+            if (Sapphire.get().getProject() != null && !newName.isEmpty()) {
+                name = newName.get();
+                this.getParent().setModified();
+            }
+        }
     }
 
     @Override
     public boolean selectable() {
-        return false;
+        boolean result = false;
+        ImGui.pushID(this.getUid());
+        ImGui.beginGroup();
+        float buttonOriginX = ImGui.getCursorPosX();
+        // Calculate alignment position relative to the available space so the text always starts after the icon
+        float textPositionX = (ImGui.getFontSize() * 1.5f + ImGui.getTreeNodeToLabelSpacing()) / (ImGui.getContentRegionAvailX() - ImGui.getTreeNodeToLabelSpacing());
+
+        ImGui.pushStyleVar(ImGuiStyleVar.ButtonTextAlign, textPositionX, 0.5f);
+        if (ImGui.button(name, ImGui.getContentRegionAvailX(), ImGui.getFontSize() * 1.5f)) result = true;
+        ImGui.popStyleVar();
+
+        ImGui.sameLine();
+        ImGui.setCursorPosX(buttonOriginX);
+        ImGui.image(Sapphire.getIcon("component.png").getId(), ImGui.getFontSize() * 1.5f, ImGui.getFontSize() * 1.5f,
+                0, 1, 1, 0);
+
+        ImGui.endGroup();
+        ImGui.popID();
+
+        return result;
     }
 }

@@ -5,6 +5,7 @@ import diamondEngine.Environment;
 import diamondEngine.Diamond;
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaComponents.Grid;
+import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiTreeNodeFlags;
@@ -56,7 +57,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
 
             if (ImGui.treeNodeEx(env.getName() + (env.isModified() ? " *" : ""), NODE_FLAGS)) {
                 if (ImGui.isItemClicked()) {
-                    SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, env));
+                    SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, null, env));
                 }
                 envContextMenu(env);
                 drawEntities(env);
@@ -70,7 +71,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
     private void drawComponents(Environment env) {
         for (Component component : env.getComponents()) {
             if (component.selectable()) {
-                SappEvents.notify(new SappEvent(SappEventType.Selected_object, component));
+                SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, null, component));
             }
             componentContextMenu(env, component);
         }
@@ -79,7 +80,9 @@ public class EnvHierarchyWindow extends ImguiWindow {
     private void drawEntities(Environment env) {
         if (!env.getEntities().isEmpty() && ImGui.treeNode("Entities")) {
             for (Entity entity : env.getEntities()) {
-                ImGui.text(entity.toString());
+                if (entity.selectable()) {
+                    SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, null, entity));
+                }
             }
             ImGui.treePop();
         }
@@ -108,7 +111,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
             ImGui.separator();
 
             if (ImGui.menuItem(Sapphire.getLiteral("add_grid"))) SappEvents.notify(
-                    new SappEvent(SappEventType.Add_component, env, new Grid(32, env)));
+                    new SappEvent(SappEventType.Add_component, env, null, new Grid(32, env)));
             ImGui.separator();
 
             if (ImGui.menuItem(Sapphire.getLiteral("delete"))) SappEvents.notify(
@@ -123,8 +126,6 @@ public class EnvHierarchyWindow extends ImguiWindow {
      */
     private void entityContextMenu(Environment env) {
         if (ImGui.beginPopupContextItem(env.getName() + "_entity_item")) {
-            if (ImGui.menuItem(Sapphire.getLiteral("add_grid"))) SappEvents.notify(
-                    new SappEvent(SappEventType.Add_component, env, new Grid(32, env)));
             ImGui.endPopup();
         }
     }
@@ -132,7 +133,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
     private void componentContextMenu(Environment env, Component component) {
         if (ImGui.beginPopupContextItem("entity_item")) {
             if (ImGui.menuItem(Sapphire.getLiteral("delete"))) SappEvents.notify(
-                    new SappEvent(SappEventType.Delete_object, env, component));
+                    new SappEvent(SappEventType.Delete_object, env, null, component));
             ImGui.endPopup();
         }
     }

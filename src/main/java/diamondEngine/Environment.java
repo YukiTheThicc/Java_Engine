@@ -137,6 +137,7 @@ public class Environment implements SappDrawable {
 
     public void setDirty() {
         isDirty = true;
+        isModified = true;
     }
 
     public void setToRemove() {
@@ -157,6 +158,10 @@ public class Environment implements SappDrawable {
 
     public boolean isModified() {
         return isModified;
+    }
+
+    public void setModified() {
+        isModified = true;
     }
 
     public float getWinSizeAdjustX() {
@@ -311,6 +316,10 @@ public class Environment implements SappDrawable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void saveCustom(String path) {
+
     }
 
     /**

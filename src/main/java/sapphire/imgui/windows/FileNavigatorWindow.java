@@ -88,7 +88,7 @@ public class FileNavigatorWindow extends ImguiWindow {
     private void fileContextMenu(File file) {
         if (ImGui.beginPopupContextItem(file.getName())) {
             if (ImGui.menuItem(Sapphire.getLiteral("delete"))) SappEvents.notify(
-                    new SappEvent(SappEventType.Delete_file, file));
+                    new SappEvent(SappEventType.Delete_file, null, null, file));
             ImGui.endPopup();
         }
     }
