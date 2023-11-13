@@ -70,14 +70,10 @@ public class WindowsEventHandler implements SappObserver {
     }
 
     private void handleAddEntity(SappEvent event) {
-        if (event.env != null && event.payload instanceof Entity) {
-            for (Component component : event.env.getComponents()) {
-                if (component.getClass() == event.payload.getClass()) {
-                    return;
-                }
-            }
-            event.env.addComponent((Component) event.payload);
+        if (event.env != null && event.entity != null) {
+            event.env.addEntity(event.entity);
         }
+        DiaLogger.log(WindowsEventHandler.class, "" + event.entity);
     }
 
     private void handleDeleteObj(SappEvent event) {

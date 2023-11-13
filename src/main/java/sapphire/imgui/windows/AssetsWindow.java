@@ -1,6 +1,6 @@
 package sapphire.imgui.windows;
 
-import diamondEngine.Template;
+import diamondEngine.diaAssets.Template;
 import diamondEngine.diaAssets.Sound;
 import diamondEngine.diaEvents.DiaEvent;
 import diamondEngine.diaEvents.DiaEvents;
@@ -8,13 +8,12 @@ import diamondEngine.diaEvents.DiaObserver;
 import diamondEngine.diaAssets.Shader;
 import diamondEngine.diaAssets.Texture;
 import diamondEngine.diaUtils.DiaAssetManager;
+import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiCond;
+import imgui.flag.ImGuiWindowFlags;
 import sapphire.Sapphire;
-import sapphire.SappEvents;
-import sapphire.eventsSystem.SappEvent;
-import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.SappImGuiLayer;
 import sapphire.imgui.SappImGui;
 import sapphire.imgui.components.AssetImageButton;
@@ -40,7 +39,6 @@ public class AssetsWindow extends ImguiWindow implements DiaObserver {
     private AssetImageButton selectedAsset = null;
     private final List<AssetImageButton> shaderButtons;
     private final List<AssetImageButton> textureButtons;
-    private final List<AssetImageButton> spriteSheetButtons;
     private final List<AssetImageButton> soundButtons;
     private final List<AssetImageButton> templateButtons;
 
@@ -53,7 +51,6 @@ public class AssetsWindow extends ImguiWindow implements DiaObserver {
         this.copyAssetButton = new ImageButton(Sapphire.getIcon("copy.png"), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE);
         this.shaderButtons = new ArrayList<>();
         this.textureButtons = new ArrayList<>();
-        this.spriteSheetButtons = new ArrayList<>();
         this.soundButtons = new ArrayList<>();
         this.templateButtons = new ArrayList<>();
         DiaEvents.addObserver(this);
@@ -72,7 +69,6 @@ public class AssetsWindow extends ImguiWindow implements DiaObserver {
             ImGui.nextColumn();
             if (ImGui.beginTabBar(this.getTitle(), this.getFlags())) {
                 drawTab(Sapphire.getLiteral("textures"), textureButtons);
-                drawTab(Sapphire.getLiteral("sprite_sheets"), spriteSheetButtons);
                 drawTab(Sapphire.getLiteral("sounds"), soundButtons);
                 drawTab(Sapphire.getLiteral("shaders"), shaderButtons);
                 drawTab(Sapphire.getLiteral("templates"), templateButtons);
@@ -88,10 +84,26 @@ public class AssetsWindow extends ImguiWindow implements DiaObserver {
      */
     private void toolbar() {
         ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
-        if (addAssetButton.draw()) SappEvents.notify(new SappEvent(SappEventType.Add_asset));
+        this.addAssetPopUpMenu();
+        if (addAssetButton.draw()) {
+            //SappEvents.notify(new SappEvent(SappEventType.Add_asset));
+            ImGui.openPopup("logger_options");
+            DiaLogger.log("Pressed Logger Options");
+        }
         if (removeAssetButton.draw());
         //if (copyAssetButton.draw());
         ImGui.popStyleColor(1);
+    }
+
+    /**
+     *
+     */
+    private void addAssetPopUpMenu() {
+        if (ImGui.beginPopupModal("logger_options", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize |
+                ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)) {
+
+            ImGui.endPopup();
+        }
     }
 
     /**

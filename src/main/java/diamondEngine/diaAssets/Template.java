@@ -1,20 +1,21 @@
-package diamondEngine;
+package diamondEngine.diaAssets;
 
+import diamondEngine.DiamondObject;
+import diamondEngine.Entity;
+import diamondEngine.Environment;
 import diamondEngine.diaComponents.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Template extends DiamondObject {
+public class Template {
 
     // ATTRIBUTES
     private String name;
-    private String entityName;
     private List<Component> components;
 
     // CONSTRUCTORS
-    public Template(String name, Environment env) {
-        super(env);
+    public Template(String name) {
         this.name = name;
         this.components = new ArrayList<>();
     }
@@ -28,14 +29,9 @@ public class Template extends DiamondObject {
         this.name = name;
     }
 
-    public String getEntityName() {
-        return entityName;
-    }
-
     // METHODS
-    public Entity createEntity() {
-
-        Entity newEntity = new Entity(this.getParent());
+    public Entity createEntity(Environment env) {
+        Entity newEntity = new Entity(env);
         for (Component c : components) {
             newEntity.addComponent(c.copy());
         }
@@ -43,15 +39,9 @@ public class Template extends DiamondObject {
     }
 
     public void copyFromEntity(Entity entity) {
-        this.entityName = entity.getName();
         this.components.clear();
         for (Component c : entity.getComponents()) {
             components.add(c.copy());
         }
-    }
-
-    @Override
-    public void update(float dt) {
-
     }
 }

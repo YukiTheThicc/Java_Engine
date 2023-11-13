@@ -92,11 +92,19 @@ public class EnvHierarchyWindow extends ImguiWindow {
         }
     }
 
+    /**
+     * Context menu for an environment
+     * @param env Environment for which the menu is being drawn
+     */
     private void envContextMenu(Environment env) {
         if (ImGui.beginPopupContextItem(env.getName() + "_env_item")) {
 
             if (ImGui.menuItem(Sapphire.getLiteral("make_current"))) SappEvents.notify(
                     new SappEvent(SappEventType.Make_current, env));
+            ImGui.separator();
+
+            if (ImGui.menuItem(Sapphire.getLiteral("add_entity"))) SappEvents.notify(
+                    new SappEvent(SappEventType.Add_entity, env, new Entity(env)));
             ImGui.separator();
 
             if (ImGui.menuItem(Sapphire.getLiteral("add_grid"))) SappEvents.notify(
@@ -109,8 +117,12 @@ public class EnvHierarchyWindow extends ImguiWindow {
         }
     }
 
+    /**
+     * Context menu for an entity
+     * @param env Environment within
+     */
     private void entityContextMenu(Environment env) {
-        if (ImGui.beginPopupContextItem(env.getName() + "entity_item")) {
+        if (ImGui.beginPopupContextItem(env.getName() + "_entity_item")) {
             if (ImGui.menuItem(Sapphire.getLiteral("add_grid"))) SappEvents.notify(
                     new SappEvent(SappEventType.Add_component, env, new Grid(32, env)));
             ImGui.endPopup();

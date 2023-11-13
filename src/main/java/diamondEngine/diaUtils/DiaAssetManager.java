@@ -1,6 +1,6 @@
 package diamondEngine.diaUtils;
 
-import diamondEngine.Template;
+import diamondEngine.diaAssets.Template;
 import diamondEngine.diaAssets.Sound;
 import diamondEngine.diaEvents.DiaEvent;
 import diamondEngine.diaEvents.DiaEventType;

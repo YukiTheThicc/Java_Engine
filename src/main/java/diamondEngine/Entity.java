@@ -1,10 +1,11 @@
 package diamondEngine;
 
 import diamondEngine.diaComponents.Component;
+import sapphire.imgui.SappDrawable;
 
 import java.util.ArrayList;
 
-public class Entity extends DiamondObject{
+public class Entity extends DiamondObject implements SappDrawable {
 
     public static final String GENERATED_NAME = "GENERATED_ENTITY";
 
@@ -63,5 +64,15 @@ public class Entity extends DiamondObject{
         for (Component c : components) {
             c.update(dt);
         }
+    }
+
+    @Override
+    public void imgui() {
+
+    }
+
+    @Override
+    public boolean selectable() {
+        return false;
     }
 }
