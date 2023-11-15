@@ -2,7 +2,7 @@ package sapphire.imgui.components;
 
 import diamondEngine.diaAssets.Texture;
 import imgui.ImGui;
-import sapphire.SappEvents;
+import sapphire.eventsSystem.SappEvents;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
 import sapphire.eventsSystem.SappObserver;

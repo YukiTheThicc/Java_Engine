@@ -78,11 +78,9 @@ public class ProfilerWindow extends ImguiWindow {
                             elapsedTime -= staticTime;
                         }
                     }
-
                     ImPlot.popColormap();
                     ImPlot.endPlot();
                 }
-
                 font.setScale(1f);
                 ImGui.popFont();
             }

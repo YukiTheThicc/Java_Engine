@@ -8,6 +8,7 @@ import diamondEngine.diaControls.MouseControls;
 import diamondEngine.diaAssets.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
+import sapphire.eventsSystem.SappEvents;
 import sapphire.imgui.SappDrawable;
 import sapphire.imgui.SappImGuiLayer;
 import sapphire.utils.SappDefaultLiterals;
@@ -184,22 +185,29 @@ public class Sapphire {
 
     public void launch() {
         // Initialize general front end and Engine
-        DiaLogger.init();
-        DiaUtils.init();
-        defaultLiterals();
-        defaultColors();
-        window.init("Sapphire", "sapphire/icon.png",
-                MouseControls::mousePosCallback,
-                MouseControls::mouseButtonCallback,
-                MouseControls::mouseScrollCallback);
+        DiaLogger.init();                       // First thing so other systems may log issues when initializing
+        DiaUtils.init();                        // Utils ready for other systems to be able to use them
+        defaultLiterals();                      // Setting default literals
+        defaultColors();                        // Setting default colors
+
+        // Init the window
+        window.init("Sapphire", "sapphire/icon.png");
+
+        // Init Sapphires Diamond instance
         diaInstance.init();
+
+        // Register the editor controller for profiling
         Diamond.getProfiler().addRegister("Editor Controller");
-        loadIcons();
+        loadIcons();                            // Load Sapphire icons
+
+        // Create ImGUI layer for Sapphire
         imGUILayer = new SappImGuiLayer(this.window.getGlfwWindow());
-        settings.init();
-        imGUILayer.init();
-        SappEvents.init(imGUILayer);
-        run();
+        settings.init();                        // Init settings before layer to have the settings available for ImGui
+        imGUILayer.init();                      // Init ImGui layer
+        SappEvents.init(imGUILayer);            // Init sapp events, needs layer for certain handlers
+        run();                                  // Run Sapphire main loop
+
+        // Finalize execution once Sapphire is closed
         if (project != null) project.closeProject();
         imGUILayer.destroyImGui();
         DiaLogger.close();
@@ -219,7 +227,6 @@ public class Sapphire {
                 diaInstance.updateAllEnvLists();
                 diaInstance.update(dt);
             }
-
             MouseControls.endFrame();
             Diamond.getCurrentEnv().endFrame();
             Diamond.getProfiler().endMeasurement("Total");

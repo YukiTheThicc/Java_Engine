@@ -4,9 +4,9 @@ import com.google.gson.*;
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaRenderer.DebugRenderer;
 import diamondEngine.diaRenderer.Framebuffer;
+import diamondEngine.diaUtils.DiaFIFO;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
-import diamondEngine.diaUtils.DiaProfiler;
 import diamondEngine.diaUtils.serializers.ComponentSerializer;
 import diamondEngine.diaUtils.serializers.EntitySerializer;
 import imgui.ImGui;
@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -31,19 +32,26 @@ public class Environment implements SappDrawable {
     public static final String ENV_EXTENSION = ".denv";
     public static final int DEFAULT_FRAME_X = 480;
     public static final int DEFAULT_FRAME_Y = 270;
+    public static final int ID_BATCH_SIZE = 512;
 
     // ATTRIBUTES
+    // UID System
     private final long UID_SEED = 1000000000;
-    private long CURRENT = UID_SEED + 1;
+    private long CURRENT = 1;
+    private transient long currentBatch = 0;
+    private DiaFIFO availableIDs;
+    private transient HashMap<Long, DiamondObject> registeredObjects;
+
+    // Environment properties
     private Environment parent;
     private String name;
     private transient String originFile;
-    private List<Environment> children;
-    private List<Entity> entities;
-    private List<Component> components;
     private int frameX;
     private int frameY;
     private boolean isInitialized;
+    private List<Environment> children;
+    private List<Entity> entities;
+    private List<Component> components;
 
     // Runtime attributes
     private transient List<Entity> entitiesToRemove;
@@ -177,6 +185,7 @@ public class Environment implements SappDrawable {
         frame = new Framebuffer(frameX, frameY);
         isInitialized = true;
         isModified = true;
+        availableIDs = new DiaFIFO(4);
         if (isProfiling) {
             Diamond.getProfiler().addRegister("Update Lists");
             Diamond.getProfiler().addRegister("Update Children");
@@ -186,7 +195,14 @@ public class Environment implements SappDrawable {
         }
     }
 
-    public long genId() {
+    private void generateIDs() {
+        for (int i = 0; i < availableIDs.getSize(); i++) {
+            availableIDs.push(UID_SEED);
+        }
+        currentBatch++;
+    }
+
+    public long getID() {
         CURRENT++;
         return CURRENT;
     }

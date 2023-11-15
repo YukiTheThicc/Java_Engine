@@ -1,4 +1,4 @@
-package sapphire;
+package sapphire.eventsSystem;
 
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappObserver;

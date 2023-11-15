@@ -7,9 +7,14 @@ public abstract class DiamondObject {
     private final long uid;
 
     // CONSTRUCTORS
+    public DiamondObject(Environment env, long id) {
+        this.parent = env;
+        this.uid = env.getID();
+    }
+
     public DiamondObject(Environment env) {
         this.parent = env;
-        this.uid = env.genId();
+        this.uid = env.getID();
     }
 
     // GETTERS && SETTERS

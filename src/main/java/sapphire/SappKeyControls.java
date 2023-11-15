@@ -3,6 +3,7 @@ package sapphire;
 import imgui.ImGuiIO;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
+import sapphire.eventsSystem.SappEvents;
 
 import java.util.Arrays;
 

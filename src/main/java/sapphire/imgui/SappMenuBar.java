@@ -2,7 +2,7 @@ package sapphire.imgui;
 
 import imgui.ImGui;
 import sapphire.Sapphire;
-import sapphire.SappEvents;
+import sapphire.eventsSystem.SappEvents;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.windows.ImguiWindow;

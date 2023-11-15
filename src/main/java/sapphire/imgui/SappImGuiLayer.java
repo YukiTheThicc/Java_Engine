@@ -8,7 +8,7 @@ import imgui.flag.ImGuiStyleVar;
 import imgui.internal.ImGuiDockNode;
 import sapphire.Sapphire;
 import sapphire.SappKeyControls;
-import sapphire.SappEvents;
+import sapphire.eventsSystem.SappEvents;
 import sapphire.SappSettings;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
@@ -130,7 +130,8 @@ public class SappImGuiLayer {
             }
         });
 
-        imGuiGlfw.init(glfwWindow, false);
+        // !!! REVISE !!! Should be false once all callbacks are set up
+        imGuiGlfw.init(glfwWindow, true);
         imGuiGl3.init("#version 330 core");
         SappStyles.setSapphireStyles();
         SappImGui.init();
@@ -167,7 +168,8 @@ public class SappImGuiLayer {
         windows.put(newWindow.getId(), newWindow);
 
         /* Settings for the windows are loaded. At the time of writing this code, only one setting is stored, being if
-         * the window is active or not. Because of this, the window settings are stored as a simple map*/
+         * the window is active or not. Because of this, the window settings are stored as a simple map
+         */
         for (String windowId : Sapphire.get().getSettings().getActiveWindows().keySet()) {
             for (String window : windows.keySet()) {
                 if (windows.get(window).getId().equals(windowId)) {

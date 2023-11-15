@@ -1,5 +1,6 @@
 package diamondEngine;
 
+import diamondEngine.diaControls.MouseControls;
 import diamondEngine.diaUtils.DiaUtils;
 import org.lwjgl.glfw.*;
 import org.joml.Vector2f;
@@ -88,10 +89,7 @@ public class Window {
         System.out.println("Resizing");
     }
 
-    public void init(String title, String iconPath,
-                         GLFWCursorPosCallbackI mousePosCallback,
-                         GLFWMouseButtonCallbackI mouseButtonCallback,
-                         GLFWScrollCallbackI mouseScrollCallback) {
+    public void init(String title, String iconPath) {
         GLFWErrorCallback.createPrint(System.err).set();
 
         if (!glfwInit()) {
@@ -110,9 +108,9 @@ public class Window {
             throw new IllegalStateException("Failed to create GLFW window");
         }
 
-        glfwSetCursorPosCallback(glfwWindow, mousePosCallback);
-        glfwSetMouseButtonCallback(glfwWindow, mouseButtonCallback);
-        glfwSetScrollCallback(glfwWindow, mouseScrollCallback);
+        glfwSetCursorPosCallback(glfwWindow, MouseControls::mousePosCallback);
+        glfwSetMouseButtonCallback(glfwWindow, MouseControls::mouseButtonCallback);
+        glfwSetScrollCallback(glfwWindow, MouseControls::mouseScrollCallback);
         glfwSetWindowSizeCallback(glfwWindow, (w, newX, newY) -> {
             Window.setWidth(newX);
             Window.setHeight(newY);
