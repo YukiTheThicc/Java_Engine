@@ -325,67 +325,6 @@ public class Environment implements SappDrawable {
         }
     }
 
-    public void save(String path) {
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .registerTypeAdapter(Component.class, new ComponentSerializer(this))
-                .registerTypeAdapter(Entity.class, new EntitySerializer(this))
-                .enableComplexMapKeySerialization()
-                .create();
-
-        try {
-            originFile = path;
-            FileWriter writer = new FileWriter(path);
-            writer.write(gson.toJson(this));
-            writer.close();
-            isModified = false;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Loads an environment from a file passed as a parameter
-     * @param path Path of the environment file to load the new environment from
-     * @return The newly loaded environment
-     */
-    public static Environment load(String path) {
-        Environment env = new Environment("LOADED ENV");
-        env.init();
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .registerTypeAdapter(Environment.class, (InstanceCreator<?>) type -> env)
-                .registerTypeAdapter(Component.class, new ComponentSerializer(env))
-                .registerTypeAdapter(Entity.class, new EntitySerializer(env))
-                .enableComplexMapKeySerialization()
-                .create();
-        String inFile = "";
-
-        try {
-            inFile = new String(Files.readAllBytes(Paths.get(path)));
-            if (!inFile.equals("")) {
-                Environment loaded = gson.fromJson(inFile, Environment.class);
-                long maxId = loaded.UID_SEED;
-                for (Entity e : loaded.entities) {
-                    maxId = e.getUid() > maxId ? e.getUid() + 1 : maxId;
-                    for (Component c : e.getComponents()) {
-                        maxId = c.getUid() > maxId ? c.getUid() + 1 : maxId;
-                    }
-                }
-                for (Component c : loaded.components) {
-                    maxId = c.getUid() > maxId ? c.getUid() + 1 : maxId;
-                }
-                loaded.originFile = path;
-                loaded.isModified = false;
-                return loaded;
-            }
-        } catch (Exception e) {
-            DiaLogger.log(Environment.class, "Failed to load environment from '" + path + "'\n\t" + e.getMessage(), DiaLoggerLevel.ERROR);
-            return null;
-        }
-        return env;
-    }
-
     public void destroy() {
 
     }
@@ -456,12 +395,70 @@ public class Environment implements SappDrawable {
         */
     }
 
-    public float getRatio() {
-        return ((float) frameX / frameY) * ((float) Window.getHeight() / Window.getWidth());
-    }
-
     @Override
     public boolean selectable() {
         return false;
+    }
+
+    // SERIALIZATION METHODS
+    public void save(String path) {
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(Component.class, new ComponentSerializer(this))
+                .registerTypeAdapter(Entity.class, new EntitySerializer(this))
+                .enableComplexMapKeySerialization()
+                .create();
+
+        try {
+            originFile = path;
+            FileWriter writer = new FileWriter(path);
+            writer.write(gson.toJson(this));
+            writer.close();
+            isModified = false;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Loads an environment from a file passed as a parameter
+     * @param path Path of the environment file to load the new environment from
+     * @return The newly loaded environment
+     */
+    public static Environment load(String path) {
+        Environment env = new Environment("LOADED ENV");
+        env.init();
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(Environment.class, (InstanceCreator<?>) type -> env)
+                .registerTypeAdapter(Component.class, new ComponentSerializer(env))
+                .registerTypeAdapter(Entity.class, new EntitySerializer(env))
+                .enableComplexMapKeySerialization()
+                .create();
+        String inFile = "";
+
+        try {
+            inFile = new String(Files.readAllBytes(Paths.get(path)));
+            if (!inFile.equals("")) {
+                Environment loaded = gson.fromJson(inFile, Environment.class);
+                long maxId = loaded.UID_SEED;
+                for (Entity e : loaded.entities) {
+                    maxId = e.getUid() > maxId ? e.getUid() + 1 : maxId;
+                    for (Component c : e.getComponents()) {
+                        maxId = c.getUid() > maxId ? c.getUid() + 1 : maxId;
+                    }
+                }
+                for (Component c : loaded.components) {
+                    maxId = c.getUid() > maxId ? c.getUid() + 1 : maxId;
+                }
+                loaded.originFile = path;
+                loaded.isModified = false;
+                return loaded;
+            }
+        } catch (Exception e) {
+            DiaLogger.log(Environment.class, "Failed to load environment from '" + path + "'\n\t" + e.getMessage(), DiaLoggerLevel.ERROR);
+            return null;
+        }
+        return env;
     }
 }
