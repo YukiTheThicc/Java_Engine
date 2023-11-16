@@ -18,7 +18,7 @@ public class Entity extends DiamondObject implements SappDrawable {
     // ATTRIBUTES
     private String name;
     private ArrayList<Component> components;
-    private boolean toSerialize;
+    private transient boolean toSerialize;
 
     // CONSTRUCTORS
     public Entity(Environment env) {

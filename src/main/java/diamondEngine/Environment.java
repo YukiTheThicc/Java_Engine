@@ -10,6 +10,7 @@ import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.serializers.ComponentSerializer;
 import diamondEngine.diaUtils.serializers.EntitySerializer;
 import imgui.ImGui;
+import imgui.flag.ImGuiTableFlags;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import sapphire.Sapphire;
@@ -37,21 +38,20 @@ public class Environment implements SappDrawable {
     // ATTRIBUTES
     // UID System
     private final long UID_SEED = 1000000000;
-    private long CURRENT = 1;
     private transient long currentBatch = 0;
-    private DiaFIFO availableIDs;
+    private transient DiaFIFO availableIDs;
     private transient HashMap<Long, Long> registeredObjects;
 
     // Environment properties
     private Environment parent;
     private String name;
-    private transient String originFile;
     private int frameX;
     private int frameY;
-    private boolean isInitialized;
     private List<Environment> children;
     private List<Entity> entities;
     private List<Component> components;
+    private transient String originFile;
+    private transient boolean isInitialized;
 
     // Runtime attributes
     private transient List<Entity> entitiesToRemove;
@@ -204,8 +204,6 @@ public class Environment implements SappDrawable {
     }
 
     public long getID() {
-        //CURRENT++;
-        //return CURRENT;
         long givenID = (long) availableIDs.pop();
         this.registeredObjects.put(givenID, givenID);
         if (availableIDs.getStored() == 0) generateIDs();
@@ -213,8 +211,6 @@ public class Environment implements SappDrawable {
     }
 
     public long getID(long id) {
-        //CURRENT++;
-        //return CURRENT;
         long givenID = this.registeredObjects.containsKey(id) ? id : (long) availableIDs.pop();
         this.registeredObjects.put(givenID, givenID);
         if (availableIDs.getStored() == 0) generateIDs();
@@ -369,7 +365,7 @@ public class Environment implements SappDrawable {
             inFile = new String(Files.readAllBytes(Paths.get(path)));
             if (!inFile.equals("")) {
                 Environment loaded = gson.fromJson(inFile, Environment.class);
-                long maxId = loaded.CURRENT;
+                long maxId = loaded.UID_SEED;
                 for (Entity e : loaded.entities) {
                     maxId = e.getUid() > maxId ? e.getUid() + 1 : maxId;
                     for (Component c : e.getComponents()) {
@@ -379,13 +375,13 @@ public class Environment implements SappDrawable {
                 for (Component c : loaded.components) {
                     maxId = c.getUid() > maxId ? c.getUid() + 1 : maxId;
                 }
-                loaded.CURRENT = maxId;
                 loaded.originFile = path;
                 loaded.isModified = false;
                 return loaded;
             }
         } catch (Exception e) {
             DiaLogger.log(Environment.class, "Failed to load environment from '" + path + "'\n\t" + e.getMessage(), DiaLoggerLevel.ERROR);
+            return null;
         }
         return env;
     }
@@ -415,10 +411,41 @@ public class Environment implements SappDrawable {
             changeFrame(frameX, newHeight.get());
             isModified = true;
         }
+        ImGui.separator();
 
-        ImGui.text("Current id: " + CURRENT);
-        ImGui.text("Seed: " + UID_SEED);
+        // UID System INFO
+        DiaFIFO fifo = Diamond.getCurrentEnv().getAvailableIDs();
+        HashMap<Long, Long> objs = Diamond.getCurrentEnv().getRegisteredObjects();
 
+        ImGui.text("First: " + fifo.getFirst());
+        ImGui.sameLine();
+        ImGui.text("Last: " + fifo.getLast());
+        ImGui.sameLine();
+        ImGui.text("Stored: " + fifo.getStored());
+        ImGui.separator();
+
+        ImGui.columns(fifo.getList().length);
+        for (int i = 0; i < fifo.getList().length; i++) {
+            Object obj = fifo.getList()[i];
+            ImGui.text(obj + "");
+            if (i < fifo.getList().length - 1) ImGui.nextColumn();
+        }
+        ImGui.columns(1);
+        ImGui.separator();
+
+        if (ImGui.beginTable("Objects", 2 , ImGuiTableFlags.Borders)) {
+
+            ImGui.tableSetupColumn("ID");
+            ImGui.tableSetupColumn("Object");
+            ImGui.tableHeadersRow();
+            for (long key : objs.keySet()) {
+                ImGui.tableNextColumn();
+                ImGui.text("" + key);
+                ImGui.tableNextColumn();
+                ImGui.text("" + objs.get(key));
+            }
+        }
+        ImGui.endTable();
 
         /*
         ImGui.text("winSizeAdjustX: " + winSizeAdjustX);
