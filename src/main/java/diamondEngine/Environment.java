@@ -32,7 +32,7 @@ public class Environment implements SappDrawable {
     public static final String ENV_EXTENSION = ".denv";
     public static final int DEFAULT_FRAME_X = 480;
     public static final int DEFAULT_FRAME_Y = 270;
-    public static final int ID_BATCH_SIZE = 512;
+    public static final int ID_BATCH_SIZE = 4;
 
     // ATTRIBUTES
     // UID System
@@ -40,7 +40,7 @@ public class Environment implements SappDrawable {
     private long CURRENT = 1;
     private transient long currentBatch = 0;
     private DiaFIFO availableIDs;
-    private transient HashMap<Long, DiamondObject> registeredObjects;
+    private transient HashMap<Long, Long> registeredObjects;
 
     // Environment properties
     private Environment parent;
@@ -127,10 +127,6 @@ public class Environment implements SappDrawable {
         return components;
     }
 
-    public boolean isInitialized() {
-        return isInitialized;
-    }
-
     public Framebuffer getFrame() {
         return frame;
     }
@@ -141,15 +137,6 @@ public class Environment implements SappDrawable {
 
     public int getFrameY() {
         return frameY;
-    }
-
-    public void setDirty() {
-        isDirty = true;
-        isModified = true;
-    }
-
-    public void setToRemove() {
-        this.toRemove = true;
     }
 
     public boolean isToRemove() {
@@ -180,12 +167,25 @@ public class Environment implements SappDrawable {
         return winSizeAdjustY;
     }
 
+    public DiaFIFO getAvailableIDs() {
+        return availableIDs;
+    }
+
+    public HashMap<Long, Long> getRegisteredObjects() {
+        return registeredObjects;
+    }
+
+    public long getCurrentBatch() {
+        return currentBatch;
+    }
+
     // METHODS
     public void init() {
         frame = new Framebuffer(frameX, frameY);
         isInitialized = true;
         isModified = true;
-        availableIDs = new DiaFIFO(4);
+        availableIDs = new DiaFIFO(ID_BATCH_SIZE);
+        registeredObjects = new HashMap<>();
         if (isProfiling) {
             Diamond.getProfiler().addRegister("Update Lists");
             Diamond.getProfiler().addRegister("Update Children");
@@ -193,18 +193,32 @@ public class Environment implements SappDrawable {
             Diamond.getProfiler().addRegister("Update Entities");
             Diamond.getProfiler().addRegister("Debug Render");
         }
+        generateIDs();
     }
 
     private void generateIDs() {
         for (int i = 0; i < availableIDs.getSize(); i++) {
-            availableIDs.push(UID_SEED);
+            availableIDs.push(UID_SEED + ID_BATCH_SIZE * currentBatch + i);
         }
         currentBatch++;
     }
 
     public long getID() {
-        CURRENT++;
-        return CURRENT;
+        //CURRENT++;
+        //return CURRENT;
+        long givenID = (long) availableIDs.pop();
+        this.registeredObjects.put(givenID, givenID);
+        if (availableIDs.getStored() == 0) generateIDs();
+        return givenID;
+    }
+
+    public long getID(long id) {
+        //CURRENT++;
+        //return CURRENT;
+        long givenID = this.registeredObjects.containsKey(id) ? id : (long) availableIDs.pop();
+        this.registeredObjects.put(givenID, givenID);
+        if (availableIDs.getStored() == 0) generateIDs();
+        return givenID;
     }
 
     public void addChild(Environment environment) {

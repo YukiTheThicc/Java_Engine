@@ -22,10 +22,6 @@ public class EntitySerializer implements JsonDeserializer<Entity> {
         JsonObject jsonObject = json.getAsJsonObject();
         JsonArray components = jsonObject.getAsJsonArray("components");
 
-        Entity entity = new Entity(env);
-        for (JsonElement e: components) {
-            Entity c = context.deserialize(e, Entity.class);
-        }
-        return entity;
+        return new Entity(env);
     }
 }
