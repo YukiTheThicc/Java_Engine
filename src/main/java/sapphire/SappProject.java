@@ -8,6 +8,7 @@ import diamondEngine.Diamond;
 import diamondEngine.diaUtils.DiaAssetManager;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
+import diamondEngine.diaUtils.serializers.EnvironmentSerializer;
 import sapphire.imgui.SappImGui;
 
 import java.io.File;
@@ -148,11 +149,14 @@ public class SappProject {
                 }
 
                 for (String envFile : projectEnvFiles) {
-                    Environment loadedEnv = Environment.load(envFile);
-                    if (loadedEnv != null) {
-                        Diamond.get().addEnvironment(loadedEnv);
-                        if (loadedEnv.getOriginFile().equals(currentEnv)) {
-                            Diamond.setCurrentEnv(loadedEnv);
+                    Environment env = new Environment();
+                    env.init();
+                    EnvironmentSerializer es = new EnvironmentSerializer(env);
+                    es.load(envFile);
+                    if (env != null) {
+                        Diamond.get().addEnvironment(env);
+                        if (env.getOriginFile().equals(currentEnv)) {
+                            Diamond.setCurrentEnv(env);
                         }
                     }
                 }

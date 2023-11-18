@@ -3,7 +3,6 @@ package sapphire;
 import com.google.gson.JsonObject;
 import diamondEngine.Diamond;
 import diamondEngine.Window;
-import diamondEngine.diaControls.MouseControllerEditor;
 import diamondEngine.diaControls.MouseControls;
 import diamondEngine.diaAssets.Texture;
 import diamondEngine.diaUtils.DiaLogger;
@@ -220,7 +219,7 @@ public class Sapphire {
         while (running) {
 
             window.pollEvents();
-            MouseControllerEditor.update(dt);
+            SappMouseControls.update(dt);
             Diamond.getProfiler().beginMeasurement("Total");
             Diamond.getCurrentEnv().startFrame();
             if (dt >= 0) {

@@ -24,6 +24,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -31,17 +32,11 @@ public class Environment implements SappDrawable {
 
     // CONSTANTS
     public static final String ENV_EXTENSION = ".denv";
+    public static final String DEFAULT_NAME = "UNKNOWN";
     public static final int DEFAULT_FRAME_X = 480;
     public static final int DEFAULT_FRAME_Y = 270;
-    public static final int ID_BATCH_SIZE = 4;
 
     // ATTRIBUTES
-    // UID System
-    private final long UID_SEED = 1000000000;
-    private transient long currentBatch = 0;
-    private transient DiaFIFO availableIDs;
-    private transient HashMap<Long, Long> registeredObjects;
-
     // Environment properties
     private Environment parent;
     private String name;
@@ -54,6 +49,7 @@ public class Environment implements SappDrawable {
     private transient boolean isInitialized;
 
     // Runtime attributes
+    private transient HashMap<String, DiamondObject> registeredObjects;
     private transient List<Entity> entitiesToRemove;
     private transient List<Component> componentsToRemove;
     private transient Framebuffer frame;
@@ -66,6 +62,22 @@ public class Environment implements SappDrawable {
     private transient boolean isProfiling = true;
 
     // CONSTRUCTORS
+    public Environment() {
+        this.frameX = DEFAULT_FRAME_X;
+        this.frameY = DEFAULT_FRAME_Y;
+        this.parent = null;
+        this.name = DEFAULT_NAME;
+        this.originFile = null;
+        this.isInitialized = false;
+        this.children = new ArrayList<>();
+        this.entities = new ArrayList<>();
+        this.components = new ArrayList<>();
+        this.entitiesToRemove = new ArrayList<>();
+        this.componentsToRemove = new ArrayList<>();
+        this.winSizeAdjustX = (float) Window.getWidth() / frameX;
+        this.winSizeAdjustY = (float) Window.getHeight() / frameY;
+    }
+
     public Environment(String name) {
         this.frameX = DEFAULT_FRAME_X;
         this.frameY = DEFAULT_FRAME_Y;
@@ -159,6 +171,10 @@ public class Environment implements SappDrawable {
         isModified = true;
     }
 
+    public void setSaved() {
+        isModified = false;
+    }
+
     public float getWinSizeAdjustX() {
         return winSizeAdjustX;
     }
@@ -167,16 +183,28 @@ public class Environment implements SappDrawable {
         return winSizeAdjustY;
     }
 
-    public DiaFIFO getAvailableIDs() {
-        return availableIDs;
-    }
-
-    public HashMap<Long, Long> getRegisteredObjects() {
+    public HashMap<String, DiamondObject> getRegisteredObjects() {
         return registeredObjects;
     }
 
-    public long getCurrentBatch() {
-        return currentBatch;
+    public void setFrameX(int frameX) {
+        this.frameX = frameX;
+    }
+
+    public void setFrameY(int frameY) {
+        this.frameY = frameY;
+    }
+
+    public void setChildren(List<Environment> children) {
+        this.children = children;
+    }
+
+    public void setEntities(List<Entity> entities) {
+        this.entities = entities;
+    }
+
+    public void setComponents(List<Component> components) {
+        this.components = components;
     }
 
     // METHODS
@@ -184,7 +212,6 @@ public class Environment implements SappDrawable {
         frame = new Framebuffer(frameX, frameY);
         isInitialized = true;
         isModified = true;
-        availableIDs = new DiaFIFO(ID_BATCH_SIZE);
         registeredObjects = new HashMap<>();
         if (isProfiling) {
             Diamond.getProfiler().addRegister("Update Lists");
@@ -193,28 +220,6 @@ public class Environment implements SappDrawable {
             Diamond.getProfiler().addRegister("Update Entities");
             Diamond.getProfiler().addRegister("Debug Render");
         }
-        generateIDs();
-    }
-
-    private void generateIDs() {
-        for (int i = 0; i < availableIDs.getSize(); i++) {
-            availableIDs.push(UID_SEED + ID_BATCH_SIZE * currentBatch + i);
-        }
-        currentBatch++;
-    }
-
-    public long getID() {
-        long givenID = (long) availableIDs.pop();
-        this.registeredObjects.put(givenID, givenID);
-        if (availableIDs.getStored() == 0) generateIDs();
-        return givenID;
-    }
-
-    public long getID(long id) {
-        long givenID = this.registeredObjects.containsKey(id) ? id : (long) availableIDs.pop();
-        this.registeredObjects.put(givenID, givenID);
-        if (availableIDs.getStored() == 0) generateIDs();
-        return givenID;
     }
 
     public void addChild(Environment environment) {
@@ -226,9 +231,18 @@ public class Environment implements SappDrawable {
         }
     }
 
+    public void addEntity(Entity entity) {
+        if (entity != null) {
+            entities.add(entity);
+            registeredObjects.put(entity.getUuid(), entity);
+            isModified = true;
+        }
+    }
+
     public void addComponent(Component component) {
         if (component != null) {
             components.add(component);
+            registeredObjects.put(component.getUuid(), component);
             isModified = true;
         }
     }
@@ -241,19 +255,16 @@ public class Environment implements SappDrawable {
         }
     }
 
-    public void addEntity(Entity entity) {
-        if (entity != null) {
-            entities.add(entity);
-            isModified = true;
-        }
-    }
-
     public void removeEntity(Entity entity) {
         if (entity != null) {
             entitiesToRemove.add(entity);
             isDirty = true;
             isModified = true;
         }
+    }
+
+    public void registerObject(DiamondObject object) {
+        this.registeredObjects.put(object.getUuid(), object);
     }
 
     public void changeFrame(int frameX, int frameY) {
@@ -353,35 +364,16 @@ public class Environment implements SappDrawable {
         ImGui.separator();
 
         // UID System INFO
-        DiaFIFO fifo = Diamond.getCurrentEnv().getAvailableIDs();
-        HashMap<Long, Long> objs = Diamond.getCurrentEnv().getRegisteredObjects();
-
-        ImGui.text("First: " + fifo.getFirst());
-        ImGui.sameLine();
-        ImGui.text("Last: " + fifo.getLast());
-        ImGui.sameLine();
-        ImGui.text("Stored: " + fifo.getStored());
-        ImGui.separator();
-
-        ImGui.columns(fifo.getList().length);
-        for (int i = 0; i < fifo.getList().length; i++) {
-            Object obj = fifo.getList()[i];
-            ImGui.text(obj + "");
-            if (i < fifo.getList().length - 1) ImGui.nextColumn();
-        }
-        ImGui.columns(1);
-        ImGui.separator();
-
         if (ImGui.beginTable("Objects", 2 , ImGuiTableFlags.Borders)) {
 
             ImGui.tableSetupColumn("ID");
             ImGui.tableSetupColumn("Object");
             ImGui.tableHeadersRow();
-            for (long key : objs.keySet()) {
+            for (String key : getRegisteredObjects().keySet()) {
                 ImGui.tableNextColumn();
                 ImGui.text("" + key);
                 ImGui.tableNextColumn();
-                ImGui.text("" + objs.get(key));
+                ImGui.text("" + getRegisteredObjects().get(key));
             }
         }
         ImGui.endTable();
@@ -398,67 +390,5 @@ public class Environment implements SappDrawable {
     @Override
     public boolean selectable() {
         return false;
-    }
-
-    // SERIALIZATION METHODS
-    public void save(String path) {
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .registerTypeAdapter(Component.class, new ComponentSerializer(this))
-                .registerTypeAdapter(Entity.class, new EntitySerializer(this))
-                .enableComplexMapKeySerialization()
-                .create();
-
-        try {
-            originFile = path;
-            FileWriter writer = new FileWriter(path);
-            writer.write(gson.toJson(this));
-            writer.close();
-            isModified = false;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Loads an environment from a file passed as a parameter
-     * @param path Path of the environment file to load the new environment from
-     * @return The newly loaded environment
-     */
-    public static Environment load(String path) {
-        Environment env = new Environment("LOADED ENV");
-        env.init();
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .registerTypeAdapter(Environment.class, (InstanceCreator<?>) type -> env)
-                .registerTypeAdapter(Component.class, new ComponentSerializer(env))
-                .registerTypeAdapter(Entity.class, new EntitySerializer(env))
-                .enableComplexMapKeySerialization()
-                .create();
-        String inFile = "";
-
-        try {
-            inFile = new String(Files.readAllBytes(Paths.get(path)));
-            if (!inFile.equals("")) {
-                Environment loaded = gson.fromJson(inFile, Environment.class);
-                long maxId = loaded.UID_SEED;
-                for (Entity e : loaded.entities) {
-                    maxId = e.getUid() > maxId ? e.getUid() + 1 : maxId;
-                    for (Component c : e.getComponents()) {
-                        maxId = c.getUid() > maxId ? c.getUid() + 1 : maxId;
-                    }
-                }
-                for (Component c : loaded.components) {
-                    maxId = c.getUid() > maxId ? c.getUid() + 1 : maxId;
-                }
-                loaded.originFile = path;
-                loaded.isModified = false;
-                return loaded;
-            }
-        } catch (Exception e) {
-            DiaLogger.log(Environment.class, "Failed to load environment from '" + path + "'\n\t" + e.getMessage(), DiaLoggerLevel.ERROR);
-            return null;
-        }
-        return env;
     }
 }

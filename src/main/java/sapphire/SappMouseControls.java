@@ -1,18 +1,13 @@
-package diamondEngine.diaControls;
+package sapphire;
 
 import diamondEngine.Diamond;
-import diamondEngine.Environment;
-import diamondEngine.diaComponents.Component;
 import diamondEngine.diaControls.MouseControls;
-import diamondEngine.diaUtils.DiaLogger;
-import imgui.ImGui;
 import org.joml.Vector2f;
-import sapphire.Sapphire;
 import sapphire.imgui.windows.GameViewWindow;
 
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
 
-public class MouseControllerEditor {
+public class SappMouseControls {
 
     // ATTRIBUTES
     private static Vector2f clickOrigin;

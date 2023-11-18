@@ -4,6 +4,7 @@ import diamondEngine.Diamond;
 import diamondEngine.Environment;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
+import diamondEngine.diaUtils.serializers.EnvironmentSerializer;
 import sapphire.Sapphire;
 import sapphire.SappDir;
 import sapphire.SappProject;
@@ -136,11 +137,12 @@ public class MenuEventHandler implements SappObserver {
     private void importEnv() {
         String path = DiaUtils.selectFile();
         if (path != null && !path.isEmpty()) {
-            Environment env = Environment.load(path);
-            if (env != null) {
-                Diamond.get().addEnvironment(env);
-                if (Sapphire.get().getProject() != null) Sapphire.get().getProject().save();
-            }
+            Environment env = new Environment();
+            env.init();
+            EnvironmentSerializer es = new EnvironmentSerializer(env);
+            es.load(path);
+            Diamond.get().addEnvironment(env);
+            if (Sapphire.get().getProject() != null) Sapphire.get().getProject().save();
         }
     }
 
@@ -155,7 +157,8 @@ public class MenuEventHandler implements SappObserver {
             }
 
             if (file != null && file.isFile()) {
-                env.save(file.getAbsolutePath());
+                EnvironmentSerializer es = new EnvironmentSerializer(env);
+                es.save(file.getAbsolutePath());
                 if (Sapphire.get().getProject() != null) Sapphire.get().getProject().save();
             }
         }
@@ -166,7 +169,9 @@ public class MenuEventHandler implements SappObserver {
         if (env != null) {
             File file = DiaUtils.saveFile(Sapphire.getProjectDir() + "/" + SappProject.ENVS_DIR, Environment.ENV_EXTENSION);
             if (file != null && file.isFile()) {
-                env.save(file.getAbsolutePath());
+                EnvironmentSerializer es = new EnvironmentSerializer(env);
+                es.save(file.getAbsolutePath());
+                if (Sapphire.get().getProject() != null) Sapphire.get().getProject().save();
             }
         }
     }

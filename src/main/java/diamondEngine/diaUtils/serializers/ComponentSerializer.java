@@ -3,7 +3,9 @@ package diamondEngine.diaUtils.serializers;
 import com.google.gson.*;
 import diamondEngine.Environment;
 import diamondEngine.diaComponents.Component;
+import diamondEngine.diaUtils.DiaLogger;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 
 public class ComponentSerializer implements JsonSerializer<Component>, JsonDeserializer<Component> {
@@ -32,11 +34,9 @@ public class ComponentSerializer implements JsonSerializer<Component>, JsonDeser
         JsonElement element = jsonObject.get("properties");
 
         try {
-            Component newComp = context.deserialize(element, Class.forName(type));
-
             return context.deserialize(element, Class.forName(type));
-        } catch (ClassNotFoundException e) {
-            throw new JsonParseException("Unknown element type: " + type, e);
+        } catch (Exception e) {
+            throw new JsonParseException("Failed to load component: " + type, e);
         }
     }
 }

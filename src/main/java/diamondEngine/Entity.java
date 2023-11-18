@@ -3,7 +3,6 @@ package diamondEngine;
 import diamondEngine.diaComponents.Component;
 import imgui.ImGui;
 import imgui.flag.ImGuiStyleVar;
-import imgui.type.ImInt;
 import imgui.type.ImString;
 import sapphire.Sapphire;
 import sapphire.imgui.SappDrawable;
@@ -75,7 +74,7 @@ public class Entity extends DiamondObject implements SappDrawable {
     @Override
     public void imgui() {
 
-        ImGui.text("ID: " + this.getUid());
+        ImGui.text("ID: " + this.getUuid());
         SappImGui.textLabel("Name", name);
         ImString newName = new ImString(name, 256);
         if (SappImGui.inputText(Sapphire.getLiteral("name"), newName)) {
@@ -89,7 +88,7 @@ public class Entity extends DiamondObject implements SappDrawable {
     @Override
     public boolean selectable() {
         boolean result = false;
-        ImGui.pushID(this.getUid());
+        ImGui.pushID(this.getUuid());
         ImGui.beginGroup();
         float buttonOriginX = ImGui.getCursorPosX();
         // Calculate alignment position relative to the available space so the text always starts after the icon
