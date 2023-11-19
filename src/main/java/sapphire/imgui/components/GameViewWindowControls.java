@@ -53,7 +53,7 @@ public class GameViewWindowControls {
         ImGui.pushStyleVar(ImGuiStyleVar.ChildRounding, 255f);
         ImGui.begin("controls", flags);
 
-        if (!Diamond.getCurrentEnv().getName().equals(Diamond.LIMBO_ENV_NAME)) {
+        if (!Diamond.getCurrentEnv().getUuid().equals(Diamond.getDefaultEnv().getUuid())) {
             float envNameX = SappImGui.textSize(Diamond.getCurrentEnv().getName());
             SappImGui.alignNoHeader(AlignX.LEFT, AlignY.TOP, envNameX + ImGui.getStyle().getFramePaddingX() * 2, mainControlsY);
             ImGui.beginChild("env_info", envNameX + ImGui.getStyle().getFramePaddingX() * 2, mainControlsY);

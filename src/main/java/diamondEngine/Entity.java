@@ -27,6 +27,13 @@ public class Entity extends DiamondObject implements SappDrawable {
         this.toSerialize = true;
     }
 
+    public Entity(Environment env, String uuid) {
+        super(env, uuid);
+        this.name = GENERATED_NAME;
+        this.components = new ArrayList<>();
+        this.toSerialize = true;
+    }
+
     public Entity(String name, Environment env) {
         super(env);
         this.name = name;
@@ -62,6 +69,7 @@ public class Entity extends DiamondObject implements SappDrawable {
     public void addComponent(Component component) {
         if (component != null) {
             components.add(component);
+            this.getParent().registerObject(component);
         }
     }
 
@@ -74,13 +82,17 @@ public class Entity extends DiamondObject implements SappDrawable {
     @Override
     public void imgui() {
 
-        ImGui.text("ID: " + this.getUuid());
-        SappImGui.textLabel("Name", name);
+        SappImGui.textLabel("UUID", this.getUuid());
         ImString newName = new ImString(name, 256);
         if (SappImGui.inputText(Sapphire.getLiteral("name"), newName)) {
             if (Sapphire.get().getProject() != null && !newName.isEmpty()) {
                 name = newName.get();
                 this.getParent().setModified();
+            }
+        }
+        for (Component c : components) {
+            if (ImGui.collapsingHeader(c.getClass().getSimpleName())) {
+                c.imgui();
             }
         }
     }

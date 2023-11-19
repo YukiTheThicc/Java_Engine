@@ -2,6 +2,7 @@ package sapphire;
 
 import diamondEngine.Diamond;
 import diamondEngine.diaControls.MouseControls;
+import imgui.ImGui;
 import org.joml.Vector2f;
 import sapphire.imgui.windows.GameViewWindow;
 
@@ -19,6 +20,11 @@ public class SappMouseControls {
 
     public static void update(float dt) {
         Diamond.getProfiler().beginMeasurement("Editor Controller");
+        viewPortControls(dt);
+        Diamond.getProfiler().endMeasurement("Editor Controller");
+    }
+
+    private static void viewPortControls(float dt) {
         if (MouseControls.getScreenY() != 0.0f) {
             float addValue = (float) Math.pow(Math.abs(MouseControls.getScrollY()) * scrollSensitivity, 1 / GameViewWindow.editorCamera.zoom);
             addValue *= -Math.signum(MouseControls.getScrollY());
@@ -39,7 +45,5 @@ public class SappMouseControls {
         if (dragLag <= 0.0f && !MouseControls.mouseButtonDown(GLFW_MOUSE_BUTTON_MIDDLE)) {
             dragLag = 0.032f;
         }
-
-        Diamond.getProfiler().endMeasurement("Editor Controller");
     }
 }

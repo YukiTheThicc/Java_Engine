@@ -11,7 +11,6 @@ import sapphire.Sapphire;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -68,7 +67,6 @@ public class EnvironmentSerializer {
                 env.setOriginFile(path);
                 if (loaded.getChildren() != null) for (Environment e : loaded.getChildren()) env.addChild(e);
                 if (loaded.getEntities() != null)for (Entity e : loaded.getEntities()) env.addEntity(e);
-                if (loaded.getComponents() != null) for (Component c : loaded.getComponents()) env.addComponent(c);
                 env.setSaved();
                 Sapphire.setActiveObject(env);
                 Diamond.setCurrentEnv(env);

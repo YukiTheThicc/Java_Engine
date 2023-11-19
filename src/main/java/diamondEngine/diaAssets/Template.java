@@ -30,18 +30,4 @@ public class Template {
     }
 
     // METHODS
-    public Entity createEntity(Environment env) {
-        Entity newEntity = new Entity(env);
-        for (Component c : components) {
-            newEntity.addComponent(c.copy());
-        }
-        return newEntity;
-    }
-
-    public void copyFromEntity(Entity entity) {
-        this.components.clear();
-        for (Component c : entity.getComponents()) {
-            components.add(c.copy());
-        }
-    }
 }

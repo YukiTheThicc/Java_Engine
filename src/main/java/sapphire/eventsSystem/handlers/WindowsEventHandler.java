@@ -25,11 +25,8 @@ public class WindowsEventHandler implements SappObserver {
             case Add_env:
                 handleNewEnv();
                 break;
-            case Add_component:
-                handleAddComponent(event);
-                break;
-            case Add_entity:
-                handleAddEntity(event);
+            case Add_object:
+                handleAddObject(event);
                 break;
             case Selected_object:
                 if (event.payload instanceof SappDrawable) Sapphire.setActiveObject((SappDrawable) event.payload);
@@ -58,22 +55,23 @@ public class WindowsEventHandler implements SappObserver {
         Diamond.get().addEmptyEnvironment();
     }
 
-    private void handleAddComponent(SappEvent event) {
-        if (event.env != null && event.payload instanceof Component) {
-            for (Component component : event.env.getComponents()) {
+    private void handleAddObject(SappEvent event) {
+        // ADD Entity to environment
+        if (event.env != null && event.entity != null) {
+            event.env.addEntity(event.entity);
+        }
+
+        // ADD Component to entity
+        if (event.entity != null && event.payload instanceof Component) {
+            for (Component component : event.entity.getComponents()) {
                 if (component.getClass() == event.payload.getClass()) {
                     return;
                 }
             }
-            event.env.addComponent((Component) event.payload);
+            event.entity.addComponent((Component) event.payload);
         }
-    }
 
-    private void handleAddEntity(SappEvent event) {
-        if (event.env != null && event.entity != null) {
-            event.env.addEntity(event.entity);
-        }
-        DiaLogger.log(WindowsEventHandler.class, "" + event.entity);
+        DiaLogger.log("Add object");
     }
 
     private void handleDeleteObj(SappEvent event) {
@@ -82,14 +80,9 @@ public class WindowsEventHandler implements SappObserver {
             Diamond.get().removeEnv(event.env);
             Sapphire.get().getProject().save();
             if (Sapphire.getActiveObject() == event.env) Sapphire.setActiveObject(null);
-        } else if (event.env != null) {
-            if (event.payload instanceof Entity) {
-                event.env.removeEntity((Entity) event.payload);
-            } else if (event.payload instanceof Component) {
-                event.env.removeComponent((Component) event.payload);
-            }
-            if (Sapphire.getActiveObject() == event.payload) Sapphire.setActiveObject(null);
         }
+
+        DiaLogger.log("Delete object");
     }
 
     private void handleDeleteFile(SappEvent event) {

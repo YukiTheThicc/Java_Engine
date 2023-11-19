@@ -18,7 +18,7 @@ import sapphire.imgui.components.ImageLabelButton;
 public class EnvHierarchyWindow extends ImguiWindow {
 
     private final int NODE_FLAGS = ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.Selected |
-            ImGuiTreeNodeFlags.OpenOnArrow |ImGuiTreeNodeFlags.OpenOnDoubleClick;
+            ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.OpenOnDoubleClick;
 
     // ATTRIBUTES
     private final ImageLabelButton newRootEnvButton;
@@ -60,71 +60,64 @@ public class EnvHierarchyWindow extends ImguiWindow {
                 }
                 envContextMenu(env);
                 drawEntities(env);
-                drawComponents(env);
                 ImGui.treePop();
             }
             ImGui.popID();
         }
     }
 
-    private void drawComponents(Environment env) {
-        for (Component component : env.getComponents()) {
-            if (component.selectable()) {
-                SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, null, component));
-            }
-            componentContextMenu(env, component);
-        }
-    }
-
     private void drawEntities(Environment env) {
-        if (!env.getEntities().isEmpty() && ImGui.treeNode("Entities")) {
-            for (Entity entity : env.getEntities()) {
-                if (entity.selectable()) {
-                    SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, null, entity));
-                }
+        for (Entity entity : env.getEntities()) {
+            entityContextMenu(entity);
+            if (entity.selectable()) {
+                SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, null, entity));
             }
-            ImGui.treePop();
         }
     }
 
     private void mainContextMenu() {
         if (ImGui.beginPopupContextItem("env_menu")) {
-            if (ImGui.menuItem(Sapphire.getLiteral("create_env"))) SappEvents.notify(new SappEvent(SappEventType.Add_env));
+            if (ImGui.menuItem(Sapphire.getLiteral("create_env")))
+                SappEvents.notify(new SappEvent(SappEventType.Add_env));
             ImGui.endPopup();
         }
     }
 
     /**
      * Context menu for an environment
+     *
      * @param env Environment for which the menu is being drawn
      */
     private void envContextMenu(Environment env) {
-        if (ImGui.beginPopupContextItem(env.getName() + "_env_item")) {
+        if (ImGui.beginPopupContextItem(env.getUuid())) {
 
             if (ImGui.menuItem(Sapphire.getLiteral("make_current"))) SappEvents.notify(
                     new SappEvent(SappEventType.Make_current, env));
             ImGui.separator();
 
             if (ImGui.menuItem(Sapphire.getLiteral("add_entity"))) SappEvents.notify(
-                    new SappEvent(SappEventType.Add_entity, env, new Entity(env)));
-            ImGui.separator();
-
-            if (ImGui.menuItem(Sapphire.getLiteral("add_grid"))) SappEvents.notify(
-                    new SappEvent(SappEventType.Add_component, env, null, new Grid(32, env)));
+                    new SappEvent(SappEventType.Add_object, env, new Entity(env)));
             ImGui.separator();
 
             if (ImGui.menuItem(Sapphire.getLiteral("delete"))) SappEvents.notify(
-                new SappEvent(SappEventType.Delete_object, env));
+                    new SappEvent(SappEventType.Delete_object, env));
             ImGui.endPopup();
         }
     }
 
     /**
      * Context menu for an entity
-     * @param env Environment within
+     *
+     * @param e Entity
      */
-    private void entityContextMenu(Environment env) {
-        if (ImGui.beginPopupContextItem(env.getName() + "_entity_item")) {
+    private void entityContextMenu(Entity e) {
+        if (ImGui.beginPopupContextItem(e.getUuid())) {
+            if (ImGui.menuItem(Sapphire.getLiteral("add_grid"))) SappEvents.notify(
+                    new SappEvent(SappEventType.Add_object, null, e, new Grid(32, e.getParent())));
+            ImGui.separator();
+
+            if (ImGui.menuItem(Sapphire.getLiteral("delete"))) SappEvents.notify(
+                    new SappEvent(SappEventType.Delete_object, null, e));
             ImGui.endPopup();
         }
     }

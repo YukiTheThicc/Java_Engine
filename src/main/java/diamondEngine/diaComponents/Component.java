@@ -17,6 +17,10 @@ public abstract class Component extends DiamondObject implements SappDrawable {
        super(env);
     }
 
+    public Component(Environment env, String uuid) {
+        super(env, uuid);
+    }
+
     // GETTERS & SETTERS
     public Entity getOwner() {
         return owner;

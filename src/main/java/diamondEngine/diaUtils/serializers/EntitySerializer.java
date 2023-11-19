@@ -22,8 +22,9 @@ public class EntitySerializer implements JsonDeserializer<Entity> {
     public Entity deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
         JsonArray components = jsonObject.getAsJsonArray("components");
+        JsonElement uuid = jsonObject.get("uuid");
 
-        Entity entity = new Entity(env);
+        Entity entity = new Entity(env, uuid.getAsString());
         for (JsonElement e: components) {
             Component c = context.deserialize(e, Component.class);
             entity.addComponent(c);

@@ -32,7 +32,6 @@ public class ComponentSerializer implements JsonSerializer<Component>, JsonDeser
         JsonObject jsonObject = json.getAsJsonObject();
         String type = jsonObject.get("type").getAsString();
         JsonElement element = jsonObject.get("properties");
-
         try {
             return context.deserialize(element, Class.forName(type));
         } catch (Exception e) {

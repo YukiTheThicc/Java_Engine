@@ -6,19 +6,24 @@ import java.util.regex.Pattern;
 
 public class DiaUUID {
 
-    private static final Pattern pattern = Pattern.compile("[0-9A-F]{8}-[0-9A-F]{7}", Pattern.CASE_INSENSITIVE);
+    private static final Pattern pattern = Pattern.compile("[0-9A-F]{14}-[0-9A-F]{14}", Pattern.CASE_INSENSITIVE);
 
     public static String generateUUID() {
 
-        String timeFrag = String.format("%1$08X", System.currentTimeMillis());                  // Time fragment for the UUID
-        String randomFrag = String.format("%1$07X", new Random().nextInt()).substring(0, 7);    // Random number fragment
+        String timeFrag = String.format("%1$014X", System.currentTimeMillis());                  // Time fragment for the UUID
+        String randomFrag = String.format("%1$014X", new Random().nextLong()).substring(0, 14);    // Random number fragment
 
-        return timeFrag.substring(timeFrag.length() - 9, timeFrag.length() - 1) + "-" + randomFrag;
+        return timeFrag + "-" + randomFrag;
     }
 
     public static String checkUUID(String tentative) {
         Matcher matcher = pattern.matcher(tentative);
-        if (matcher.find()) return tentative;
-        return null;
+        String toReturn = "";
+        if (matcher.find()) {
+            toReturn = tentative;
+        } else {
+            toReturn = generateUUID();
+        }
+        return toReturn;
     }
 }

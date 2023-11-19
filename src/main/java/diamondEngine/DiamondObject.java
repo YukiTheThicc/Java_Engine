@@ -24,12 +24,12 @@ public abstract class DiamondObject {
         return parent;
     }
 
-    public String getUuid() {
-        return uuid;
-    }
-
     public void setParent(Environment parent) {
         this.parent = parent;
+    }
+
+    public String getUuid() {
+        return uuid;
     }
 
     public abstract void update(float dt);

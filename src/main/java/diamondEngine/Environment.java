@@ -7,6 +7,7 @@ import diamondEngine.diaRenderer.Framebuffer;
 import diamondEngine.diaUtils.DiaFIFO;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
+import diamondEngine.diaUtils.DiaUUID;
 import diamondEngine.diaUtils.serializers.ComponentSerializer;
 import diamondEngine.diaUtils.serializers.EntitySerializer;
 import imgui.ImGui;
@@ -40,18 +41,17 @@ public class Environment implements SappDrawable {
     // Environment properties
     private Environment parent;
     private String name;
+    private String uuid;
     private int frameX;
     private int frameY;
     private List<Environment> children;
     private List<Entity> entities;
-    private List<Component> components;
     private transient String originFile;
     private transient boolean isInitialized;
 
     // Runtime attributes
     private transient HashMap<String, DiamondObject> registeredObjects;
     private transient List<Entity> entitiesToRemove;
-    private transient List<Component> componentsToRemove;
     private transient Framebuffer frame;
     private transient float winSizeAdjustX = 1.0f;
     private transient float winSizeAdjustY = 1.0f;
@@ -67,13 +67,12 @@ public class Environment implements SappDrawable {
         this.frameY = DEFAULT_FRAME_Y;
         this.parent = null;
         this.name = DEFAULT_NAME;
+        this.uuid = DiaUUID.generateUUID();
         this.originFile = null;
         this.isInitialized = false;
         this.children = new ArrayList<>();
         this.entities = new ArrayList<>();
-        this.components = new ArrayList<>();
         this.entitiesToRemove = new ArrayList<>();
-        this.componentsToRemove = new ArrayList<>();
         this.winSizeAdjustX = (float) Window.getWidth() / frameX;
         this.winSizeAdjustY = (float) Window.getHeight() / frameY;
     }
@@ -83,34 +82,36 @@ public class Environment implements SappDrawable {
         this.frameY = DEFAULT_FRAME_Y;
         this.parent = null;
         this.name = name;
+        this.uuid = DiaUUID.generateUUID();
         this.originFile = null;
         this.isInitialized = false;
         this.children = new ArrayList<>();
         this.entities = new ArrayList<>();
-        this.components = new ArrayList<>();
         this.entitiesToRemove = new ArrayList<>();
-        this.componentsToRemove = new ArrayList<>();
         this.winSizeAdjustX = (float) Window.getWidth() / frameX;
         this.winSizeAdjustY = (float) Window.getHeight() / frameY;
     }
 
-    public Environment(String name, Environment parent) {
+    public Environment(String name, String uuid) {
         this.frameX = DEFAULT_FRAME_X;
         this.frameY = DEFAULT_FRAME_Y;
-        this.parent = parent;
+        this.parent = null;
         this.name = name;
+        this.uuid = DiaUUID.checkUUID(uuid);
         this.originFile = null;
         this.isInitialized = false;
         this.children = new ArrayList<>();
         this.entities = new ArrayList<>();
-        this.components = new ArrayList<>();
         this.entitiesToRemove = new ArrayList<>();
-        this.componentsToRemove = new ArrayList<>();
         this.winSizeAdjustX = (float) Window.getWidth() / frameX;
         this.winSizeAdjustY = (float) Window.getHeight() / frameY;
     }
 
     // GETTERS & SETTERS
+    public String getUuid() {
+        return uuid;
+    }
+
     public String getName() {
         return name;
     }
@@ -133,10 +134,6 @@ public class Environment implements SappDrawable {
 
     public List<Entity> getEntities() {
         return entities;
-    }
-
-    public List<Component> getComponents() {
-        return components;
     }
 
     public Framebuffer getFrame() {
@@ -187,26 +184,6 @@ public class Environment implements SappDrawable {
         return registeredObjects;
     }
 
-    public void setFrameX(int frameX) {
-        this.frameX = frameX;
-    }
-
-    public void setFrameY(int frameY) {
-        this.frameY = frameY;
-    }
-
-    public void setChildren(List<Environment> children) {
-        this.children = children;
-    }
-
-    public void setEntities(List<Entity> entities) {
-        this.entities = entities;
-    }
-
-    public void setComponents(List<Component> components) {
-        this.components = components;
-    }
-
     // METHODS
     public void init() {
         frame = new Framebuffer(frameX, frameY);
@@ -239,22 +216,6 @@ public class Environment implements SappDrawable {
         }
     }
 
-    public void addComponent(Component component) {
-        if (component != null) {
-            components.add(component);
-            registeredObjects.put(component.getUuid(), component);
-            isModified = true;
-        }
-    }
-
-    public void removeComponent(Component component) {
-        if (component != null) {
-            componentsToRemove.add(component);
-            isDirty = true;
-            isModified = true;
-        }
-    }
-
     public void removeEntity(Entity entity) {
         if (entity != null) {
             entitiesToRemove.add(entity);
@@ -265,6 +226,7 @@ public class Environment implements SappDrawable {
 
     public void registerObject(DiamondObject object) {
         this.registeredObjects.put(object.getUuid(), object);
+        isModified = true;
     }
 
     public void changeFrame(int frameX, int frameY) {
@@ -310,10 +272,6 @@ public class Environment implements SappDrawable {
         for (Environment child : children) child.update(dt);
         Diamond.getProfiler().endMeasurement("Update Children");
 
-        Diamond.getProfiler().beginMeasurement("Update Components");
-        for (Component component : components) component.update(dt);
-        Diamond.getProfiler().endMeasurement("Update Components");
-
         Diamond.getProfiler().beginMeasurement("Update Entities");
         for (Entity e : entities) e.update(dt);
         Diamond.getProfiler().endMeasurement("Update Entities");
@@ -325,13 +283,13 @@ public class Environment implements SappDrawable {
     public void updateLists() {
         if (isDirty) {
             for (Entity e : entitiesToRemove) {
+                for (Component c : e.getComponents()) {
+                    registeredObjects.remove(c);
+                }
                 entities.remove(e);
-            }
-            for (Component c : componentsToRemove) {
-                components.remove(c);
+                registeredObjects.remove(e.getUuid());
             }
             entitiesToRemove.clear();
-            components.clear();
             isDirty = false;
         }
     }
@@ -342,6 +300,7 @@ public class Environment implements SappDrawable {
 
     @Override
     public void imgui() {
+        SappImGui.textLabel("UUID", uuid);
         SappImGui.textLabel("Framebuffer", "" + frame.getFboId());
         ImString newName = new ImString(name, 256);
         if (SappImGui.inputText(Sapphire.getLiteral("name"), newName)) {
@@ -373,7 +332,7 @@ public class Environment implements SappDrawable {
                 ImGui.tableNextColumn();
                 ImGui.text("" + key);
                 ImGui.tableNextColumn();
-                ImGui.text("" + getRegisteredObjects().get(key));
+                ImGui.text(getRegisteredObjects().get(key).getClass().getSimpleName());
             }
         }
         ImGui.endTable();

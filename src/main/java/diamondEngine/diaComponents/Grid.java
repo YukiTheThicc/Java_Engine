@@ -15,14 +15,16 @@ public class Grid extends Component {
     // ATTRIBUTES
     private int cellX;
     private int cellY;
-    private float cellNX;
-    private float cellNY;
-    private int numHLines = 0;
-    private int numVLines = 0;
-    private float width = 0;
-    private float height = 0;
-    private boolean draw;
-    private final Vector3f color = new Vector3f(0.333f, 0.333f, 0.333f);
+
+    // RUNTIME ATTRIBUTES
+    private transient float cellNX;
+    private transient float cellNY;
+    private transient int numHLines = 0;
+    private transient int numVLines = 0;
+    private transient float width = 0;
+    private transient float height = 0;
+    private transient boolean draw;
+    private transient final Vector3f color = new Vector3f(0.333f, 0.333f, 0.333f);
 
     // CONSTRUCTORS
     public Grid(int cell, Environment env) {
@@ -107,6 +109,7 @@ public class Grid extends Component {
 
     @Override
     public void imgui() {
+        SappImGui.textLabel("UUID", this.getUuid());
         ImInt cellX = new ImInt(this.cellX);
         ImInt cellY = new ImInt(this.cellY);
         if (SappImGui.dragInt(Sapphire.getLiteral("cell_height"), cellY)) {
@@ -120,6 +123,6 @@ public class Grid extends Component {
 
     @Override
     public Component copy() {
-        return new Grid(this.cellX, this.cellY, this.getParent());
+        return new Grid(cellX, cellY, this.getParent());
     }
 }

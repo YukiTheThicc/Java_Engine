@@ -16,7 +16,7 @@ public class Diamond {
 
     // ATTRIBUTES
     private static Environment currentEnv = null;
-    private static Environment limboEnv = null;
+    private static Environment defaultEnv = null;
     private static Diamond diamond = null;
     private static DiaProfiler profiler = null;
     private final ArrayList<Environment> environments;
@@ -48,6 +48,10 @@ public class Diamond {
         return profiler;
     }
 
+    public static Environment getDefaultEnv() {
+        return defaultEnv;
+    }
+
     // METHODS
     public static Diamond get() {
         if (Diamond.diamond == null) {
@@ -60,8 +64,8 @@ public class Diamond {
         // Initialize with dummy environment to draw an empty framebuffer
         profiler = new DiaProfiler(2);
         profiler.addRegister("Total");
-        limboEnv = new Environment(LIMBO_ENV_NAME);
-        currentEnv = limboEnv;
+        defaultEnv = new Environment(LIMBO_ENV_NAME);
+        currentEnv = defaultEnv;
         currentEnv.init();
     }
 
@@ -90,7 +94,7 @@ public class Diamond {
             for (Environment env : environmentsToRemove) {
                 environments.remove(env);
                 if (env == currentEnv) {
-                    currentEnv = limboEnv;
+                    currentEnv = defaultEnv;
                 }
             }
             environmentsToRemove.clear();

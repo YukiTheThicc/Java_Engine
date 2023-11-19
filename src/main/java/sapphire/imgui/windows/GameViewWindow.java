@@ -18,6 +18,7 @@ public class GameViewWindow extends ImguiWindow {
     private int leftX, rightX, topY, bottomY;
     public static Camera editorCamera;
     private final GameViewWindowControls controls = new GameViewWindowControls();
+    private boolean isFocused = false;
 
     // CONSTRUCTORS
     public GameViewWindow() {
@@ -45,10 +46,14 @@ public class GameViewWindow extends ImguiWindow {
         return bottomY;
     }
 
+    public boolean isFocused() {
+        return isFocused;
+    }
+
     // METHODS
     public boolean getWantCaptureMouse() {
         return MouseControls.getX() >= leftX && MouseControls.getX() <= rightX &&
-                MouseControls.getY() >= topY && MouseControls.getY() <= bottomY;
+                MouseControls.getY() >= topY && MouseControls.getY() <= bottomY && isFocused;
     }
 
     private ImVec2 getLargestSizeForViewport() {
@@ -87,6 +92,7 @@ public class GameViewWindow extends ImguiWindow {
         ImGui.setNextWindowDockID(layer.getDockId());
         if (ImGui.begin(this.getTitle(), this.getFlags())) {
 
+            isFocused = ImGui.isWindowFocused();
             ImVec2 windowSize = getLargestSizeForViewport();
             ImVec2 viewPortPos = getCenteredPositionForViewport(windowSize);
             ImVec2 viewPortWindowPos = ImGui.getWindowViewport().getWorkPos();
