@@ -72,7 +72,7 @@ public class Entity extends DiamondObject implements SappDrawable {
     //METHODS
     public void addComponent(Component component) {
         if (component != null) {
-            component.setOwner(this);
+            component.setOwner(this.getUuid());
             component.setParent(getParent());
             components.add(component);
             this.getParent().registerObject(component);

@@ -94,8 +94,6 @@ public class WindowsEventHandler implements SappObserver {
                 event.entity.removeComponent(((Component) event.payload).getUuid());
             }
         }
-
-        DiaLogger.log("Delete object");
     }
 
     private void handleDeleteFile(SappEvent event) {

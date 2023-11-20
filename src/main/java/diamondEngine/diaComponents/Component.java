@@ -11,7 +11,7 @@ import sapphire.imgui.SappDrawable;
 public abstract class Component extends DiamondObject implements SappDrawable {
 
     // ATTRIBUTES
-    private Entity owner;
+    private String ownerId;
 
     public Component(Environment env) {
        super(env);
@@ -22,12 +22,12 @@ public abstract class Component extends DiamondObject implements SappDrawable {
     }
 
     // GETTERS & SETTERS
-    public Entity getOwner() {
-        return owner;
+    public String getOwner() {
+        return ownerId;
     }
 
-    public void setOwner(Entity owner) {
-        this.owner = owner;
+    public void setOwner(String owner) {
+        this.ownerId = owner;
     }
 
     // METHODS
