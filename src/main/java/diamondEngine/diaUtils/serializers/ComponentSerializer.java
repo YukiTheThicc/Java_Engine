@@ -33,7 +33,9 @@ public class ComponentSerializer implements JsonSerializer<Component>, JsonDeser
         String type = jsonObject.get("type").getAsString();
         JsonElement element = jsonObject.get("properties");
         try {
-            return context.deserialize(element, Class.forName(type));
+            Component loaded = context.deserialize(element, Class.forName(type));
+            loaded.init();
+            return loaded;
         } catch (Exception e) {
             throw new JsonParseException("Failed to load component: " + type, e);
         }

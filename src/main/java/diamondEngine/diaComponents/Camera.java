@@ -17,7 +17,6 @@ public class Camera {
     private final Vector2f pSize;
     private final Vector2f pSizeActual;
     public Vector2f pos;
-    public float factor = 4f;
     public float zoom = 1.0f;
 
     // CONSTRUCTORS
@@ -42,7 +41,7 @@ public class Camera {
     public Matrix4f getViewMatrix() {
         vMatrix.identity();
         Vector3f cameraFront = new Vector3f(front);
-        vMatrix.lookAt(new Vector3f(pos.x / factor, pos.y / factor, 20.0f), cameraFront.add(pos.x / factor, pos.y / factor, 0.0f), up);
+        vMatrix.lookAt(new Vector3f(pos.x, pos.y, 20.0f), cameraFront.add(pos.x, pos.y, 0.0f), up);
         invView = new Matrix4f(vMatrix).invert();
         return vMatrix;
     }

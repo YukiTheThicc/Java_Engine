@@ -21,6 +21,11 @@ public class SappStyles {
         ImGui.getStyle().setColor(ImGuiCol.TitleBg, accent[0], accent[1], accent[2], accent[3]);
         ImGui.getStyle().setColor(ImGuiCol.TitleBgActive, accent[0], accent[1], accent[2], accent[3]);
         ImGui.getStyle().setColor(ImGuiCol.ChildBg, dark_bg[0], dark_bg[1], dark_bg[2], dark_bg[3]);
+        ImGui.getStyle().setColor(ImGuiCol.Border, dark_bg[0], dark_bg[1], dark_bg[2], dark_bg[3]);
+        ImGui.getStyle().setColor(ImGuiCol.PopupBg, dark_bg[0], dark_bg[1], dark_bg[2], dark_bg[3]);
+        ImGui.getStyle().setColor(ImGuiCol.Separator, accent[0], accent[1], accent[2], accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.SeparatorActive, accent[0], accent[1], accent[2], accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.SeparatorHovered, accent[0], accent[1], accent[2], accent[3]);
 
         // Tabs
         ImGui.getStyle().setColor(ImGuiCol.Tab, accent[0], accent[1], accent[2], accent[3]);
@@ -30,11 +35,26 @@ public class SappStyles {
         ImGui.getStyle().setColor(ImGuiCol.TabUnfocusedActive, accent[0], accent[1], accent[2], accent[3]);
 
         // Buttons
-        ImGui.getStyle().setColor(ImGuiCol.Button, accent[0], accent[1], accent[2], accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.Button, main_bg[0], main_bg[1], main_bg[2], main_bg[3]);
         ImGui.getStyle().setColor(ImGuiCol.ButtonActive, highlight[0], highlight[1], highlight[2], highlight[3]);
         ImGui.getStyle().setColor(ImGuiCol.ButtonHovered, highlight[0], highlight[1], highlight[2], highlight[3]);
 
+        // Trees
+        ImGui.getStyle().setColor(ImGuiCol.Header, main_bg[0], main_bg[1], main_bg[2], main_bg[3]);
+        ImGui.getStyle().setColor(ImGuiCol.HeaderActive, highlight[0], highlight[1], highlight[2], highlight[3]);
+        ImGui.getStyle().setColor(ImGuiCol.HeaderHovered, highlight[0], highlight[1], highlight[2], highlight[3]);
+
+        // Tables
+        ImGui.getStyle().setColor(ImGuiCol.TableHeaderBg, accent[0], accent[1], accent[2], accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.TableBorderLight, accent[0], accent[1], accent[2], accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.TableBorderStrong, accent[0], accent[1], accent[2], accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.TableRowBg, accent[0], accent[1], accent[2], accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.TableRowBgAlt, accent[0], accent[1], accent[2], accent[3]);
+
         // Others
+        ImGui.getStyle().setColor(ImGuiCol.TitleBg, accent[0], accent[1], accent[2], accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.TitleBgCollapsed, accent[0], accent[1], accent[2], accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.TitleBgActive, highlight[0], highlight[1], highlight[2], highlight[3]);
         ImGui.getStyle().setColor(ImGuiCol.NavHighlight, highlight[0], highlight[1], highlight[2], highlight[3]);
         ImGui.getStyle().setColor(ImGuiCol.Text, font[0], font[1], font[2], font[3]);
 
@@ -49,9 +69,9 @@ public class SappStyles {
         // Window
         ImGui.getStyle().setChildRounding(0f);
         ImGui.getStyle().setTabRounding(0f);
-        ImGui.getStyle().setWindowPadding(8f, 8f);
+        ImGui.getStyle().setWindowPadding(4f, 4f);
         ImGui.getStyle().setWindowTitleAlign(0f, 0.5f);
         ImGui.getStyle().setWindowMinSize(10f, 10f);
-        ImGui.getStyle().setWindowPadding(8, 8);
+        ImGui.getStyle().setCellPadding(0, 0);
     }
 }

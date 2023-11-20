@@ -16,8 +16,8 @@ import imgui.flag.ImGuiWindowFlags;
 import sapphire.Sapphire;
 import sapphire.imgui.SappImGuiLayer;
 import sapphire.imgui.SappImGui;
-import sapphire.imgui.components.AssetImageButton;
-import sapphire.imgui.components.ImageButton;
+import sapphire.imgui.widgets.AssetImageButton;
+import sapphire.imgui.widgets.ImageButton;
 
 import java.io.File;
 import java.util.ArrayList;

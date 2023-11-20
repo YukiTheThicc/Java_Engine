@@ -66,6 +66,7 @@ public class SappDefaultLiterals {
         literals.put("projection_size", "Projection size");
         literals.put("camera", "Camera");
         literals.put("delete", "Delete");
+        literals.put("add_entity", "Add entity");
         literals.put("add_grid", "Add grid");
         literals.put("projection_matrix", "Projection matrix");
         literals.put("import_env", "Import environment");
@@ -74,6 +75,7 @@ public class SappDefaultLiterals {
         literals.put("new_env", "New environment");
         literals.put("make_current", "Make current");
         literals.put("textures", "Textures");
+        literals.put("remove", "Remove");
 
         return literals;
     }

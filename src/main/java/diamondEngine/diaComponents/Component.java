@@ -31,6 +31,14 @@ public abstract class Component extends DiamondObject implements SappDrawable {
     }
 
     // METHODS
+
+    /**
+     * !!! REVISE !!! It may be better to rethink this approach. To allow the current serialization system for components
+     * to work properly, it is necessary to implement an init function that initializes transient attributes as they are
+     * not serialized.
+     */
+    public abstract void init();
+
     public abstract void update(float dt);
 
     public void imgui() {

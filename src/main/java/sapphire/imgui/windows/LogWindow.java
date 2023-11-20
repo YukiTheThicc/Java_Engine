@@ -17,7 +17,7 @@ import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
 import sapphire.imgui.SappImGuiLayer;
 import sapphire.imgui.SappImGui;
-import sapphire.imgui.components.ImageButton;
+import sapphire.imgui.widgets.ImageButton;
 
 import java.io.File;
 import java.io.IOException;

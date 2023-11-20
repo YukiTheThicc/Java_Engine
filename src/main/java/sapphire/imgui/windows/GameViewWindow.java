@@ -10,7 +10,7 @@ import imgui.flag.ImGuiWindowFlags;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import sapphire.imgui.SappImGuiLayer;
-import sapphire.imgui.components.GameViewWindowControls;
+import sapphire.imgui.widgets.GameViewWindowControls;
 
 public class GameViewWindow extends ImguiWindow {
 

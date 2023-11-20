@@ -38,7 +38,7 @@ public class SappImGui {
     public static void drawMatrix4f(String label, Matrix4f matrix) {
         ImGui.pushID(label);
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
+        ImGui.setColumnWidth(0, (ImGui.getWindowWidth()) / 3);
         ImGui.textWrapped(label);
         ImGui.nextColumn();
         ImGui.beginTable("##", 4);
@@ -88,11 +88,11 @@ public class SappImGui {
     }
 
     public static void drawVec2Control(String label, Vector2f values) {
-        drawVec2Control(label, values, 0.0f, ImGui.getWindowWidth() / 3);
+        drawVec2Control(label, values, 0.0f, (ImGui.getWindowWidth()) / 3);
     }
 
     public static void drawVec2Control(String label, Vector2f values, float resetValue) {
-        drawVec2Control(label, values, resetValue, ImGui.getWindowWidth() / 3);
+        drawVec2Control(label, values, resetValue, (ImGui.getWindowWidth()) / 3);
     }
 
     public static void drawVec2Control(String label, Vector2f values, float resetValue, float columnWidth) {
@@ -150,7 +150,7 @@ public class SappImGui {
     }
 
     public static void drawVec3Control(String label, Vector3f values) {
-        drawVec3Control(label, values, 0.0f, ImGui.getWindowWidth() / 3);
+        drawVec3Control(label, values, 0.0f, (ImGui.getWindowWidth()) / 3);
     }
 
     public static void drawVec3Control(String label, Vector3f values, float resetValue, float columnWidth) {
@@ -232,11 +232,11 @@ public class SappImGui {
         ImGui.pushID(label);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
+        ImGui.setColumnWidth(0, (ImGui.getWindowWidth()) / 3);
         ImGui.textWrapped(label);
         ImGui.nextColumn();
 
-        ImGui.pushItemWidth(ImGui.getContentRegionAvailX());
+       ImGui.pushItemWidth(ImGui.getContentRegionAvailX() + ImGui.getStyle().getFramePaddingX() * 2);
         float[] valArr = {value.get()};
         if (ImGui.dragFloat("##dragFloat", valArr, step)) {
             value.set(valArr[0]);
@@ -256,11 +256,11 @@ public class SappImGui {
         ImGui.pushID(label);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
+        ImGui.setColumnWidth(0, (ImGui.getWindowWidth()) / 3);
         ImGui.textWrapped(label);
         ImGui.nextColumn();
 
-        ImGui.pushItemWidth(ImGui.getContentRegionAvailX());
+       ImGui.pushItemWidth(ImGui.getContentRegionAvailX() + ImGui.getStyle().getFramePaddingX() * 2);
         int[] valArr = {value.get()};
         if (ImGui.dragInt("##dragInt", valArr, 0.1f)) {
             value.set(valArr[0]);
@@ -281,7 +281,7 @@ public class SappImGui {
         ImGui.pushID(label);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
+        ImGui.setColumnWidth(0, (ImGui.getWindowWidth()) / 3);
         ImGui.textWrapped(label);
         ImGui.nextColumn();
 
@@ -301,11 +301,11 @@ public class SappImGui {
         ImGui.pushID(label);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
+        ImGui.setColumnWidth(0, (ImGui.getWindowWidth()) / 3);
         ImGui.textWrapped(label);
         ImGui.nextColumn();
 
-        ImGui.pushItemWidth(ImGui.getContentRegionAvailX());
+       ImGui.pushItemWidth(ImGui.getContentRegionAvailX() + ImGui.getStyle().getFramePaddingX() * 2);
         if (ImGui.inputInt("##" + label, value)) {
             ImGui.columns(1);
             ImGui.popID();
@@ -323,11 +323,11 @@ public class SappImGui {
         ImGui.pushID(label);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
+        ImGui.setColumnWidth(0, (ImGui.getWindowWidth()) / 3);
         ImGui.textWrapped(label);
         ImGui.nextColumn();
 
-        ImGui.pushItemWidth(ImGui.getContentRegionAvailX());
+       ImGui.pushItemWidth(ImGui.getContentRegionAvailX() + ImGui.getStyle().getFramePaddingX() * 2);
         if (ImGui.inputText("##" + label, text)) {
             ImGui.columns(1);
             ImGui.popID();
@@ -345,7 +345,7 @@ public class SappImGui {
         ImGui.pushID(label);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
+        ImGui.setColumnWidth(0, (ImGui.getWindowWidth()) / 3);
         ImGui.textWrapped(label);
         ImGui.nextColumn();
 
@@ -404,7 +404,7 @@ public class SappImGui {
     }
 
     /**
-     * For windowsSets the ImGUI cursor to be aligned on both axis given the desired alignment and total size of the elements to be
+     * For windows. Sets the ImGUI cursor to be aligned on both axis given the desired alignment and total size of the elements to be
      * aligned on both axis, within the window the function is called.
      *
      * @param alignX Enum value of the horizontal alignment
@@ -452,7 +452,7 @@ public class SappImGui {
         String result = null;
         ImGui.pushID(title);
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, ImGui.getWindowWidth() / 3);
+        ImGui.setColumnWidth(0, (ImGui.getWindowWidth()) / 3);
         ImGui.textWrapped(title);
         ImGui.nextColumn();
         if (ImGui.beginCombo("##" + title, selected)) {
@@ -519,6 +519,19 @@ public class SappImGui {
         }
         modal.setActive(true);
         return modal;
+    }
+
+    public static boolean checkboxLabel(String label, boolean checked) {
+        ImGui.pushID(label);
+
+        ImGui.columns(2);
+        ImGui.setColumnWidth(0, (ImGui.getWindowWidth()) / 3);
+        ImGui.textWrapped(label);
+        ImGui.nextColumn();
+        boolean changed = ImGui.checkbox("##" + label, checked);
+        ImGui.columns(1);
+        ImGui.popID();
+        return changed;
     }
 
     public static void toolTip() {

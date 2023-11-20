@@ -65,9 +65,15 @@ public class Entity extends DiamondObject implements SappDrawable {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     //METHODS
     public void addComponent(Component component) {
         if (component != null) {
+            component.setOwner(this);
+            component.setParent(getParent());
             components.add(component);
             this.getParent().registerObject(component);
         }
@@ -125,7 +131,7 @@ public class Entity extends DiamondObject implements SappDrawable {
 
         ImGui.sameLine();
         ImGui.setCursorPosX(buttonOriginX);
-        ImGui.image(Sapphire.getIcon("component.png").getId(), ImGui.getFontSize() * 1.5f, ImGui.getFontSize() * 1.5f,
+        ImGui.image(Sapphire.getIcon("component.png").getId(), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE,
                 0, 1, 1, 0);
 
         ImGui.endGroup();

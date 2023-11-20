@@ -3,6 +3,7 @@ package sapphire.imgui.windows;
 import diamondEngine.Entity;
 import diamondEngine.Environment;
 import diamondEngine.Diamond;
+import diamondEngine.diaAssets.Texture;
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaComponents.Grid;
 import imgui.ImGui;
@@ -12,8 +13,10 @@ import sapphire.Sapphire;
 import sapphire.eventsSystem.SappEvents;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
+import sapphire.imgui.SappImGui;
 import sapphire.imgui.SappImGuiLayer;
-import sapphire.imgui.components.ImageLabelButton;
+import sapphire.imgui.widgets.ImageLabelButton;
+import sapphire.utils.SappStyles;
 
 public class EnvHierarchyWindow extends ImguiWindow {
 
@@ -52,6 +55,11 @@ public class EnvHierarchyWindow extends ImguiWindow {
     private void drawNestedEntities() {
 
         for (Environment env : Diamond.get().getEnvironments()) {
+
+            Texture tex = Sapphire.getIcon("sapp.png");
+            ImGui.image(tex.getId(), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE, 0, 1, 1, 0);
+            ImGui.sameLine();
+
             ImGui.pushID(env.getUuid());
             if (ImGui.treeNodeEx(env.getName() + (env.isModified() ? " *" : ""), NODE_FLAGS)) {
                 if (ImGui.isItemClicked()) {
@@ -98,7 +106,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
                     new SappEvent(SappEventType.Add_object, env, new Entity(env)));
             ImGui.separator();
 
-            if (ImGui.menuItem(Sapphire.getLiteral("delete"))) SappEvents.notify(
+            if (ImGui.menuItem(Sapphire.getLiteral("remove"))) SappEvents.notify(
                     new SappEvent(SappEventType.Delete_object, env));
             ImGui.endPopup();
         }

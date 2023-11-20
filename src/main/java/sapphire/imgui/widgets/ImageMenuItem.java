@@ -1,4 +1,4 @@
-package sapphire.imgui.components;
+package sapphire.imgui.widgets;
 
 import diamondEngine.diaAssets.Texture;
 import imgui.ImGui;

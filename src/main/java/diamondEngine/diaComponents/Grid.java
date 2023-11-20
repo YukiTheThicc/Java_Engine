@@ -15,6 +15,7 @@ public class Grid extends Component {
     // ATTRIBUTES
     private int cellX;
     private int cellY;
+    private boolean draw;
 
     // RUNTIME ATTRIBUTES
     private transient float cellNX;
@@ -23,26 +24,28 @@ public class Grid extends Component {
     private transient int numVLines = 0;
     private transient float width = 0;
     private transient float height = 0;
-    private transient boolean draw;
-    private transient final Vector3f color = new Vector3f(0.333f, 0.333f, 0.333f);
+    private transient Vector3f color;
 
     // CONSTRUCTORS
     public Grid(int cell, Environment env) {
         super(env);
         this.cellX = cell;
         this.cellY = cell;
+        this.draw = true;
         this.cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX();
         this.cellNY = (float) cellY / Diamond.getCurrentEnv().getFrameY();
-        this.draw = true;
+
+        this.color = new Vector3f(0.333f, 0.333f, 0.333f);
     }
 
     public Grid(int cellX, int cellY, Environment env) {
         super(env);
         this.cellX = cellX;
         this.cellY = cellY;
+        this.draw = true;
         this.cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX();
         this.cellNY = (float) cellY / Diamond.getCurrentEnv().getFrameY();
-        this.draw = true;
+        this.color = new Vector3f(0.333f, 0.333f, 0.333f);
     }
 
     // GETTERS & SETTERS
@@ -64,6 +67,13 @@ public class Grid extends Component {
 
     // METHODS
     @Override
+    public void init() {
+        this.cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX();
+        this.cellNY = (float) cellY / Diamond.getCurrentEnv().getFrameY();
+        this.color = new Vector3f(0.333f, 0.333f, 0.333f);
+    }
+
+    @Override
     public void update(float dt) {
         if (draw) {
             Camera camera = GameViewWindow.editorCamera;
@@ -78,8 +88,8 @@ public class Grid extends Component {
                 numVLines = (int) ((camera.zoom / cellNX) * pSize.x / adjustX) + 3;
                 width = cellNX * 2 + camera.zoom * pSize.x / adjustX;
                 height = cellNY * 2 + camera.zoom * pSize.y / adjustY;
-                float firstX = ((int) (cameraPos.x / camera.factor / cellNX) - 1) * cellNX;
-                float firstY = ((int) (cameraPos.y / camera.factor / cellNY) - 1) * cellNY;
+                float firstX = ((int) (cameraPos.x / cellNX) - 1) * cellNX;
+                float firstY = ((int) (cameraPos.y / cellNY) - 1) * cellNY;
                 int maxLines = Math.max(numVLines, numHLines);
 
                 float x = 0;
@@ -117,6 +127,9 @@ public class Grid extends Component {
         }
         if (SappImGui.dragInt(Sapphire.getLiteral("cell_width"), cellX)) {
             cameraChanged(cellX.get(), cellY.get());
+        }
+        if (SappImGui.checkboxLabel(Sapphire.getLiteral("draw_grid"), draw)) {
+            this.draw = !draw;
         }
         SappImGui.textLabel("Cells", (numHLines - 1) * (numVLines - 1) + " (" + (numVLines - 1) + "x" + (numHLines - 1) + ")");
     }
