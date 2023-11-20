@@ -229,6 +229,11 @@ public class Environment implements SappDrawable {
         isModified = true;
     }
 
+    public void unRegisterObject(DiamondObject object) {
+        this.registeredObjects.remove(object.getUuid());
+        isModified = true;
+    }
+
     public void changeFrame(int frameX, int frameY) {
         this.frameX = frameX;
         this.frameY = frameY;
@@ -284,7 +289,7 @@ public class Environment implements SappDrawable {
         if (isDirty) {
             for (Entity e : entitiesToRemove) {
                 for (Component c : e.getComponents()) {
-                    registeredObjects.remove(c);
+                    registeredObjects.remove(c.getUuid());
                 }
                 entities.remove(e);
                 registeredObjects.remove(e.getUuid());

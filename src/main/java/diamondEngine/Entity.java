@@ -73,6 +73,19 @@ public class Entity extends DiamondObject implements SappDrawable {
         }
     }
 
+    public void removeComponent(String uuid) {
+        Component toRemove = null;
+        for (Component c : components) {
+            if (c.getUuid().equals(uuid)) {
+                toRemove = c;
+            }
+        }
+        if (toRemove != null) {
+            components.remove(toRemove);
+            getParent().unRegisterObject(toRemove);
+        }
+    }
+
     public void update(float dt) {
         for (Component c : components) {
             c.update(dt);

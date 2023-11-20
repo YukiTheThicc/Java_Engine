@@ -52,8 +52,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
     private void drawNestedEntities() {
 
         for (Environment env : Diamond.get().getEnvironments()) {
-            ImGui.pushID(env.getName());
-
+            ImGui.pushID(env.getUuid());
             if (ImGui.treeNodeEx(env.getName() + (env.isModified() ? " *" : ""), NODE_FLAGS)) {
                 if (ImGui.isItemClicked()) {
                     SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, null, env));
@@ -68,10 +67,10 @@ public class EnvHierarchyWindow extends ImguiWindow {
 
     private void drawEntities(Environment env) {
         for (Entity entity : env.getEntities()) {
-            entityContextMenu(entity);
             if (entity.selectable()) {
                 SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, null, entity));
             }
+            entityContextMenu(entity);
         }
     }
 

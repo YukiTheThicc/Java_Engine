@@ -75,11 +75,24 @@ public class WindowsEventHandler implements SappObserver {
     }
 
     private void handleDeleteObj(SappEvent event) {
-        if (event.env != null && event.payload == null) {
-            // An environment has been removed
+
+        // Remove environment
+        if (event.env != null && event.entity == null && event.payload == null) {
             Diamond.get().removeEnv(event.env);
             Sapphire.get().getProject().save();
             if (Sapphire.getActiveObject() == event.env) Sapphire.setActiveObject(null);
+        }
+
+        // Remove entity from environment
+        if (event.entity != null && event.payload == null) {
+            event.entity.getParent().removeEntity(event.entity);
+        }
+
+        // Remove component from entity
+        if (event.env == null && event.entity != null && event.payload != null) {
+            if (event.payload instanceof Component) {
+                event.entity.removeComponent(((Component) event.payload).getUuid());
+            }
         }
 
         DiaLogger.log("Delete object");
