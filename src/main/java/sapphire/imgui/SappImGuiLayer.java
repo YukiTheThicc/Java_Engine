@@ -6,6 +6,7 @@ import diamondEngine.diaUtils.DiaUtils;
 import imgui.extension.implot.ImPlot;
 import imgui.flag.ImGuiStyleVar;
 import imgui.internal.ImGuiDockNode;
+import imgui.type.ImInt;
 import sapphire.Sapphire;
 import sapphire.SappKeyControls;
 import sapphire.eventsSystem.SappEvents;
@@ -29,6 +30,7 @@ import sapphire.utils.SappStyles;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -260,11 +262,44 @@ public class SappImGuiLayer {
                 fontConfig.setPixelSnapH(true);
 
                 ImFont font = fontAtlas.addFontFromFileTTF(file.getAbsolutePath(), settings.getFontSize(), fontConfig);
+
+                int[] rect_ids = new int[2];
+                rect_ids[0] = io.getFonts().addCustomRectFontGlyph(font, (short) 'a', 13, 13, 13 + 1f);
+                rect_ids[1] = io.getFonts().addCustomRectFontGlyph(font, (short) 'b', 13, 13, 13 + 1f);
+
+                ImInt width = new ImInt();
+                ImInt height = new ImInt();
+                ImInt bytesPerPixel = new ImInt();
+                ByteBuffer texPixels = io.getFonts().getTexDataAsRGBA32(width, height, bytesPerPixel);
+                DiaLogger.log("_____________________");
+                DiaLogger.log("width: " + width);
+                DiaLogger.log("height: " + height);
+                DiaLogger.log("bytesPerPixel: " + bytesPerPixel);
+                DiaLogger.log("size: " + texPixels.limit());
+
+                for (int id : rect_ids) {
+                    ImFontGlyph cosa = font.findGlyph(id);
+                    DiaLogger.log("Glyph: " + id);
+                    DiaLogger.log("Glyph width: " + cosa.getX1());
+                    DiaLogger.log("Glyph height: " + cosa.getY1());
+                    for (int y = 0; y < cosa.getY1(); y++) {
+                        int index = (int) ((cosa.getY1() + y) * width.get() + cosa.getX1());
+                        DiaLogger.log("Index: " + index);
+                        for (int x = (int) cosa.getX1(); x > 0; x--) {
+                            //texPixels.put(new byte[]{(byte) 255, (byte) 0, (byte) 0, (byte) 255});
+                            texPixels.put(index, new byte[]{(byte) 255, (byte) 0, (byte) 0, (byte) 255}, 0, 4);
+                        }
+/*
+                        ImU32* p = (ImU32*)tex_pixels + (cosa.getY1() + y) * tex_width + (rect->X);
+                         *p++ = IM_COL32(255, 0, 0, 255);*/
+                    }
+                }
+
                 settings.addFont(font);
                 ImFont smallFont = fontAtlas.addFontFromFileTTF(file.getAbsolutePath(), settings.getFontSize() - 4, fontConfig);
                 settings.addSmallFont(smallFont);
                 fontsList[i] = file.getName();
-                fontConfig.destroy(); // After all fonts were added we don't need this config more
+                fontConfig.destroy(); // After all fonts were added we don't need this config anymore
                 i++;
             }
             settings.setFontsList(fontsList);

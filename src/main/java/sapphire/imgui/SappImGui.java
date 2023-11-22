@@ -1,8 +1,13 @@
 package sapphire.imgui;
 
 import diamondEngine.diaUtils.DiaLogger;
+import imgui.ImColor;
 import imgui.ImGui;
+import imgui.ImGuiStyle;
+import imgui.ImVec2;
 import imgui.flag.*;
+import imgui.internal.ImGuiWindow;
+import imgui.internal.ImRect;
 import imgui.type.ImFloat;
 import imgui.type.ImInt;
 import imgui.type.ImString;
@@ -236,7 +241,7 @@ public class SappImGui {
         ImGui.textWrapped(label);
         ImGui.nextColumn();
 
-       ImGui.pushItemWidth(ImGui.getContentRegionAvailX() + ImGui.getStyle().getFramePaddingX() * 2);
+        ImGui.pushItemWidth(ImGui.getContentRegionAvailX() + ImGui.getStyle().getFramePaddingX() * 2);
         float[] valArr = {value.get()};
         if (ImGui.dragFloat("##dragFloat", valArr, step)) {
             value.set(valArr[0]);
@@ -260,7 +265,7 @@ public class SappImGui {
         ImGui.textWrapped(label);
         ImGui.nextColumn();
 
-       ImGui.pushItemWidth(ImGui.getContentRegionAvailX() + ImGui.getStyle().getFramePaddingX() * 2);
+        ImGui.pushItemWidth(ImGui.getContentRegionAvailX() + ImGui.getStyle().getFramePaddingX() * 2);
         int[] valArr = {value.get()};
         if (ImGui.dragInt("##dragInt", valArr, 0.1f)) {
             value.set(valArr[0]);
@@ -305,7 +310,7 @@ public class SappImGui {
         ImGui.textWrapped(label);
         ImGui.nextColumn();
 
-       ImGui.pushItemWidth(ImGui.getContentRegionAvailX() + ImGui.getStyle().getFramePaddingX() * 2);
+        ImGui.pushItemWidth(ImGui.getContentRegionAvailX() + ImGui.getStyle().getFramePaddingX() * 2);
         if (ImGui.inputInt("##" + label, value)) {
             ImGui.columns(1);
             ImGui.popID();
@@ -327,7 +332,7 @@ public class SappImGui {
         ImGui.textWrapped(label);
         ImGui.nextColumn();
 
-       ImGui.pushItemWidth(ImGui.getContentRegionAvailX() + ImGui.getStyle().getFramePaddingX() * 2);
+        ImGui.pushItemWidth(ImGui.getContentRegionAvailX() + ImGui.getStyle().getFramePaddingX() * 2);
         if (ImGui.inputText("##" + label, text)) {
             ImGui.columns(1);
             ImGui.popID();
@@ -537,4 +542,9 @@ public class SappImGui {
     public static void toolTip() {
 
     }
+
+    public static boolean iconTreeNode(String label, String id) {
+        return false;
+    }
 }
+

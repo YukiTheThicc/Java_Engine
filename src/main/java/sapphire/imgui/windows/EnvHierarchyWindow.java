@@ -8,6 +8,7 @@ import diamondEngine.diaComponents.Component;
 import diamondEngine.diaComponents.Grid;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
+import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiTreeNodeFlags;
 import sapphire.Sapphire;
 import sapphire.eventsSystem.SappEvents;
@@ -43,6 +44,10 @@ public class EnvHierarchyWindow extends ImguiWindow {
             } else {
                 drawNestedEntities();
             }
+
+
+
+
         }
 
         ImGui.end();
