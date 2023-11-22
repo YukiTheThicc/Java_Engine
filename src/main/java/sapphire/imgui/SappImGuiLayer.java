@@ -263,9 +263,12 @@ public class SappImGuiLayer {
 
                 ImFont font = fontAtlas.addFontFromFileTTF(file.getAbsolutePath(), settings.getFontSize(), fontConfig);
 
+                /*
                 int[] rect_ids = new int[2];
                 rect_ids[0] = io.getFonts().addCustomRectFontGlyph(font, (short) 'a', 13, 13, 13 + 1f);
                 rect_ids[1] = io.getFonts().addCustomRectFontGlyph(font, (short) 'b', 13, 13, 13 + 1f);
+
+                io.getFonts().build();
 
                 ImInt width = new ImInt();
                 ImInt height = new ImInt();
@@ -282,18 +285,20 @@ public class SappImGuiLayer {
                     DiaLogger.log("Glyph: " + id);
                     DiaLogger.log("Glyph width: " + cosa.getX1());
                     DiaLogger.log("Glyph height: " + cosa.getY1());
+                    DiaLogger.log("Glyph advance: " + cosa.getAdvanceX());
                     for (int y = 0; y < cosa.getY1(); y++) {
-                        int index = (int) ((cosa.getY1() + y) * width.get() + cosa.getX1());
+                        int index = (int) (cosa.getAdvanceX() + (cosa.getY1() + y) * width.get() + cosa.getX1());
                         DiaLogger.log("Index: " + index);
-                        for (int x = (int) cosa.getX1(); x > 0; x--) {
-                            //texPixels.put(new byte[]{(byte) 255, (byte) 0, (byte) 0, (byte) 255});
-                            texPixels.put(index, new byte[]{(byte) 255, (byte) 0, (byte) 0, (byte) 255}, 0, 4);
+                        for (int x = (int) (cosa.getX1() + cosa.getAdvanceX()); x > 0; x--) {
+                            texPixels.put(index, new byte[]{(byte) 255, (byte) 0, (byte) 0, (byte) 255});
+                            index++;
                         }
-/*
-                        ImU32* p = (ImU32*)tex_pixels + (cosa.getY1() + y) * tex_width + (rect->X);
-                         *p++ = IM_COL32(255, 0, 0, 255);*/
                     }
                 }
+
+                byte[] arr = new byte[texPixels.limit()];
+                texPixels.get(arr);
+                ImFont newFont = fontAtlas.addFontFromMemoryTTF(arr, settings.getFontSize());*/
 
                 settings.addFont(font);
                 ImFont smallFont = fontAtlas.addFontFromFileTTF(file.getAbsolutePath(), settings.getFontSize() - 4, fontConfig);

@@ -44,12 +44,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
             } else {
                 drawNestedEntities();
             }
-
-
-
-
         }
-
         ImGui.end();
     }
 
