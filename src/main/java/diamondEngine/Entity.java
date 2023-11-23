@@ -5,6 +5,9 @@ import imgui.ImGui;
 import imgui.flag.ImGuiStyleVar;
 import imgui.type.ImString;
 import sapphire.Sapphire;
+import sapphire.eventsSystem.SappEvent;
+import sapphire.eventsSystem.SappEventType;
+import sapphire.eventsSystem.SappEvents;
 import sapphire.imgui.SappDrawable;
 import sapphire.imgui.SappImGui;
 
@@ -113,6 +116,21 @@ public class Entity extends DiamondObject implements SappDrawable {
             if (ImGui.collapsingHeader(c.getClass().getSimpleName())) {
                 c.imgui();
             }
+            componentContextMenu(c);
+        }
+    }
+
+    /**
+     * Context menu for a component
+     * @param c Component for which the menu is being drawn
+     */
+    private void componentContextMenu(Component c) {
+        if (ImGui.beginPopupContextItem(c.getUuid())) {
+            if (ImGui.menuItem(Sapphire.getLiteral("remove"))) {
+                this.components.remove(c);
+                this.getParent().unRegisterObject(c);
+            }
+            ImGui.endPopup();
         }
     }
 

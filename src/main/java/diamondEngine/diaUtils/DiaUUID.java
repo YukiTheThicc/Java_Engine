@@ -6,12 +6,13 @@ import java.util.regex.Pattern;
 
 public class DiaUUID {
 
-    private static final Pattern pattern = Pattern.compile("[0-9A-F]{14}-[0-9A-F]{14}", Pattern.CASE_INSENSITIVE);
+    private static final Pattern pattern = Pattern.compile("[0-9A-F]{6}-[0-9A-F]{8}", Pattern.CASE_INSENSITIVE);
 
     public static String generateUUID() {
 
-        String timeFrag = String.format("%1$014X", System.currentTimeMillis());                  // Time fragment for the UUID
-        String randomFrag = String.format("%1$014X", new Random().nextLong()).substring(0, 14);    // Random number fragment
+        String fullTimeFrag = String.format("%1$014X", System.currentTimeMillis());   // Time fragment for the UUID
+        String timeFrag = fullTimeFrag.substring(fullTimeFrag.length() - 7, fullTimeFrag.length() - 1);   // Time fragment for the UUID
+        String randomFrag = String.format("%1$014X", new Random().nextLong()).substring(0, 8);    // Random number fragment
 
         return timeFrag + "-" + randomFrag;
     }
