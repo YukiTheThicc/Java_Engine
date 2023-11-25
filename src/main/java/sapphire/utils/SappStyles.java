@@ -57,6 +57,10 @@ public class SappStyles {
         ImGui.getStyle().setColor(ImGuiCol.TitleBgActive, highlight[0], highlight[1], highlight[2], highlight[3]);
         ImGui.getStyle().setColor(ImGuiCol.NavHighlight, highlight[0], highlight[1], highlight[2], highlight[3]);
         ImGui.getStyle().setColor(ImGuiCol.Text, font[0], font[1], font[2], font[3]);
+        ImGui.getStyle().setColor(ImGuiCol.FrameBg, dark_bg[0], dark_bg[1], dark_bg[2], dark_bg[3]);
+        ImGui.getStyle().setColor(ImGuiCol.FrameBgActive, accent[0], accent[1], accent[2], accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.FrameBgHovered, accent[0], accent[1], accent[2], accent[3]);
+        ImGui.getStyle().setColor(ImGuiCol.TextSelectedBg, accent[0], accent[1], accent[2], accent[3]);
 
         // STYLES
         // Borders

@@ -21,12 +21,15 @@ public class Entity extends DiamondObject implements SappDrawable {
     private String name;
     private ArrayList<Component> components;
     private transient boolean toSerialize;
+    private transient boolean isDirty;
+    private transient ArrayList<Component> toRemove;
 
     // CONSTRUCTORS
     public Entity(Environment env) {
         super(env);
         this.name = GENERATED_NAME;
         this.components = new ArrayList<>();
+        this.toRemove = new ArrayList<>();
         this.toSerialize = true;
     }
 
@@ -34,6 +37,7 @@ public class Entity extends DiamondObject implements SappDrawable {
         super(env, uuid);
         this.name = GENERATED_NAME;
         this.components = new ArrayList<>();
+        this.toRemove = new ArrayList<>();
         this.toSerialize = true;
     }
 
@@ -41,6 +45,7 @@ public class Entity extends DiamondObject implements SappDrawable {
         super(env);
         this.name = name;
         this.components = new ArrayList<>();
+        this.toRemove = new ArrayList<>();
         this.toSerialize = true;
     }
 
@@ -48,6 +53,7 @@ public class Entity extends DiamondObject implements SappDrawable {
         super(env);
         this.name = name;
         this.components = new ArrayList<>();
+        this.toRemove = new ArrayList<>();
         this.toSerialize = toSerialize;
     }
 
@@ -83,19 +89,21 @@ public class Entity extends DiamondObject implements SappDrawable {
     }
 
     public void removeComponent(String uuid) {
-        Component toRemove = null;
         for (Component c : components) {
             if (c.getUuid().equals(uuid)) {
-                toRemove = c;
+                toRemove.add(c);
+                isDirty = true;
             }
-        }
-        if (toRemove != null) {
-            components.remove(toRemove);
-            getParent().unRegisterObject(toRemove);
         }
     }
 
     public void update(float dt) {
+        if (isDirty) {
+            for (Component c : toRemove) {
+                components.remove(c);
+                this.getParent().unRegisterObject(c);
+            }
+        }
         for (Component c : components) {
             c.update(dt);
         }
@@ -114,9 +122,11 @@ public class Entity extends DiamondObject implements SappDrawable {
         }
         for (Component c : components) {
             if (ImGui.collapsingHeader(c.getClass().getSimpleName())) {
+                componentContextMenu(c);
                 c.imgui();
+            } else {
+                componentContextMenu(c);
             }
-            componentContextMenu(c);
         }
     }
 
@@ -127,8 +137,7 @@ public class Entity extends DiamondObject implements SappDrawable {
     private void componentContextMenu(Component c) {
         if (ImGui.beginPopupContextItem(c.getUuid())) {
             if (ImGui.menuItem(Sapphire.getLiteral("remove"))) {
-                this.components.remove(c);
-                this.getParent().unRegisterObject(c);
+                this.removeComponent(c.getUuid());
             }
             ImGui.endPopup();
         }
@@ -140,17 +149,15 @@ public class Entity extends DiamondObject implements SappDrawable {
         ImGui.pushID(this.getUuid());
         ImGui.beginGroup();
         float buttonOriginX = ImGui.getCursorPosX();
-        // Calculate alignment position relative to the available space so the text always starts after the icon
-        float textPositionX = (ImGui.getFontSize() * 1.5f + ImGui.getTreeNodeToLabelSpacing()) / (ImGui.getContentRegionAvailX() - ImGui.getTreeNodeToLabelSpacing());
 
-        ImGui.pushStyleVar(ImGuiStyleVar.ButtonTextAlign, textPositionX, 0.5f);
-        if (ImGui.button(name, ImGui.getContentRegionAvailX(), ImGui.getFontSize() * 1.5f)) result = true;
-        ImGui.popStyleVar();
+        if (ImGui.button("", ImGui.getContentRegionAvailX(), ImGui.getFontSize() * 1.5f)) result = true;
 
         ImGui.sameLine();
         ImGui.setCursorPosX(buttonOriginX);
         ImGui.image(Sapphire.getIcon("component.png").getId(), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE,
                 0, 1, 1, 0);
+        ImGui.sameLine();
+        ImGui.text(name);
 
         ImGui.endGroup();
         ImGui.popID();

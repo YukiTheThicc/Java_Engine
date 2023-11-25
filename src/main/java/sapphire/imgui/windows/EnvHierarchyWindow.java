@@ -8,7 +8,6 @@ import diamondEngine.diaComponents.Component;
 import diamondEngine.diaComponents.Grid;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
-import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiTreeNodeFlags;
 import sapphire.Sapphire;
 import sapphire.eventsSystem.SappEvents;
@@ -17,7 +16,6 @@ import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.SappImGui;
 import sapphire.imgui.SappImGuiLayer;
 import sapphire.imgui.widgets.ImageLabelButton;
-import sapphire.utils.SappStyles;
 
 public class EnvHierarchyWindow extends ImguiWindow {
 
@@ -42,7 +40,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
             if (Diamond.get().getEnvironments().isEmpty()) {
                 drawEmptyEnvsPrompt();
             } else {
-                drawNestedEntities();
+                drawNestedEnvironments();
             }
         }
         ImGui.end();
@@ -52,7 +50,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
         if (newRootEnvButton.draw()) SappEvents.notify(new SappEvent(SappEventType.New_root_env));
     }
 
-    private void drawNestedEntities() {
+    private void drawNestedEnvironments() {
 
         for (Environment env : Diamond.get().getEnvironments()) {
 

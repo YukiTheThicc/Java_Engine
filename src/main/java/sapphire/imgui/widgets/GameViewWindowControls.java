@@ -48,7 +48,8 @@ public class GameViewWindowControls {
 
         ImGui.setNextWindowPos(windowPos.x, windowPos.y + offsetY);
         ImGui.setNextWindowSize(windowSize.x, mainControlsY);
-        ImGui.pushStyleColor(ImGuiCol.ChildBg, 50, 50, 50, 125);
+        int[] color = Sapphire.getColor("grey");
+        ImGui.pushStyleColor(ImGuiCol.ChildBg, color[0], color[1], color[2], 125);
         ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
         ImGui.pushStyleVar(ImGuiStyleVar.ChildRounding, 255f);
         ImGui.begin("controls", flags);
