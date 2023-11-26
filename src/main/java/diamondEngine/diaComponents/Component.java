@@ -13,12 +13,12 @@ public abstract class Component extends DiamondObject implements SappDrawable {
     // ATTRIBUTES
     private String ownerId;
 
-    public Component(Environment env) {
-       super(env);
+    public Component() {
+       super();
     }
 
-    public Component(Environment env, String uuid) {
-        super(env, uuid);
+    public Component(String uuid) {
+        super( uuid);
     }
 
     // GETTERS & SETTERS

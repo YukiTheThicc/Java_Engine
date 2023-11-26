@@ -25,36 +25,28 @@ public class Entity extends DiamondObject implements SappDrawable {
     private transient ArrayList<Component> toRemove;
 
     // CONSTRUCTORS
-    public Entity(Environment env) {
-        super(env);
+    public Entity() {
+        super();
         this.name = GENERATED_NAME;
         this.components = new ArrayList<>();
         this.toRemove = new ArrayList<>();
         this.toSerialize = true;
     }
 
-    public Entity(Environment env, String uuid) {
-        super(env, uuid);
+    public Entity(String uuid) {
+        super(uuid);
         this.name = GENERATED_NAME;
         this.components = new ArrayList<>();
         this.toRemove = new ArrayList<>();
         this.toSerialize = true;
     }
 
-    public Entity(String name, Environment env) {
-        super(env);
+    public Entity(String uuid, String name) {
+        super(uuid);
         this.name = name;
         this.components = new ArrayList<>();
         this.toRemove = new ArrayList<>();
         this.toSerialize = true;
-    }
-
-    public Entity(String name, Environment env, boolean toSerialize) {
-        super(env);
-        this.name = name;
-        this.components = new ArrayList<>();
-        this.toRemove = new ArrayList<>();
-        this.toSerialize = toSerialize;
     }
 
     // GETTERS & SETTERS
@@ -79,12 +71,23 @@ public class Entity extends DiamondObject implements SappDrawable {
     }
 
     //METHODS
+    public Entity copy() {
+        Entity copied = new Entity();
+        copied.setName(name + "_copy");
+        for (Component c : components) {
+            copied.addComponent(c.copy());
+        }
+        return copied;
+    }
+
     public void addComponent(Component component) {
         if (component != null) {
             component.setOwner(this.getUuid());
-            component.setParent(getParent());
+            component.setParent(this.getParent());
             components.add(component);
-            this.getParent().registerObject(component);
+            if (this.getParent() != null) {
+                this.getParent().registerObject(component);
+            }
         }
     }
 
@@ -109,6 +112,19 @@ public class Entity extends DiamondObject implements SappDrawable {
         }
     }
 
+    /**
+     * Context menu for a component
+     * @param c Component for which the menu is being drawn
+     */
+    private void componentContextMenu(Component c) {
+        if (ImGui.beginPopupContextItem(c.getUuid())) {
+            if (ImGui.menuItem(Sapphire.getLiteral("remove"))) {
+                this.removeComponent(c.getUuid());
+            }
+            ImGui.endPopup();
+        }
+    }
+
     @Override
     public void imgui() {
 
@@ -127,19 +143,6 @@ public class Entity extends DiamondObject implements SappDrawable {
             } else {
                 componentContextMenu(c);
             }
-        }
-    }
-
-    /**
-     * Context menu for a component
-     * @param c Component for which the menu is being drawn
-     */
-    private void componentContextMenu(Component c) {
-        if (ImGui.beginPopupContextItem(c.getUuid())) {
-            if (ImGui.menuItem(Sapphire.getLiteral("remove"))) {
-                this.removeComponent(c.getUuid());
-            }
-            ImGui.endPopup();
         }
     }
 

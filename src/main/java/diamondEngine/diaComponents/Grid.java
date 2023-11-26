@@ -27,19 +27,18 @@ public class Grid extends Component {
     private transient Vector3f color;
 
     // CONSTRUCTORS
-    public Grid(int cell, Environment env) {
-        super(env);
+    public Grid(int cell) {
+        super();
         this.cellX = cell;
         this.cellY = cell;
         this.draw = true;
         this.cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX();
         this.cellNY = (float) cellY / Diamond.getCurrentEnv().getFrameY();
-
         this.color = new Vector3f(0.333f, 0.333f, 0.333f);
     }
 
-    public Grid(int cellX, int cellY, Environment env) {
-        super(env);
+    public Grid(int cellX, int cellY) {
+        super();
         this.cellX = cellX;
         this.cellY = cellY;
         this.draw = true;
@@ -136,6 +135,6 @@ public class Grid extends Component {
 
     @Override
     public Component copy() {
-        return new Grid(cellX, cellY, this.getParent());
+        return new Grid(cellX, cellY);
     }
 }

@@ -152,7 +152,7 @@ public class SappProject {
                     Environment env = new Environment();
                     env.init();
                     EnvironmentSerializer es = new EnvironmentSerializer(env);
-                    es.load(envFile);
+                    env = es.load(envFile);
                     if (env != null) {
                         Diamond.get().addEnvironment(env);
                         if (env.getOriginFile().equals(currentEnv)) {

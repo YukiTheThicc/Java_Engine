@@ -28,6 +28,9 @@ public class WindowsEventHandler implements SappObserver {
             case Add_object:
                 handleAddObject(event);
                 break;
+            case Copy_object:
+                handleCopyObject(event);
+                break;
             case Selected_object:
                 if (event.payload instanceof SappDrawable) Sapphire.setActiveObject((SappDrawable) event.payload);
                 break;
@@ -70,8 +73,13 @@ public class WindowsEventHandler implements SappObserver {
             }
             event.entity.addComponent((Component) event.payload);
         }
+    }
 
-        DiaLogger.log("Add object");
+    private void handleCopyObject(SappEvent event) {
+        // ADD Entity to environment
+        if (event.env != null && event.entity != null) {
+            event.env.addEntity(event.entity.copy());
+        }
     }
 
     private void handleDeleteObj(SappEvent event) {

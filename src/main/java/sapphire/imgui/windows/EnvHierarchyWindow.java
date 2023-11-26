@@ -101,7 +101,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
             ImGui.separator();
 
             if (ImGui.menuItem(Sapphire.getLiteral("add_entity"))) SappEvents.notify(
-                    new SappEvent(SappEventType.Add_object, env, new Entity(env)));
+                    new SappEvent(SappEventType.Add_object, env, new Entity()));
             ImGui.separator();
 
             if (ImGui.menuItem(Sapphire.getLiteral("remove"))) SappEvents.notify(
@@ -118,19 +118,13 @@ public class EnvHierarchyWindow extends ImguiWindow {
     private void entityContextMenu(Entity e) {
         if (ImGui.beginPopupContextItem(e.getUuid())) {
             if (ImGui.menuItem(Sapphire.getLiteral("add_grid"))) SappEvents.notify(
-                    new SappEvent(SappEventType.Add_object, null, e, new Grid(32, e.getParent())));
+                    new SappEvent(SappEventType.Add_object, null, e, new Grid(32)));
             ImGui.separator();
 
+            if (ImGui.menuItem(Sapphire.getLiteral("copy"))) SappEvents.notify(
+                    new SappEvent(SappEventType.Copy_object, e.getParent(), e));
             if (ImGui.menuItem(Sapphire.getLiteral("delete"))) SappEvents.notify(
                     new SappEvent(SappEventType.Delete_object, null, e));
-            ImGui.endPopup();
-        }
-    }
-
-    private void componentContextMenu(Environment env, Component component) {
-        if (ImGui.beginPopupContextItem("entity_item")) {
-            if (ImGui.menuItem(Sapphire.getLiteral("delete"))) SappEvents.notify(
-                    new SappEvent(SappEventType.Delete_object, env, null, component));
             ImGui.endPopup();
         }
     }

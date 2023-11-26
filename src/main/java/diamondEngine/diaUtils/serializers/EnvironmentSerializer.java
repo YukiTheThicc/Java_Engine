@@ -66,13 +66,13 @@ public class EnvironmentSerializer {
                 env.setName(loaded.getName());
                 env.setOriginFile(path);
                 if (loaded.getChildren() != null) for (Environment e : loaded.getChildren()) env.addChild(e);
-                if (loaded.getEntities() != null)for (Entity e : loaded.getEntities()) env.addEntity(e);
+                if (loaded.getEntities() != null) for (Entity e : loaded.getEntities()) env.addEntity(e);
                 env.setSaved();
                 Sapphire.setActiveObject(env);
                 Diamond.setCurrentEnv(env);
             }
         } catch (Exception e) {
-            DiaLogger.log(EnvironmentSerializer.class, "Failed to load environment from '" + path + "'\n\t" + e.getMessage(), DiaLoggerLevel.ERROR);
+            DiaLogger.log(EnvironmentSerializer.class, "Failed to load environment from '" + path + "'\n\t" + e, DiaLoggerLevel.ERROR);
             return null;
         }
         return env;

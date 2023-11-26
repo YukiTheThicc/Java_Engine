@@ -51,6 +51,7 @@ public class Environment implements SappDrawable {
 
     // Runtime attributes
     private transient HashMap<String, DiamondObject> registeredObjects;
+    private transient List<Entity> entitiesToAdd;
     private transient List<Entity> entitiesToRemove;
     private transient Framebuffer frame;
     private transient float winSizeAdjustX = 1.0f;
@@ -72,6 +73,7 @@ public class Environment implements SappDrawable {
         this.isInitialized = false;
         this.children = new ArrayList<>();
         this.entities = new ArrayList<>();
+        this.entitiesToAdd = new ArrayList<>();
         this.entitiesToRemove = new ArrayList<>();
         this.winSizeAdjustX = (float) Window.getWidth() / frameX;
         this.winSizeAdjustY = (float) Window.getHeight() / frameY;
@@ -87,6 +89,7 @@ public class Environment implements SappDrawable {
         this.isInitialized = false;
         this.children = new ArrayList<>();
         this.entities = new ArrayList<>();
+        this.entitiesToAdd = new ArrayList<>();
         this.entitiesToRemove = new ArrayList<>();
         this.winSizeAdjustX = (float) Window.getWidth() / frameX;
         this.winSizeAdjustY = (float) Window.getHeight() / frameY;
@@ -102,6 +105,7 @@ public class Environment implements SappDrawable {
         this.isInitialized = false;
         this.children = new ArrayList<>();
         this.entities = new ArrayList<>();
+        this.entitiesToAdd = new ArrayList<>();
         this.entitiesToRemove = new ArrayList<>();
         this.winSizeAdjustX = (float) Window.getWidth() / frameX;
         this.winSizeAdjustY = (float) Window.getHeight() / frameY;
@@ -210,9 +214,9 @@ public class Environment implements SappDrawable {
 
     public void addEntity(Entity entity) {
         if (entity != null) {
-            entities.add(entity);
-            registeredObjects.put(entity.getUuid(), entity);
+            entitiesToAdd.add(entity);
             isModified = true;
+            isDirty = true;
         }
     }
 
@@ -287,6 +291,19 @@ public class Environment implements SappDrawable {
      */
     public void updateLists() {
         if (isDirty) {
+
+            // Add entities
+            for (Entity e : entitiesToAdd) {
+                e.setParent(this);
+                registeredObjects.put(e.getUuid(), e);
+                for (Component c : e.getComponents()) {
+                    if (!registeredObjects.containsKey(c.getUuid())) registeredObjects.put(c.getUuid(), c);
+                }
+                entities.add(e);
+                registeredObjects.put(e.getUuid(), e);
+            }
+
+            // Remove entities
             for (Entity e : entitiesToRemove) {
                 for (Component c : e.getComponents()) {
                     registeredObjects.remove(c.getUuid());
@@ -294,6 +311,9 @@ public class Environment implements SappDrawable {
                 entities.remove(e);
                 registeredObjects.remove(e.getUuid());
             }
+
+            // Clear buffer lists
+            entitiesToAdd.clear();
             entitiesToRemove.clear();
             isDirty = false;
         }

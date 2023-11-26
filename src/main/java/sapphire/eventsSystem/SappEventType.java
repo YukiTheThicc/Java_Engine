@@ -10,6 +10,7 @@ public enum SappEventType {
     Cancel,
     Add_env,
     Add_object,
+    Copy_object,
     Selected_object,
     Save_env,
     New_root_env,
