@@ -36,10 +36,17 @@ public class SpriteRenderer {
         this.spriteWidth = spriteWidth;
         this.spriteHeight = spriteHeight;
         this.spacing = spacing;
-
         int spriteSheetX = texture.getWidth() / (spriteWidth + spacing);
         int spriteSheetY = texture.getHeight() / (spriteHeight + spacing);
         this.numSprites = spriteSheetX * spriteSheetY;
+    }
+
+    public SpriteRenderer() {
+        this.texture = null;
+        this.spriteWidth = 0;
+        this.spriteHeight = 0;
+        this.spacing = 0;
+        this.numSprites = 0;
     }
 
     // GETTERS & SETTERS
@@ -62,4 +69,6 @@ public class SpriteRenderer {
     public int getSpacing() {
         return spacing;
     }
+
+
 }

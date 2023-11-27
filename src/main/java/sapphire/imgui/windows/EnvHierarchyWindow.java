@@ -6,6 +6,8 @@ import diamondEngine.Diamond;
 import diamondEngine.diaAssets.Texture;
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaComponents.Grid;
+import diamondEngine.diaComponents.SpriteRenderer;
+import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiTreeNodeFlags;
@@ -16,6 +18,8 @@ import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.SappImGui;
 import sapphire.imgui.SappImGuiLayer;
 import sapphire.imgui.widgets.ImageLabelButton;
+
+import java.util.Arrays;
 
 public class EnvHierarchyWindow extends ImguiWindow {
 
@@ -117,8 +121,12 @@ public class EnvHierarchyWindow extends ImguiWindow {
      */
     private void entityContextMenu(Entity e) {
         if (ImGui.beginPopupContextItem(e.getUuid())) {
+
+            // Component addition options
             if (ImGui.menuItem(Sapphire.getLiteral("add_grid"))) SappEvents.notify(
                     new SappEvent(SappEventType.Add_object, null, e, new Grid(32)));
+            if (ImGui.menuItem(Sapphire.getLiteral("add_sprite_renderer"))) SappEvents.notify(
+                    new SappEvent(SappEventType.Add_object, null, e, new SpriteRenderer()));
             ImGui.separator();
 
             if (ImGui.menuItem(Sapphire.getLiteral("copy"))) SappEvents.notify(
