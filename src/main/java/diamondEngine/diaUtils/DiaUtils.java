@@ -251,4 +251,35 @@ public class DiaUtils {
 
         return imageBuffer;
     }
+
+    /**
+     * Gets the values of an Enum type
+     * @param enumType Enum which values are to be retrieved
+     * @return Array of names for the enum
+     * @param <T> Enum class
+     */
+    public static <T extends Enum<T>> String[] getEnumValues(Class<T> enumType) {
+        String[] enumValues = new String[enumType.getEnumConstants().length];
+        int i = 0;
+        for (T enumIntegerValue : enumType.getEnumConstants()) {
+            enumValues[i] = enumIntegerValue.name();
+            i++;
+        }
+        return enumValues;
+    }
+
+    /**
+     * Gets the index of a String inside a String array
+     * @param str String which index with the index that wants to be known
+     * @param arr Array of Strings in which the index of str wants to be known
+     * @return The index, returns -1 if is not found within the array
+     */
+    public static int indexOf(String str, String[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            if (str.equals(arr[i])) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }

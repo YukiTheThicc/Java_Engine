@@ -13,7 +13,7 @@ import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
 import sapphire.imgui.SappImGuiLayer;
-import sapphire.imgui.SappImGui;
+import sapphire.imgui.SappImGuiUtils;
 
 import java.io.File;
 
@@ -38,7 +38,7 @@ public class FileNavigatorWindow extends ImguiWindow {
             SappProject project = Sapphire.get().getProject();
             if (project != null && project.getRoot() != null) {
                 if (project.getRoot().isAlive()) {
-                    SappImGui.align(AlignX.CENTER, AlignY.CENTER, SappImGui.textSize(Sapphire.getLiteral("loading")), ImGui.getFontSize());
+                    SappImGuiUtils.align(AlignX.CENTER, AlignY.CENTER, SappImGuiUtils.textSize(Sapphire.getLiteral("loading")), ImGui.getFontSize());
                     ImGui.text(Sapphire.getLiteral("loading"));
                 } else {
                     ImGui.setNextItemOpen(true);

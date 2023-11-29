@@ -1,31 +1,20 @@
 package diamondEngine;
 
-import com.google.gson.*;
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaRenderer.DebugRenderer;
 import diamondEngine.diaRenderer.Framebuffer;
-import diamondEngine.diaUtils.DiaFIFO;
-import diamondEngine.diaUtils.DiaLogger;
-import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUUID;
-import diamondEngine.diaUtils.serializers.ComponentSerializer;
-import diamondEngine.diaUtils.serializers.EntitySerializer;
 import imgui.ImGui;
 import imgui.flag.ImGuiTableFlags;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import sapphire.Sapphire;
 import sapphire.imgui.SappDrawable;
-import sapphire.imgui.SappImGui;
+import sapphire.imgui.SappImGuiUtils;
 
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.net.URL;
+import java.util.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -201,6 +190,27 @@ public class Environment implements SappDrawable {
             Diamond.getProfiler().addRegister("Update Entities");
             Diamond.getProfiler().addRegister("Debug Render");
         }
+
+        ClassLoader c = ClassLoader.getSystemClassLoader();
+        try {
+            Enumeration<URL> d = c.getResources("");
+            while (d.hasMoreElements()) {
+                URL e = d.nextElement();
+                e.getContent();
+                System.out.println(e);
+                System.out.println(e.getContent());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        ServiceLoader<Component> a = ServiceLoader.loadInstalled(Component.class);
+        System.out.println(a);
+        a.reload();
+        Iterator<Component> b = a.iterator();
+        while (b.hasNext()) {
+            b.next();
+            System.out.println(b);
+        }
     }
 
     public void addChild(Environment environment) {
@@ -325,10 +335,10 @@ public class Environment implements SappDrawable {
 
     @Override
     public void imgui() {
-        SappImGui.textLabel("UUID", uuid);
-        SappImGui.textLabel("Framebuffer", "" + frame.getFboId());
+        SappImGuiUtils.textLabel("UUID", uuid);
+        SappImGuiUtils.textLabel("Framebuffer", "" + frame.getFboId());
         ImString newName = new ImString(name, 256);
-        if (SappImGui.inputText(Sapphire.getLiteral("name"), newName)) {
+        if (SappImGuiUtils.inputText(Sapphire.getLiteral("name"), newName)) {
             if (Sapphire.get().getProject() != null && !newName.isEmpty()) {
                 name = newName.get();
                 isModified = true;
@@ -336,12 +346,12 @@ public class Environment implements SappDrawable {
         }
 
         ImInt newWidth = new ImInt(frameX);
-        if (SappImGui.inputInt(Sapphire.getLiteral("frame_width"), newWidth)) {
+        if (SappImGuiUtils.inputInt(Sapphire.getLiteral("frame_width"), newWidth)) {
             changeFrame(newWidth.get(), frameY);
             isModified = true;
         }
         ImInt newHeight = new ImInt(frameY);
-        if (SappImGui.inputInt(Sapphire.getLiteral("frame_height"), newHeight)) {
+        if (SappImGuiUtils.inputInt(Sapphire.getLiteral("frame_height"), newHeight)) {
             changeFrame(frameX, newHeight.get());
             isModified = true;
         }

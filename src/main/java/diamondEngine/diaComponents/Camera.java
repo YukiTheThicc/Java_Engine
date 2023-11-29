@@ -5,7 +5,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-public class Camera {
+public class Camera extends Component{
 
     // ATTRIBUTES
     private final Matrix4f pMatrix;
@@ -30,7 +30,7 @@ public class Camera {
         this.invView = new Matrix4f();
         this.front = new Vector3f(0.0f, 0.0f, -1.0f);
         this.up = new Vector3f(0.0f, 1.0f, 0.0f);
-        this.updateOrthoProjection();
+        this.update(0);
     }
 
     // GETTERS & SETTERS
@@ -71,19 +71,26 @@ public class Camera {
     }
 
     // METHODS
-    public void updateOrthoProjection() {
+    private void calculateActualPSize() {
+        this.pSizeActual.x = pSize.x / Diamond.getCurrentEnv().getWinSizeAdjustY();
+        this.pSizeActual.y = pSize.y / Diamond.getCurrentEnv().getWinSizeAdjustX();
+    }
+
+    @Override
+    public void init() {
+
+    }
+
+    @Override
+    public void update(float dt) {
         pMatrix.identity();
         calculateActualPSize();
         pMatrix.ortho(0.0f, this.zoom * pSizeActual.x, 0.0f, this.zoom * pSizeActual.y, 0.0f, 100.0f);
         invProj = new Matrix4f(pMatrix).invert();
     }
 
-    public void updatePerspectiveProjection() {
-
-    }
-
-    private void calculateActualPSize() {
-        this.pSizeActual.x = pSize.x / Diamond.getCurrentEnv().getWinSizeAdjustY();
-        this.pSizeActual.y = pSize.y / Diamond.getCurrentEnv().getWinSizeAdjustX();
+    @Override
+    public Component copy() {
+        return null;
     }
 }

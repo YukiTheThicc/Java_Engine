@@ -6,7 +6,6 @@ import diamondEngine.diaUtils.DiaUtils;
 import imgui.extension.implot.ImPlot;
 import imgui.flag.ImGuiStyleVar;
 import imgui.internal.ImGuiDockNode;
-import imgui.type.ImInt;
 import sapphire.Sapphire;
 import sapphire.SappKeyControls;
 import sapphire.eventsSystem.SappEvents;
@@ -30,7 +29,6 @@ import sapphire.utils.SappStyles;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -136,7 +134,7 @@ public class SappImGuiLayer {
         imGuiGlfw.init(glfwWindow, true);
         imGuiGl3.init("#version 330 core");
         SappStyles.setSapphireStyles();
-        SappImGui.init();
+        SappImGuiUtils.init();
         initWindows();
         changeFont(Sapphire.get().getSettings().getCurrentFont());
     }

@@ -15,7 +15,7 @@ import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiWindowFlags;
 import sapphire.Sapphire;
 import sapphire.imgui.SappImGuiLayer;
-import sapphire.imgui.SappImGui;
+import sapphire.imgui.SappImGuiUtils;
 import sapphire.imgui.widgets.AssetImageButton;
 import sapphire.imgui.widgets.ImageButton;
 
@@ -45,10 +45,10 @@ public class AssetsWindow extends ImguiWindow implements DiaObserver {
     // CONSTRUCTORS
     public AssetsWindow() {
         super("assets", "Assets");
-        this.toolbarWidth = SappImGui.SMALL_ICON_SIZE + ImGui.getStyle().getFramePaddingX() * 4;
-        this.addAssetButton = new ImageButton(Sapphire.getIcon("add.png"), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE);
-        this.removeAssetButton = new ImageButton(Sapphire.getIcon("trash.png"), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE);
-        this.copyAssetButton = new ImageButton(Sapphire.getIcon("copy.png"), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE);
+        this.toolbarWidth = SappImGuiUtils.SMALL_ICON_SIZE + ImGui.getStyle().getFramePaddingX() * 4;
+        this.addAssetButton = new ImageButton(Sapphire.getIcon("add.png"), SappImGuiUtils.SMALL_ICON_SIZE, SappImGuiUtils.SMALL_ICON_SIZE);
+        this.removeAssetButton = new ImageButton(Sapphire.getIcon("trash.png"), SappImGuiUtils.SMALL_ICON_SIZE, SappImGuiUtils.SMALL_ICON_SIZE);
+        this.copyAssetButton = new ImageButton(Sapphire.getIcon("copy.png"), SappImGuiUtils.SMALL_ICON_SIZE, SappImGuiUtils.SMALL_ICON_SIZE);
         this.shaderButtons = new ArrayList<>();
         this.textureButtons = new ArrayList<>();
         this.soundButtons = new ArrayList<>();

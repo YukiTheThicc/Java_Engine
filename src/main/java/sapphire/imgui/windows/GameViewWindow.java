@@ -88,7 +88,7 @@ public class GameViewWindow extends ImguiWindow {
 
     public void imgui(SappImGuiLayer layer) {
 
-        editorCamera.updateOrthoProjection();
+        editorCamera.update(0);
         ImGui.setNextWindowDockID(layer.getDockId());
         if (ImGui.begin(this.getTitle(), this.getFlags())) {
 

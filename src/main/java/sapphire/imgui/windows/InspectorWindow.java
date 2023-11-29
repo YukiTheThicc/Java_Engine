@@ -19,7 +19,7 @@ public class InspectorWindow extends ImguiWindow {
             SappDrawable activeObj = Sapphire.getActiveObject();
             if (activeObj != null) {
                 String name = activeObj.getClass().getSimpleName().toUpperCase();
-                SappImGui.align(AlignX.CENTER, AlignY.TOP, SappImGui.textSize(name), ImGui.getFontSize());
+                SappImGuiUtils.align(AlignX.CENTER, AlignY.TOP, SappImGuiUtils.textSize(name), ImGui.getFontSize());
                 ImGui.text(name);
                 ImGui.separator();
                 activeObj.imgui();

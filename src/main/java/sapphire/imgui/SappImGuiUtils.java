@@ -1,13 +1,8 @@
 package sapphire.imgui;
 
 import diamondEngine.diaUtils.DiaLogger;
-import imgui.ImColor;
 import imgui.ImGui;
-import imgui.ImGuiStyle;
-import imgui.ImVec2;
 import imgui.flag.*;
-import imgui.internal.ImGuiWindow;
-import imgui.internal.ImRect;
 import imgui.type.ImFloat;
 import imgui.type.ImInt;
 import imgui.type.ImString;
@@ -21,7 +16,7 @@ import sapphire.imgui.windows.ModalConfirmation;
 import sapphire.imgui.windows.ImguiWindow;
 import sapphire.imgui.windows.ModalInformation;
 
-public class SappImGui {
+public class SappImGuiUtils {
 
     public static float BIG_ICON_SIZE;
     public static float MEDIUM_ICON_SIZE;

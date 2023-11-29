@@ -4,6 +4,7 @@ import diamondEngine.Entity;
 import diamondEngine.Environment;
 import diamondEngine.Diamond;
 import diamondEngine.diaAssets.Texture;
+import diamondEngine.diaComponents.Camera;
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaComponents.Grid;
 import diamondEngine.diaComponents.SpriteRenderer;
@@ -11,15 +12,16 @@ import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiTreeNodeFlags;
+import org.joml.Vector2f;
 import sapphire.Sapphire;
 import sapphire.eventsSystem.SappEvents;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
-import sapphire.imgui.SappImGui;
+import sapphire.imgui.SappImGuiUtils;
 import sapphire.imgui.SappImGuiLayer;
 import sapphire.imgui.widgets.ImageLabelButton;
 
-import java.util.Arrays;
+import java.util.ServiceLoader;
 
 public class EnvHierarchyWindow extends ImguiWindow {
 
@@ -59,7 +61,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
         for (Environment env : Diamond.get().getEnvironments()) {
 
             Texture tex = Sapphire.getIcon("sapp.png");
-            ImGui.image(tex.getId(), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE, 0, 1, 1, 0);
+            ImGui.image(tex.getId(), SappImGuiUtils.SMALL_ICON_SIZE, SappImGuiUtils.SMALL_ICON_SIZE, 0, 1, 1, 0);
             ImGui.sameLine();
 
             ImGui.pushID(env.getUuid());
@@ -123,9 +125,13 @@ public class EnvHierarchyWindow extends ImguiWindow {
         if (ImGui.beginPopupContextItem(e.getUuid())) {
 
             // Component addition options
+            if (ImGui.menuItem(Sapphire.getLiteral("add_camera"))) SappEvents.notify(
+                    new SappEvent(SappEventType.Add_object, null, e, new Camera(new Vector2f(), 1, 1)));
             if (ImGui.menuItem(Sapphire.getLiteral("add_grid"))) SappEvents.notify(
                     new SappEvent(SappEventType.Add_object, null, e, new Grid(32)));
             if (ImGui.menuItem(Sapphire.getLiteral("add_sprite_renderer"))) SappEvents.notify(
+                    new SappEvent(SappEventType.Add_object, null, e, new SpriteRenderer()));
+            if (ImGui.menuItem(Sapphire.getLiteral("add_text_renderer"))) SappEvents.notify(
                     new SappEvent(SappEventType.Add_object, null, e, new SpriteRenderer()));
             ImGui.separator();
 

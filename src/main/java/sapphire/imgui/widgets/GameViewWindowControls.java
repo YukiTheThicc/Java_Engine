@@ -12,7 +12,7 @@ import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
-import sapphire.imgui.SappImGui;
+import sapphire.imgui.SappImGuiUtils;
 
 public class GameViewWindowControls {
 
@@ -21,8 +21,8 @@ public class GameViewWindowControls {
     private final ImageButton stop;
     private final ImageButton settings;
     private final float offsetY;
-    private final float iconSizeX = SappImGui.BIG_ICON_SIZE;
-    private final float iconSizeY = SappImGui.BIG_ICON_SIZE;
+    private final float iconSizeX = SappImGuiUtils.BIG_ICON_SIZE;
+    private final float iconSizeY = SappImGuiUtils.BIG_ICON_SIZE;
     private final float mainControlsX;
     private final float mainControlsY;
     private final int flags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize |
@@ -55,17 +55,17 @@ public class GameViewWindowControls {
         ImGui.begin("controls", flags);
 
         if (!Diamond.getCurrentEnv().getUuid().equals(Diamond.getDefaultEnv().getUuid())) {
-            float envNameX = SappImGui.textSize(Diamond.getCurrentEnv().getName());
-            SappImGui.alignNoHeader(AlignX.LEFT, AlignY.TOP, envNameX + ImGui.getStyle().getFramePaddingX() * 2, mainControlsY);
+            float envNameX = SappImGuiUtils.textSize(Diamond.getCurrentEnv().getName());
+            SappImGuiUtils.alignNoHeader(AlignX.LEFT, AlignY.TOP, envNameX + ImGui.getStyle().getFramePaddingX() * 2, mainControlsY);
             ImGui.beginChild("env_info", envNameX + ImGui.getStyle().getFramePaddingX() * 2, mainControlsY);
-            SappImGui.align(AlignX.CENTER, AlignY.CENTER, envNameX, ImGui.getFontSize());
+            SappImGuiUtils.align(AlignX.CENTER, AlignY.CENTER, envNameX, ImGui.getFontSize());
             ImGui.text(Diamond.getCurrentEnv().getName());
             ImGui.endChild();
         }
 
-        SappImGui.alignNoHeader(AlignX.CENTER, AlignY.TOP, mainControlsX, mainControlsY);
+        SappImGuiUtils.alignNoHeader(AlignX.CENTER, AlignY.TOP, mainControlsX, mainControlsY);
         ImGui.beginChild("main_controls", mainControlsX, mainControlsY);
-        SappImGui.align(AlignX.CENTER, AlignY.CENTER, iconSizeX * 2 + ImGui.getStyle().getFramePaddingX(), iconSizeY);
+        SappImGuiUtils.align(AlignX.CENTER, AlignY.CENTER, iconSizeX * 2 + ImGui.getStyle().getFramePaddingX(), iconSizeY);
 
         if (play.draw(!isDiasRunning)) {
             SappEvents.notify(new SappEvent(SappEventType.Play));
@@ -76,9 +76,9 @@ public class GameViewWindowControls {
         }
         ImGui.endChild();
 
-        SappImGui.alignNoHeader(AlignX.RIGHT, AlignY.CENTER, iconSizeX + ImGui.getStyle().getFramePaddingX() * 2, mainControlsY);
+        SappImGuiUtils.alignNoHeader(AlignX.RIGHT, AlignY.CENTER, iconSizeX + ImGui.getStyle().getFramePaddingX() * 2, mainControlsY);
         ImGui.beginChild("settings", iconSizeX + ImGui.getStyle().getFramePaddingX() * 2, mainControlsY);
-        SappImGui.align(AlignX.CENTER, AlignY.CENTER, iconSizeX, iconSizeY);
+        SappImGuiUtils.align(AlignX.CENTER, AlignY.CENTER, iconSizeX, iconSizeY);
         if (settings.draw()) {
             ImGui.openPopup("view_settings");
         }

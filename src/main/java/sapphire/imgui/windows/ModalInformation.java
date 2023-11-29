@@ -7,7 +7,7 @@ import sapphire.Sapphire;
 import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
 import sapphire.imgui.SappImGuiLayer;
-import sapphire.imgui.SappImGui;
+import sapphire.imgui.SappImGuiUtils;
 
 public class ModalInformation extends ImguiWindow{
 
@@ -42,12 +42,12 @@ public class ModalInformation extends ImguiWindow{
         if (ImGui.beginPopupModal(getTitle(), ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize |
                 ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)) {
 
-            SappImGui.align(AlignX.LEFT, AlignY.TOP, SappImGui.textSize(message), ImGui.getFontSize());
+            SappImGuiUtils.align(AlignX.LEFT, AlignY.TOP, SappImGuiUtils.textSize(message), ImGui.getFontSize());
             ImGui.textWrapped(message);
 
-            float totalSizeButtonsX = SappImGui.textSize(ok) + ImGui.getStyle().getCellPaddingX() * 2;
+            float totalSizeButtonsX = SappImGuiUtils.textSize(ok) + ImGui.getStyle().getCellPaddingX() * 2;
             float totalSizeButtonsY = ImGui.getFontSize() + ImGui.getStyle().getCellPaddingY() * 2;
-            SappImGui.align(AlignX.CENTER, AlignY.BOTTOM, totalSizeButtonsX, totalSizeButtonsY);
+            SappImGuiUtils.align(AlignX.CENTER, AlignY.BOTTOM, totalSizeButtonsX, totalSizeButtonsY);
             if (ImGui.button(ok)) {
                 this.setActive(false);
                 ImGui.closeCurrentPopup();

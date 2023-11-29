@@ -1,13 +1,12 @@
 package diamondEngine.diaComponents;
 
 import diamondEngine.Diamond;
-import diamondEngine.Environment;
 import diamondEngine.diaRenderer.DebugRenderer;
 import imgui.type.ImInt;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import sapphire.Sapphire;
-import sapphire.imgui.SappImGui;
+import sapphire.imgui.SappImGuiUtils;
 import sapphire.imgui.windows.GameViewWindow;
 
 public class Grid extends Component {
@@ -118,19 +117,19 @@ public class Grid extends Component {
 
     @Override
     public void imgui() {
-        SappImGui.textLabel("UUID", this.getUuid());
+        SappImGuiUtils.textLabel("UUID", this.getUuid());
         ImInt cellX = new ImInt(this.cellX);
         ImInt cellY = new ImInt(this.cellY);
-        if (SappImGui.dragInt(Sapphire.getLiteral("cell_height"), cellY)) {
+        if (SappImGuiUtils.dragInt(Sapphire.getLiteral("cell_height"), cellY)) {
             cameraChanged(cellX.get(), cellY.get());
         }
-        if (SappImGui.dragInt(Sapphire.getLiteral("cell_width"), cellX)) {
+        if (SappImGuiUtils.dragInt(Sapphire.getLiteral("cell_width"), cellX)) {
             cameraChanged(cellX.get(), cellY.get());
         }
-        if (SappImGui.checkboxLabel(Sapphire.getLiteral("draw_grid"), draw)) {
+        if (SappImGuiUtils.checkboxLabel(Sapphire.getLiteral("draw_grid"), draw)) {
             this.draw = !draw;
         }
-        SappImGui.textLabel("Cells", (numHLines - 1) * (numVLines - 1) + " (" + (numVLines - 1) + "x" + (numHLines - 1) + ")");
+        SappImGuiUtils.textLabel("Cells", (numHLines - 1) * (numVLines - 1) + " (" + (numVLines - 1) + "x" + (numHLines - 1) + ")");
     }
 
     @Override

@@ -8,7 +8,7 @@ import diamondEngine.diaUtils.DiaUtils;
 import sapphire.Sapphire;
 import sapphire.SappDir;
 import sapphire.SappProject;
-import sapphire.imgui.SappImGui;
+import sapphire.imgui.SappImGuiUtils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -59,7 +59,7 @@ public class SappProjectCreator {
                 DiaLogger.log("Failed while creating new project", DiaLoggerLevel.ERROR);
             }
         } else {
-            SappImGui.infoModal(Sapphire.getLiteral("create_project"), Sapphire.getLiteral("dir_not_empty"));
+            SappImGuiUtils.infoModal(Sapphire.getLiteral("create_project"), Sapphire.getLiteral("dir_not_empty"));
         }
         return null;
     }

@@ -5,7 +5,7 @@ import imgui.ImGui;
 import imgui.type.ImFloat;
 import sapphire.Sapphire;
 import sapphire.imgui.SappImGuiLayer;
-import sapphire.imgui.SappImGui;
+import sapphire.imgui.SappImGuiUtils;
 
 public class EditorCameraWindow extends ImguiWindow {
 
@@ -23,12 +23,12 @@ public class EditorCameraWindow extends ImguiWindow {
         if (ImGui.begin(this.getTitle(), this.getFlags())) {
 
             ImFloat zoom = new ImFloat(editorCamera.zoom);
-            if (SappImGui.dragFloat(Sapphire.getLiteral("zoom"), zoom)) editorCamera.zoom = zoom.get();
-            SappImGui.drawVec2Control(Sapphire.getLiteral("position"), editorCamera.pos);
-            SappImGui.drawVec2Control(Sapphire.getLiteral("projection_size"), editorCamera.getPSize());
-            SappImGui.drawVec3Control(Sapphire.getLiteral("camera_front"), editorCamera.getFront());
-            SappImGui.drawVec3Control(Sapphire.getLiteral("camera_up"), editorCamera.getUp());
-            SappImGui.drawMatrix4f(Sapphire.getLiteral("projection_matrix"), editorCamera.getProjMatrix());
+            if (SappImGuiUtils.dragFloat(Sapphire.getLiteral("zoom"), zoom)) editorCamera.zoom = zoom.get();
+            SappImGuiUtils.drawVec2Control(Sapphire.getLiteral("position"), editorCamera.pos);
+            SappImGuiUtils.drawVec2Control(Sapphire.getLiteral("projection_size"), editorCamera.getPSize());
+            SappImGuiUtils.drawVec3Control(Sapphire.getLiteral("camera_front"), editorCamera.getFront());
+            SappImGuiUtils.drawVec3Control(Sapphire.getLiteral("camera_up"), editorCamera.getUp());
+            SappImGuiUtils.drawMatrix4f(Sapphire.getLiteral("projection_matrix"), editorCamera.getProjMatrix());
         }
         ImGui.end();
     }

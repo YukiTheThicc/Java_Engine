@@ -16,7 +16,7 @@ import sapphire.Sapphire;
 import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
 import sapphire.imgui.SappImGuiLayer;
-import sapphire.imgui.SappImGui;
+import sapphire.imgui.SappImGuiUtils;
 import sapphire.imgui.widgets.ImageButton;
 
 import java.io.File;
@@ -51,8 +51,8 @@ public class LogWindow extends ImguiWindow implements DiaLoggerObserver, SappObs
         }
         this.currentLine = 0;
         this.autoScroll = new ImBoolean(true);
-        this.optionsButton = new ImageButton(Sapphire.getIcon("gear.png"), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE);
-        this.toolbarWidth = SappImGui.SMALL_ICON_SIZE;
+        this.optionsButton = new ImageButton(Sapphire.getIcon("gear.png"), SappImGuiUtils.SMALL_ICON_SIZE, SappImGuiUtils.SMALL_ICON_SIZE);
+        this.toolbarWidth = SappImGuiUtils.SMALL_ICON_SIZE;
         this.setFlags(ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoScrollbar);
         DiaLogger.addObserver(this);
     }
@@ -117,7 +117,7 @@ public class LogWindow extends ImguiWindow implements DiaLoggerObserver, SappObs
 
             ImGui.sameLine();
             ImInt index = new ImInt(DiaLogger.getCurrentLevel().ordinal());
-            if (SappImGui.combo(Sapphire.getLiteral("severity"), index, availableLevels, 125f)) {
+            if (SappImGuiUtils.combo(Sapphire.getLiteral("severity"), index, availableLevels, 125f)) {
                 DiaLogger.changeLevel(DiaLoggerLevel.values()[index.get()]);
                 DiaLogger.log("Changed log level to: " + DiaLogger.getCurrentLevel());
             }
@@ -126,15 +126,15 @@ public class LogWindow extends ImguiWindow implements DiaLoggerObserver, SappObs
             ImInt lines = new ImInt(this.lines);
             if (ImGui.inputInt(Sapphire.getLiteral("log_lines"), lines)) changeLineCount(lines.get());*/
 
-            float clearX = SappImGui.textSize(Sapphire.getLiteral("save_log")) + SappImGui.textSize(Sapphire.getLiteral("clear")) + ImGui.getStyle().getCellPaddingX() * 5;
+            float clearX = SappImGuiUtils.textSize(Sapphire.getLiteral("save_log")) + SappImGuiUtils.textSize(Sapphire.getLiteral("clear")) + ImGui.getStyle().getCellPaddingX() * 5;
             float clearY = ImGui.getFontSize() + ImGui.getStyle().getCellPaddingY() * 2;
-            SappImGui.align(AlignX.CENTER, AlignY.BOTTOM, clearX, clearY);
+            SappImGuiUtils.align(AlignX.CENTER, AlignY.BOTTOM, clearX, clearY);
             if (ImGui.button(Sapphire.getLiteral("clear"))) clear();
             ImGui.sameLine();
             String title = Sapphire.getLiteral("save_log");
             String message = Sapphire.getLiteral("sure_to_save_log");
             if (ImGui.button(title)) {
-                confWindow = (ModalConfirmation) SappImGui.confirmModal(title, message, this);
+                confWindow = (ModalConfirmation) SappImGuiUtils.confirmModal(title, message, this);
             }
 
             ImGui.endPopup();

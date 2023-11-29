@@ -2,14 +2,13 @@ package sapphire;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import diamondEngine.Environment;
 import diamondEngine.Diamond;
 import diamondEngine.diaUtils.DiaAssetManager;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.serializers.EnvironmentSerializer;
-import sapphire.imgui.SappImGui;
+import sapphire.imgui.SappImGuiUtils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -131,7 +130,7 @@ public class SappProject {
                 inFile = new String(Files.readAllBytes(projectFile.toPath()));
                 DiaLogger.log("Loading project file from '" + projectFile.getAbsolutePath() + "'");
             } else {
-                SappImGui.infoModal(Sapphire.getLiteral("project"), Sapphire.getLiteral("no_project_file"));
+                SappImGuiUtils.infoModal(Sapphire.getLiteral("project"), Sapphire.getLiteral("no_project_file"));
                 root = null;
             }
             if (!inFile.equals("")) {

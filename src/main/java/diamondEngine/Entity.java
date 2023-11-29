@@ -2,14 +2,10 @@ package diamondEngine;
 
 import diamondEngine.diaComponents.Component;
 import imgui.ImGui;
-import imgui.flag.ImGuiStyleVar;
 import imgui.type.ImString;
 import sapphire.Sapphire;
-import sapphire.eventsSystem.SappEvent;
-import sapphire.eventsSystem.SappEventType;
-import sapphire.eventsSystem.SappEvents;
 import sapphire.imgui.SappDrawable;
-import sapphire.imgui.SappImGui;
+import sapphire.imgui.SappImGuiUtils;
 
 import java.util.ArrayList;
 
@@ -128,9 +124,9 @@ public class Entity extends DiamondObject implements SappDrawable {
     @Override
     public void imgui() {
 
-        SappImGui.textLabel("UUID", this.getUuid());
+        SappImGuiUtils.textLabel("UUID", this.getUuid());
         ImString newName = new ImString(name, 256);
-        if (SappImGui.inputText(Sapphire.getLiteral("name"), newName)) {
+        if (SappImGuiUtils.inputText(Sapphire.getLiteral("name"), newName)) {
             if (Sapphire.get().getProject() != null && !newName.isEmpty()) {
                 name = newName.get();
                 this.getParent().setModified();
@@ -157,7 +153,7 @@ public class Entity extends DiamondObject implements SappDrawable {
 
         ImGui.sameLine();
         ImGui.setCursorPosX(buttonOriginX);
-        ImGui.image(Sapphire.getIcon("component.png").getId(), SappImGui.SMALL_ICON_SIZE, SappImGui.SMALL_ICON_SIZE,
+        ImGui.image(Sapphire.getIcon("component.png").getId(), SappImGuiUtils.SMALL_ICON_SIZE, SappImGuiUtils.SMALL_ICON_SIZE,
                 0, 1, 1, 0);
         ImGui.sameLine();
         ImGui.text(name);

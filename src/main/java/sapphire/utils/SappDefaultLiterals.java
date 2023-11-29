@@ -67,7 +67,7 @@ public class SappDefaultLiterals {
         literals.put("camera", "Camera");
         literals.put("delete", "Delete");
         literals.put("add_entity", "Add entity");
-        literals.put("add_grid", "Add grid");
+        literals.put("add_grid", "Add Grid");
         literals.put("projection_matrix", "Projection matrix");
         literals.put("import_env", "Import environment");
         literals.put("save_env", "Save environment");
@@ -76,6 +76,11 @@ public class SappDefaultLiterals {
         literals.put("make_current", "Make current");
         literals.put("textures", "Textures");
         literals.put("remove", "Remove");
+        literals.put("copy", "Copy");
+        literals.put("add_sprite_renderer", "Add Sprite");
+        literals.put("camera_front", "Camera front");
+        literals.put("camera_up", "Camera up");
+        literals.put("draw_grid", "Draw Grid");
 
         return literals;
     }

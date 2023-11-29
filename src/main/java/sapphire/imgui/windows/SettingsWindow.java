@@ -13,7 +13,7 @@ import sapphire.SappSettings;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.SappImGuiLayer;
-import sapphire.imgui.SappImGui;
+import sapphire.imgui.SappImGuiUtils;
 
 public class SettingsWindow extends ImguiWindow {
 
@@ -66,7 +66,7 @@ public class SettingsWindow extends ImguiWindow {
 
             // Workspace
             ImString workspace = new ImString(settings.getWorkspace(), 256);
-            if (SappImGui.inputText(Sapphire.getLiteral("workspace"), workspace))  {
+            if (SappImGuiUtils.inputText(Sapphire.getLiteral("workspace"), workspace))  {
                 if (!workspace.isEmpty()) settings.setWorkspace(workspace.get());
             }
             ImGui.sameLine();
@@ -76,7 +76,7 @@ public class SettingsWindow extends ImguiWindow {
             ImGui.separator();
 
             // Font
-            String newFont = SappImGui.combo(Sapphire.getLiteral("font"), settings.getCurrentFont(), settings.getFontsList());
+            String newFont = SappImGuiUtils.combo(Sapphire.getLiteral("font"), settings.getCurrentFont(), settings.getFontsList());
             if (newFont != null) {
                 layer.changeFont(newFont);
                 settingsChanged = true;
@@ -96,7 +96,7 @@ public class SettingsWindow extends ImguiWindow {
             }
 
             // Language
-            String newLang = SappImGui.combo(Sapphire.getLiteral("lang"), settings.getCurrentLang(), settings.getLanguages());
+            String newLang = SappImGuiUtils.combo(Sapphire.getLiteral("lang"), settings.getCurrentLang(), settings.getLanguages());
             if (newLang != null) {
                 settings.changeLangTo(newLang);
                 settingsChanged = true;

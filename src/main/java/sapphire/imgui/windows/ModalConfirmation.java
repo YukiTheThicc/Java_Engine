@@ -11,7 +11,7 @@ import sapphire.Sapphire;
 import sapphire.imgui.AlignX;
 import sapphire.imgui.AlignY;
 import sapphire.imgui.SappImGuiLayer;
-import sapphire.imgui.SappImGui;
+import sapphire.imgui.SappImGuiUtils;
 
 public class ModalConfirmation extends ImguiWindow {
 
@@ -65,12 +65,12 @@ public class ModalConfirmation extends ImguiWindow {
         if (ImGui.beginPopupModal(getTitle(), ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize |
                 ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)) {
 
-            SappImGui.align(AlignX.LEFT, AlignY.CENTER, SappImGui.textSize(message), ImGui.getFontSize());
+            SappImGuiUtils.align(AlignX.LEFT, AlignY.CENTER, SappImGuiUtils.textSize(message), ImGui.getFontSize());
             ImGui.text(message);
 
-            float totalSizeButtonsX = SappImGui.textSize(affirmative) + SappImGui.textSize(negative) + ImGui.getStyle().getCellPaddingX() * 5;
+            float totalSizeButtonsX = SappImGuiUtils.textSize(affirmative) + SappImGuiUtils.textSize(negative) + ImGui.getStyle().getCellPaddingX() * 5;
             float totalSizeButtonsY = ImGui.getFontSize() + ImGui.getStyle().getCellPaddingY() * 2;
-            SappImGui.align(AlignX.LEFT, AlignY.BOTTOM, totalSizeButtonsX, totalSizeButtonsY);
+            SappImGuiUtils.align(AlignX.LEFT, AlignY.BOTTOM, totalSizeButtonsX, totalSizeButtonsY);
 
             if (ImGui.button(affirmative)) {
                 result = true;
@@ -82,7 +82,7 @@ public class ModalConfirmation extends ImguiWindow {
                 parent.onNotify(new SappEvent(SappEventType.Cancel));
             }
 
-            SappImGui.align(AlignX.RIGHT, AlignY.BOTTOM, SappImGui.textSize(Sapphire.getLiteral("dont_ask_again")) + ImGui.getFontSize() + ImGui.getStyle().getFramePaddingX() * 2, ImGui.getFontSize() + ImGui.getStyle().getFramePaddingY() * 2);
+            SappImGuiUtils.align(AlignX.RIGHT, AlignY.BOTTOM, SappImGuiUtils.textSize(Sapphire.getLiteral("dont_ask_again")) + ImGui.getFontSize() + ImGui.getStyle().getFramePaddingX() * 2, ImGui.getFontSize() + ImGui.getStyle().getFramePaddingY() * 2);
             ImGui.checkbox(Sapphire.getLiteral("dont_ask_again"), askAgain);
             ImGui.endPopup();
         }
