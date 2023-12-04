@@ -135,7 +135,13 @@ public class MenuEventHandler implements SappObserver {
     }
 
     private void importEnv() {
-        String path = DiaUtils.selectFile();
+        String projPath = Sapphire.get().getProject().getRoot().getPath().getAbsolutePath();
+        String path = "";
+        if (new File(projPath + "\\envs").exists()) {
+            path = DiaUtils.selectFile("Import Environment", projPath + "\\envs\\", "*.jpg");
+        } else {
+            path = DiaUtils.selectFile("Import Environment", projPath, "*.jpg");
+        }
         if (path != null && !path.isEmpty()) {
             Environment env = new Environment();
             env.init();

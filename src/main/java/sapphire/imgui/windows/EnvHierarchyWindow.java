@@ -5,10 +5,8 @@ import diamondEngine.Environment;
 import diamondEngine.Diamond;
 import diamondEngine.diaAssets.Texture;
 import diamondEngine.diaComponents.Camera;
-import diamondEngine.diaComponents.Component;
 import diamondEngine.diaComponents.Grid;
-import diamondEngine.diaComponents.SpriteRenderer;
-import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.diaComponents.Sprite;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiTreeNodeFlags;
@@ -20,8 +18,6 @@ import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.SappImGuiUtils;
 import sapphire.imgui.SappImGuiLayer;
 import sapphire.imgui.widgets.ImageLabelButton;
-
-import java.util.ServiceLoader;
 
 public class EnvHierarchyWindow extends ImguiWindow {
 
@@ -130,9 +126,9 @@ public class EnvHierarchyWindow extends ImguiWindow {
             if (ImGui.menuItem(Sapphire.getLiteral("add_grid"))) SappEvents.notify(
                     new SappEvent(SappEventType.Add_object, null, e, new Grid(32)));
             if (ImGui.menuItem(Sapphire.getLiteral("add_sprite_renderer"))) SappEvents.notify(
-                    new SappEvent(SappEventType.Add_object, null, e, new SpriteRenderer()));
+                    new SappEvent(SappEventType.Add_object, null, e, new Sprite()));
             if (ImGui.menuItem(Sapphire.getLiteral("add_text_renderer"))) SappEvents.notify(
-                    new SappEvent(SappEventType.Add_object, null, e, new SpriteRenderer()));
+                    new SappEvent(SappEventType.Add_object, null, e, new Sprite()));
             ImGui.separator();
 
             if (ImGui.menuItem(Sapphire.getLiteral("copy"))) SappEvents.notify(

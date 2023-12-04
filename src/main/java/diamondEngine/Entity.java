@@ -1,6 +1,9 @@
 package diamondEngine;
 
 import diamondEngine.diaComponents.Component;
+import diamondEngine.diaComponents.Transform;
+import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.diaUtils.DiaLoggerLevel;
 import imgui.ImGui;
 import imgui.type.ImString;
 import sapphire.Sapphire;
@@ -16,6 +19,7 @@ public class Entity extends DiamondObject implements SappDrawable {
     // ATTRIBUTES
     private String name;
     private ArrayList<Component> components;
+    private transient Transform transform;
     private transient boolean toSerialize;
     private transient boolean isDirty;
     private transient ArrayList<Component> toRemove;
@@ -94,6 +98,27 @@ public class Entity extends DiamondObject implements SappDrawable {
                 isDirty = true;
             }
         }
+    }
+
+    /**
+     * Gets the current instance of the component class attached to this entity if it exists. Returns null if not.
+     * @param componentClass The class of the component
+     * @return Component instance from the specified class
+     * @param <T> Class
+     */
+    public <T extends Component> T getComponent(Class<T> componentClass) {
+        for (Component c : components) {
+            try {
+                if (componentClass.isAssignableFrom(c.getClass())) {
+                    return componentClass.cast(c);
+                }
+            } catch (ClassCastException e) {
+                e.printStackTrace();
+                DiaLogger.log(Entity.class, "Failed to cast component from entity with ID: " + this.getUuid() +
+                        "\n" + e.getMessage(), DiaLoggerLevel.ERROR);
+            }
+        }
+        return null;
     }
 
     public void update(float dt) {

@@ -3,7 +3,7 @@ package diamondEngine.diaComponents;
 import diamondEngine.diaAssets.Texture;
 import org.joml.Vector2f;
 
-public class SpriteRenderer {
+public class Sprite extends Component{
 
     // ATTRIBUTES
     private final Texture texture;
@@ -19,7 +19,7 @@ public class SpriteRenderer {
     };
 
     // CONTRUCTORS
-    public SpriteRenderer(Texture texture, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
+    public Sprite(Texture texture, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
         this.texture = texture;
         this.spriteWidth = spriteWidth;
         this.spriteHeight = spriteHeight;
@@ -31,7 +31,7 @@ public class SpriteRenderer {
      *  Creates a new SpriteSheet with the specified texture, the number of sprites is calculated by the size of the texture
      *  in relation to the sprite size and spacing
      */
-    public SpriteRenderer(Texture texture, int spriteWidth, int spriteHeight, int spacing) {
+    public Sprite(Texture texture, int spriteWidth, int spriteHeight, int spacing) {
         this.texture = texture;
         this.spriteWidth = spriteWidth;
         this.spriteHeight = spriteHeight;
@@ -41,7 +41,7 @@ public class SpriteRenderer {
         this.numSprites = spriteSheetX * spriteSheetY;
     }
 
-    public SpriteRenderer() {
+    public Sprite() {
         this.texture = null;
         this.spriteWidth = 0;
         this.spriteHeight = 0;
@@ -70,5 +70,20 @@ public class SpriteRenderer {
         return spacing;
     }
 
+    // METHODS
+    @Override
+    public void init() {
+
+    }
+
+    @Override
+    public void update(float dt) {
+
+    }
+
+    @Override
+    public Component copy() {
+        return null;
+    }
 
 }
