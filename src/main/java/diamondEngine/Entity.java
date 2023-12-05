@@ -88,6 +88,9 @@ public class Entity extends DiamondObject implements SappDrawable {
             if (this.getParent() != null) {
                 this.getParent().registerObject(component);
             }
+            if (component instanceof Transform) {
+                this.transform = (Transform) component;
+            }
         }
     }
 

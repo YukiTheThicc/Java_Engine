@@ -1,6 +1,7 @@
 package diamondEngine;
 
 import diamondEngine.diaComponents.Component;
+import diamondEngine.diaComponents.Transform;
 import diamondEngine.diaRenderer.DebugRenderer;
 import diamondEngine.diaRenderer.Framebuffer;
 import diamondEngine.diaUtils.DiaUUID;
@@ -197,14 +198,14 @@ public class Environment implements SappDrawable {
             while (d.hasMoreElements()) {
                 URL e = d.nextElement();
                 e.getContent();
-                System.out.println(e);
+                System.out.println(e.getPath());
                 System.out.println(e.getContent());
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
         ServiceLoader<Component> a = ServiceLoader.loadInstalled(Component.class);
-        System.out.println(a);
         a.reload();
         Iterator<Component> b = a.iterator();
         while (b.hasNext()) {
@@ -224,6 +225,9 @@ public class Environment implements SappDrawable {
 
     public void addEntity(Entity entity) {
         if (entity != null) {
+            if (entity.getComponent(Transform.class) == null) {
+                entity.addComponent(new Transform());
+            }
             entitiesToAdd.add(entity);
             isModified = true;
             isDirty = true;

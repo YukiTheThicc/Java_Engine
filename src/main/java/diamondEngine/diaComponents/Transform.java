@@ -1,6 +1,10 @@
 package diamondEngine.diaComponents;
 
+import imgui.type.ImFloat;
+import imgui.type.ImInt;
 import org.joml.Vector2f;
+import sapphire.Sapphire;
+import sapphire.imgui.SappImGuiUtils;
 
 public class Transform extends Component {
 
@@ -67,6 +71,16 @@ public class Transform extends Component {
     @Override
     public void update(float dt) {
 
+    }
+
+    @Override
+    public void imgui() {
+        SappImGuiUtils.drawVec2Control(Sapphire.getLiteral("position"), this.position);
+        SappImGuiUtils.drawVec2Control(Sapphire.getLiteral("scale"), this.scale);
+        ImFloat newRotation = new ImFloat(this.rotation);
+        if (SappImGuiUtils.dragFloat(Sapphire.getLiteral("rotation"), newRotation)) this.rotation = newRotation.get();
+        ImInt newZIndex = new ImInt(this.zIndex);
+        if (SappImGuiUtils.dragInt(Sapphire.getLiteral("zindex"), newZIndex)) this.zIndex = newZIndex.get();
     }
 
     @Override
