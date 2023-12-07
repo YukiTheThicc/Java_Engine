@@ -67,7 +67,7 @@ public class GameViewWindow extends ImguiWindow {
         if (aspectHeight > windowSize.y) {
             // We must switch to pillarbox mode
             aspectHeight = windowSize.y;
-            aspectWidth = aspectHeight * Diamond.getCurrentEnv().getAspectRatio();;
+            aspectWidth = aspectHeight * Diamond.getCurrentEnv().getAspectRatio();
         }
 
         return new ImVec2(aspectWidth, aspectHeight);

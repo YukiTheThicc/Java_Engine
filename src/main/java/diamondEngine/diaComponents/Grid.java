@@ -66,9 +66,9 @@ public class Grid extends Component {
     // METHODS
     @Override
     public void init() {
-        this.cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX();
+        this.cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX() * Diamond.getCurrentEnv().getAspectRatio();
         this.cellNY = (float) cellY / Diamond.getCurrentEnv().getFrameY();
-        this.color = new Vector3f(0.333f, 0.333f, 0.333f);
+        this.color = new Vector3f(0.444f, 0.444f, 0.444f);
     }
 
     @Override
@@ -80,9 +80,9 @@ public class Grid extends Component {
 
             if (camera.zoom <= 4) {
 
-                numHLines = (int) (camera.zoom / cellNY * pSize.y) + 3;
-                numVLines = (int) (camera.zoom / cellNX * pSize.x) + 3;
-                width = cellNX * 2 + camera.zoom * pSize.x;
+                numHLines = (int) (camera.zoom * pSize.y / cellNY) + 3;
+                numVLines = (int) (camera.zoom * pSize.x * Diamond.getCurrentEnv().getAspectRatio() / cellNX) + 3;
+                width = (cellNX * 2 + camera.zoom * pSize.x) * Diamond.getCurrentEnv().getAspectRatio();
                 height = cellNY * 2 + camera.zoom * pSize.y;
                 float firstX = ((int) (cameraPos.x / cellNX) - 1) * cellNX;
                 float firstY = ((int) (cameraPos.y / cellNY) - 1) * cellNY;
@@ -106,10 +106,10 @@ public class Grid extends Component {
         }
     }
 
-    public void cameraChanged(int cellX, int cellY) {
+    public void cellSizeChanged(int cellX, int cellY) {
         this.cellY = cellY;
         this.cellX = cellX;
-        cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX();
+        cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX() * Diamond.getCurrentEnv().getAspectRatio();
         cellNY = (float) cellY / Diamond.getCurrentEnv().getFrameY();
     }
 
@@ -119,10 +119,10 @@ public class Grid extends Component {
         ImInt cellX = new ImInt(this.cellX);
         ImInt cellY = new ImInt(this.cellY);
         if (SappImGuiUtils.dragInt(Sapphire.getLiteral("cell_height"), cellY)) {
-            cameraChanged(cellX.get(), cellY.get());
+            cellSizeChanged(cellX.get(), cellY.get());
         }
         if (SappImGuiUtils.dragInt(Sapphire.getLiteral("cell_width"), cellX)) {
-            cameraChanged(cellX.get(), cellY.get());
+            cellSizeChanged(cellX.get(), cellY.get());
         }
         if (SappImGuiUtils.checkboxLabel(Sapphire.getLiteral("draw_grid"), draw)) {
             this.draw = !draw;
