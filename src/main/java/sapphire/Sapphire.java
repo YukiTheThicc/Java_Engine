@@ -215,7 +215,7 @@ public class Sapphire {
         while (running) {
 
             window.pollEvents();
-            SappMouseControls.update(dt);
+            SappMouseController.update(dt);
             Diamond.getProfiler().beginMeasurement("Total");
             Diamond.getCurrentEnv().startFrame();
             if (dt >= 0) {

@@ -9,6 +9,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import sapphire.Sapphire;
+import sapphire.imgui.windows.GameViewWindow;
 
 import java.util.Arrays;
 
