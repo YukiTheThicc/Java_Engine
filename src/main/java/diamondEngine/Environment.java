@@ -191,27 +191,7 @@ public class Environment implements SappDrawable {
             Diamond.getProfiler().addRegister("Update Entities");
             Diamond.getProfiler().addRegister("Debug Render");
         }
-
-        ClassLoader c = ClassLoader.getSystemClassLoader();
-        try {
-            Enumeration<URL> d = c.getResources("");
-            while (d.hasMoreElements()) {
-                URL e = d.nextElement();
-                e.getContent();
-                System.out.println(e.getPath());
-                System.out.println(e.getContent());
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        ServiceLoader<Component> a = ServiceLoader.loadInstalled(Component.class);
-        a.reload();
-        Iterator<Component> b = a.iterator();
-        while (b.hasNext()) {
-            b.next();
-            System.out.println(b);
-        }
+        changeFrame(frameX, frameY);
     }
 
     public void addChild(Environment environment) {
@@ -255,8 +235,8 @@ public class Environment implements SappDrawable {
     public void changeFrame(int frameX, int frameY) {
         this.frameX = frameX;
         this.frameY = frameY;
-        this.winSizeAdjustX = (float) Window.getWidth() / frameX;
-        this.winSizeAdjustY = (float) Window.getHeight() / frameY;
+        this.winSizeAdjustX = (float) frameX / Window.getWidth();
+        this.winSizeAdjustY = (float) frameY / Window.getHeight();
         frame.destroy();
         frame = new Framebuffer(frameX, frameY);
     }

@@ -83,9 +83,8 @@ public class Camera extends Component{
 
     // METHODS
     private void calculateActualPSize() {
-        this.pSizeActual.x = pSize.x / Diamond.getCurrentEnv().getWinSizeAdjustY();
-        this.pSizeActual.y = pSize.y / Diamond.getCurrentEnv().getWinSizeAdjustX();
-        System.out.println(pSizeActual);
+        this.pSizeActual.x = pSize.x / Diamond.getCurrentEnv().getWinSizeAdjustX();
+        this.pSizeActual.y = pSize.y / Diamond.getCurrentEnv().getWinSizeAdjustY();
     }
 
     @Override

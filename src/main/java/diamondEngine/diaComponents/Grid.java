@@ -77,15 +77,13 @@ public class Grid extends Component {
             Camera camera = GameViewWindow.editorCamera;
             Vector2f cameraPos = camera.pos;
             Vector2f pSize = camera.getPSize();
-            float adjustX = Diamond.getCurrentEnv().getWinSizeAdjustX();
-            float adjustY = Diamond.getCurrentEnv().getWinSizeAdjustY();
 
             if (camera.zoom <= 4) {
 
-                numHLines = (int) ((camera.zoom / cellNY) * pSize.y / adjustY) + 3;
-                numVLines = (int) ((camera.zoom / cellNX) * pSize.x / adjustX) + 3;
-                width = cellNX * 2 + camera.zoom * pSize.x / adjustX;
-                height = cellNY * 2 + camera.zoom * pSize.y / adjustY;
+                numHLines = (int) (camera.zoom / cellNY * pSize.y) + 3;
+                numVLines = (int) (camera.zoom / cellNX * pSize.x) + 3;
+                width = cellNX * 2 + camera.zoom * pSize.x;
+                height = cellNY * 2 + camera.zoom * pSize.y;
                 float firstX = ((int) (cameraPos.x / cellNX) - 1) * cellNX;
                 float firstY = ((int) (cameraPos.y / cellNY) - 1) * cellNY;
                 int maxLines = Math.max(numVLines, numHLines);
