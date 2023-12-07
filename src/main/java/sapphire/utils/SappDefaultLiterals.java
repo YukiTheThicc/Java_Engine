@@ -81,6 +81,11 @@ public class SappDefaultLiterals {
         literals.put("camera_front", "Camera front");
         literals.put("camera_up", "Camera up");
         literals.put("draw_grid", "Draw Grid");
+        literals.put("scale", "Scale");
+        literals.put("rotation", "Rotation");
+        literals.put("zindex", "Z Index");
+        literals.put("add_camera", "Add Camera");
+        literals.put("add_text_renderer", "Add Text Renderer");
 
         return literals;
     }

@@ -8,16 +8,19 @@ import org.joml.Vector3f;
 public class Camera extends Component{
 
     // ATTRIBUTES
-    private final Matrix4f pMatrix;
-    private final Matrix4f vMatrix;
-    private Matrix4f invProj;
-    private Matrix4f invView;
+    public Vector2f pos;
+    public float zoom = 1.0f;
     private final Vector3f front;
     private final Vector3f up;
     private final Vector2f pSize;
-    private final Vector2f pSizeActual;
-    public Vector2f pos;
-    public float zoom = 1.0f;
+    private boolean isActive = false;
+
+    // RUNTIME ATTRIBUTES
+    private transient final Vector2f pSizeActual;
+    private transient Matrix4f pMatrix;
+    private transient final Matrix4f vMatrix;
+    private transient Matrix4f invProj;
+    private transient Matrix4f invView;
 
     // CONSTRUCTORS
     public Camera(Vector2f pos, float pWidth, float pHeight) {
@@ -70,10 +73,19 @@ public class Camera extends Component{
         return pSizeActual;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive() {
+        isActive = true;
+    }
+
     // METHODS
     private void calculateActualPSize() {
         this.pSizeActual.x = pSize.x / Diamond.getCurrentEnv().getWinSizeAdjustY();
         this.pSizeActual.y = pSize.y / Diamond.getCurrentEnv().getWinSizeAdjustX();
+        System.out.println(pSizeActual);
     }
 
     @Override
@@ -83,10 +95,12 @@ public class Camera extends Component{
 
     @Override
     public void update(float dt) {
-        pMatrix.identity();
-        calculateActualPSize();
-        pMatrix.ortho(0.0f, this.zoom * pSizeActual.x, 0.0f, this.zoom * pSizeActual.y, 0.0f, 100.0f);
-        invProj = new Matrix4f(pMatrix).invert();
+        if (isActive) {
+            pMatrix.identity();
+            calculateActualPSize();
+            pMatrix.ortho(0.0f, this.zoom * pSizeActual.x, 0.0f, this.zoom * pSizeActual.y, 0.0f, 100.0f);
+            invProj = new Matrix4f(pMatrix).invert();
+        }
     }
 
     @Override

@@ -76,7 +76,7 @@ public class Grid extends Component {
         if (draw) {
             Camera camera = GameViewWindow.editorCamera;
             Vector2f cameraPos = camera.pos;
-            Vector2f pSize = camera.getPSizeActual();
+            Vector2f pSize = camera.getPSize();
             float adjustX = Diamond.getCurrentEnv().getWinSizeAdjustX();
             float adjustY = Diamond.getCurrentEnv().getWinSizeAdjustY();
 

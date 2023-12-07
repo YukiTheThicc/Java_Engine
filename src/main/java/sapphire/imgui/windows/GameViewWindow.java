@@ -26,7 +26,8 @@ public class GameViewWindow extends ImguiWindow {
         this.setFlags(ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse |
                 ImGuiWindowFlags.NoResize);
         Vector2i pm = DiaMath.getFractionFromFloat((float) Diamond.getCurrentEnv().getFrameY() / Diamond.getCurrentEnv().getFrameX());
-        GameViewWindow.editorCamera = new Camera(new Vector2f(), 4f, 4f);
+        GameViewWindow.editorCamera = new Camera(new Vector2f(), 4.5f, 4.5f);
+        editorCamera.setActive();
     }
 
     // GETTERS & SETTERS
