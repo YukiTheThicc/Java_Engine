@@ -10,12 +10,8 @@ import java.lang.reflect.Type;
 
 public class EntitySerializer implements JsonDeserializer<Entity> {
 
-    // ATTRIBUTES
-    private final Environment env;
-
     // CONSTRUCTOR
-    public EntitySerializer(Environment env) {
-        this.env = env;
+    public EntitySerializer() {
     }
 
     // METHODS
@@ -28,7 +24,7 @@ public class EntitySerializer implements JsonDeserializer<Entity> {
 
         Entity entity = new Entity(uuid.getAsString());
         entity.setName(name.getAsString());
-        for (JsonElement e: components) {
+        for (JsonElement e : components) {
             Component c = context.deserialize(e, Component.class);
             entity.addComponent(c);
         }

@@ -1,8 +1,5 @@
 package diamondEngine.diaAssets;
 
-import diamondEngine.DiamondObject;
-import diamondEngine.Entity;
-import diamondEngine.Environment;
 import diamondEngine.diaComponents.Component;
 
 import java.util.ArrayList;

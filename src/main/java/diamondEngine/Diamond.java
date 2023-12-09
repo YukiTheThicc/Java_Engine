@@ -89,6 +89,10 @@ public class Diamond {
         environments.add(env);
     }
 
+    /**
+     * Updates the current environment and processes the env list if the instance is dirty.
+     * @param dt
+     */
     public void update(float dt) {
         if (isDirty) {
             for (Environment env : environmentsToRemove) {
@@ -108,7 +112,7 @@ public class Diamond {
      */
     public void updateAllEnvLists() {
         for (Environment env : environments) {
-            env.updateLists();
+            env.updateEntityList();
         }
     }
 }

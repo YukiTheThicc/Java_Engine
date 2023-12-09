@@ -148,14 +148,13 @@ public class SappProject {
                 }
 
                 for (String envFile : projectEnvFiles) {
-                    Environment env = new Environment();
-                    env.init();
-                    EnvironmentSerializer es = new EnvironmentSerializer(env);
-                    env = es.load(envFile);
-                    if (env != null) {
-                        Diamond.get().addEnvironment(env);
-                        if (env.getOriginFile().equals(currentEnv)) {
-                            Diamond.setCurrentEnv(env);
+
+                    EnvironmentSerializer es = new EnvironmentSerializer();
+                    Environment loadedEnv = es.load(envFile);
+                    if (loadedEnv != null) {
+                        Diamond.get().addEnvironment(loadedEnv);
+                        if (loadedEnv.getOriginFile().equals(currentEnv)) {
+                            Diamond.setCurrentEnv(loadedEnv);
                         }
                     }
                 }

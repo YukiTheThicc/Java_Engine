@@ -1,5 +1,6 @@
 package diamondEngine;
 
+import diamondEngine.diaAssets.DiaAsset;
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaComponents.Transform;
 import diamondEngine.diaRenderer.DebugRenderer;
@@ -13,8 +14,6 @@ import sapphire.Sapphire;
 import sapphire.imgui.SappDrawable;
 import sapphire.imgui.SappImGuiUtils;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -36,16 +35,16 @@ public class Environment implements SappDrawable {
     private int frameY;
     private List<Environment> children;
     private List<Entity> entities;
-    private transient String originFile;
-    private transient boolean isInitialized;
 
     // Runtime attributes
-    private transient HashMap<String, DiamondObject> registeredObjects;
+    private transient String originFile;
     private transient List<Entity> entitiesToAdd;
     private transient List<Entity> entitiesToRemove;
+    private transient HashMap<String, DiaObject> registeredObjects;
     private transient Framebuffer frame;
     private transient float winSizeAdjustX = 1.0f;
     private transient float winSizeAdjustY = 1.0f;
+    private transient boolean isInitialized = true;
     private transient boolean isDirty = false;
     private transient boolean toRemove = false;
     private transient boolean isModified = true;
@@ -54,51 +53,33 @@ public class Environment implements SappDrawable {
 
     // CONSTRUCTORS
     public Environment() {
-        this.frameX = DEFAULT_FRAME_X;
-        this.frameY = DEFAULT_FRAME_Y;
         this.parent = null;
         this.name = DEFAULT_NAME;
         this.uuid = DiaUUID.generateUUID();
-        this.originFile = null;
-        this.isInitialized = false;
+        this.frameX = DEFAULT_FRAME_X;
+        this.frameY = DEFAULT_FRAME_Y;
         this.children = new ArrayList<>();
         this.entities = new ArrayList<>();
-        this.entitiesToAdd = new ArrayList<>();
-        this.entitiesToRemove = new ArrayList<>();
-        this.winSizeAdjustX = (float) Window.getWidth() / frameX;
-        this.winSizeAdjustY = (float) Window.getHeight() / frameY;
     }
 
     public Environment(String name) {
-        this.frameX = DEFAULT_FRAME_X;
-        this.frameY = DEFAULT_FRAME_Y;
         this.parent = null;
         this.name = name;
         this.uuid = DiaUUID.generateUUID();
-        this.originFile = null;
-        this.isInitialized = false;
+        this.frameX = DEFAULT_FRAME_X;
+        this.frameY = DEFAULT_FRAME_Y;
         this.children = new ArrayList<>();
         this.entities = new ArrayList<>();
-        this.entitiesToAdd = new ArrayList<>();
-        this.entitiesToRemove = new ArrayList<>();
-        this.winSizeAdjustX = (float) Window.getWidth() / frameX;
-        this.winSizeAdjustY = (float) Window.getHeight() / frameY;
     }
 
     public Environment(String name, String uuid) {
-        this.frameX = DEFAULT_FRAME_X;
-        this.frameY = DEFAULT_FRAME_Y;
         this.parent = null;
         this.name = name;
         this.uuid = DiaUUID.checkUUID(uuid);
-        this.originFile = null;
-        this.isInitialized = false;
+        this.frameX = DEFAULT_FRAME_X;
+        this.frameY = DEFAULT_FRAME_Y;
         this.children = new ArrayList<>();
         this.entities = new ArrayList<>();
-        this.entitiesToAdd = new ArrayList<>();
-        this.entitiesToRemove = new ArrayList<>();
-        this.winSizeAdjustX = (float) Window.getWidth() / frameX;
-        this.winSizeAdjustY = (float) Window.getHeight() / frameY;
     }
 
     // GETTERS & SETTERS
@@ -174,16 +155,25 @@ public class Environment implements SappDrawable {
         return winSizeAdjustY;
     }
 
-    public HashMap<String, DiamondObject> getRegisteredObjects() {
+    public HashMap<String, DiaObject> getRegisteredObjects() {
         return registeredObjects;
     }
 
     // METHODS
+
+    /**
+     * Initializes the transient attributes of the environment,
+     */
     public void init() {
         frame = new Framebuffer(frameX, frameY);
-        isInitialized = true;
         isModified = true;
         registeredObjects = new HashMap<>();
+        originFile = null;
+        entitiesToAdd = new ArrayList<>();
+        entitiesToRemove = new ArrayList<>();
+        winSizeAdjustX = (float) Window.getWidth() / frameX;
+        winSizeAdjustY = (float) Window.getHeight() / frameY;
+
         if (isProfiling) {
             Diamond.getProfiler().addRegister("Update Lists");
             Diamond.getProfiler().addRegister("Update Children");
@@ -192,6 +182,8 @@ public class Environment implements SappDrawable {
             Diamond.getProfiler().addRegister("Debug Render");
         }
         changeFrame(frameX, frameY);
+
+        isInitialized = true;
     }
 
     public void addChild(Environment environment) {
@@ -203,6 +195,10 @@ public class Environment implements SappDrawable {
         }
     }
 
+    /**
+     * An entity is added to a buffer list to then be added at
+     * @param entity Entity to be added
+     */
     public void addEntity(Entity entity) {
         if (entity != null) {
             if (entity.getComponent(Transform.class) == null) {
@@ -222,12 +218,12 @@ public class Environment implements SappDrawable {
         }
     }
 
-    public void registerObject(DiamondObject object) {
+    public void registerObject(DiaObject object) {
         this.registeredObjects.put(object.getUuid(), object);
         isModified = true;
     }
 
-    public void unRegisterObject(DiamondObject object) {
+    public void unRegisterObject(DiaObject object) {
         this.registeredObjects.remove(object.getUuid());
         isModified = true;
     }
@@ -268,7 +264,7 @@ public class Environment implements SappDrawable {
      */
     public void update(float dt) {
         Diamond.getProfiler().beginMeasurement("Update Lists");
-        updateLists();
+        updateEntityList();
         Diamond.getProfiler().endMeasurement("Update Lists");
 
         Diamond.getProfiler().beginMeasurement("Update Children");
@@ -281,9 +277,11 @@ public class Environment implements SappDrawable {
     }
 
     /**
-     * Updates the entities and components lists of the environment
+     * Updates the entity list of the environment by looping the buffer lists of entities to add and entities to remove
+     * and adding or removing entities form the main list accordingly. Automatically registers and unregisters components
+     * from added or removed entities. This method should be called after the environment updates.
      */
-    public void updateLists() {
+    public void updateEntityList() {
         if (isDirty) {
 
             // Add entities

@@ -143,11 +143,13 @@ public class MenuEventHandler implements SappObserver {
             path = DiaUtils.selectFile("Import Environment", projPath, "*.jpg");
         }
         if (path != null && !path.isEmpty()) {
-            Environment env = new Environment();
-            env.init();
-            EnvironmentSerializer es = new EnvironmentSerializer(env);
-            es.load(path);
-            Diamond.get().addEnvironment(env);
+
+            EnvironmentSerializer es = new EnvironmentSerializer();
+            Environment env = es.load(path);
+            if (env != null) {
+                env.init();
+                Diamond.get().addEnvironment(env);
+            }
             if (Sapphire.get().getProject() != null) Sapphire.get().getProject().save();
         }
     }
@@ -163,8 +165,8 @@ public class MenuEventHandler implements SappObserver {
             }
 
             if (file != null && file.isFile()) {
-                EnvironmentSerializer es = new EnvironmentSerializer(env);
-                es.save(file.getAbsolutePath());
+                EnvironmentSerializer es = new EnvironmentSerializer();
+                es.save(file.getAbsolutePath(), env);
                 if (Sapphire.get().getProject() != null) Sapphire.get().getProject().save();
             }
         }
@@ -175,8 +177,8 @@ public class MenuEventHandler implements SappObserver {
         if (env != null) {
             File file = DiaUtils.saveFile(Sapphire.getProjectDir() + "/" + SappProject.ENVS_DIR, Environment.ENV_EXTENSION);
             if (file != null && file.isFile()) {
-                EnvironmentSerializer es = new EnvironmentSerializer(env);
-                es.save(file.getAbsolutePath());
+                EnvironmentSerializer es = new EnvironmentSerializer();
+                es.save(file.getAbsolutePath(), env);
                 if (Sapphire.get().getProject() != null) Sapphire.get().getProject().save();
             }
         }

@@ -1,14 +1,12 @@
 package diamondEngine.diaComponents;
 
-import diamondEngine.DiamondObject;
-import diamondEngine.Entity;
-import diamondEngine.Environment;
+import diamondEngine.DiaObject;
 import imgui.ImGui;
 import imgui.flag.ImGuiStyleVar;
 import sapphire.Sapphire;
 import sapphire.imgui.SappDrawable;
 
-public abstract class Component extends DiamondObject implements SappDrawable {
+public abstract class Component extends DiaObject implements SappDrawable {
 
     // ATTRIBUTES
     private String ownerId;

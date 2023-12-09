@@ -12,7 +12,7 @@ import sapphire.imgui.SappImGuiUtils;
 
 import java.util.ArrayList;
 
-public class Entity extends DiamondObject implements SappDrawable {
+public class Entity extends DiaObject implements SappDrawable {
 
     public static final String GENERATED_NAME = "GENERATED_ENTITY";
 

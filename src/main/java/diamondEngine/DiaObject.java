@@ -2,18 +2,18 @@ package diamondEngine;
 
 import diamondEngine.diaUtils.DiaUUID;
 
-public abstract class DiamondObject {
+public abstract class DiaObject {
 
     // ATTRIBUTES
     private transient Environment parent = null;
     private final String uuid;
 
     // CONSTRUCTORS
-    public DiamondObject() {
+    public DiaObject() {
         this.uuid = DiaUUID.generateUUID();
     }
 
-    public DiamondObject(String uuid) {
+    public DiaObject(String uuid) {
         this.uuid = DiaUUID.checkUUID(uuid);
     }
 

@@ -10,12 +10,9 @@ import java.lang.reflect.Type;
 
 public class ComponentSerializer implements JsonSerializer<Component>, JsonDeserializer<Component> {
 
-    // ATTRIBUTES
-    private Environment env;
-    
+
     // CONSTRUCTORS
-    public ComponentSerializer(Environment env) {
-        this.env = env;
+    public ComponentSerializer() {
     }
 
     // METHODS
