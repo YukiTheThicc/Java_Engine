@@ -1,5 +1,6 @@
 package diamondEngine.diaComponents;
 
+import diamondEngine.Camera;
 import diamondEngine.Diamond;
 import diamondEngine.diaRenderer.DebugRenderer;
 import imgui.type.ImInt;

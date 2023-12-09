@@ -4,7 +4,7 @@ import diamondEngine.Entity;
 import diamondEngine.Environment;
 import diamondEngine.Diamond;
 import diamondEngine.diaAssets.Texture;
-import diamondEngine.diaComponents.Camera;
+import diamondEngine.Camera;
 import diamondEngine.diaComponents.Grid;
 import diamondEngine.diaComponents.Sprite;
 import imgui.ImGui;
@@ -121,8 +121,6 @@ public class EnvHierarchyWindow extends ImguiWindow {
         if (ImGui.beginPopupContextItem(e.getUuid())) {
 
             // Component addition options
-            if (ImGui.menuItem(Sapphire.getLiteral("add_camera"))) SappEvents.notify(
-                    new SappEvent(SappEventType.Add_object, null, e, new Camera(new Vector2f(), 1, 1)));
             if (ImGui.menuItem(Sapphire.getLiteral("add_grid"))) SappEvents.notify(
                     new SappEvent(SappEventType.Add_object, null, e, new Grid(32)));
             if (ImGui.menuItem(Sapphire.getLiteral("add_sprite_renderer"))) SappEvents.notify(

@@ -1,11 +1,10 @@
-package diamondEngine.diaComponents;
+package diamondEngine;
 
-import diamondEngine.Diamond;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-public class Camera extends Component{
+public class Camera{
 
     // ATTRIBUTES
     public Vector2f pos;
@@ -33,7 +32,7 @@ public class Camera extends Component{
         this.invView = new Matrix4f();
         this.front = new Vector3f(0.0f, 0.0f, -1.0f);
         this.up = new Vector3f(0.0f, 1.0f, 0.0f);
-        this.update(0);
+        this.updateProjection();
     }
 
     // GETTERS & SETTERS
@@ -45,7 +44,7 @@ public class Camera extends Component{
         vMatrix.identity();
         Vector3f cameraFront = new Vector3f(front);
         vMatrix.lookAt(new Vector3f(pos.x, pos.y, 20.0f), cameraFront.add(pos.x, pos.y, 0.0f), up);
-        invView = new Matrix4f(vMatrix).invert();
+        vMatrix.invert(invView);
         return vMatrix;
     }
 
@@ -87,23 +86,12 @@ public class Camera extends Component{
         this.pSizeActual.y = pSize.y / Diamond.getCurrentEnv().getWinSizeAdjustY();
     }
 
-    @Override
-    public void init() {
-
-    }
-
-    @Override
-    public void update(float dt) {
+    public void updateProjection() {
         if (isActive) {
             pMatrix.identity();
             calculateActualPSize();
             pMatrix.ortho(0.0f, this.zoom * pSizeActual.x, 0.0f, this.zoom * pSizeActual.y, 0.0f, 100.0f);
-            invProj = new Matrix4f(pMatrix).invert();
+            pMatrix.invert(invProj);
         }
-    }
-
-    @Override
-    public Component copy() {
-        return null;
     }
 }

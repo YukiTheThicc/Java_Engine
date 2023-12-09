@@ -1,6 +1,6 @@
 package sapphire.imgui.windows;
 
-import diamondEngine.diaComponents.Camera;
+import diamondEngine.Camera;
 import imgui.ImGui;
 import imgui.type.ImFloat;
 import sapphire.Sapphire;

@@ -13,7 +13,7 @@ public class SappMouseController {
     // ATTRIBUTES
     private static Vector2f clickOrigin;
     private static float dragLag = 0.032f;
-    private static float dragSensitivity = 10.0f;
+    private static float dragSensitivity = 5.0f;
     private static float scrollSensitivity = 0.1f;
     private static boolean reset = false;
     private static float lerpTime = 0.0f;
@@ -33,7 +33,7 @@ public class SappMouseController {
 
         if (MouseControls.mouseButtonDown(GLFW_MOUSE_BUTTON_MIDDLE) && dragLag > 0) {
             clickOrigin = MouseControls.getWorld(GameViewWindow.editorCamera);
-            DiaLogger.log("origin: " + MouseControls.screenToWorld(clickOrigin, GameViewWindow.editorCamera));
+            DiaLogger.log("origin: " + MouseControls.getWorld(GameViewWindow.editorCamera));
             dragLag -= dt;
             return;
         } else if (MouseControls.mouseButtonDown(GLFW_MOUSE_BUTTON_MIDDLE)) {

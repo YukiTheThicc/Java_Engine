@@ -1,7 +1,7 @@
 package sapphire.imgui.windows;
 
 import diamondEngine.Diamond;
-import diamondEngine.diaComponents.Camera;
+import diamondEngine.Camera;
 import diamondEngine.diaControls.MouseControls;
 import diamondEngine.diaUtils.DiaMath;
 import imgui.ImGui;
@@ -26,7 +26,7 @@ public class GameViewWindow extends ImguiWindow {
         this.setFlags(ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse |
                 ImGuiWindowFlags.NoResize);
         Vector2i pm = DiaMath.getFractionFromFloat((float) Diamond.getCurrentEnv().getFrameY() / Diamond.getCurrentEnv().getFrameX());
-        GameViewWindow.editorCamera = new Camera(new Vector2f(), 1f, 1f);
+        GameViewWindow.editorCamera = new Camera(new Vector2f(), 1, 1);
         editorCamera.setActive();
     }
 
@@ -89,7 +89,7 @@ public class GameViewWindow extends ImguiWindow {
 
     public void imgui(SappImGuiLayer layer) {
 
-        editorCamera.update(0);
+        editorCamera.updateProjection();
         ImGui.setNextWindowDockID(layer.getDockId());
         if (ImGui.begin(this.getTitle(), this.getFlags())) {
 

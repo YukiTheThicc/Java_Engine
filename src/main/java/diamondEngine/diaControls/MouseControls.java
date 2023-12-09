@@ -1,15 +1,11 @@
 package diamondEngine.diaControls;
 
 import diamondEngine.Window;
-import diamondEngine.diaComponents.Camera;
-import diamondEngine.diaUtils.DiaLogger;
-import diamondEngine.diaUtils.DiaLoggerLevel;
-import imgui.ImVec2;
+import diamondEngine.Camera;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import sapphire.Sapphire;
-import sapphire.imgui.windows.GameViewWindow;
 
 import java.util.Arrays;
 
@@ -162,8 +158,9 @@ public class MouseControls {
         currentY = (2.0f * (1.0f - (currentY / gameViewportSize.y))) - 1;
 
         Vector4f tmp = new Vector4f(currentX, currentY, 0, 1);
-        Matrix4f inverseView = new Matrix4f(c.getInvView());
         Matrix4f inverseProjection = new Matrix4f(c.getInvProj());
+        Matrix4f inverseView = new Matrix4f(c.getInvView());
+
         tmp.mul(inverseView.mul(inverseProjection));
         return new Vector2f(tmp.x, tmp.y);
     }

@@ -1,7 +1,7 @@
 package diamondEngine.diaRenderer;
 
 import diamondEngine.diaAssets.Shader;
-import diamondEngine.diaComponents.Camera;
+import diamondEngine.Camera;
 import diamondEngine.diaUtils.DiaAssetManager;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
