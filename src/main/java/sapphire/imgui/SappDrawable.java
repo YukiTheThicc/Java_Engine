@@ -8,7 +8,7 @@ public interface SappDrawable {
     /**
      * Should draw the inspector window view of the item
      */
-    void imgui();
+    void inspect();
 
     /**
      * Should draw a button that allows the user to select this item as the current active object

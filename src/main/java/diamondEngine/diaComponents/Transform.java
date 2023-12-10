@@ -74,7 +74,7 @@ public class Transform extends Component {
     }
 
     @Override
-    public void imgui() {
+    public void inspect() {
         SappImGuiUtils.drawVec2Control(Sapphire.getLiteral("position"), this.position);
         SappImGuiUtils.drawVec2Control(Sapphire.getLiteral("scale"), this.scale);
         ImFloat newRotation = new ImFloat(this.rotation);

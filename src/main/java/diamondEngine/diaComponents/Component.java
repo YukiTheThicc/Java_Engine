@@ -39,7 +39,7 @@ public abstract class Component extends DiaObject implements SappDrawable {
 
     public abstract void update(float dt);
 
-    public void imgui() {
+    public void inspect() {
         ImGui.text(this.getClass().getSimpleName());
     }
 

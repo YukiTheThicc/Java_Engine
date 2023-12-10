@@ -314,7 +314,7 @@ public class Environment implements SappDrawable {
     }
 
     @Override
-    public void imgui() {
+    public void inspect() {
         SappImGuiUtils.textLabel("UUID", uuid);
         SappImGuiUtils.textLabel("Framebuffer", "" + frame.getFboId());
         ImString newName = new ImString(name, 256);

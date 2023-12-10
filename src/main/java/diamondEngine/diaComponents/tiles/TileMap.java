@@ -142,7 +142,7 @@ public class TileMap extends Component {
     }
 
     @Override
-    public void imgui() {
+    public void inspect() {
         SappImGuiUtils.textLabel("UUID", this.getUuid());
         ImInt cellX = new ImInt(this.cellX);
         ImInt cellY = new ImInt(this.cellY);

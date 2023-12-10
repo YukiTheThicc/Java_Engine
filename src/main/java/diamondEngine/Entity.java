@@ -150,7 +150,7 @@ public class Entity extends DiaObject implements SappDrawable {
     }
 
     @Override
-    public void imgui() {
+    public void inspect() {
 
         SappImGuiUtils.textLabel("UUID", this.getUuid());
         ImString newName = new ImString(name, 256);
@@ -163,7 +163,7 @@ public class Entity extends DiaObject implements SappDrawable {
         for (Component c : components) {
             if (ImGui.collapsingHeader(c.getClass().getSimpleName())) {
                 componentContextMenu(c);
-                c.imgui();
+                c.inspect();
             } else {
                 componentContextMenu(c);
             }

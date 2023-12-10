@@ -63,13 +63,25 @@ public class FileNavigatorWindow extends ImguiWindow {
                 drawDir(nestedDir, layer);
             }
 
-            String iconFile;
+            String fileExtension;
             String selected;
             for (File file : DiaUtils.getFilesInDir(dir.getPath().getAbsolutePath())) {
 
                 selected = null;
-                iconFile = file.getName().substring(file.getName().lastIndexOf('.') + 1) + ".png";
-                tex = Sapphire.getIcon(iconFile);
+                fileExtension = file.getName().substring(file.getName().lastIndexOf('.') + 1).toLowerCase();
+
+                switch (fileExtension) {
+                    case "png":
+                    case "jpg":
+                    case "jpeg":
+                        tex = new Texture();
+                        tex.load(file.getAbsolutePath());
+                        break;
+                    default:
+                        tex = Sapphire.getIcon(fileExtension + ".png");
+                        break;
+                }
+
                 ImGui.image(tex.getId(), DEFAULT_ICON_X, DEFAULT_ICON_Y, 0, 1, 1, 0);
                 ImGui.sameLine();
 
