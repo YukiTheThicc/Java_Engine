@@ -10,7 +10,7 @@ import sapphire.Sapphire;
 import sapphire.SappProject;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappObserver;
-import sapphire.imgui.SappDrawable;
+import sapphire.imgui.SappInspectable;
 
 import java.io.File;
 
@@ -30,7 +30,7 @@ public class WindowsEventHandler implements SappObserver {
                 handleCopyObject(event);
                 break;
             case Selected_object:
-                if (event.payload instanceof SappDrawable) Sapphire.setActiveObject((SappDrawable) event.payload);
+                if (event.payload instanceof SappInspectable) Sapphire.setActiveObject((SappInspectable) event.payload);
                 break;
             case Delete_object:
                 handleDeleteObj(event);

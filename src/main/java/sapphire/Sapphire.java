@@ -8,7 +8,7 @@ import diamondEngine.diaAssets.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
 import sapphire.eventsSystem.SappEvents;
-import sapphire.imgui.SappDrawable;
+import sapphire.imgui.SappInspectable;
 import sapphire.imgui.SappImGuiLayer;
 import sapphire.utils.SappDefaultLiterals;
 
@@ -36,7 +36,7 @@ public class Sapphire {
     private SappProject project;
     private HashMap<String, String> literals;
     private SappImGuiLayer imGUILayer;
-    private SappDrawable activeObject;
+    private SappInspectable activeObject;
     private boolean diaRunning;
     private boolean running;
     private float dt;
@@ -115,11 +115,11 @@ public class Sapphire {
         this.diaRunning = diaRunning;
     }
 
-    public static SappDrawable getActiveObject() {
+    public static SappInspectable getActiveObject() {
         return Sapphire.get().activeObject;
     }
 
-    public static void setActiveObject(SappDrawable activeObject) {
+    public static void setActiveObject(SappInspectable activeObject) {
         Sapphire.get().activeObject = activeObject;
     }
 

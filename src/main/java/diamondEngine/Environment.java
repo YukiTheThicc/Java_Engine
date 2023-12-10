@@ -10,14 +10,14 @@ import imgui.flag.ImGuiTableFlags;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import sapphire.Sapphire;
-import sapphire.imgui.SappDrawable;
+import sapphire.imgui.SappInspectable;
 import sapphire.imgui.SappImGuiUtils;
 
 import java.util.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class Environment implements SappDrawable {
+public class Environment implements SappInspectable {
 
     // CONSTANTS
     public static final String ENV_EXTENSION = ".denv";
@@ -362,7 +362,7 @@ public class Environment implements SappDrawable {
     }
 
     @Override
-    public boolean selectable() {
+    public boolean select() {
         return false;
     }
 }

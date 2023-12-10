@@ -4,9 +4,9 @@ import diamondEngine.DiaObject;
 import imgui.ImGui;
 import imgui.flag.ImGuiStyleVar;
 import sapphire.Sapphire;
-import sapphire.imgui.SappDrawable;
+import sapphire.imgui.SappInspectable;
 
-public abstract class Component extends DiaObject implements SappDrawable {
+public abstract class Component extends DiaObject implements SappInspectable {
 
     // ATTRIBUTES
     private String ownerId;
@@ -43,7 +43,7 @@ public abstract class Component extends DiaObject implements SappDrawable {
         ImGui.text(this.getClass().getSimpleName());
     }
 
-    public boolean selectable() {
+    public boolean select() {
         boolean result = false;
         ImGui.pushID(this.getUuid());
         ImGui.beginGroup();

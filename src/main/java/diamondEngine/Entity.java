@@ -7,12 +7,12 @@ import diamondEngine.diaUtils.DiaLoggerLevel;
 import imgui.ImGui;
 import imgui.type.ImString;
 import sapphire.Sapphire;
-import sapphire.imgui.SappDrawable;
+import sapphire.imgui.SappInspectable;
 import sapphire.imgui.SappImGuiUtils;
 
 import java.util.ArrayList;
 
-public class Entity extends DiaObject implements SappDrawable {
+public class Entity extends DiaObject implements SappInspectable {
 
     public static final String GENERATED_NAME = "GENERATED_ENTITY";
 
@@ -105,9 +105,10 @@ public class Entity extends DiaObject implements SappDrawable {
 
     /**
      * Gets the current instance of the component class attached to this entity if it exists. Returns null if not.
+     *
      * @param componentClass The class of the component
+     * @param <T>            Class
      * @return Component instance from the specified class
-     * @param <T> Class
      */
     public <T extends Component> T getComponent(Class<T> componentClass) {
         for (Component c : components) {
@@ -138,6 +139,7 @@ public class Entity extends DiaObject implements SappDrawable {
 
     /**
      * Context menu for a component
+     *
      * @param c Component for which the menu is being drawn
      */
     private void componentContextMenu(Component c) {
@@ -170,8 +172,13 @@ public class Entity extends DiaObject implements SappDrawable {
         }
     }
 
+    /**
+     * Draws a button for the entity with the standard icon for the
+     *
+     * @return
+     */
     @Override
-    public boolean selectable() {
+    public boolean select() {
         boolean result = false;
         ImGui.pushID(this.getUuid());
         ImGui.beginGroup();
@@ -188,6 +195,19 @@ public class Entity extends DiaObject implements SappDrawable {
 
         ImGui.endGroup();
         ImGui.popID();
+
+        // Drag and drop source
+        if (ImGui.beginDragDropSource()) {
+            ImGui.setDragDropPayload("EntitySelectable", this);
+            ImGui.text(name);
+            ImGui.endDragDropSource();
+        }
+
+        // Drag and drop target
+        if (ImGui.beginDragDropTarget()) {
+
+            ImGui.endDragDropTarget();
+        }
 
         return result;
     }

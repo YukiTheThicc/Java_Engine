@@ -354,6 +354,11 @@ public class SappImGuiUtils {
         ImGui.popID();
     }
 
+    /**
+     * Calculates the given text width for the current font
+     * @param text The text from which the width is going to be calculated
+     * @return The size of the text
+     */
     public static float textSize(String text) {
         return ImGui.getFont().calcTextSizeAX(ImGui.getFontSize(), ImGui.getWindowSizeX(), ImGui.getWindowSizeX(), text);
     }
@@ -534,12 +539,6 @@ public class SappImGuiUtils {
         return changed;
     }
 
-    public static void toolTip() {
 
-    }
-
-    public static boolean iconTreeNode(String label, String id) {
-        return false;
-    }
 }
 

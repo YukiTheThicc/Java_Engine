@@ -73,7 +73,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
 
     private void drawEntities(Environment env) {
         for (Entity entity : env.getEntities()) {
-            if (entity.selectable()) {
+            if (entity.select()) {
                 SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, null, entity));
             }
             entityContextMenu(entity);

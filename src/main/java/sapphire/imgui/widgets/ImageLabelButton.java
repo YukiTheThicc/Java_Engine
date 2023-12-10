@@ -43,24 +43,19 @@ public class ImageLabelButton implements SappObserver {
 
     // METHODS
     public boolean draw() {
-
         boolean result = false;
         ImGui.pushID(label);
         ImGui.beginGroup();
         buttonOriginX = ImGui.getCursorPosX();
-
         if (ImGui.button(label, buttonSizeX, imageSizeY)) result = true;
-
         ImGui.sameLine();
         ImGui.setCursorPosX(buttonOriginX);
         ImGui.image(image.getId(), imageSizeX, imageSizeY, 0, 1, 1, 0);
-
         ImGui.endGroup();
         ImGui.popID();
-
         return result;
-
     }
+
     @Override
     public void onNotify(SappEvent event) {
         if (event.type == SappEventType.Font_changed) {
