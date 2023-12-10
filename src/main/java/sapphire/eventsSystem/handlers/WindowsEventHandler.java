@@ -1,10 +1,8 @@
 package sapphire.eventsSystem.handlers;
 
-import diamondEngine.Entity;
 import diamondEngine.Diamond;
-import diamondEngine.Environment;
 import diamondEngine.diaComponents.Component;
-import diamondEngine.diaUtils.DiaAssetManager;
+import diamondEngine.diaUtils.DiaAssetPool;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
@@ -119,7 +117,7 @@ public class WindowsEventHandler implements SappObserver {
         String[] assetPaths = DiaUtils.selectFiles("", Sapphire.getProjectDir());
         if (assetPaths != null) {
             for (String assetPath : assetPaths) {
-                if (DiaAssetManager.loadResource(assetPath)) Sapphire.get().getProject().addResource(assetPath);
+                if (DiaAssetPool.loadResource(assetPath)) Sapphire.get().getProject().addResource(assetPath);
             }
         }
     }

@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import diamondEngine.Environment;
 import diamondEngine.Diamond;
-import diamondEngine.diaUtils.DiaAssetManager;
+import diamondEngine.diaUtils.DiaAssetPool;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.serializers.EnvironmentSerializer;
@@ -26,7 +26,6 @@ public class SappProject {
     public static final String TEX_DIR = "res/tex";
     public static final String SFX_DIR = "res/sfx";
     public static final String MUSIC_DIR = "res/mus";
-    public static final String SPRITES_DIR = "res/spr";
 
     // ATTRIBUTES
     private List<File> openedFiles;
@@ -144,7 +143,7 @@ public class SappProject {
                 currentEnv = temp.getCurrentEnv();
 
                 for (String asset : resources) {
-                    DiaAssetManager.loadResource(asset);
+                    DiaAssetPool.loadResource(asset);
                 }
 
                 for (String envFile : projectEnvFiles) {

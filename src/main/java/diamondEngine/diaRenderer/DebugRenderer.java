@@ -2,7 +2,7 @@ package diamondEngine.diaRenderer;
 
 import diamondEngine.diaAssets.Shader;
 import diamondEngine.Camera;
-import diamondEngine.diaUtils.DiaAssetManager;
+import diamondEngine.diaUtils.DiaAssetPool;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import sapphire.imgui.windows.GameViewWindow;
@@ -21,7 +21,7 @@ public class DebugRenderer {
     private static final int MAX_LINES = 10000;
     private static final List<Line> lines = new ArrayList<>();
     private static final float[] vertexArray = new float[MAX_LINES * 6 * 2];
-    private static final Shader shader = DiaAssetManager.getShader("debugLine2D", "diamond/res/shaders/debugLine2D.glsl");
+    private static final Shader shader = DiaAssetPool.getShader("debugLine2D", "diamond/res/shaders/debugLine2D.glsl");
     private static int vaoID;
     private static int vboID;
     private static boolean started = false;

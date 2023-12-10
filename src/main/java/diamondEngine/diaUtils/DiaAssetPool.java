@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DiaAssetManager {
+public class DiaAssetPool {
 
     // ATTRIBUTES
     private static Map<String, Shader> shaders = new HashMap<>();
@@ -45,15 +45,15 @@ public class DiaAssetManager {
                     case ".glsl":
                         break;
                     default:
-                        DiaLogger.log(DiaAssetManager.class, "Resource type '" + fileExtension + "' not supported '" + path + "'", DiaLoggerLevel.WARN);
+                        DiaLogger.log(DiaAssetPool.class, "Resource type '" + fileExtension + "' not supported '" + path + "'", DiaLoggerLevel.WARN);
                         return false;
                 }
             } else {
-                DiaLogger.log(DiaAssetManager.class, "Resource does not exist '" + path + "'", DiaLoggerLevel.ERROR);
+                DiaLogger.log(DiaAssetPool.class, "Resource does not exist '" + path + "'", DiaLoggerLevel.ERROR);
                 return false;
             }
         } else {
-            DiaLogger.log(DiaAssetManager.class, "Invalid path '" + path + "'", DiaLoggerLevel.ERROR);
+            DiaLogger.log(DiaAssetPool.class, "Invalid path '" + path + "'", DiaLoggerLevel.ERROR);
             return false;
         }
         return true;
@@ -76,12 +76,12 @@ public class DiaAssetManager {
 
     public static Shader getShader(String name, String path) {
         File file = new File(path);
-        if (DiaAssetManager.shaders.containsKey(name)) {
-            return DiaAssetManager.shaders.get(name);
+        if (DiaAssetPool.shaders.containsKey(name)) {
+            return DiaAssetPool.shaders.get(name);
         } else {
             Shader shader = new Shader(name, path);
             shader.compile();
-            DiaAssetManager.shaders.put(file.getAbsolutePath(), shader);
+            DiaAssetPool.shaders.put(file.getAbsolutePath(), shader);
             DiaEvents.notify(new DiaEvent(DiaEventType.ASSET_ADDED));
             return shader;
         }

@@ -1,6 +1,5 @@
 package diamondEngine;
 
-import diamondEngine.diaAssets.DiaAsset;
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaComponents.Transform;
 import diamondEngine.diaRenderer.DebugRenderer;
@@ -160,7 +159,6 @@ public class Environment implements SappDrawable {
     }
 
     // METHODS
-
     /**
      * Initializes the transient attributes of the environment,
      */

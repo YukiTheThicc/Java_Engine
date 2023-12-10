@@ -7,8 +7,7 @@ import diamondEngine.diaEvents.DiaEvents;
 import diamondEngine.diaEvents.DiaObserver;
 import diamondEngine.diaAssets.Shader;
 import diamondEngine.diaAssets.Texture;
-import diamondEngine.diaUtils.DiaAssetManager;
-import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.diaUtils.DiaAssetPool;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiCond;
@@ -130,11 +129,11 @@ public class AssetsWindow extends ImguiWindow implements DiaObserver {
      * the project
      */
     private void getFirstElements() {
-        for (Texture t : DiaAssetManager.getAllTextures()) {
+        for (Texture t : DiaAssetPool.getAllTextures()) {
             textureButtons.add(new AssetImageButton(t));
         }
 
-        for (Sound so : DiaAssetManager.getAllSounds()) {
+        for (Sound so : DiaAssetPool.getAllSounds()) {
             File tmp = new File(so.getPath());
             soundButtons.add(new AssetImageButton(so.getPath(), tmp.getName(), Sapphire.getIcon("sfx.png")));
         }

@@ -4,13 +4,11 @@ import diamondEngine.Entity;
 import diamondEngine.Environment;
 import diamondEngine.Diamond;
 import diamondEngine.diaAssets.Texture;
-import diamondEngine.Camera;
-import diamondEngine.diaComponents.Grid;
 import diamondEngine.diaComponents.Sprite;
+import diamondEngine.diaComponents.tiles.TileMap;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiTreeNodeFlags;
-import org.joml.Vector2f;
 import sapphire.Sapphire;
 import sapphire.eventsSystem.SappEvents;
 import sapphire.eventsSystem.SappEvent;
@@ -121,8 +119,8 @@ public class EnvHierarchyWindow extends ImguiWindow {
         if (ImGui.beginPopupContextItem(e.getUuid())) {
 
             // Component addition options
-            if (ImGui.menuItem(Sapphire.getLiteral("add_grid"))) SappEvents.notify(
-                    new SappEvent(SappEventType.Add_object, null, e, new Grid(32)));
+            if (ImGui.menuItem(Sapphire.getLiteral("add_tile_map"))) SappEvents.notify(
+                    new SappEvent(SappEventType.Add_object, null, e, new TileMap(32)));
             if (ImGui.menuItem(Sapphire.getLiteral("add_sprite_renderer"))) SappEvents.notify(
                     new SappEvent(SappEventType.Add_object, null, e, new Sprite()));
             if (ImGui.menuItem(Sapphire.getLiteral("add_text_renderer"))) SappEvents.notify(
