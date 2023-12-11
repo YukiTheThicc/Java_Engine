@@ -17,10 +17,9 @@ import sapphire.imgui.SappImGuiUtils;
 import sapphire.imgui.SappImGuiLayer;
 import sapphire.imgui.widgets.ImageLabelButton;
 
-public class EnvHierarchyWindow extends ImguiWindow {
+import java.util.List;
 
-    private final int NODE_FLAGS = ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.Selected |
-            ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.OpenOnDoubleClick;
+public class EnvHierarchyWindow extends ImguiWindow {
 
     // ATTRIBUTES
     private final ImageLabelButton newRootEnvButton;
@@ -53,28 +52,45 @@ public class EnvHierarchyWindow extends ImguiWindow {
     private void drawNestedEnvironments() {
 
         for (Environment env : Diamond.get().getEnvironments()) {
-            Texture tex = Sapphire.getIcon("sapp.png");
-            ImGui.image(tex.getId(), SappImGuiUtils.SMALL_ICON_SIZE, SappImGuiUtils.SMALL_ICON_SIZE, 0, 1, 1, 0);
-            ImGui.sameLine();
-
-            ImGui.pushID(env.getUuid());
-            if (ImGui.treeNodeEx((char) 0xe000 + " " + env.getName() + (env.isModified() ? " *" : ""), NODE_FLAGS)) {
-                if (ImGui.isItemClicked()) {
-                    SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, null, env));
-                }
+            if (SappImGuiUtils.imageTreeNode(env.getUuid(), env.getName() + (env.isModified() ? " *" : ""), "sapp.png", env)) {
                 envContextMenu(env);
-                drawEntities(env);
+                drawEntities(env.getEntities());
                 ImGui.treePop();
             }
-            ImGui.popID();
+
+            // Drag and drop target
+            if (ImGui.beginDragDropTarget()) {
+                Object payload = ImGui.acceptDragDropPayload("Selectable");
+                if (payload instanceof Entity) {
+                    env.addEntity((Entity) payload);
+                }
+                ImGui.endDragDropTarget();
+            }
         }
     }
 
-    private void drawEntities(Environment env) {
-        for (Entity entity : env.getEntities()) {
-            if (SappImGuiUtils.selectable(entity.getUuid(), entity.getName(), "entity.png", entity)) {
-                SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, null, entity));
+    private void drawEntities(List<Entity> entities) {
+        for (Entity entity : entities) {
+            if (entity.getNestedEntities().size() == 0) {
+                if (SappImGuiUtils.selectable(entity.getUuid(), entity.getName(), "entity.png", entity)) {
+                    SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, null, entity));
+                }
+            } else {
+                if (SappImGuiUtils.imageTreeNode(entity.getUuid(), entity.getName(), "entity.png", entity)) {
+                    drawEntities(entity.getNestedEntities());
+                    ImGui.treePop();
+                }
             }
+
+            // Drag and drop target
+            if (ImGui.beginDragDropTarget()) {
+                Object payload = ImGui.acceptDragDropPayload("Selectable");
+                if (payload instanceof Entity) {
+                    entity.addNestedEntity((Entity) payload);
+                }
+                ImGui.endDragDropTarget();
+            }
+
             entityContextMenu(entity);
         }
     }
@@ -127,7 +143,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
             ImGui.separator();
 
             if (ImGui.menuItem(Sapphire.getLiteral("copy"))) SappEvents.notify(
-                    new SappEvent(SappEventType.Copy_object, e.getParent(), e));
+                    new SappEvent(SappEventType.Copy_object, e.getEnv(), e));
             if (ImGui.menuItem(Sapphire.getLiteral("delete"))) SappEvents.notify(
                     new SappEvent(SappEventType.Delete_object, null, e));
             ImGui.endPopup();

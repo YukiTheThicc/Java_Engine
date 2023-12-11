@@ -1,6 +1,8 @@
 package sapphire.imgui;
 
 import diamondEngine.DiaObject;
+import diamondEngine.Entity;
+import diamondEngine.Environment;
 import diamondEngine.diaAssets.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
@@ -453,10 +455,10 @@ public class SappImGuiUtils {
      * @param id         ID for the selectable. Should be unique
      * @param text       Text to display on the selectable
      * @param icon       Icon identifier
-     * @param selectable Object that for which the selectable is being drawn
+     * @param source Object that for which the selectable is being drawn
      * @return True if the selectable has been pressed
      */
-    public static boolean selectable(String id, String text, String icon, Object selectable) {
+    public static boolean selectable(String id, String text, String icon, Object source) {
         boolean result = false;
         ImGui.pushID(id);
         ImGui.beginGroup();
@@ -465,7 +467,7 @@ public class SappImGuiUtils {
         if (ImGui.button("", ImGui.getContentRegionAvailX(), ImGui.getFontSize() * 1.5f)) result = true;
 
         if (ImGui.beginDragDropSource()) {
-            ImGui.setDragDropPayload("Selectable", selectable);
+            ImGui.setDragDropPayload("Selectable", source);
             float tipOrigin = ImGui.getCursorPosY();
             ImGui.image(Sapphire.getIcon(icon).getId(), SMALL_ICON_SIZE, SMALL_ICON_SIZE, 0, 1, 1, 0);
             ImGui.sameLine();
@@ -476,7 +478,12 @@ public class SappImGuiUtils {
 
         // Drag and drop target
         if (ImGui.beginDragDropTarget()) {
-
+            Object payload = ImGui.acceptDragDropPayload("Selectable");
+            if (source instanceof Entity && payload instanceof Entity) {
+                ((Entity) source).addNestedEntity((Entity) payload);
+            } else if (source instanceof Environment && payload instanceof Entity) {
+                ((Environment) source).addEntity((Entity) payload);
+            }
             ImGui.endDragDropTarget();
         }
 
@@ -491,7 +498,15 @@ public class SappImGuiUtils {
         return result;
     }
 
-    public static boolean imageTreeNode(String id, String text, String icon, DiaObject object) {
+    /**
+     *
+     * @param id
+     * @param text
+     * @param icon
+     * @param source
+     * @return
+     */
+    public static boolean imageTreeNode(String id, String text, String icon, Object source) {
         Texture tex = Sapphire.getIcon(icon);
         ImGui.image(tex.getId(), SappImGuiUtils.SMALL_ICON_SIZE, SappImGuiUtils.SMALL_ICON_SIZE, 0, 1, 1, 0);
         ImGui.sameLine();
@@ -500,12 +515,22 @@ public class SappImGuiUtils {
         ImGui.pushID(id);
         if (ImGui.treeNodeEx(text, NODE_FLAGS)) {
             if (ImGui.isItemClicked()) {
-                SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, null, object));
+                SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, null, source));
             }
-            ImGui.treePop();
             isOpen = true;
         }
         ImGui.popID();
+
+        if (ImGui.beginDragDropSource()) {
+            ImGui.setDragDropPayload("Selectable", source);
+            float tipOrigin = ImGui.getCursorPosY();
+            ImGui.image(Sapphire.getIcon(icon).getId(), SMALL_ICON_SIZE, SMALL_ICON_SIZE, 0, 1, 1, 0);
+            ImGui.sameLine();
+            ImGui.setCursorPosY(tipOrigin + (SMALL_ICON_SIZE - ImGui.getFontSize()) / 2);
+            ImGui.text(text);
+            ImGui.endDragDropSource();
+        }
+
         return isOpen;
     }
     // ----> SECTION END: BUTTONS AND SELECTABLES

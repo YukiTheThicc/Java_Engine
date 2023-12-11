@@ -18,17 +18,23 @@ public class Entity extends DiaObject {
     // ATTRIBUTES
     private String name;
     private ArrayList<Component> components;
+    private ArrayList<Entity> nestedEntities;
+
+    // RUNTIME ATTRIBUTES
+    private transient ArrayList<Component> componentsToRemove;
+    private transient ArrayList<Entity> entitiesToRemove;
     private transient Transform transform;
     private transient boolean toSerialize;
     private transient boolean isDirty;
-    private transient ArrayList<Component> toRemove;
 
     // CONSTRUCTORS
     public Entity() {
         super();
         this.name = GENERATED_NAME;
         this.components = new ArrayList<>();
-        this.toRemove = new ArrayList<>();
+        this.nestedEntities = new ArrayList<>();
+        this.componentsToRemove = new ArrayList<>();
+        this.entitiesToRemove = new ArrayList<>();
         this.toSerialize = true;
     }
 
@@ -36,7 +42,9 @@ public class Entity extends DiaObject {
         super(uuid);
         this.name = GENERATED_NAME;
         this.components = new ArrayList<>();
-        this.toRemove = new ArrayList<>();
+        this.nestedEntities = new ArrayList<>();
+        this.componentsToRemove = new ArrayList<>();
+        this.entitiesToRemove = new ArrayList<>();
         this.toSerialize = true;
     }
 
@@ -44,7 +52,9 @@ public class Entity extends DiaObject {
         super(uuid);
         this.name = name;
         this.components = new ArrayList<>();
-        this.toRemove = new ArrayList<>();
+        this.nestedEntities = new ArrayList<>();
+        this.componentsToRemove = new ArrayList<>();
+        this.entitiesToRemove = new ArrayList<>();
         this.toSerialize = true;
     }
 
@@ -59,6 +69,10 @@ public class Entity extends DiaObject {
 
     public ArrayList<Component> getComponents() {
         return components;
+    }
+
+    public ArrayList<Entity> getNestedEntities() {
+        return nestedEntities;
     }
 
     public String getName() {
@@ -81,22 +95,53 @@ public class Entity extends DiaObject {
 
     public void addComponent(Component component) {
         if (component != null) {
-            component.setOwner(this.getUuid());
-            component.setParent(this.getParent());
+            component.setOwner(getUuid());
+            component.setEnv(getEnv());
             components.add(component);
-            if (this.getParent() != null) {
-                this.getParent().registerObject(component);
+            if (getEnv() != null) {
+                getEnv().registerObject(component);
+                getEnv().setModified();
             }
             if (component instanceof Transform) {
-                this.transform = (Transform) component;
+                transform = (Transform) component;
             }
+        }
+    }
+
+    public void addNestedEntity(Entity entity) {
+        if (entity != null && getParent() != entity && !nestedEntities.contains(entity)) {
+
+            // Handle removing of nested entity from its parent list
+            DiaObject parent = entity.getParent();
+            if (parent != null) {
+                if (parent instanceof Environment) {
+                    ((Environment) parent).removeEntity(entity);
+                } else if (parent instanceof Entity) {
+                    ((Entity) parent).removeNestedEntity(getUuid());
+                }
+            }
+
+            entity.setParent(this);
+            entity.setEnv(this.getEnv());
+            nestedEntities.add(entity);
+
+            if (getEnv() != null) getEnv().setModified();
         }
     }
 
     public void removeComponent(String uuid) {
         for (Component c : components) {
             if (c.getUuid().equals(uuid)) {
-                toRemove.add(c);
+                componentsToRemove.add(c);
+                isDirty = true;
+            }
+        }
+    }
+
+    public void removeNestedEntity(String uuid) {
+        for (Entity e : nestedEntities) {
+            if (e.getUuid().equals(uuid)) {
+                entitiesToRemove.add(e);
                 isDirty = true;
             }
         }
@@ -126,10 +171,15 @@ public class Entity extends DiaObject {
 
     public void update(float dt) {
         if (isDirty) {
-            for (Component c : toRemove) {
+            for (Component c : componentsToRemove) {
                 components.remove(c);
-                this.getParent().unRegisterObject(c);
+                this.getEnv().unRegisterObject(c);
             }
+            componentsToRemove.clear();
+            for (Entity e : entitiesToRemove) {
+                nestedEntities.remove(e);
+            }
+            entitiesToRemove.clear();
         }
         for (Component c : components) {
             c.update(dt);
@@ -158,7 +208,7 @@ public class Entity extends DiaObject {
         if (SappImGuiUtils.inputText(Sapphire.getLiteral("name"), newName)) {
             if (Sapphire.get().getProject() != null && !newName.isEmpty()) {
                 name = newName.get();
-                this.getParent().setModified();
+                this.getEnv().setModified();
             }
         }
         for (Component c : components) {

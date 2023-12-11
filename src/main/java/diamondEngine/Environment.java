@@ -169,7 +169,7 @@ public class Environment extends DiaObject {
         if (environment != null) {
             if (!environment.isInitialized) environment.init();
             children.add(environment);
-            environment.setParent(this);
+            environment.setEnv(this);
             isModified = true;
         }
     }
@@ -179,7 +179,7 @@ public class Environment extends DiaObject {
      * @param entity Entity to be added
      */
     public void addEntity(Entity entity) {
-        if (entity != null) {
+        if (entity != null && !entities.contains(entity)) {
             if (entity.getComponent(Transform.class) == null) {
                 entity.addComponent(new Transform());
             }
@@ -265,6 +265,18 @@ public class Environment extends DiaObject {
 
             // Add entities
             for (Entity e : entitiesToAdd) {
+
+                // Handle removing of nested entity from its parent list
+                DiaObject parent = e.getParent();
+                if (parent != null) {
+                    if (parent instanceof Environment) {
+                        ((Environment) parent).removeEntity(e);
+                    } else if (parent instanceof Entity) {
+                        ((Entity) parent).removeNestedEntity(e.getUuid());
+                    }
+                }
+
+                e.setEnv(this);
                 e.setParent(this);
                 registeredObjects.put(e.getUuid(), e);
                 for (Component c : e.getComponents()) {

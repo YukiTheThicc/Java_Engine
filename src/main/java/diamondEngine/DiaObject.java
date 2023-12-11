@@ -6,7 +6,8 @@ import imgui.ImGui;
 public abstract class DiaObject {
 
     // ATTRIBUTES
-    private transient Environment parent = null;
+    private transient Environment env = null;
+    private transient DiaObject parent;
     private final String uuid;
 
     // CONSTRUCTORS
@@ -19,16 +20,28 @@ public abstract class DiaObject {
     }
 
     // GETTERS && SETTERS
-    public Environment getParent() {
-        return parent;
+    public Environment getEnv() {
+        return env;
     }
 
-    public void setParent(Environment parent) {
-        this.parent = parent;
+    public void setEnv(Environment env) {
+        this.env = env;
     }
 
     public String getUuid() {
         return uuid;
+    }
+
+    public DiaObject getParent() {
+        return parent;
+    }
+
+    /**
+     * Sets the parent to a new object. Handles removal from the parents entity lists
+     * @param parent
+     */
+    public void setParent(DiaObject parent) {
+        this.parent = parent;
     }
 
     // METHODS
