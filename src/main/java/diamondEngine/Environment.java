@@ -4,20 +4,18 @@ import diamondEngine.diaComponents.Component;
 import diamondEngine.diaComponents.Transform;
 import diamondEngine.diaRenderer.DebugRenderer;
 import diamondEngine.diaRenderer.Framebuffer;
-import diamondEngine.diaUtils.DiaUUID;
 import imgui.ImGui;
 import imgui.flag.ImGuiTableFlags;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import sapphire.Sapphire;
-import sapphire.imgui.SappInspectable;
 import sapphire.imgui.SappImGuiUtils;
 
 import java.util.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class Environment implements SappInspectable {
+public class Environment extends DiaObject {
 
     // CONSTANTS
     public static final String ENV_EXTENSION = ".denv";
@@ -27,9 +25,7 @@ public class Environment implements SappInspectable {
 
     // ATTRIBUTES
     // Environment properties
-    private Environment parent;
     private String name;
-    private String uuid;
     private int frameX;
     private int frameY;
     private List<Environment> children;
@@ -52,9 +48,8 @@ public class Environment implements SappInspectable {
 
     // CONSTRUCTORS
     public Environment() {
-        this.parent = null;
+        super();
         this.name = DEFAULT_NAME;
-        this.uuid = DiaUUID.generateUUID();
         this.frameX = DEFAULT_FRAME_X;
         this.frameY = DEFAULT_FRAME_Y;
         this.children = new ArrayList<>();
@@ -62,9 +57,8 @@ public class Environment implements SappInspectable {
     }
 
     public Environment(String name) {
-        this.parent = null;
+        super();
         this.name = name;
-        this.uuid = DiaUUID.generateUUID();
         this.frameX = DEFAULT_FRAME_X;
         this.frameY = DEFAULT_FRAME_Y;
         this.children = new ArrayList<>();
@@ -72,9 +66,8 @@ public class Environment implements SappInspectable {
     }
 
     public Environment(String name, String uuid) {
-        this.parent = null;
+        super(uuid);
         this.name = name;
-        this.uuid = DiaUUID.checkUUID(uuid);
         this.frameX = DEFAULT_FRAME_X;
         this.frameY = DEFAULT_FRAME_Y;
         this.children = new ArrayList<>();
@@ -82,10 +75,6 @@ public class Environment implements SappInspectable {
     }
 
     // GETTERS & SETTERS
-    public String getUuid() {
-        return uuid;
-    }
-
     public String getName() {
         return name;
     }
@@ -96,14 +85,6 @@ public class Environment implements SappInspectable {
 
     public List<Environment> getChildren() {
         return children;
-    }
-
-    public Environment getParent() {
-        return parent;
-    }
-
-    public void setParent(Environment parent) {
-        this.parent = parent;
     }
 
     public List<Entity> getEntities() {
@@ -315,7 +296,7 @@ public class Environment implements SappInspectable {
 
     @Override
     public void inspect() {
-        SappImGuiUtils.textLabel("UUID", uuid);
+        SappImGuiUtils.textLabel("UUID", getUuid());
         SappImGuiUtils.textLabel("Framebuffer", "" + frame.getFboId());
         ImString newName = new ImString(name, 256);
         if (SappImGuiUtils.inputText(Sapphire.getLiteral("name"), newName)) {
@@ -359,10 +340,5 @@ public class Environment implements SappInspectable {
         ImGui.text((float) Window.getWidth() / frameX + " / " + (float) Window.getHeight() / frameY);
         ImGui.text("Ratio: " + getRatio());
         */
-    }
-
-    @Override
-    public boolean select() {
-        return false;
     }
 }

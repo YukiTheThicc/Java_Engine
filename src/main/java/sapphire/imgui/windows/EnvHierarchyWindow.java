@@ -53,13 +53,12 @@ public class EnvHierarchyWindow extends ImguiWindow {
     private void drawNestedEnvironments() {
 
         for (Environment env : Diamond.get().getEnvironments()) {
-
             Texture tex = Sapphire.getIcon("sapp.png");
             ImGui.image(tex.getId(), SappImGuiUtils.SMALL_ICON_SIZE, SappImGuiUtils.SMALL_ICON_SIZE, 0, 1, 1, 0);
             ImGui.sameLine();
 
             ImGui.pushID(env.getUuid());
-            if (ImGui.treeNodeEx(env.getName() + (env.isModified() ? " *" : ""), NODE_FLAGS)) {
+            if (ImGui.treeNodeEx((char) 0xe000 + " " + env.getName() + (env.isModified() ? " *" : ""), NODE_FLAGS)) {
                 if (ImGui.isItemClicked()) {
                     SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, null, env));
                 }
@@ -73,7 +72,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
 
     private void drawEntities(Environment env) {
         for (Entity entity : env.getEntities()) {
-            if (entity.select()) {
+            if (SappImGuiUtils.selectable(entity.getUuid(), entity.getName(), "entity.png", entity)) {
                 SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, null, entity));
             }
             entityContextMenu(entity);

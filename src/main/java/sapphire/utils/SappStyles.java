@@ -73,7 +73,7 @@ public class SappStyles {
         // Window
         ImGui.getStyle().setChildRounding(0f);
         ImGui.getStyle().setTabRounding(0f);
-        ImGui.getStyle().setWindowPadding(4f, 4f);
+        ImGui.getStyle().setWindowPadding(8f, 8f);
         ImGui.getStyle().setWindowTitleAlign(0f, 0.5f);
         ImGui.getStyle().setWindowMinSize(10f, 10f);
         ImGui.getStyle().setCellPadding(0, 0);

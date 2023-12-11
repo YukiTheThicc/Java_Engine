@@ -252,16 +252,30 @@ public class SappImGuiLayer {
 
             String[] fontsList = new String[fontFiles.size()];
             int i = 0;
-            for (File file : fontFiles) {
 
-                final ImFontAtlas fontAtlas = io.getFonts();
-                final ImFontConfig fontConfig = new ImFontConfig();
-                fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesDefault());
-                fontConfig.setPixelSnapH(true);
+            final ImFontAtlas fontAtlas = io.getFonts();
+            final ImFontConfig fontConfig = new ImFontConfig();
+            fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesDefault());
+            fontConfig.setPixelSnapH(true);
+
+            for (File file : fontFiles) {
 
                 ImFont font = fontAtlas.addFontFromFileTTF(file.getAbsolutePath(), settings.getFontSize(), fontConfig);
 
-                /*
+                ImFontConfig fontConfigIcons = new ImFontConfig();
+                fontConfigIcons.setMergeMode(true);
+                fontConfigIcons.setGlyphMinAdvanceX(SappImGuiUtils.SMALL_ICON_SIZE);
+                short[] chars = {(short) 0xe000, (short) 0xe0fe, (short)0};
+                fontAtlas.addFontFromFileTTF("sapphire/fonts/OpenFontIcons.ttf", settings.getFontSize(), fontConfig, chars);
+                fontConfigIcons.destroy();
+
+                // Add small font version
+                settings.addFont(font);
+                ImFont smallFont = fontAtlas.addFontFromFileTTF(file.getAbsolutePath(), settings.getFontSize() - 4, fontConfig);
+                settings.addSmallFont(smallFont);
+                fontsList[i] = file.getName();
+
+                 /*
                 int[] rect_ids = new int[2];
                 rect_ids[0] = io.getFonts().addCustomRectFontGlyph(font, (short) 'a', 13, 13, 13 + 1f);
                 rect_ids[1] = io.getFonts().addCustomRectFontGlyph(font, (short) 'b', 13, 13, 13 + 1f);
@@ -298,13 +312,10 @@ public class SappImGuiLayer {
                 texPixels.get(arr);
                 ImFont newFont = fontAtlas.addFontFromMemoryTTF(arr, settings.getFontSize());*/
 
-                settings.addFont(font);
-                ImFont smallFont = fontAtlas.addFontFromFileTTF(file.getAbsolutePath(), settings.getFontSize() - 4, fontConfig);
-                settings.addSmallFont(smallFont);
-                fontsList[i] = file.getName();
-                fontConfig.destroy(); // After all fonts were added we don't need this config anymore
                 i++;
             }
+            fontConfig.destroy(); // After all fonts were added we don't need this config anymore
+
             settings.setFontsList(fontsList);
         } else {
             DiaLogger.log("Failed to load any font files from Sapphire fonts dir");

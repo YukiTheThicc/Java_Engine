@@ -1,6 +1,7 @@
 package sapphire;
 
 import com.google.gson.JsonObject;
+import diamondEngine.DiaObject;
 import diamondEngine.Diamond;
 import diamondEngine.Window;
 import diamondEngine.diaControls.MouseControls;
@@ -8,7 +9,6 @@ import diamondEngine.diaAssets.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
 import sapphire.eventsSystem.SappEvents;
-import sapphire.imgui.SappInspectable;
 import sapphire.imgui.SappImGuiLayer;
 import sapphire.utils.SappDefaultLiterals;
 
@@ -36,7 +36,7 @@ public class Sapphire {
     private SappProject project;
     private HashMap<String, String> literals;
     private SappImGuiLayer imGUILayer;
-    private SappInspectable activeObject;
+    private DiaObject activeObject;
     private boolean diaRunning;
     private boolean running;
     private float dt;
@@ -115,11 +115,11 @@ public class Sapphire {
         this.diaRunning = diaRunning;
     }
 
-    public static SappInspectable getActiveObject() {
+    public static DiaObject getActiveObject() {
         return Sapphire.get().activeObject;
     }
 
-    public static void setActiveObject(SappInspectable activeObject) {
+    public static void setActiveObject(DiaObject activeObject) {
         Sapphire.get().activeObject = activeObject;
     }
 

@@ -4,7 +4,6 @@ import diamondEngine.Diamond;
 import diamondEngine.diaControls.MouseControls;
 import diamondEngine.diaUtils.DiaLogger;
 import org.joml.Vector2f;
-import sapphire.imgui.SappInspectable;
 import sapphire.imgui.windows.GameViewWindow;
 
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
@@ -18,8 +17,6 @@ public class SappMouseController {
     private static float scrollSensitivity = 0.1f;
     private static boolean reset = false;
     private static float lerpTime = 0.0f;
-
-    private static SappInspectable payload;
 
     public static void update(float dt) {
         Diamond.getProfiler().beginMeasurement("Editor Controller");

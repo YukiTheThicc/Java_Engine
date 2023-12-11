@@ -1,5 +1,7 @@
 package sapphire.imgui;
 
+import diamondEngine.DiaObject;
+import diamondEngine.diaAssets.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
 import imgui.flag.*;
@@ -10,6 +12,9 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import sapphire.eventsSystem.SappEvent;
+import sapphire.eventsSystem.SappEventType;
+import sapphire.eventsSystem.SappEvents;
 import sapphire.eventsSystem.SappObserver;
 import sapphire.Sapphire;
 import sapphire.imgui.windows.ModalConfirmation;
@@ -18,6 +23,7 @@ import sapphire.imgui.windows.ModalInformation;
 
 public class SappImGuiUtils {
 
+    // ICON SIZES VARIABLES
     public static float BIG_ICON_SIZE;
     public static float MEDIUM_ICON_SIZE;
     public static float SMALL_ICON_SIZE;
@@ -25,6 +31,14 @@ public class SappImGuiUtils {
     public static float MEDIUM_COLUMN_SIZE;
     public static float SMALL_COLUMN_SIZE;
 
+    // FLAGS
+    private static final int NODE_FLAGS = ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.Selected |
+            ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.OpenOnDoubleClick;
+
+    /**
+     * Calculates the icon sizes depending on the size of the font used by ImGUI. Needs to be called once the ImGUI context
+     * has been set up.
+     */
     public static void init() {
         float fontSize = Sapphire.get().getSettings().getFontSize();
         BIG_ICON_SIZE = fontSize * 2.5f;
@@ -35,6 +49,7 @@ public class SappImGuiUtils {
         SMALL_COLUMN_SIZE = fontSize * 10;
     }
 
+    // ----> SECTION START: INPUTS AND VARIABLE CONTROLS
     public static void drawMatrix4f(String label, Matrix4f matrix) {
         ImGui.pushID(label);
         ImGui.columns(2);
@@ -341,6 +356,167 @@ public class SappImGuiUtils {
         return false;
     }
 
+    public static boolean checkboxLabel(String label, boolean checked) {
+        ImGui.pushID(label);
+
+        ImGui.columns(2);
+        ImGui.setColumnWidth(0, (ImGui.getWindowWidth()) / 3);
+        ImGui.textWrapped(label);
+        ImGui.nextColumn();
+        boolean changed = ImGui.checkbox("##" + label, checked);
+        ImGui.columns(1);
+        ImGui.popID();
+        return changed;
+    }
+
+    public static String combo(String title, String selected, String[] options) {
+
+        String result = null;
+        ImGui.pushID(title);
+        ImGui.columns(2);
+        ImGui.setColumnWidth(0, (ImGui.getWindowWidth()) / 3);
+        ImGui.textWrapped(title);
+        ImGui.nextColumn();
+        if (ImGui.beginCombo("##" + title, selected)) {
+            for (String option : options) {
+                ImGui.pushID(option);
+                if (ImGui.selectable(option)) {
+                    DiaLogger.log("Selected '" + option + "'");
+                    result = option;
+                }
+                ImGui.popID();
+            }
+            ImGui.endCombo();
+        }
+        ImGui.columns(1);
+        ImGui.popID();
+        return result;
+    }
+
+    public static boolean combo(String title, ImInt index, String[] options, float labelColWidth) {
+
+        ImGui.pushID(title);
+        ImGui.columns(2);
+        ImGui.setColumnWidth(0, labelColWidth);
+        ImGui.textWrapped(title);
+        ImGui.nextColumn();
+
+        if (ImGui.combo("##" + title, index, options)) {
+            ImGui.popID();
+            return true;
+        }
+        ImGui.columns(1);
+        ImGui.popID();
+        return false;
+    }
+    // ----> SECTION END: INPUTS AND VARIABLE CONTROLS
+
+    // ----> SECTION START: AUXILIARY MODAL WINDOWS
+    public static ImguiWindow confirmModal(String title, String message, String aff, String neg, SappObserver parent) {
+        String id = title.toLowerCase().replace(" ", "_");
+        ImguiWindow modal = Sapphire.get().getImGUILayer().getWindows().get(id);
+        if (modal == null) {
+            modal = new ModalConfirmation(id, title, message, aff, neg, parent);
+            Sapphire.get().getImGUILayer().addWindow(modal);
+        }
+        modal.setActive(true);
+        return modal;
+    }
+
+    public static ImguiWindow confirmModal(String title, String message, SappObserver parent) {
+        String id = title.toLowerCase().replace(" ", "_");
+        ImguiWindow modal = Sapphire.get().getImGUILayer().getWindows().get(id);
+        if (modal == null) {
+            modal = new ModalConfirmation(id, title, message, parent);
+            Sapphire.get().getImGUILayer().addWindow(modal);
+        }
+        modal.setActive(true);
+        return modal;
+    }
+
+    public static ImguiWindow infoModal(String title, String message) {
+        String id = title.toLowerCase().replace(" ", "_");
+        ImguiWindow modal = Sapphire.get().getImGUILayer().getWindows().get(id);
+        if (modal == null) {
+            modal = new ModalInformation(id, title, message);
+            Sapphire.get().getImGUILayer().addWindow(modal);
+        }
+        modal.setActive(true);
+        return modal;
+    }
+    // ----> SECTION END: AUXILIARY MODAL WINDOWS
+
+    // ----> SECTION START: BUTTONS AND SELECTABLES
+    /**
+     * Draws a standard selectable button with an icon.
+     *
+     * @param id         ID for the selectable. Should be unique
+     * @param text       Text to display on the selectable
+     * @param icon       Icon identifier
+     * @param selectable Object that for which the selectable is being drawn
+     * @return True if the selectable has been pressed
+     */
+    public static boolean selectable(String id, String text, String icon, Object selectable) {
+        boolean result = false;
+        ImGui.pushID(id);
+        ImGui.beginGroup();
+        float buttonOriginX = ImGui.getCursorPosX();
+
+        if (ImGui.button("", ImGui.getContentRegionAvailX(), ImGui.getFontSize() * 1.5f)) result = true;
+
+        if (ImGui.beginDragDropSource()) {
+            ImGui.setDragDropPayload("Selectable", selectable);
+            float tipOrigin = ImGui.getCursorPosY();
+            ImGui.image(Sapphire.getIcon(icon).getId(), SMALL_ICON_SIZE, SMALL_ICON_SIZE, 0, 1, 1, 0);
+            ImGui.sameLine();
+            ImGui.setCursorPosY(tipOrigin + (SMALL_ICON_SIZE - ImGui.getFontSize()) / 2);
+            ImGui.text(text);
+            ImGui.endDragDropSource();
+        }
+
+        // Drag and drop target
+        if (ImGui.beginDragDropTarget()) {
+
+            ImGui.endDragDropTarget();
+        }
+
+        ImGui.sameLine();
+        ImGui.setCursorPosX(buttonOriginX);
+        ImGui.image(Sapphire.getIcon(icon).getId(), SMALL_ICON_SIZE, SMALL_ICON_SIZE, 0, 1, 1, 0);
+        ImGui.sameLine();
+        ImGui.text(text);
+
+        ImGui.endGroup();
+        ImGui.popID();
+        return result;
+    }
+
+    public static boolean imageTreeNode(String id, String text, String icon, DiaObject object) {
+        Texture tex = Sapphire.getIcon(icon);
+        ImGui.image(tex.getId(), SappImGuiUtils.SMALL_ICON_SIZE, SappImGuiUtils.SMALL_ICON_SIZE, 0, 1, 1, 0);
+        ImGui.sameLine();
+
+        boolean isOpen = false;
+        ImGui.pushID(id);
+        if (ImGui.treeNodeEx(text, NODE_FLAGS)) {
+            if (ImGui.isItemClicked()) {
+                SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, null, object));
+            }
+            ImGui.treePop();
+            isOpen = true;
+        }
+        ImGui.popID();
+        return isOpen;
+    }
+    // ----> SECTION END: BUTTONS AND SELECTABLES
+
+    // ----> SECTION START: OTHER UTILITY METHODS
+    /**
+     * Shows a text with a label using the standard two columns display for the inputs.
+     *
+     * @param label Label for the text
+     * @param text  Text to be displayed
+     */
     public static void textLabel(String label, String text) {
         ImGui.pushID(label);
 
@@ -356,6 +532,7 @@ public class SappImGuiUtils {
 
     /**
      * Calculates the given text width for the current font
+     *
      * @param text The text from which the width is going to be calculated
      * @return The size of the text
      */
@@ -451,94 +628,6 @@ public class SappImGuiUtils {
 
         ImGui.setCursorPos(x, y);
     }
-
-    public static String combo(String title, String selected, String[] options) {
-
-        String result = null;
-        ImGui.pushID(title);
-        ImGui.columns(2);
-        ImGui.setColumnWidth(0, (ImGui.getWindowWidth()) / 3);
-        ImGui.textWrapped(title);
-        ImGui.nextColumn();
-        if (ImGui.beginCombo("##" + title, selected)) {
-            for (String option : options) {
-                ImGui.pushID(option);
-                if (ImGui.selectable(option)) {
-                    DiaLogger.log("Selected '" + option + "'");
-                    result = option;
-                }
-                ImGui.popID();
-            }
-            ImGui.endCombo();
-        }
-        ImGui.columns(1);
-        ImGui.popID();
-        return result;
-    }
-
-    public static boolean combo(String title, ImInt index, String[] options, float labelColWidth) {
-
-        ImGui.pushID(title);
-        ImGui.columns(2);
-        ImGui.setColumnWidth(0, labelColWidth);
-        ImGui.textWrapped(title);
-        ImGui.nextColumn();
-
-        if (ImGui.combo("##" + title, index, options)) {
-            ImGui.popID();
-            return true;
-        }
-        ImGui.columns(1);
-        ImGui.popID();
-        return false;
-    }
-
-    public static ImguiWindow confirmModal(String title, String message, String aff, String neg, SappObserver parent) {
-        String id = title.toLowerCase().replace(" ", "_");
-        ImguiWindow modal = Sapphire.get().getImGUILayer().getWindows().get(id);
-        if (modal == null) {
-            modal = new ModalConfirmation(id, title, message, aff, neg, parent);
-            Sapphire.get().getImGUILayer().addWindow(modal);
-        }
-        modal.setActive(true);
-        return modal;
-    }
-
-    public static ImguiWindow confirmModal(String title, String message, SappObserver parent) {
-        String id = title.toLowerCase().replace(" ", "_");
-        ImguiWindow modal = Sapphire.get().getImGUILayer().getWindows().get(id);
-        if (modal == null) {
-            modal = new ModalConfirmation(id, title, message, parent);
-            Sapphire.get().getImGUILayer().addWindow(modal);
-        }
-        modal.setActive(true);
-        return modal;
-    }
-
-    public static ImguiWindow infoModal(String title, String message) {
-        String id = title.toLowerCase().replace(" ", "_");
-        ImguiWindow modal = Sapphire.get().getImGUILayer().getWindows().get(id);
-        if (modal == null) {
-            modal = new ModalInformation(id, title, message);
-            Sapphire.get().getImGUILayer().addWindow(modal);
-        }
-        modal.setActive(true);
-        return modal;
-    }
-
-    public static boolean checkboxLabel(String label, boolean checked) {
-        ImGui.pushID(label);
-
-        ImGui.columns(2);
-        ImGui.setColumnWidth(0, (ImGui.getWindowWidth()) / 3);
-        ImGui.textWrapped(label);
-        ImGui.nextColumn();
-        boolean changed = ImGui.checkbox("##" + label, checked);
-        ImGui.columns(1);
-        ImGui.popID();
-        return changed;
-    }
-
-
+    // ----> SECTION END: OTHER UTILITY METHODS
 }
 

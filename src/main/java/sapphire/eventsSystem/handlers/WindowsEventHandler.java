@@ -1,5 +1,6 @@
 package sapphire.eventsSystem.handlers;
 
+import diamondEngine.DiaObject;
 import diamondEngine.Diamond;
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaUtils.DiaAssetPool;
@@ -10,7 +11,6 @@ import sapphire.Sapphire;
 import sapphire.SappProject;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappObserver;
-import sapphire.imgui.SappInspectable;
 
 import java.io.File;
 
@@ -30,7 +30,7 @@ public class WindowsEventHandler implements SappObserver {
                 handleCopyObject(event);
                 break;
             case Selected_object:
-                if (event.payload instanceof SappInspectable) Sapphire.setActiveObject((SappInspectable) event.payload);
+                if (event.payload instanceof DiaObject) Sapphire.setActiveObject((DiaObject) event.payload);
                 break;
             case Delete_object:
                 handleDeleteObj(event);

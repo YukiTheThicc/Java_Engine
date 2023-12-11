@@ -1,5 +1,6 @@
 package sapphire.imgui.windows;
 
+import diamondEngine.DiaObject;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
 import sapphire.Sapphire;
@@ -16,7 +17,7 @@ public class InspectorWindow extends ImguiWindow {
 
         ImGui.setNextWindowSize(400f, 400f, ImGuiCond.FirstUseEver);
         if (ImGui.begin(this.getTitle(), this.getFlags())) {
-            SappInspectable activeObj = Sapphire.getActiveObject();
+            DiaObject activeObj = Sapphire.getActiveObject();
             if (activeObj != null) {
                 String name = activeObj.getClass().getSimpleName().toUpperCase();
                 SappImGuiUtils.align(AlignX.CENTER, AlignY.TOP, SappImGuiUtils.textSize(name), ImGui.getFontSize());

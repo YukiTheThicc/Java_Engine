@@ -1,6 +1,7 @@
 package diamondEngine;
 
 import diamondEngine.diaUtils.DiaUUID;
+import imgui.ImGui;
 
 public abstract class DiaObject {
 
@@ -30,5 +31,10 @@ public abstract class DiaObject {
         return uuid;
     }
 
+    // METHODS
     public abstract void update(float dt);
+
+    public void inspect() {
+        ImGui.text(this.getClass().getSimpleName());
+    };
 }

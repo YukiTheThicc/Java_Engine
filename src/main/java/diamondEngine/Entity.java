@@ -7,12 +7,11 @@ import diamondEngine.diaUtils.DiaLoggerLevel;
 import imgui.ImGui;
 import imgui.type.ImString;
 import sapphire.Sapphire;
-import sapphire.imgui.SappInspectable;
 import sapphire.imgui.SappImGuiUtils;
 
 import java.util.ArrayList;
 
-public class Entity extends DiaObject implements SappInspectable {
+public class Entity extends DiaObject {
 
     public static final String GENERATED_NAME = "GENERATED_ENTITY";
 
@@ -170,45 +169,5 @@ public class Entity extends DiaObject implements SappInspectable {
                 componentContextMenu(c);
             }
         }
-    }
-
-    /**
-     * Draws a button for the entity with the standard icon for the
-     *
-     * @return
-     */
-    @Override
-    public boolean select() {
-        boolean result = false;
-        ImGui.pushID(this.getUuid());
-        ImGui.beginGroup();
-        float buttonOriginX = ImGui.getCursorPosX();
-
-        if (ImGui.button("", ImGui.getContentRegionAvailX(), ImGui.getFontSize() * 1.5f)) result = true;
-
-        ImGui.sameLine();
-        ImGui.setCursorPosX(buttonOriginX);
-        ImGui.image(Sapphire.getIcon("component.png").getId(), SappImGuiUtils.SMALL_ICON_SIZE, SappImGuiUtils.SMALL_ICON_SIZE,
-                0, 1, 1, 0);
-        ImGui.sameLine();
-        ImGui.text(name);
-
-        ImGui.endGroup();
-        ImGui.popID();
-
-        // Drag and drop source
-        if (ImGui.beginDragDropSource()) {
-            ImGui.setDragDropPayload("EntitySelectable", this);
-            ImGui.text(name);
-            ImGui.endDragDropSource();
-        }
-
-        // Drag and drop target
-        if (ImGui.beginDragDropTarget()) {
-
-            ImGui.endDragDropTarget();
-        }
-
-        return result;
     }
 }
