@@ -1,6 +1,5 @@
 package diamondEngine;
 
-import diamondEngine.diaComponents.Component;
 import diamondEngine.diaComponents.Transform;
 import diamondEngine.diaRenderer.DebugRenderer;
 import diamondEngine.diaRenderer.Framebuffer;
@@ -33,9 +32,9 @@ public class Environment extends DiaObject {
 
     // Runtime attributes
     private transient String originFile;
+    private transient HashMap<String, DiaObject> registeredEntities;
     private transient List<Entity> entitiesToAdd;
     private transient List<Entity> entitiesToRemove;
-    private transient HashMap<String, DiaObject> registeredObjects;
     private transient Framebuffer frame;
     private transient float winSizeAdjustX = 1.0f;
     private transient float winSizeAdjustY = 1.0f;
@@ -135,8 +134,8 @@ public class Environment extends DiaObject {
         return winSizeAdjustY;
     }
 
-    public HashMap<String, DiaObject> getRegisteredObjects() {
-        return registeredObjects;
+    public HashMap<String, DiaObject> getRegisteredEntities() {
+        return registeredEntities;
     }
 
     // METHODS
@@ -146,7 +145,7 @@ public class Environment extends DiaObject {
     public void init() {
         frame = new Framebuffer(frameX, frameY);
         isModified = true;
-        registeredObjects = new HashMap<>();
+        registeredEntities = new HashMap<>();
         originFile = null;
         entitiesToAdd = new ArrayList<>();
         entitiesToRemove = new ArrayList<>();
@@ -198,12 +197,12 @@ public class Environment extends DiaObject {
     }
 
     public void registerObject(DiaObject object) {
-        this.registeredObjects.put(object.getUuid(), object);
+        this.registeredEntities.put(object.getUuid(), object);
         isModified = true;
     }
 
     public void unRegisterObject(DiaObject object) {
-        this.registeredObjects.remove(object.getUuid());
+        this.registeredEntities.remove(object.getUuid());
         isModified = true;
     }
 
@@ -262,44 +261,25 @@ public class Environment extends DiaObject {
      */
     public void updateEntityList() {
         if (isDirty) {
-
-            // Add entities
-            for (Entity e : entitiesToAdd) {
-
-                // Handle removing of nested entity from its parent list
-                DiaObject parent = e.getParent();
-                if (parent != null) {
-                    if (parent instanceof Environment) {
-                        ((Environment) parent).removeEntity(e);
-                    } else if (parent instanceof Entity) {
-                        ((Entity) parent).removeNestedEntity(e.getUuid());
-                    }
-                }
-
-                e.setEnv(this);
-                e.setParent(this);
-                registeredObjects.put(e.getUuid(), e);
-                for (Component c : e.getComponents()) {
-                    if (!registeredObjects.containsKey(c.getUuid())) registeredObjects.put(c.getUuid(), c);
-                }
-                entities.add(e);
-                registeredObjects.put(e.getUuid(), e);
-            }
-
-            // Remove entities
-            for (Entity e : entitiesToRemove) {
-                for (Component c : e.getComponents()) {
-                    registeredObjects.remove(c.getUuid());
-                }
-                entities.remove(e);
-                registeredObjects.remove(e.getUuid());
-            }
-
+            for (Entity e : entitiesToAdd) addEntityToList(e);
+            for (Entity e : entitiesToRemove) removeEntityFromList(e);
             // Clear buffer lists
             entitiesToAdd.clear();
             entitiesToRemove.clear();
             isDirty = false;
         }
+    }
+
+    private void addEntityToList(Entity e) {
+        e.setEnv(this);
+        registeredEntities.put(e.getUuid(), e);
+        entities.add(e);
+        registeredEntities.put(e.getUuid(), e);
+    }
+
+    private void removeEntityFromList(Entity e) {
+        entities.remove(e);
+        registeredEntities.remove(e.getUuid());
     }
 
     public void destroy() {
@@ -336,11 +316,11 @@ public class Environment extends DiaObject {
             ImGui.tableSetupColumn("ID");
             ImGui.tableSetupColumn("Object");
             ImGui.tableHeadersRow();
-            for (String key : getRegisteredObjects().keySet()) {
+            for (String key : getRegisteredEntities().keySet()) {
                 ImGui.tableNextColumn();
                 ImGui.text("" + key);
                 ImGui.tableNextColumn();
-                ImGui.text(getRegisteredObjects().get(key).getClass().getSimpleName());
+                ImGui.text(getRegisteredEntities().get(key).getClass().getSimpleName());
             }
         }
         ImGui.endTable();

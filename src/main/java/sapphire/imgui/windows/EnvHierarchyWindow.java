@@ -52,11 +52,8 @@ public class EnvHierarchyWindow extends ImguiWindow {
     private void drawNestedEnvironments() {
 
         for (Environment env : Diamond.get().getEnvironments()) {
-            if (SappImGuiUtils.imageTreeNode(env.getUuid(), env.getName() + (env.isModified() ? " *" : ""), "sapp.png", env)) {
-                envContextMenu(env);
-                drawEntities(env.getEntities());
-                ImGui.treePop();
-            }
+            boolean isOpen = SappImGuiUtils.imageTreeNode(env.getUuid(), (char) 0xe000 + " " + env.getName() + (env.isModified() ? " *" : ""),
+                    "sapp.png", env);
 
             // Drag and drop target
             if (ImGui.beginDragDropTarget()) {
@@ -65,6 +62,12 @@ public class EnvHierarchyWindow extends ImguiWindow {
                     env.addEntity((Entity) payload);
                 }
                 ImGui.endDragDropTarget();
+            }
+
+            if (isOpen) {
+                envContextMenu(env);
+                drawEntities(env.getEntities());
+                ImGui.treePop();
             }
         }
     }

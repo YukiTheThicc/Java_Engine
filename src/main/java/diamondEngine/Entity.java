@@ -95,11 +95,9 @@ public class Entity extends DiaObject {
 
     public void addComponent(Component component) {
         if (component != null) {
-            component.setOwner(getUuid());
-            component.setEnv(getEnv());
+            component.setOwner(this);
             components.add(component);
             if (getEnv() != null) {
-                getEnv().registerObject(component);
                 getEnv().setModified();
             }
             if (component instanceof Transform) {
@@ -110,40 +108,24 @@ public class Entity extends DiaObject {
 
     public void addNestedEntity(Entity entity) {
         if (entity != null && getParent() != entity && !nestedEntities.contains(entity)) {
-
-            // Handle removing of nested entity from its parent list
-            DiaObject parent = entity.getParent();
-            if (parent != null) {
-                if (parent instanceof Environment) {
-                    ((Environment) parent).removeEntity(entity);
-                } else if (parent instanceof Entity) {
-                    ((Entity) parent).removeNestedEntity(getUuid());
-                }
-            }
-
             entity.setParent(this);
             entity.setEnv(this.getEnv());
             nestedEntities.add(entity);
-
             if (getEnv() != null) getEnv().setModified();
         }
     }
 
-    public void removeComponent(String uuid) {
-        for (Component c : components) {
-            if (c.getUuid().equals(uuid)) {
-                componentsToRemove.add(c);
-                isDirty = true;
-            }
+    public void removeComponent(Component c) {
+        if (c != null) {
+            componentsToRemove.add(c);
+            isDirty = true;
         }
     }
 
-    public void removeNestedEntity(String uuid) {
-        for (Entity e : nestedEntities) {
-            if (e.getUuid().equals(uuid)) {
-                entitiesToRemove.add(e);
-                isDirty = true;
-            }
+    public void removeNestedEntity(Entity e) {
+        if (e != null) {
+            entitiesToRemove.add(e);
+            isDirty = true;
         }
     }
 
@@ -173,7 +155,6 @@ public class Entity extends DiaObject {
         if (isDirty) {
             for (Component c : componentsToRemove) {
                 components.remove(c);
-                this.getEnv().unRegisterObject(c);
             }
             componentsToRemove.clear();
             for (Entity e : entitiesToRemove) {
@@ -186,18 +167,11 @@ public class Entity extends DiaObject {
         }
     }
 
-    /**
-     * Context menu for a component
-     *
-     * @param c Component for which the menu is being drawn
-     */
-    private void componentContextMenu(Component c) {
-        if (ImGui.beginPopupContextItem(c.getUuid())) {
-            if (ImGui.menuItem(Sapphire.getLiteral("remove"))) {
-                this.removeComponent(c.getUuid());
-            }
-            ImGui.endPopup();
+    public void destroy() {
+        for (Component c : components) {
+            c.destroy();
         }
+        this.getEnv().unRegisterObject(this);
     }
 
     @Override
@@ -218,6 +192,20 @@ public class Entity extends DiaObject {
             } else {
                 componentContextMenu(c);
             }
+        }
+    }
+
+    /**
+     * Context menu for a component
+     *
+     * @param c Component for which the menu is being drawn
+     */
+    private void componentContextMenu(Component c) {
+        if (ImGui.beginPopupContextItem(c.getClass().getSimpleName())) {
+            if (ImGui.menuItem(Sapphire.getLiteral("remove"))) {
+                this.removeComponent(c);
+            }
+            ImGui.endPopup();
         }
     }
 }

@@ -143,7 +143,6 @@ public class TileMap extends Component {
 
     @Override
     public void inspect() {
-        SappImGuiUtils.textLabel("UUID", this.getUuid());
         ImInt cellX = new ImInt(this.cellX);
         ImInt cellY = new ImInt(this.cellY);
         if (SappImGuiUtils.dragInt(Sapphire.getLiteral("cell_height"), cellY)) {
@@ -160,5 +159,10 @@ public class TileMap extends Component {
     @Override
     public Component copy() {
         return new TileMap(cellX, cellY);
+    }
+
+    @Override
+    public void destroy() {
+
     }
 }

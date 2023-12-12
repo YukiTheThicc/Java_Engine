@@ -86,4 +86,8 @@ public class Sprite extends Component{
         return null;
     }
 
+    @Override
+    public void destroy() {
+
+    }
 }

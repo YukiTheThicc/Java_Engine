@@ -1,31 +1,29 @@
 package diamondEngine.diaComponents;
 
-import diamondEngine.DiaObject;
+import diamondEngine.Entity;
+import imgui.ImGui;
 
-public abstract class Component extends DiaObject {
+public abstract class Component {
 
     // ATTRIBUTES
-    private String ownerId;
+    private transient Entity owner;
 
-    public Component() {
-       super();
-    }
+    public Component() {}
 
-    public Component(String uuid) {
-        super( uuid);
+    public Component(Entity owner) {
+        this.owner = owner;
     }
 
     // GETTERS & SETTERS
-    public String getOwner() {
-        return ownerId;
+    public Entity getOwner() {
+        return owner;
     }
 
-    public void setOwner(String owner) {
-        this.ownerId = owner;
+    public void setOwner(Entity owner) {
+        this.owner = owner;
     }
 
     // METHODS
-
     /**
      * !!! REVISE !!! It may be better to re-think this approach. To allow components to work properly WITHIN the current
      * serialization system, it is necessary to implement an init function that initializes transient attributes as they
@@ -36,4 +34,10 @@ public abstract class Component extends DiaObject {
     public abstract void update(float dt);
 
     public abstract Component copy();
+
+    public abstract void destroy();
+
+    public void inspect() {
+        ImGui.text(this.getClass().getSimpleName());
+    }
 }

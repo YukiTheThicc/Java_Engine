@@ -97,7 +97,7 @@ public class WindowsEventHandler implements SappObserver {
         // Remove component from entity
         if (event.env == null && event.entity != null && event.payload != null) {
             if (event.payload instanceof Component) {
-                event.entity.removeComponent(((Component) event.payload).getUuid());
+                event.entity.removeComponent(((Component) event.payload));
             }
         }
     }

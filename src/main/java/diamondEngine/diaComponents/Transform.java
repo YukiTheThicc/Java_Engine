@@ -87,4 +87,9 @@ public class Transform extends Component {
     public Component copy() {
         return new Transform(new Vector2f(this.position), new Vector2f(this.scale), this.rotation, this.zIndex);
     }
+
+    @Override
+    public void destroy() {
+
+    }
 }
