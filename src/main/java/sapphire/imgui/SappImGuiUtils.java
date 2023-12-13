@@ -479,11 +479,6 @@ public class SappImGuiUtils {
         // Drag and drop target
         if (ImGui.beginDragDropTarget()) {
             Object payload = ImGui.acceptDragDropPayload("Selectable");
-            if (source instanceof Entity && payload instanceof Entity) {
-                ((Entity) source).addNestedEntity((Entity) payload);
-            } else if (source instanceof Environment && payload instanceof Entity) {
-                ((Environment) source).addEntity((Entity) payload);
-            }
             ImGui.endDragDropTarget();
         }
 
@@ -522,7 +517,7 @@ public class SappImGuiUtils {
         ImGui.popID();
 
         if (ImGui.beginDragDropSource()) {
-            ImGui.setDragDropPayload("Selectable", source);
+            ImGui.setDragDropPayload("HierarchyNode", source);
             float tipOrigin = ImGui.getCursorPosY();
             ImGui.image(Sapphire.getIcon(icon).getId(), SMALL_ICON_SIZE, SMALL_ICON_SIZE, 0, 1, 1, 0);
             ImGui.sameLine();

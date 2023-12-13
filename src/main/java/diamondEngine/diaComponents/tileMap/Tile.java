@@ -1,4 +1,4 @@
-package diamondEngine.diaComponents.tiles;
+package diamondEngine.diaComponents.tileMap;
 
 import org.joml.Vector2i;
 

@@ -1,12 +1,8 @@
 package diamondEngine.diaComponents;
 
-import imgui.type.ImFloat;
-import imgui.type.ImInt;
 import org.joml.Vector2f;
-import sapphire.Sapphire;
-import sapphire.imgui.SappImGuiUtils;
 
-public class Transform extends Component {
+public class Transform implements Component {
 
     // ATTRIBUTES
     public Vector2f position;
@@ -56,13 +52,6 @@ public class Transform extends Component {
     }
 
     // METHODS
-    public void copy(Transform to) {
-        to.position.set(this.position);
-        to.scale.set(this.scale);
-        to.rotation = this.rotation;
-        to.zIndex = this.zIndex;
-    }
-
     @Override
     public void init() {
 
@@ -74,22 +63,19 @@ public class Transform extends Component {
     }
 
     @Override
-    public void inspect() {
-        SappImGuiUtils.drawVec2Control(Sapphire.getLiteral("position"), this.position);
-        SappImGuiUtils.drawVec2Control(Sapphire.getLiteral("scale"), this.scale);
-        ImFloat newRotation = new ImFloat(this.rotation);
-        if (SappImGuiUtils.dragFloat(Sapphire.getLiteral("rotation"), newRotation)) this.rotation = newRotation.get();
-        ImInt newZIndex = new ImInt(this.zIndex);
-        if (SappImGuiUtils.dragInt(Sapphire.getLiteral("zindex"), newZIndex)) this.zIndex = newZIndex.get();
-    }
-
-    @Override
-    public Component copy() {
+    public Transform copy() {
         return new Transform(new Vector2f(this.position), new Vector2f(this.scale), this.rotation, this.zIndex);
     }
 
     @Override
     public void destroy() {
 
+    }
+
+    public void copyTo(Transform to) {
+        to.position.set(this.position);
+        to.scale.set(this.scale);
+        to.rotation = this.rotation;
+        to.zIndex = this.zIndex;
     }
 }

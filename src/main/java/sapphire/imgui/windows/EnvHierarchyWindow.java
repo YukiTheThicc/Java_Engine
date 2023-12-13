@@ -3,12 +3,11 @@ package sapphire.imgui.windows;
 import diamondEngine.Entity;
 import diamondEngine.Environment;
 import diamondEngine.Diamond;
-import diamondEngine.diaAssets.Texture;
 import diamondEngine.diaComponents.Sprite;
-import diamondEngine.diaComponents.tiles.TileMap;
+import diamondEngine.diaComponents.tileMap.TileMap;
+import diamondEngine.diaUtils.DiaHierarchyNode;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
-import imgui.flag.ImGuiTreeNodeFlags;
 import sapphire.Sapphire;
 import sapphire.eventsSystem.SappEvents;
 import sapphire.eventsSystem.SappEvent;
@@ -16,8 +15,6 @@ import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.SappImGuiUtils;
 import sapphire.imgui.SappImGuiLayer;
 import sapphire.imgui.widgets.ImageLabelButton;
-
-import java.util.List;
 
 public class EnvHierarchyWindow extends ImguiWindow {
 
@@ -57,44 +54,34 @@ public class EnvHierarchyWindow extends ImguiWindow {
 
             // Drag and drop target
             if (ImGui.beginDragDropTarget()) {
-                Object payload = ImGui.acceptDragDropPayload("Selectable");
-                if (payload instanceof Entity) {
-                    env.addEntity((Entity) payload);
-                }
+                Object payload = ImGui.acceptDragDropPayload("HierarchyNode");
                 ImGui.endDragDropTarget();
             }
 
             if (isOpen) {
                 envContextMenu(env);
-                drawEntities(env.getEntities());
+                drawEntitiesHierarchy(env);
                 ImGui.treePop();
             }
         }
     }
 
-    private void drawEntities(List<Entity> entities) {
-        for (Entity entity : entities) {
-            if (entity.getNestedEntities().size() == 0) {
-                if (SappImGuiUtils.selectable(entity.getUuid(), entity.getName(), "entity.png", entity)) {
-                    SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, null, entity));
-                }
-            } else {
-                if (SappImGuiUtils.imageTreeNode(entity.getUuid(), entity.getName(), "entity.png", entity)) {
-                    drawEntities(entity.getNestedEntities());
-                    ImGui.treePop();
-                }
+    private void drawEntitiesHierarchy(Environment env) {
+        DiaHierarchyNode root = env.getHierarchyRoot();
+        for (DiaHierarchyNode node : root.getChildren()) {
+            Entity e = node.getEntity();
+            boolean isEntityOpen = SappImGuiUtils.imageTreeNode(e.getUuid(), e.getName(), "entity.png", node);
+            if (isEntityOpen) {
+
+                ImGui.treePop();
             }
 
             // Drag and drop target
             if (ImGui.beginDragDropTarget()) {
-                Object payload = ImGui.acceptDragDropPayload("Selectable");
-                if (payload instanceof Entity) {
-                    entity.addNestedEntity((Entity) payload);
-                }
+                Object payload = ImGui.acceptDragDropPayload("HierarchyNode");
                 ImGui.endDragDropTarget();
             }
-
-            entityContextMenu(entity);
+            entityContextMenu(e);
         }
     }
 

@@ -3,12 +3,7 @@ package diamondEngine;
 import diamondEngine.diaComponents.Transform;
 import diamondEngine.diaRenderer.DebugRenderer;
 import diamondEngine.diaRenderer.Framebuffer;
-import imgui.ImGui;
-import imgui.flag.ImGuiTableFlags;
-import imgui.type.ImInt;
-import imgui.type.ImString;
-import sapphire.Sapphire;
-import sapphire.imgui.SappImGuiUtils;
+import diamondEngine.diaUtils.DiaHierarchyNode;
 
 import java.util.*;
 
@@ -19,26 +14,27 @@ public class Environment extends DiaObject {
     // CONSTANTS
     public static final String ENV_EXTENSION = ".denv";
     public static final String DEFAULT_NAME = "UNKNOWN";
+    public static final String NEW_ENVIRONMENT_NAME = "New Environment";
     public static final int DEFAULT_FRAME_X = 480;
     public static final int DEFAULT_FRAME_Y = 270;
 
-    // ATTRIBUTES
-    // Environment properties
-    private String name;
+    // PERSISTENT DATA
     private int frameX;
     private int frameY;
-    private List<Environment> children;
     private List<Entity> entities;
+    private List<Environment> nestedEnvironments;
+    private HashMap<String, DiaHierarchyNode> hierarchyNodes;
+    private DiaHierarchyNode hierarchyTreeRoot;
 
-    // Runtime attributes
+    // RUNTIME DATA
     private transient String originFile;
-    private transient HashMap<String, DiaObject> registeredEntities;
     private transient List<Entity> entitiesToAdd;
-    private transient List<Entity> entitiesToRemove;
+    private transient List<Entity> entitiesToDelete;
     private transient Framebuffer frame;
     private transient float winSizeAdjustX = 1.0f;
     private transient float winSizeAdjustY = 1.0f;
-    private transient boolean isInitialized = true;
+
+    // FLAGS
     private transient boolean isDirty = false;
     private transient boolean toRemove = false;
     private transient boolean isModified = true;
@@ -48,11 +44,11 @@ public class Environment extends DiaObject {
     // CONSTRUCTORS
     public Environment() {
         super();
-        this.name = DEFAULT_NAME;
+        this.name = NEW_ENVIRONMENT_NAME;
         this.frameX = DEFAULT_FRAME_X;
         this.frameY = DEFAULT_FRAME_Y;
-        this.children = new ArrayList<>();
         this.entities = new ArrayList<>();
+        this.nestedEnvironments = new ArrayList<>();
     }
 
     public Environment(String name) {
@@ -60,8 +56,8 @@ public class Environment extends DiaObject {
         this.name = name;
         this.frameX = DEFAULT_FRAME_X;
         this.frameY = DEFAULT_FRAME_Y;
-        this.children = new ArrayList<>();
         this.entities = new ArrayList<>();
+        this.nestedEnvironments = new ArrayList<>();
     }
 
     public Environment(String name, String uuid) {
@@ -69,25 +65,21 @@ public class Environment extends DiaObject {
         this.name = name;
         this.frameX = DEFAULT_FRAME_X;
         this.frameY = DEFAULT_FRAME_Y;
-        this.children = new ArrayList<>();
         this.entities = new ArrayList<>();
+        this.nestedEnvironments = new ArrayList<>();
     }
 
     // GETTERS & SETTERS
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Environment> getChildren() {
-        return children;
-    }
-
     public List<Entity> getEntities() {
         return entities;
+    }
+
+    public HashMap<String, DiaHierarchyNode> getHierarchyNodes() {
+        return hierarchyNodes;
+    }
+
+    public DiaHierarchyNode getHierarchyRoot() {
+        return hierarchyTreeRoot;
     }
 
     public Framebuffer getFrame() {
@@ -134,47 +126,76 @@ public class Environment extends DiaObject {
         return winSizeAdjustY;
     }
 
-    public HashMap<String, DiaObject> getRegisteredEntities() {
-        return registeredEntities;
-    }
-
     // METHODS
+    // -- START SECTION: LIFECYCLE METHODS -- //
     /**
      * Initializes the transient attributes of the environment,
      */
     public void init() {
         frame = new Framebuffer(frameX, frameY);
         isModified = true;
-        registeredEntities = new HashMap<>();
+        hierarchyNodes = new HashMap<>();
+        hierarchyTreeRoot = new DiaHierarchyNode(null);
         originFile = null;
         entitiesToAdd = new ArrayList<>();
-        entitiesToRemove = new ArrayList<>();
+        entitiesToDelete = new ArrayList<>();
         winSizeAdjustX = (float) Window.getWidth() / frameX;
         winSizeAdjustY = (float) Window.getHeight() / frameY;
 
         if (isProfiling) {
             Diamond.getProfiler().addRegister("Update Lists");
-            Diamond.getProfiler().addRegister("Update Children");
-            Diamond.getProfiler().addRegister("Update Components");
             Diamond.getProfiler().addRegister("Update Entities");
             Diamond.getProfiler().addRegister("Debug Render");
         }
         changeFrame(frameX, frameY);
-
-        isInitialized = true;
-    }
-
-    public void addChild(Environment environment) {
-        if (environment != null) {
-            if (!environment.isInitialized) environment.init();
-            children.add(environment);
-            environment.setEnv(this);
-            isModified = true;
-        }
     }
 
     /**
-     * An entity is added to a buffer list to then be added at
+     * Updates the environment
+     *
+     * @param dt Delta time for the main loop update
+     */
+    public void update(float dt) {
+        Diamond.getProfiler().beginMeasurement("Update Lists");
+        updateEntityList();
+        Diamond.getProfiler().endMeasurement("Update Lists");
+
+        Diamond.getProfiler().beginMeasurement("Update Entities");
+        for (DiaObject e : entities) e.update(dt);
+        Diamond.getProfiler().endMeasurement("Update Entities");
+    }
+
+    /**
+     * Updates the entity list of the environment by looping the buffer lists of entities to add and entities to remove
+     * and adding or removing entities form the main list accordingly. Automatically registers and unregisters components
+     * from added or removed entities. This method should be called after the environment updates.
+     */
+    public void updateEntityList() {
+        if (isDirty) {
+            for (Entity e : entitiesToAdd) {
+                e.setEnv(this);
+                entities.add(e);
+                hierarchyNodes.put(e.getUuid(), new DiaHierarchyNode(e));
+            }
+            for (Entity e : entitiesToDelete) {
+                entities.remove(e);
+            }
+            // Clear buffer lists
+            entitiesToAdd.clear();
+            entitiesToDelete.clear();
+            isDirty = false;
+        }
+    }
+    // -- END SECTION: UPDATE METHODS -- //
+
+    public void destroy() {
+
+    }
+    // -- END SECTION: UPDATE METHODS -- //
+
+    // -- START SECTION: HIERARCHY MANAGEMENT METHODS -- //
+    /**
+     * Adds an entity to the list of entities to be added to be added to the Environment proper later.
      * @param entity Entity to be added
      */
     public void addEntity(Entity entity) {
@@ -188,24 +209,54 @@ public class Environment extends DiaObject {
         }
     }
 
-    public void removeEntity(Entity entity) {
+    /**
+     * Adds an entity to the list of entities to be deleted to be deleted from the Environment proper later.
+     * @param entity Entity to be deleted from the environment
+     */
+    public void deleteEntity(Entity entity) {
         if (entity != null) {
-            entitiesToRemove.add(entity);
+            entitiesToDelete.add(entity);
             isDirty = true;
             isModified = true;
         }
     }
 
-    public void registerObject(DiaObject object) {
-        this.registeredEntities.put(object.getUuid(), object);
-        isModified = true;
+    /**
+     * Appends to the node 'child' the node 'parent'. If the parent node is set to null, then the node will be
+     * set to root level.
+     * @param parent Parent entity
+     * @param child Child entity
+     */
+    public void appendChildToNode(DiaHierarchyNode parent, DiaHierarchyNode child) {
+        DiaHierarchyNode newParent = parent != null ? parent : hierarchyTreeRoot;
+        if (child.getParent() != null) {
+            // If the child has a parent then it has to be removed from the parents children list
+            child.getParent().getChildren().remove(child);
+        }
+        child.setParent(newParent);
+        newParent.getChildren().add(child);
     }
 
-    public void unRegisterObject(DiaObject object) {
-        this.registeredEntities.remove(object.getUuid());
-        isModified = true;
+    /**
+     * Returns the parent Entity for the entity with the given id. Returns null if the entity is at root level in the
+     * environment hierarchy.
+     * @param a Parent entity
+     */
+    public Entity getEntityParent(String a) {
+        DiaHierarchyNode node = hierarchyNodes.get(a);
+        if (node != null) return node.getParent().getEntity();
+        return null;
     }
 
+    /**
+     * Returns the list of IDs of the given entities children. Returns empty list if the entity has no children
+     */
+    public String[] getNodeChildren() {
+        return new String[0];
+    }
+    // -- END SECTION: HIERARCHY MANAGEMENT METHODS -- //
+
+    // -- START SECTION: OTHER METHODS -- //
     public void changeFrame(int frameX, int frameY) {
         this.frameX = frameX;
         this.frameY = frameY;
@@ -220,7 +271,6 @@ public class Environment extends DiaObject {
     }
 
     public void startFrame() {
-
         this.frame.bind();
         glClearColor(0.1f, 0.1f, 0.1f, 1f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -235,102 +285,6 @@ public class Environment extends DiaObject {
         }
         this.frame.unBind();
     }
+    // -- END SECTION: OTHER METHODS -- //
 
-    /**
-     * Updates the environment
-     * @param dt Delta time for the main loop update
-     */
-    public void update(float dt) {
-        Diamond.getProfiler().beginMeasurement("Update Lists");
-        updateEntityList();
-        Diamond.getProfiler().endMeasurement("Update Lists");
-
-        Diamond.getProfiler().beginMeasurement("Update Children");
-        for (Environment child : children) child.update(dt);
-        Diamond.getProfiler().endMeasurement("Update Children");
-
-        Diamond.getProfiler().beginMeasurement("Update Entities");
-        for (Entity e : entities) e.update(dt);
-        Diamond.getProfiler().endMeasurement("Update Entities");
-    }
-
-    /**
-     * Updates the entity list of the environment by looping the buffer lists of entities to add and entities to remove
-     * and adding or removing entities form the main list accordingly. Automatically registers and unregisters components
-     * from added or removed entities. This method should be called after the environment updates.
-     */
-    public void updateEntityList() {
-        if (isDirty) {
-            for (Entity e : entitiesToAdd) addEntityToList(e);
-            for (Entity e : entitiesToRemove) removeEntityFromList(e);
-            // Clear buffer lists
-            entitiesToAdd.clear();
-            entitiesToRemove.clear();
-            isDirty = false;
-        }
-    }
-
-    private void addEntityToList(Entity e) {
-        e.setEnv(this);
-        registeredEntities.put(e.getUuid(), e);
-        entities.add(e);
-        registeredEntities.put(e.getUuid(), e);
-    }
-
-    private void removeEntityFromList(Entity e) {
-        entities.remove(e);
-        registeredEntities.remove(e.getUuid());
-    }
-
-    public void destroy() {
-
-    }
-
-    @Override
-    public void inspect() {
-        SappImGuiUtils.textLabel("UUID", getUuid());
-        SappImGuiUtils.textLabel("Framebuffer", "" + frame.getFboId());
-        ImString newName = new ImString(name, 256);
-        if (SappImGuiUtils.inputText(Sapphire.getLiteral("name"), newName)) {
-            if (Sapphire.get().getProject() != null && !newName.isEmpty()) {
-                name = newName.get();
-                isModified = true;
-            }
-        }
-
-        ImInt newWidth = new ImInt(frameX);
-        if (SappImGuiUtils.inputInt(Sapphire.getLiteral("frame_width"), newWidth)) {
-            changeFrame(newWidth.get(), frameY);
-            isModified = true;
-        }
-        ImInt newHeight = new ImInt(frameY);
-        if (SappImGuiUtils.inputInt(Sapphire.getLiteral("frame_height"), newHeight)) {
-            changeFrame(frameX, newHeight.get());
-            isModified = true;
-        }
-        ImGui.separator();
-
-        // UID System INFO
-        if (ImGui.beginTable("Objects", 2 , ImGuiTableFlags.Borders)) {
-
-            ImGui.tableSetupColumn("ID");
-            ImGui.tableSetupColumn("Object");
-            ImGui.tableHeadersRow();
-            for (String key : getRegisteredEntities().keySet()) {
-                ImGui.tableNextColumn();
-                ImGui.text("" + key);
-                ImGui.tableNextColumn();
-                ImGui.text(getRegisteredEntities().get(key).getClass().getSimpleName());
-            }
-        }
-        ImGui.endTable();
-
-        /*
-        ImGui.text("winSizeAdjustX: " + winSizeAdjustX);
-        ImGui.text("winSizeAdjustY: " + winSizeAdjustY);
-        ImGui.text(Window.getWidth() + " / " + Window.getHeight());
-        ImGui.text((float) Window.getWidth() / frameX + " / " + (float) Window.getHeight() / frameY);
-        ImGui.text("Ratio: " + getRatio());
-        */
-    }
 }

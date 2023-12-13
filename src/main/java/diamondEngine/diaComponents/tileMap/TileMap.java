@@ -1,20 +1,17 @@
-package diamondEngine.diaComponents.tiles;
+package diamondEngine.diaComponents.tileMap;
 
 import diamondEngine.Camera;
 import diamondEngine.Diamond;
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaRenderer.DebugRenderer;
-import imgui.type.ImInt;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import sapphire.Sapphire;
-import sapphire.imgui.SappImGuiUtils;
 import sapphire.imgui.windows.GameViewWindow;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileMap extends Component {
+public class TileMap implements Component {
 
     // ATTRIBUTES
     private TileSet tileSet;
@@ -85,6 +82,31 @@ public class TileMap extends Component {
     }
 
     // METHODS
+    @Override
+    public void init() {
+        this.cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX() * Diamond.getCurrentEnv().getAspectRatio();
+        this.cellNY = (float) cellY / Diamond.getCurrentEnv().getFrameY();
+        this.gridColor = new Vector3f(0.444f, 0.444f, 0.444f);
+        cellSizeChanged(cellX, cellY);
+    }
+
+    @Override
+    public void update(float dt) {
+
+        // The tileSet grid is drawn if it is set to be visible
+        drawGrid();
+    }
+
+    @Override
+    public Component copy() {
+        return new TileMap(cellX, cellY);
+    }
+
+    @Override
+    public void destroy() {
+
+    }
+
     private void cellSizeChanged(int cellX, int cellY) {
         this.cellY = cellY;
         this.cellX = cellX;
@@ -124,45 +146,5 @@ public class TileMap extends Component {
                 }
             }
         }
-    }
-
-    @Override
-    public void init() {
-        this.cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX() * Diamond.getCurrentEnv().getAspectRatio();
-        this.cellNY = (float) cellY / Diamond.getCurrentEnv().getFrameY();
-        this.gridColor = new Vector3f(0.444f, 0.444f, 0.444f);
-        cellSizeChanged(cellX, cellY);
-    }
-
-    @Override
-    public void update(float dt) {
-
-        // The tileSet grid is drawn if it is set to be visible
-        drawGrid();
-    }
-
-    @Override
-    public void inspect() {
-        ImInt cellX = new ImInt(this.cellX);
-        ImInt cellY = new ImInt(this.cellY);
-        if (SappImGuiUtils.dragInt(Sapphire.getLiteral("cell_height"), cellY)) {
-            cellSizeChanged(cellX.get(), cellY.get());
-        }
-        if (SappImGuiUtils.dragInt(Sapphire.getLiteral("cell_width"), cellX)) {
-            cellSizeChanged(cellX.get(), cellY.get());
-        }
-        if (SappImGuiUtils.checkboxLabel(Sapphire.getLiteral("draw_grid"), drawGrid)) {
-            this.drawGrid = !drawGrid;
-        }
-    }
-
-    @Override
-    public Component copy() {
-        return new TileMap(cellX, cellY);
-    }
-
-    @Override
-    public void destroy() {
-
     }
 }

@@ -91,7 +91,7 @@ public class WindowsEventHandler implements SappObserver {
 
         // Remove entity from environment
         if (event.entity != null && event.payload == null) {
-            event.entity.getEnv().removeEntity(event.entity);
+            event.entity.getEnv().deleteEntity(event.entity);
         }
 
         // Remove component from entity

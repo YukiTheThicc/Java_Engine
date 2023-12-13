@@ -19,7 +19,6 @@ public class EntitySerializer implements JsonDeserializer<Entity> {
     public Entity deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
         JsonArray components = jsonObject.getAsJsonArray("components");
-        JsonArray nestedEntities = jsonObject.getAsJsonArray("nestedEntities");
         JsonElement uuid = jsonObject.get("uuid");
         JsonElement name = jsonObject.get("name");
 
@@ -28,10 +27,6 @@ public class EntitySerializer implements JsonDeserializer<Entity> {
         for (JsonElement j : components) {
             Component c = context.deserialize(j, Component.class);
             entity.addComponent(c);
-        }
-        for (JsonElement j : nestedEntities) {
-            Entity e = this.deserialize(j, Entity.class, context);
-            entity.addNestedEntity(e);
         }
         return entity;
     }

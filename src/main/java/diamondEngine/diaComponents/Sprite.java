@@ -3,7 +3,7 @@ package diamondEngine.diaComponents;
 import diamondEngine.diaAssets.Texture;
 import org.joml.Vector2f;
 
-public class Sprite extends Component{
+public class Sprite implements Component{
 
     // ATTRIBUTES
     private final Texture texture;

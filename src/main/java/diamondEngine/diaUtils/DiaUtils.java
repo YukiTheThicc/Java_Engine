@@ -3,6 +3,7 @@ package diamondEngine.diaUtils;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.system.MemoryStack;
+import sapphire.eventsSystem.SappEventType;
 
 import java.io.File;
 import java.io.IOException;

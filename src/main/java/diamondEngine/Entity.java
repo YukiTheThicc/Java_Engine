@@ -16,13 +16,10 @@ public class Entity extends DiaObject {
     public static final String GENERATED_NAME = "GENERATED_ENTITY";
 
     // ATTRIBUTES
-    private String name;
     private ArrayList<Component> components;
-    private ArrayList<Entity> nestedEntities;
 
     // RUNTIME ATTRIBUTES
     private transient ArrayList<Component> componentsToRemove;
-    private transient ArrayList<Entity> entitiesToRemove;
     private transient Transform transform;
     private transient boolean toSerialize;
     private transient boolean isDirty;
@@ -32,9 +29,7 @@ public class Entity extends DiaObject {
         super();
         this.name = GENERATED_NAME;
         this.components = new ArrayList<>();
-        this.nestedEntities = new ArrayList<>();
         this.componentsToRemove = new ArrayList<>();
-        this.entitiesToRemove = new ArrayList<>();
         this.toSerialize = true;
     }
 
@@ -42,9 +37,7 @@ public class Entity extends DiaObject {
         super(uuid);
         this.name = GENERATED_NAME;
         this.components = new ArrayList<>();
-        this.nestedEntities = new ArrayList<>();
         this.componentsToRemove = new ArrayList<>();
-        this.entitiesToRemove = new ArrayList<>();
         this.toSerialize = true;
     }
 
@@ -52,9 +45,7 @@ public class Entity extends DiaObject {
         super(uuid);
         this.name = name;
         this.components = new ArrayList<>();
-        this.nestedEntities = new ArrayList<>();
         this.componentsToRemove = new ArrayList<>();
-        this.entitiesToRemove = new ArrayList<>();
         this.toSerialize = true;
     }
 
@@ -71,22 +62,10 @@ public class Entity extends DiaObject {
         return components;
     }
 
-    public ArrayList<Entity> getNestedEntities() {
-        return nestedEntities;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     //METHODS
     public Entity copy() {
         Entity copied = new Entity();
-        copied.setName(name + "_copy");
+        copied.setName(this.getName() + "_copy");
         for (Component c : components) {
             copied.addComponent(c.copy());
         }
@@ -95,7 +74,6 @@ public class Entity extends DiaObject {
 
     public void addComponent(Component component) {
         if (component != null) {
-            component.setOwner(this);
             components.add(component);
             if (getEnv() != null) {
                 getEnv().setModified();
@@ -106,25 +84,9 @@ public class Entity extends DiaObject {
         }
     }
 
-    public void addNestedEntity(Entity entity) {
-        if (entity != null && getParent() != entity && !nestedEntities.contains(entity)) {
-            entity.setParent(this);
-            entity.setEnv(this.getEnv());
-            nestedEntities.add(entity);
-            if (getEnv() != null) getEnv().setModified();
-        }
-    }
-
     public void removeComponent(Component c) {
         if (c != null) {
             componentsToRemove.add(c);
-            isDirty = true;
-        }
-    }
-
-    public void removeNestedEntity(Entity e) {
-        if (e != null) {
-            entitiesToRemove.add(e);
             isDirty = true;
         }
     }
@@ -157,10 +119,6 @@ public class Entity extends DiaObject {
                 components.remove(c);
             }
             componentsToRemove.clear();
-            for (Entity e : entitiesToRemove) {
-                nestedEntities.remove(e);
-            }
-            entitiesToRemove.clear();
         }
         for (Component c : components) {
             c.update(dt);
@@ -170,42 +128,6 @@ public class Entity extends DiaObject {
     public void destroy() {
         for (Component c : components) {
             c.destroy();
-        }
-        this.getEnv().unRegisterObject(this);
-    }
-
-    @Override
-    public void inspect() {
-
-        SappImGuiUtils.textLabel("UUID", this.getUuid());
-        ImString newName = new ImString(name, 256);
-        if (SappImGuiUtils.inputText(Sapphire.getLiteral("name"), newName)) {
-            if (Sapphire.get().getProject() != null && !newName.isEmpty()) {
-                name = newName.get();
-                this.getEnv().setModified();
-            }
-        }
-        for (Component c : components) {
-            if (ImGui.collapsingHeader(c.getClass().getSimpleName())) {
-                componentContextMenu(c);
-                c.inspect();
-            } else {
-                componentContextMenu(c);
-            }
-        }
-    }
-
-    /**
-     * Context menu for a component
-     *
-     * @param c Component for which the menu is being drawn
-     */
-    private void componentContextMenu(Component c) {
-        if (ImGui.beginPopupContextItem(c.getClass().getSimpleName())) {
-            if (ImGui.menuItem(Sapphire.getLiteral("remove"))) {
-                this.removeComponent(c);
-            }
-            ImGui.endPopup();
         }
     }
 }

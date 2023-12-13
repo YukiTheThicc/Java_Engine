@@ -23,7 +23,7 @@ public class InspectorWindow extends ImguiWindow {
                 SappImGuiUtils.align(AlignX.CENTER, AlignY.TOP, SappImGuiUtils.textSize(name), ImGui.getFontSize());
                 ImGui.text(name);
                 ImGui.separator();
-                activeObj.inspect();
+                SappInspector.inspect(activeObj);
             }
         }
         ImGui.end();

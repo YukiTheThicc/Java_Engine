@@ -7,8 +7,8 @@ public abstract class DiaObject {
 
     // ATTRIBUTES
     private transient Environment env = null;
-    private transient DiaObject parent = null;
     private final String uuid;
+    protected String name = "";
 
     // CONSTRUCTORS
     public DiaObject() {
@@ -26,39 +26,22 @@ public abstract class DiaObject {
 
     public void setEnv(Environment env) {
         this.env = env;
-        if (!env.getRegisteredEntities().containsKey(this.getUuid())) env.registerObject(this);
     }
 
     public String getUuid() {
         return uuid;
     }
 
-    public DiaObject getParent() {
-        return parent;
+    public String getName() {
+        return name;
     }
 
-    /**
-     * Sets the parent to a new object. Handles removal from the parents entity lists
-     * @param parent
-     */
-    public void setParent(DiaObject parent) {
-        // Handle removing of nested entity from its parent list
-        if (parent != null) {
-            if (parent instanceof Environment) {
-                ((Environment) parent).removeEntity((Entity) this);
-            } else if (parent instanceof Entity) {
-                ((Entity) parent).removeNestedEntity((Entity) this);
-            }
-        }
-        this.parent = parent;
+    public void setName(String name) {
+        this.name = name;
     }
 
     // METHODS
     public abstract void update(float dt);
 
     public abstract void destroy();
-
-    public void inspect() {
-        ImGui.text(this.getClass().getSimpleName());
-    };
 }
