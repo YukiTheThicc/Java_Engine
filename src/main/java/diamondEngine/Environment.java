@@ -24,10 +24,10 @@ public class Environment extends DiaObject {
     private List<Entity> entities;
     private List<Environment> nestedEnvironments;
     private HashMap<String, DiaHierarchyNode> hierarchyNodes;
-    private DiaHierarchyNode hierarchyTreeRoot;
 
     // RUNTIME DATA
     private transient String originFile;
+    private transient DiaHierarchyNode hierarchyTreeRoot;
     private transient List<Entity> entitiesToAdd;
     private transient List<Entity> entitiesToDelete;
     private transient Framebuffer frame;
@@ -175,7 +175,9 @@ public class Environment extends DiaObject {
             for (Entity e : entitiesToAdd) {
                 e.setEnv(this);
                 entities.add(e);
-                hierarchyNodes.put(e.getUuid(), new DiaHierarchyNode(e));
+                DiaHierarchyNode newNode = new DiaHierarchyNode(e);
+                appendChildToNode(hierarchyTreeRoot, newNode);
+                hierarchyNodes.put(e.getUuid(),newNode);
             }
             for (Entity e : entitiesToDelete) {
                 entities.remove(e);

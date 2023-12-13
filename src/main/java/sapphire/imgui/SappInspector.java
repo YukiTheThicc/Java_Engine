@@ -3,6 +3,7 @@ package sapphire.imgui;
 import diamondEngine.Entity;
 import diamondEngine.Environment;
 import diamondEngine.diaComponents.Component;
+import diamondEngine.diaUtils.DiaHierarchyNode;
 import diamondEngine.diaUtils.DiaUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiTableFlags;
@@ -63,12 +64,12 @@ public class SappInspector {
             ImGui.tableSetupColumn("ID");
             ImGui.tableSetupColumn("Object");
             ImGui.tableHeadersRow();
-            /*for (String key : getRegisteredEntities().keySet()) {
+            for (DiaHierarchyNode node : e.getHierarchyNodes().values()) {
                 ImGui.tableNextColumn();
-                ImGui.text("" + key);
+                ImGui.text("" + node.getEntity().getUuid());
                 ImGui.tableNextColumn();
-                ImGui.text(getRegisteredEntities().get(key).getClass().getSimpleName());
-            }*/
+                ImGui.text(node.getEntity().getClass().getSimpleName());
+            }
         }
         ImGui.endTable();
 

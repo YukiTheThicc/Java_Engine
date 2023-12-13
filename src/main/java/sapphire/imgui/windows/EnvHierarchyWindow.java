@@ -6,6 +6,7 @@ import diamondEngine.Diamond;
 import diamondEngine.diaComponents.Sprite;
 import diamondEngine.diaComponents.tileMap.TileMap;
 import diamondEngine.diaUtils.DiaHierarchyNode;
+import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
 import sapphire.Sapphire;
@@ -70,15 +71,26 @@ public class EnvHierarchyWindow extends ImguiWindow {
         DiaHierarchyNode root = env.getHierarchyRoot();
         for (DiaHierarchyNode node : root.getChildren()) {
             Entity e = node.getEntity();
-            boolean isEntityOpen = SappImGuiUtils.imageTreeNode(e.getUuid(), e.getName(), "entity.png", node);
-            if (isEntityOpen) {
 
-                ImGui.treePop();
+            if (node.getChildren().isEmpty()) {
+                SappImGuiUtils.selectable(e.getUuid(), e.getName(), "entity.png", node);
+            } else {
+                boolean isEntityOpen = SappImGuiUtils.imageTreeNode(e.getUuid(), e.getName(), "entity.png", node);
+                if (isEntityOpen) {
+
+                    ImGui.treePop();
+                }
             }
 
             // Drag and drop target
             if (ImGui.beginDragDropTarget()) {
                 Object payload = ImGui.acceptDragDropPayload("HierarchyNode");
+                DiaLogger.log("" + payload);
+
+                if (payload instanceof DiaHierarchyNode) {
+                    DiaLogger.log("Nested entity node");
+                    env.appendChildToNode(node, (DiaHierarchyNode) payload);
+                }
                 ImGui.endDragDropTarget();
             }
             entityContextMenu(e);

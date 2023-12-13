@@ -467,19 +467,13 @@ public class SappImGuiUtils {
         if (ImGui.button("", ImGui.getContentRegionAvailX(), ImGui.getFontSize() * 1.5f)) result = true;
 
         if (ImGui.beginDragDropSource()) {
-            ImGui.setDragDropPayload("Selectable", source);
+            ImGui.setDragDropPayload("HierarchyNode", source);
             float tipOrigin = ImGui.getCursorPosY();
             ImGui.image(Sapphire.getIcon(icon).getId(), SMALL_ICON_SIZE, SMALL_ICON_SIZE, 0, 1, 1, 0);
             ImGui.sameLine();
             ImGui.setCursorPosY(tipOrigin + (SMALL_ICON_SIZE - ImGui.getFontSize()) / 2);
             ImGui.text(text);
             ImGui.endDragDropSource();
-        }
-
-        // Drag and drop target
-        if (ImGui.beginDragDropTarget()) {
-            Object payload = ImGui.acceptDragDropPayload("Selectable");
-            ImGui.endDragDropTarget();
         }
 
         ImGui.sameLine();
