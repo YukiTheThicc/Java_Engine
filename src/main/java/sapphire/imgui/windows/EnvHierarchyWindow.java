@@ -69,32 +69,39 @@ public class EnvHierarchyWindow extends ImguiWindow {
 
     private void drawEntitiesHierarchy(Environment env) {
         DiaHierarchyNode root = env.getHierarchyRoot();
-        for (DiaHierarchyNode node : root.getChildren()) {
-            Entity e = node.getEntity();
-
-            if (node.getChildren().isEmpty()) {
-                SappImGuiUtils.selectable(e.getUuid(), e.getName(), "entity.png", node);
-            } else {
-                boolean isEntityOpen = SappImGuiUtils.imageTreeNode(e.getUuid(), e.getName(), "entity.png", node);
-                if (isEntityOpen) {
-
-                    ImGui.treePop();
-                }
-            }
-
-            // Drag and drop target
-            if (ImGui.beginDragDropTarget()) {
-                Object payload = ImGui.acceptDragDropPayload("HierarchyNode");
-                DiaLogger.log("" + payload);
-
-                if (payload instanceof DiaHierarchyNode) {
-                    DiaLogger.log("Nested entity node");
-                    env.appendChildToNode(node, (DiaHierarchyNode) payload);
-                }
-                ImGui.endDragDropTarget();
-            }
-            entityContextMenu(e);
+        for (String childId : root.getChildren()) {
+            DiaHierarchyNode childNode = env.getNodes().get(childId);
+            drawEntityNode(childNode, env);
         }
+    }
+
+    private void drawEntityNode(DiaHierarchyNode node, Environment env) {
+        Entity e = node.getEntity();
+        if (node.getChildren().isEmpty()) {
+            SappImGuiUtils.selectable(e.getUuid(), e.getName(), "entity.png", node);
+        } else {
+            boolean isEntityOpen = SappImGuiUtils.imageTreeNode(e.getUuid(), e.getName(), "entity.png", node);
+            if (isEntityOpen) {
+                for (String childId : node.getChildren()) {
+                    DiaHierarchyNode childNode = env.getNodes().get(childId);
+                    drawEntityNode(childNode, env);
+                }
+                ImGui.treePop();
+            }
+        }
+
+        // Drag and drop target
+        if (ImGui.beginDragDropTarget()) {
+            Object payload = ImGui.acceptDragDropPayload("HierarchyNode");
+            DiaLogger.log("" + payload);
+
+            if (payload instanceof DiaHierarchyNode) {
+                DiaLogger.log("Nested entity node");
+                env.modifyHierarchy(node.getEntity(), ((DiaHierarchyNode) payload).getEntity());
+            }
+            ImGui.endDragDropTarget();
+        }
+        entityContextMenu(e);
     }
 
     private void mainContextMenu() {

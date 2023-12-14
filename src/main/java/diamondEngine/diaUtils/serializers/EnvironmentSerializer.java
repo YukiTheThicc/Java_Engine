@@ -2,10 +2,10 @@ package diamondEngine.diaUtils.serializers;
 
 import com.google.gson.*;
 import diamondEngine.Diamond;
-import diamondEngine.DiaObject;
 import diamondEngine.Entity;
 import diamondEngine.Environment;
 import diamondEngine.diaComponents.Component;
+import diamondEngine.diaUtils.DiaHierarchyNode;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import sapphire.Sapphire;
@@ -72,10 +72,11 @@ public class EnvironmentSerializer {
                 // Data is transferred from the loaded environment to the new environment
                 finalEnv.init();
                 finalEnv.setOriginFile(path);
-                for (Entity e : loaded.getEntities()) {
-                    finalEnv.addEntity(e);
+                for (DiaHierarchyNode node : loaded.getNodes().values()) {
+                    finalEnv.addEntity(node);
                 }
                 finalEnv.updateEntityList();
+                finalEnv.constructTree();
                 finalEnv.setSaved();
                 Sapphire.setActiveObject(finalEnv);
                 Diamond.setCurrentEnv(finalEnv);

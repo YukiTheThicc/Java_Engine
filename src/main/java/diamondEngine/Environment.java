@@ -21,20 +21,19 @@ public class Environment extends DiaObject {
     // PERSISTENT DATA
     private int frameX;
     private int frameY;
-    private List<Entity> entities;
-    private List<Environment> nestedEnvironments;
-    private HashMap<String, DiaHierarchyNode> hierarchyNodes;
+    private HashMap<String, DiaHierarchyNode> nodes;
 
     // RUNTIME DATA
     private transient String originFile;
-    private transient DiaHierarchyNode hierarchyTreeRoot;
-    private transient List<Entity> entitiesToAdd;
-    private transient List<Entity> entitiesToDelete;
+    private transient List<Entity> entities;
+    private transient DiaHierarchyNode hierarchyTree;
+    private transient List<DiaHierarchyNode> nodesToAdd;
+    private transient List<DiaHierarchyNode> nodesToDelete;
     private transient Framebuffer frame;
     private transient float winSizeAdjustX = 1.0f;
     private transient float winSizeAdjustY = 1.0f;
 
-    // FLAGS
+    // RUNTIME FLAGS
     private transient boolean isDirty = false;
     private transient boolean toRemove = false;
     private transient boolean isModified = true;
@@ -48,7 +47,6 @@ public class Environment extends DiaObject {
         this.frameX = DEFAULT_FRAME_X;
         this.frameY = DEFAULT_FRAME_Y;
         this.entities = new ArrayList<>();
-        this.nestedEnvironments = new ArrayList<>();
     }
 
     public Environment(String name) {
@@ -57,7 +55,6 @@ public class Environment extends DiaObject {
         this.frameX = DEFAULT_FRAME_X;
         this.frameY = DEFAULT_FRAME_Y;
         this.entities = new ArrayList<>();
-        this.nestedEnvironments = new ArrayList<>();
     }
 
     public Environment(String name, String uuid) {
@@ -66,7 +63,6 @@ public class Environment extends DiaObject {
         this.frameX = DEFAULT_FRAME_X;
         this.frameY = DEFAULT_FRAME_Y;
         this.entities = new ArrayList<>();
-        this.nestedEnvironments = new ArrayList<>();
     }
 
     // GETTERS & SETTERS
@@ -74,12 +70,12 @@ public class Environment extends DiaObject {
         return entities;
     }
 
-    public HashMap<String, DiaHierarchyNode> getHierarchyNodes() {
-        return hierarchyNodes;
+    public HashMap<String, DiaHierarchyNode> getNodes() {
+        return nodes;
     }
 
     public DiaHierarchyNode getHierarchyRoot() {
-        return hierarchyTreeRoot;
+        return hierarchyTree;
     }
 
     public Framebuffer getFrame() {
@@ -134,11 +130,11 @@ public class Environment extends DiaObject {
     public void init() {
         frame = new Framebuffer(frameX, frameY);
         isModified = true;
-        hierarchyNodes = new HashMap<>();
-        hierarchyTreeRoot = new DiaHierarchyNode(null);
+        nodes = new HashMap<>();
+        hierarchyTree = new DiaHierarchyNode(null);
         originFile = null;
-        entitiesToAdd = new ArrayList<>();
-        entitiesToDelete = new ArrayList<>();
+        nodesToAdd = new ArrayList<>();
+        nodesToDelete = new ArrayList<>();
         winSizeAdjustX = (float) Window.getWidth() / frameX;
         winSizeAdjustY = (float) Window.getHeight() / frameY;
 
@@ -172,32 +168,31 @@ public class Environment extends DiaObject {
      */
     public void updateEntityList() {
         if (isDirty) {
-            for (Entity e : entitiesToAdd) {
+            for (DiaHierarchyNode node : nodesToAdd) {
+                Entity e = node.getEntity();
                 e.setEnv(this);
                 entities.add(e);
-                DiaHierarchyNode newNode = new DiaHierarchyNode(e);
-                appendChildToNode(hierarchyTreeRoot, newNode);
-                hierarchyNodes.put(e.getUuid(),newNode);
+                nodes.put(e.getUuid(), node);
             }
-            for (Entity e : entitiesToDelete) {
-                entities.remove(e);
+            for (DiaHierarchyNode e : nodesToDelete) {
+                // TODO Implement entity and its node deletion
             }
             // Clear buffer lists
-            entitiesToAdd.clear();
-            entitiesToDelete.clear();
+            nodesToAdd.clear();
+            nodesToDelete.clear();
             isDirty = false;
         }
     }
-    // -- END SECTION: UPDATE METHODS -- //
 
     public void destroy() {
 
     }
-    // -- END SECTION: UPDATE METHODS -- //
+    // -- END SECTION: LIFECYCLE METHODS -- //
 
     // -- START SECTION: HIERARCHY MANAGEMENT METHODS -- //
     /**
      * Adds an entity to the list of entities to be added to be added to the Environment proper later.
+     *
      * @param entity Entity to be added
      */
     public void addEntity(Entity entity) {
@@ -205,7 +200,18 @@ public class Environment extends DiaObject {
             if (entity.getComponent(Transform.class) == null) {
                 entity.addComponent(new Transform());
             }
-            entitiesToAdd.add(entity);
+            nodesToAdd.add(new DiaHierarchyNode(entity));
+            isModified = true;
+            isDirty = true;
+        }
+    }
+
+    public void addEntity(DiaHierarchyNode node) {
+        if (node != null && node.getEntity().getUuid() != null && !nodes.containsKey(node.getEntity().getUuid())) {
+            if (node.getEntity().getComponent(Transform.class) == null) {
+                node.getEntity().addComponent(new Transform());
+            }
+            nodesToAdd.add(node);
             isModified = true;
             isDirty = true;
         }
@@ -213,11 +219,20 @@ public class Environment extends DiaObject {
 
     /**
      * Adds an entity to the list of entities to be deleted to be deleted from the Environment proper later.
+     *
      * @param entity Entity to be deleted from the environment
      */
     public void deleteEntity(Entity entity) {
         if (entity != null) {
-            entitiesToDelete.add(entity);
+            nodesToDelete.add(nodes.get(entity.getUuid()));
+            isDirty = true;
+            isModified = true;
+        }
+    }
+
+    public void deleteEntity(DiaHierarchyNode node) {
+        if (node != null) {
+            nodesToDelete.add(node);
             isDirty = true;
             isModified = true;
         }
@@ -226,27 +241,38 @@ public class Environment extends DiaObject {
     /**
      * Appends to the node 'child' the node 'parent'. If the parent node is set to null, then the node will be
      * set to root level.
+     *
      * @param parent Parent entity
-     * @param child Child entity
+     * @param child  Child entity
      */
-    public void appendChildToNode(DiaHierarchyNode parent, DiaHierarchyNode child) {
-        DiaHierarchyNode newParent = parent != null ? parent : hierarchyTreeRoot;
-        if (child.getParent() != null) {
-            // If the child has a parent then it has to be removed from the parents children list
-            child.getParent().getChildren().remove(child);
+    public void modifyHierarchy(Entity parent, Entity child) {
+        DiaHierarchyNode newParent = parent != null ? nodes.get(parent.getUuid()) : hierarchyTree;
+        DiaHierarchyNode childNode = nodes.get(child.getUuid());
+        DiaHierarchyNode oldParent = nodes.get(childNode.getParent());
+        if (newParent.getEntity() == null || !newParent.getEntity().getUuid().equals(childNode.getParent())) {
+            if (oldParent != null) {
+                // If the child has a parent then it has to be removed from the parents children list
+                oldParent.getChildren().remove(child.getUuid());
+            } else {
+                hierarchyTree.removeChild(child.getUuid());
+            }
+            childNode.setParent(parent != null ? parent.getUuid() : null);
+            newParent.getChildren().add(child.getUuid());
+            isModified = true;
         }
-        child.setParent(newParent);
-        newParent.getChildren().add(child);
     }
 
     /**
      * Returns the parent Entity for the entity with the given id. Returns null if the entity is at root level in the
      * environment hierarchy.
+     *
      * @param a Parent entity
      */
     public Entity getEntityParent(String a) {
-        DiaHierarchyNode node = hierarchyNodes.get(a);
-        if (node != null) return node.getParent().getEntity();
+        DiaHierarchyNode node = nodes.get(a);
+        if (node != null) {
+            return nodes.get(node.getParent()).getEntity();
+        }
         return null;
     }
 
@@ -270,6 +296,23 @@ public class Environment extends DiaObject {
 
     public float getAspectRatio() {
         return (float) frameX / frameY;
+    }
+
+    /**
+     * Build the hierarchy tree from the nodes list. Meant to be used when the environment is loaded as the nodes are all
+     * set to root nodes.
+     */
+    public void constructTree() {
+        for (DiaHierarchyNode node : nodes.values()) {
+            if (node.getParent() != null) {
+                DiaHierarchyNode parent = nodes.get(node.getParent());
+                if (parent.getEntity() != null) {
+                    modifyHierarchy(parent.getEntity(), node.getEntity());
+                }
+            } else {
+                modifyHierarchy(null, node.getEntity());
+            }
+        }
     }
 
     public void startFrame() {

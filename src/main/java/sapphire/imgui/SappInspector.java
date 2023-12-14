@@ -64,7 +64,7 @@ public class SappInspector {
             ImGui.tableSetupColumn("ID");
             ImGui.tableSetupColumn("Object");
             ImGui.tableHeadersRow();
-            for (DiaHierarchyNode node : e.getHierarchyNodes().values()) {
+            for (DiaHierarchyNode node : e.getNodes().values()) {
                 ImGui.tableNextColumn();
                 ImGui.text("" + node.getEntity().getUuid());
                 ImGui.tableNextColumn();

@@ -7,9 +7,9 @@ import java.util.List;
 public class DiaHierarchyNode {
 
     // ATTRIBUTES
-    private DiaHierarchyNode parent;
-    private List<DiaHierarchyNode> children;
-    private transient final Entity entity;
+    private String parent;
+    private List<String> children;
+    private final Entity entity;
 
     // CONSTRUCTORS
     public DiaHierarchyNode(Entity node) {
@@ -19,15 +19,15 @@ public class DiaHierarchyNode {
     }
 
     // GETTERS & SETTERS
-    public DiaHierarchyNode getParent() {
+    public String getParent() {
         return parent;
     }
 
-    public void setParent(DiaHierarchyNode parent) {
+    public void setParent(String parent) {
         this.parent = parent;
     }
 
-    public List<DiaHierarchyNode> getChildren() {
+    public List<String> getChildren() {
         return children;
     }
 
@@ -36,11 +36,11 @@ public class DiaHierarchyNode {
     }
 
     // METHODS
-    public void addChild(DiaHierarchyNode node) {
-        children.add(node);
+    public void addChild(String entity) {
+        children.add(entity);
     }
 
-    public void removeChild(DiaHierarchyNode node) {
-        children.remove(node);
+    public void removeChild(String entity) {
+        children.remove(entity);
     }
 }
