@@ -72,11 +72,7 @@ public class EnvironmentSerializer {
                 // Data is transferred from the loaded environment to the new environment
                 finalEnv.init();
                 finalEnv.setOriginFile(path);
-                for (DiaHierarchyNode node : loaded.getNodes().values()) {
-                    finalEnv.addEntity(node);
-                }
-                finalEnv.updateEntityList();
-                finalEnv.constructTree();
+                finalEnv.loadEntityHierarchy(loaded.getNodes());
                 finalEnv.setSaved();
                 Sapphire.setActiveObject(finalEnv);
                 Diamond.setCurrentEnv(finalEnv);

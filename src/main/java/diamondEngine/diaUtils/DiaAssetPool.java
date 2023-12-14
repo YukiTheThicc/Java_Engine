@@ -4,7 +4,7 @@ import diamondEngine.diaAssets.Template;
 import diamondEngine.diaAssets.Sound;
 import diamondEngine.diaEvents.DiaEvent;
 import diamondEngine.diaEvents.DiaEventType;
-import diamondEngine.diaEvents.DiaEvents;
+import diamondEngine.diaEvents.DiaEventSystem;
 import diamondEngine.diaAssets.Shader;
 import diamondEngine.diaAssets.Texture;
 
@@ -70,7 +70,7 @@ public class DiaAssetPool {
         if (textures.remove(path) != null) wasRemoved = true;
         if (sounds.remove(path) != null) wasRemoved = true;
         if (templates.remove(path) != null) wasRemoved = true;
-        if (wasRemoved) DiaEvents.notify(new DiaEvent(DiaEventType.ASSET_REMOVED, path));
+        if (wasRemoved) DiaEventSystem.throwEvent(new DiaEvent(DiaEventType.ASSET_REMOVED, path));
         return wasRemoved;
     }
 
@@ -82,7 +82,7 @@ public class DiaAssetPool {
             Shader shader = new Shader(name, path);
             shader.compile();
             DiaAssetPool.shaders.put(file.getAbsolutePath(), shader);
-            DiaEvents.notify(new DiaEvent(DiaEventType.ASSET_ADDED));
+            DiaEventSystem.throwEvent(new DiaEvent(DiaEventType.ASSET_ADDED));
             return shader;
         }
     }
@@ -99,7 +99,7 @@ public class DiaAssetPool {
             Texture texture = new Texture();
             texture.load(path);
             textures.put(file.getAbsolutePath(), texture);
-            DiaEvents.notify(new DiaEvent(DiaEventType.ASSET_ADDED, texture));
+            DiaEventSystem.throwEvent(new DiaEvent(DiaEventType.ASSET_ADDED, texture));
             return texture;
         }
     }
@@ -116,7 +116,7 @@ public class DiaAssetPool {
             Texture texture = new Texture();
             texture.load(path);
             textures.put(file.getAbsolutePath(), texture);
-            DiaEvents.notify(new DiaEvent(DiaEventType.ASSET_ADDED, texture));
+            DiaEventSystem.throwEvent(new DiaEvent(DiaEventType.ASSET_ADDED, texture));
             return texture;
         }
     }
@@ -132,7 +132,7 @@ public class DiaAssetPool {
         } else {
             Sound sound = new Sound(file.getAbsolutePath(), false);
             sounds.put(file.getAbsolutePath(), sound);
-            DiaEvents.notify(new DiaEvent(DiaEventType.ASSET_ADDED, sound));
+            DiaEventSystem.throwEvent(new DiaEvent(DiaEventType.ASSET_ADDED, sound));
             return sound;
         }
     }

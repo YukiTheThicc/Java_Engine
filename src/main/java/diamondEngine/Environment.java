@@ -173,6 +173,7 @@ public class Environment extends DiaObject {
                 e.setEnv(this);
                 entities.add(e);
                 nodes.put(e.getUuid(), node);
+                modifyHierarchy(null, e);
             }
             for (DiaHierarchyNode e : nodesToDelete) {
                 // TODO Implement entity and its node deletion
@@ -206,17 +207,6 @@ public class Environment extends DiaObject {
         }
     }
 
-    public void addEntity(DiaHierarchyNode node) {
-        if (node != null && node.getEntity().getUuid() != null && !nodes.containsKey(node.getEntity().getUuid())) {
-            if (node.getEntity().getComponent(Transform.class) == null) {
-                node.getEntity().addComponent(new Transform());
-            }
-            nodesToAdd.add(node);
-            isModified = true;
-            isDirty = true;
-        }
-    }
-
     /**
      * Adds an entity to the list of entities to be deleted to be deleted from the Environment proper later.
      *
@@ -225,14 +215,6 @@ public class Environment extends DiaObject {
     public void deleteEntity(Entity entity) {
         if (entity != null) {
             nodesToDelete.add(nodes.get(entity.getUuid()));
-            isDirty = true;
-            isModified = true;
-        }
-    }
-
-    public void deleteEntity(DiaHierarchyNode node) {
-        if (node != null) {
-            nodesToDelete.add(node);
             isDirty = true;
             isModified = true;
         }
@@ -302,8 +284,18 @@ public class Environment extends DiaObject {
      * Build the hierarchy tree from the nodes list. Meant to be used when the environment is loaded as the nodes are all
      * set to root nodes.
      */
-    public void constructTree() {
+    public void loadEntityHierarchy(HashMap<String, DiaHierarchyNode> nodes) {
+        this.entities.clear();
+        this.nodes.clear();
+
+        // Load all nodes and corresponding entities into this environment before establishing the tree
         for (DiaHierarchyNode node : nodes.values()) {
+            this.nodes.put(node.getEntity().getUuid(), node);
+            this.entities.add(node.getEntity());
+        }
+
+        // Set the appropriate tree hierarchy from the loaded nodes
+        for (DiaHierarchyNode node : this.nodes.values()) {
             if (node.getParent() != null) {
                 DiaHierarchyNode parent = nodes.get(node.getParent());
                 if (parent.getEntity() != null) {

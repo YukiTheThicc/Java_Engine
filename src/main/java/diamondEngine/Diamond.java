@@ -2,7 +2,7 @@ package diamondEngine;
 
 import diamondEngine.diaEvents.DiaEvent;
 import diamondEngine.diaEvents.DiaEventType;
-import diamondEngine.diaEvents.DiaEvents;
+import diamondEngine.diaEvents.DiaEventSystem;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaProfiler;
@@ -41,7 +41,7 @@ public class Diamond {
 
     public static void setCurrentEnv(Environment currentEnv) {
         Diamond.currentEnv = currentEnv;
-        DiaEvents.notify(new DiaEvent(DiaEventType.ENV_CHANGED));
+        DiaEventSystem.throwEvent(new DiaEvent(DiaEventType.ENV_CHANGED));
     }
 
     public static DiaProfiler getProfiler() {
@@ -91,9 +91,10 @@ public class Diamond {
 
     /**
      * Updates the current environment and processes the env list if the instance is dirty.
-     * @param dt
+     * @param dt Time delta
      */
     public void update(float dt) {
+        DiaEventSystem.notifyObservers();
         if (isDirty) {
             for (Environment env : environmentsToRemove) {
                 environments.remove(env);

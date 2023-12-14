@@ -3,7 +3,7 @@ package sapphire.imgui.windows;
 import diamondEngine.diaAssets.Template;
 import diamondEngine.diaAssets.Sound;
 import diamondEngine.diaEvents.DiaEvent;
-import diamondEngine.diaEvents.DiaEvents;
+import diamondEngine.diaEvents.DiaEventSystem;
 import diamondEngine.diaEvents.DiaObserver;
 import diamondEngine.diaAssets.Shader;
 import diamondEngine.diaAssets.Texture;
@@ -55,7 +55,7 @@ public class AssetsWindow extends ImguiWindow implements DiaObserver {
         this.textureButtons = new ArrayList<>();
         this.soundButtons = new ArrayList<>();
         this.templateButtons = new ArrayList<>();
-        DiaEvents.addObserver(this);
+        DiaEventSystem.addObserver(this);
         getFirstElements();
     }
 
