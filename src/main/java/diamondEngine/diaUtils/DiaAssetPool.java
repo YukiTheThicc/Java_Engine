@@ -70,7 +70,6 @@ public class DiaAssetPool {
         if (textures.remove(path) != null) wasRemoved = true;
         if (sounds.remove(path) != null) wasRemoved = true;
         if (templates.remove(path) != null) wasRemoved = true;
-        if (wasRemoved) DiaEventSystem.throwEvent(new DiaEvent(DiaEventType.ASSET_REMOVED, path));
         return wasRemoved;
     }
 

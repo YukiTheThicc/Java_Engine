@@ -1,10 +1,10 @@
 package diamondEngine.diaEvents;
 
 public enum DiaEventType {
-    USER_EVENT,
+    DEFAULT,
     ASSET_ADDED,
     ASSET_REMOVED,
-    ENV_CHANGED,
+    CURRENT_ENVIRONMENT_SWITCHED,
     MOUSE_INPUT,
     KEYBOARD_INPUT,
     ENTITY_ADDED,

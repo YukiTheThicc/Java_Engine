@@ -21,6 +21,7 @@ public class DiaEventSystem {
         for (DiaEvent event : queuedEvents) {
             for (DiaObserver observer : observers) {
                 observer.onNotify(event);
+                if (event.isHandled) break;
             }
         }
     }

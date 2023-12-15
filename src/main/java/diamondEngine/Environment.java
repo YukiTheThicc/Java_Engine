@@ -1,6 +1,8 @@
 package diamondEngine;
 
 import diamondEngine.diaComponents.Transform;
+import diamondEngine.diaEvents.DiaEvent;
+import diamondEngine.diaEvents.DiaObserver;
 import diamondEngine.diaRenderer.DebugRenderer;
 import diamondEngine.diaRenderer.Framebuffer;
 import diamondEngine.diaUtils.DiaHierarchyNode;
@@ -9,7 +11,7 @@ import java.util.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class Environment extends DiaObject {
+public class Environment extends DiaObject implements DiaObserver {
 
     // CONSTANTS
     public static final String ENV_EXTENSION = ".denv";
@@ -322,6 +324,15 @@ public class Environment extends DiaObject {
         }
         this.frame.unBind();
     }
-    // -- END SECTION: OTHER METHODS -- //
 
+    @Override
+    public void onNotify(DiaEvent event) {
+        switch (event.type) {
+            case ENTITY_ADDED:
+                break;
+            case ENTITY_REMOVED:
+                break;
+        }
+    }
+    // -- END SECTION: OTHER METHODS -- //
 }

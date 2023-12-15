@@ -41,7 +41,7 @@ public class Diamond {
 
     public static void setCurrentEnv(Environment currentEnv) {
         Diamond.currentEnv = currentEnv;
-        DiaEventSystem.throwEvent(new DiaEvent(DiaEventType.ENV_CHANGED));
+        DiaEventSystem.throwEvent(new DiaEvent(DiaEventType.CURRENT_ENVIRONMENT_SWITCHED));
     }
 
     public static DiaProfiler getProfiler() {
