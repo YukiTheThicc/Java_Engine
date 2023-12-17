@@ -89,6 +89,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
         } else {
             isEntityOpen = SappImGuiUtils.imageTreeNode(e.getUuid(), e.getName(), "entity.png", node);
         }
+        entityContextMenu(env, e);
 
         // Drag and drop target
         if (ImGui.beginDragDropTarget()) {
@@ -106,7 +107,6 @@ public class EnvHierarchyWindow extends ImguiWindow {
             }
             ImGui.treePop();
         }
-        entityContextMenu(env, e);
     }
 
     private void mainContextMenu() {
