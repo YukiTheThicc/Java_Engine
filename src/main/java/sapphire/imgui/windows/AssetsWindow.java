@@ -15,7 +15,7 @@ import imgui.flag.ImGuiWindowFlags;
 import sapphire.Sapphire;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
-import sapphire.eventsSystem.SappEvents;
+import sapphire.eventsSystem.SappEventSystem;
 import sapphire.imgui.SappImGuiLayer;
 import sapphire.imgui.SappImGuiUtils;
 import sapphire.imgui.widgets.AssetImageButton;
@@ -88,7 +88,7 @@ public class AssetsWindow extends ImguiWindow implements DiaObserver {
         ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
         this.addAssetPopUpMenu();
         if (addAssetButton.draw()) {
-            SappEvents.notify(new SappEvent(SappEventType.Add_asset));
+            SappEventSystem.throwEvent(new SappEvent(SappEventType.Add_asset));
         }
         if (removeAssetButton.draw());
         //if (copyAssetButton.draw());

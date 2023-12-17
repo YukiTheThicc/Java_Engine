@@ -75,9 +75,6 @@ public class Entity extends DiaObject {
     public void addComponent(Component component) {
         if (component != null) {
             components.add(component);
-            if (getEnv() != null) {
-                getEnv().setModified();
-            }
             if (component instanceof Transform) {
                 transform = (Transform) component;
             }

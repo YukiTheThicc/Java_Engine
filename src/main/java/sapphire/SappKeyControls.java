@@ -3,7 +3,7 @@ package sapphire;
 import imgui.ImGuiIO;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
-import sapphire.eventsSystem.SappEvents;
+import sapphire.eventsSystem.SappEventSystem;
 
 import java.util.Arrays;
 
@@ -17,13 +17,13 @@ public class SappKeyControls {
     public static void processControls(ImGuiIO io) {
         io.getKeysDown(keyPressed);
         if (io.getKeyCtrl() && keyPressed[GLFW_KEY_N])
-            SappEvents.notify(new SappEvent(SappEventType.Add_env));
+            SappEventSystem.throwEvent(new SappEvent(SappEventType.Add_env));
         if (io.getKeyCtrl() && keyPressed[GLFW_KEY_I])
-            SappEvents.notify(new SappEvent(SappEventType.Import_env));
+            SappEventSystem.throwEvent(new SappEvent(SappEventType.Import_env));
         if (io.getKeyCtrl() && keyPressed[GLFW_KEY_S])
-            SappEvents.notify(new SappEvent(SappEventType.Save_env));
+            SappEventSystem.throwEvent(new SappEvent(SappEventType.Save_env));
         if (io.getKeyCtrl() && io.getKeyAlt() && keyPressed[GLFW_KEY_S])
-            SappEvents.notify(new SappEvent(SappEventType.Save_env_as));
+            SappEventSystem.throwEvent(new SappEvent(SappEventType.Save_env_as));
         Arrays.fill(keyPressed, false);
     }
 }

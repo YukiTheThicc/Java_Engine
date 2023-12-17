@@ -6,7 +6,7 @@ import imgui.ImGui;
 import imgui.flag.ImGuiSelectableFlags;
 import sapphire.Sapphire;
 import sapphire.SappDir;
-import sapphire.eventsSystem.SappEvents;
+import sapphire.eventsSystem.SappEventSystem;
 import sapphire.SappProject;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
@@ -99,7 +99,7 @@ public class FileNavigatorWindow extends ImguiWindow {
 
     private void fileContextMenu(File file) {
         if (ImGui.beginPopupContextItem(file.getName())) {
-            if (ImGui.menuItem(Sapphire.getLiteral("delete"))) SappEvents.notify(
+            if (ImGui.menuItem(Sapphire.getLiteral("delete"))) SappEventSystem.throwEvent(
                     new SappEvent(SappEventType.Delete_file, null, null, file));
             ImGui.endPopup();
         }

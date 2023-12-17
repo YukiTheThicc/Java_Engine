@@ -1,12 +1,9 @@
 package sapphire.eventsSystem.handlers;
 
-import diamondEngine.DiaObject;
 import diamondEngine.Diamond;
+import diamondEngine.Entity;
 import diamondEngine.diaComponents.Component;
-import diamondEngine.diaUtils.DiaAssetPool;
-import diamondEngine.diaUtils.DiaLogger;
-import diamondEngine.diaUtils.DiaLoggerLevel;
-import diamondEngine.diaUtils.DiaUtils;
+import diamondEngine.diaUtils.*;
 import sapphire.Sapphire;
 import sapphire.SappProject;
 import sapphire.eventsSystem.SappEvent;
@@ -30,10 +27,13 @@ public class WindowsEventHandler implements SappObserver {
                 handleCopyObject(event);
                 break;
             case Selected_object:
-                if (event.payload instanceof DiaObject) Sapphire.setActiveObject((DiaObject) event.payload);
+                if (event.payload instanceof DiaHierarchyNode) Sapphire.setActiveObject(((DiaHierarchyNode) event.payload).getEntity());
                 break;
             case Delete_object:
                 handleDeleteObj(event);
+                break;
+            case Hierarchy_changed:
+                handleHierarchyChanged(event);
                 break;
             case Delete_file:
                 handleDeleteFile(event);
@@ -89,16 +89,17 @@ public class WindowsEventHandler implements SappObserver {
             if (Sapphire.getActiveObject() == event.env) Sapphire.setActiveObject(null);
         }
 
-        // Remove entity from environment
-        if (event.entity != null && event.payload == null) {
-            event.entity.getEnv().deleteEntity(event.entity);
-        }
-
         // Remove component from entity
         if (event.env == null && event.entity != null && event.payload != null) {
             if (event.payload instanceof Component) {
                 event.entity.removeComponent(((Component) event.payload));
             }
+        }
+    }
+
+    private void handleHierarchyChanged(SappEvent event) {
+        if (event.env != null && event.payload instanceof Entity) {
+            event.env.nestEntity(event.entity, (Entity) event.payload);
         }
     }
 

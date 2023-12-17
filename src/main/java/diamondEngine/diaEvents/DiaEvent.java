@@ -1,5 +1,7 @@
 package diamondEngine.diaEvents;
 
+import diamondEngine.Environment;
+
 public class DiaEvent {
 
     // ATTRIBUTES

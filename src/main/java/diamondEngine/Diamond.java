@@ -67,6 +67,7 @@ public class Diamond {
         defaultEnv = new Environment(LIMBO_ENV_NAME);
         currentEnv = defaultEnv;
         currentEnv.init();
+        DiaEventSystem.init();
     }
 
     public void addEmptyEnvironment() {
@@ -94,7 +95,8 @@ public class Diamond {
      * @param dt Time delta
      */
     public void update(float dt) {
-        DiaEventSystem.notifyObservers();
+        updateAllEnvLists();
+        DiaEventSystem.dispatchEvents();
         if (isDirty) {
             for (Environment env : environmentsToRemove) {
                 environments.remove(env);
@@ -111,7 +113,7 @@ public class Diamond {
     /**
      * Updates the content lists of all the environments
      */
-    public void updateAllEnvLists() {
+    private void updateAllEnvLists() {
         for (Environment env : environments) {
             env.updateEntityList();
         }

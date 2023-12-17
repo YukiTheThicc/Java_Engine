@@ -2,7 +2,8 @@ package diamondEngine;
 
 import diamondEngine.diaComponents.Transform;
 import diamondEngine.diaEvents.DiaEvent;
-import diamondEngine.diaEvents.DiaObserver;
+import diamondEngine.diaEvents.DiaEventSystem;
+import diamondEngine.diaEvents.DiaEventType;
 import diamondEngine.diaRenderer.DebugRenderer;
 import diamondEngine.diaRenderer.Framebuffer;
 import diamondEngine.diaUtils.DiaHierarchyNode;
@@ -11,7 +12,7 @@ import java.util.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class Environment extends DiaObject implements DiaObserver {
+public class Environment extends DiaObject {
 
     // CONSTANTS
     public static final String ENV_EXTENSION = ".denv";
@@ -68,10 +69,6 @@ public class Environment extends DiaObject implements DiaObserver {
     }
 
     // GETTERS & SETTERS
-    public List<Entity> getEntities() {
-        return entities;
-    }
-
     public HashMap<String, DiaHierarchyNode> getNodes() {
         return nodes;
     }
@@ -126,6 +123,7 @@ public class Environment extends DiaObject implements DiaObserver {
 
     // METHODS
     // -- START SECTION: LIFECYCLE METHODS -- //
+
     /**
      * Initializes the transient attributes of the environment,
      */
@@ -172,13 +170,24 @@ public class Environment extends DiaObject implements DiaObserver {
         if (isDirty) {
             for (DiaHierarchyNode node : nodesToAdd) {
                 Entity e = node.getEntity();
-                e.setEnv(this);
                 entities.add(e);
                 nodes.put(e.getUuid(), node);
-                modifyHierarchy(null, e);
+                nestEntity(null, e);
+                DiaEventSystem.throwEvent(new DiaEvent(DiaEventType.ENTITY_ADDED, this, e));
             }
-            for (DiaHierarchyNode e : nodesToDelete) {
-                // TODO Implement entity and its node deletion
+            for (DiaHierarchyNode node : nodesToDelete) {
+                Entity e = node.getEntity();
+
+                // Handle the removal form the parents child list
+                if (nodes.get(node.getParent()) != null) {
+                    nodes.get(node.getParent()).getChildren().remove(e.getUuid());
+                } else {
+                    hierarchyTree.getChildren().remove(e.getUuid());
+                }
+
+                entities.remove(e);
+                nodes.remove(e.getUuid(), node);
+                DiaEventSystem.throwEvent(new DiaEvent(DiaEventType.ENTITY_REMOVED, this, e));
             }
             // Clear buffer lists
             nodesToAdd.clear();
@@ -203,8 +212,8 @@ public class Environment extends DiaObject implements DiaObserver {
             if (entity.getComponent(Transform.class) == null) {
                 entity.addComponent(new Transform());
             }
-            nodesToAdd.add(new DiaHierarchyNode(entity));
-            isModified = true;
+            DiaHierarchyNode newNode = new DiaHierarchyNode(entity);
+            nodesToAdd.add(newNode);
             isDirty = true;
         }
     }
@@ -215,10 +224,9 @@ public class Environment extends DiaObject implements DiaObserver {
      * @param entity Entity to be deleted from the environment
      */
     public void deleteEntity(Entity entity) {
-        if (entity != null) {
-            nodesToDelete.add(nodes.get(entity.getUuid()));
+        if (entity != null && nodes.containsKey(entity.getUuid())) {
+            this.nodesToDelete.add(nodes.get(entity.getUuid()));
             isDirty = true;
-            isModified = true;
         }
     }
 
@@ -229,7 +237,7 @@ public class Environment extends DiaObject implements DiaObserver {
      * @param parent Parent entity
      * @param child  Child entity
      */
-    public void modifyHierarchy(Entity parent, Entity child) {
+    public void nestEntity(Entity parent, Entity child) {
         DiaHierarchyNode newParent = parent != null ? nodes.get(parent.getUuid()) : hierarchyTree;
         DiaHierarchyNode childNode = nodes.get(child.getUuid());
         DiaHierarchyNode oldParent = nodes.get(childNode.getParent());
@@ -243,6 +251,7 @@ public class Environment extends DiaObject implements DiaObserver {
             childNode.setParent(parent != null ? parent.getUuid() : null);
             newParent.getChildren().add(child.getUuid());
             isModified = true;
+            DiaEventSystem.throwEvent(new DiaEvent(DiaEventType.HIERARCHY_UPDATED, this));
         }
     }
 
@@ -301,10 +310,10 @@ public class Environment extends DiaObject implements DiaObserver {
             if (node.getParent() != null) {
                 DiaHierarchyNode parent = nodes.get(node.getParent());
                 if (parent.getEntity() != null) {
-                    modifyHierarchy(parent.getEntity(), node.getEntity());
+                    nestEntity(parent.getEntity(), node.getEntity());
                 }
             } else {
-                modifyHierarchy(null, node.getEntity());
+                nestEntity(null, node.getEntity());
             }
         }
     }
@@ -323,16 +332,6 @@ public class Environment extends DiaObject implements DiaObserver {
             Diamond.getProfiler().endMeasurement("Debug Render");
         }
         this.frame.unBind();
-    }
-
-    @Override
-    public void onNotify(DiaEvent event) {
-        switch (event.type) {
-            case ENTITY_ADDED:
-                break;
-            case ENTITY_REMOVED:
-                break;
-        }
     }
     // -- END SECTION: OTHER METHODS -- //
 }

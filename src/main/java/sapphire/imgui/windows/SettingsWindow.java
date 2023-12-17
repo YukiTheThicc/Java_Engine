@@ -8,7 +8,7 @@ import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import sapphire.Sapphire;
-import sapphire.eventsSystem.SappEvents;
+import sapphire.eventsSystem.SappEventSystem;
 import sapphire.SappSettings;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
@@ -55,7 +55,7 @@ public class SettingsWindow extends ImguiWindow {
 
     private void checkChanges(SappSettings settings) {
         if (settingsChanged) {
-            SappEvents.notify(new SappEvent(SappEventType.Settings_changed));
+            SappEventSystem.throwEvent(new SappEvent(SappEventType.Settings_changed));
             settings.save();
             settingsChanged = false;
         }

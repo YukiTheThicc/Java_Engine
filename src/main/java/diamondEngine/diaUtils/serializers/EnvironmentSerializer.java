@@ -5,7 +5,6 @@ import diamondEngine.Diamond;
 import diamondEngine.Entity;
 import diamondEngine.Environment;
 import diamondEngine.diaComponents.Component;
-import diamondEngine.diaUtils.DiaHierarchyNode;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaLoggerLevel;
 import sapphire.Sapphire;

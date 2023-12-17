@@ -6,7 +6,6 @@ import imgui.ImGui;
 public abstract class DiaObject {
 
     // ATTRIBUTES
-    private transient Environment env = null;
     private final String uuid;
     protected String name = "";
 
@@ -20,14 +19,6 @@ public abstract class DiaObject {
     }
 
     // GETTERS && SETTERS
-    public Environment getEnv() {
-        return env;
-    }
-
-    public void setEnv(Environment env) {
-        this.env = env;
-    }
-
     public String getUuid() {
         return uuid;
     }

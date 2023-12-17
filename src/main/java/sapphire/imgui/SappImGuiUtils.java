@@ -1,8 +1,5 @@
 package sapphire.imgui;
 
-import diamondEngine.DiaObject;
-import diamondEngine.Entity;
-import diamondEngine.Environment;
 import diamondEngine.diaAssets.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
@@ -16,7 +13,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
-import sapphire.eventsSystem.SappEvents;
+import sapphire.eventsSystem.SappEventSystem;
 import sapphire.eventsSystem.SappObserver;
 import sapphire.Sapphire;
 import sapphire.imgui.windows.ModalConfirmation;
@@ -464,7 +461,10 @@ public class SappImGuiUtils {
         ImGui.beginGroup();
         float buttonOriginX = ImGui.getCursorPosX();
 
-        if (ImGui.button("", ImGui.getContentRegionAvailX(), ImGui.getFontSize() * 1.5f)) result = true;
+        if (ImGui.button("", ImGui.getContentRegionAvailX(), ImGui.getFontSize() * 1.5f)) {
+            result = true;
+            SappEventSystem.throwEvent(new SappEvent(SappEventType.Selected_object, null, null, source));
+        }
 
         if (ImGui.beginDragDropSource()) {
             ImGui.setDragDropPayload("HierarchyNode", source);
@@ -504,7 +504,7 @@ public class SappImGuiUtils {
         ImGui.pushID(id);
         if (ImGui.treeNodeEx(text, NODE_FLAGS)) {
             if (ImGui.isItemClicked()) {
-                SappEvents.notify(new SappEvent(SappEventType.Selected_object, null, null, source));
+                SappEventSystem.throwEvent(new SappEvent(SappEventType.Selected_object, null, null, source));
             }
             isOpen = true;
         }

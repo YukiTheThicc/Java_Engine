@@ -8,7 +8,7 @@ import diamondEngine.diaControls.MouseControls;
 import diamondEngine.diaAssets.Texture;
 import diamondEngine.diaUtils.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
-import sapphire.eventsSystem.SappEvents;
+import sapphire.eventsSystem.SappEventSystem;
 import sapphire.imgui.SappImGuiLayer;
 import sapphire.utils.SappDefaultLiterals;
 
@@ -199,7 +199,7 @@ public class Sapphire {
         imGUILayer = new SappImGuiLayer(this.window.getGlfwWindow());
         settings.init();                        // Init settings before layer to have the settings available for ImGui
         imGUILayer.init();                      // Init ImGui layer
-        SappEvents.init(imGUILayer);            // Init sapp events, needs layer for certain handlers
+        SappEventSystem.init(imGUILayer);            // Init sapp events, needs layer for certain handlers
         run();                                  // Run Sapphire main loop
 
         // Finalize execution once Sapphire is closed
@@ -215,17 +215,20 @@ public class Sapphire {
         while (running) {
 
             window.pollEvents();
-            SappMouseController.update(dt);
-            Diamond.getProfiler().beginMeasurement("Total");
-            Diamond.getCurrentEnv().startFrame();
+
+            SappMouseController.update(dt);                             // Update sapphire mouse controller
+            Diamond.getProfiler().beginMeasurement("Total");     // Start total profiling measurement
+            Diamond.getCurrentEnv().startFrame();                       // Start current environment frame
+            SappEventSystem.dispatchEvents();                           // Dispatch sapphire event buffer
+
             if (dt >= 0) {
-                diaInstance.updateAllEnvLists();
                 diaInstance.update(dt);
             }
-            MouseControls.endFrame();
-            Diamond.getCurrentEnv().endFrame();
-            Diamond.getProfiler().endMeasurement("Total");
-            Diamond.getProfiler().update(dt);
+
+            MouseControls.endFrame();                                   // End of update for the mouse controls
+            Diamond.getCurrentEnv().endFrame();                         // End frame for the current environment
+            Diamond.getProfiler().endMeasurement("Total");       // End of profiler total measurement
+            Diamond.getProfiler().update(dt);                           // Update profiler
 
             window.endFrame();
             imGUILayer.update();

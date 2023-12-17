@@ -10,6 +10,7 @@ public class SappEvent {
     public Environment env;
     public Entity entity;
     public Object payload;
+    public boolean isHandled = false;
 
     // CONSTRUCTORS
     public SappEvent(SappEventType type, Environment env, Entity entity, Object payload) {

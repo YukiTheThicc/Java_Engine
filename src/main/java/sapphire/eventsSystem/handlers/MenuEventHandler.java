@@ -155,7 +155,8 @@ public class MenuEventHandler implements SappObserver {
     }
 
     private void saveEnv() {
-        Environment env = Sapphire.getActiveObject() instanceof Environment ? (Environment) Sapphire.getActiveObject() : null;
+        Environment env = Diamond.getCurrentEnv() != null ? Diamond.getCurrentEnv() :
+                Sapphire.getActiveObject() instanceof Environment ? (Environment) Sapphire.getActiveObject() : null;
         if (env != null) {
             File file = null;
             if (env.getOriginFile() != null) {

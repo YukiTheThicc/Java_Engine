@@ -5,12 +5,14 @@ import diamondEngine.Environment;
 import diamondEngine.Diamond;
 import diamondEngine.diaComponents.Sprite;
 import diamondEngine.diaComponents.tileMap.TileMap;
+import diamondEngine.diaEvents.DiaEvent;
+import diamondEngine.diaEvents.DiaEventSystem;
+import diamondEngine.diaEvents.DiaEventType;
 import diamondEngine.diaUtils.DiaHierarchyNode;
-import diamondEngine.diaUtils.DiaLogger;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
 import sapphire.Sapphire;
-import sapphire.eventsSystem.SappEvents;
+import sapphire.eventsSystem.SappEventSystem;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.SappImGuiUtils;
@@ -44,7 +46,7 @@ public class EnvHierarchyWindow extends ImguiWindow {
     }
 
     private void drawEmptyEnvsPrompt() {
-        if (newRootEnvButton.draw()) SappEvents.notify(new SappEvent(SappEventType.New_root_env));
+        if (newRootEnvButton.draw()) SappEventSystem.throwEvent(new SappEvent(SappEventType.New_root_env));
     }
 
     private void drawNestedEnvironments() {
@@ -56,6 +58,9 @@ public class EnvHierarchyWindow extends ImguiWindow {
             // Drag and drop target
             if (ImGui.beginDragDropTarget()) {
                 Object payload = ImGui.acceptDragDropPayload("HierarchyNode");
+                if (payload instanceof DiaHierarchyNode) {
+                    SappEventSystem.throwEvent(new SappEvent(SappEventType.Hierarchy_changed, env, null, ((DiaHierarchyNode) payload).getEntity()));
+                }
                 ImGui.endDragDropTarget();
             }
 
@@ -77,37 +82,37 @@ public class EnvHierarchyWindow extends ImguiWindow {
 
     private void drawEntityNode(DiaHierarchyNode node, Environment env) {
         Entity e = node.getEntity();
+
+        boolean isEntityOpen = false;
         if (node.getChildren().isEmpty()) {
             SappImGuiUtils.selectable(e.getUuid(), e.getName(), "entity.png", node);
         } else {
-            boolean isEntityOpen = SappImGuiUtils.imageTreeNode(e.getUuid(), e.getName(), "entity.png", node);
-            if (isEntityOpen) {
-                for (String childId : node.getChildren()) {
-                    DiaHierarchyNode childNode = env.getNodes().get(childId);
-                    drawEntityNode(childNode, env);
-                }
-                ImGui.treePop();
-            }
+            isEntityOpen = SappImGuiUtils.imageTreeNode(e.getUuid(), e.getName(), "entity.png", node);
         }
 
         // Drag and drop target
         if (ImGui.beginDragDropTarget()) {
             Object payload = ImGui.acceptDragDropPayload("HierarchyNode");
-            DiaLogger.log("" + payload);
-
             if (payload instanceof DiaHierarchyNode) {
-                DiaLogger.log("Nested entity node");
-                env.modifyHierarchy(node.getEntity(), ((DiaHierarchyNode) payload).getEntity());
+                SappEventSystem.throwEvent(new SappEvent(SappEventType.Hierarchy_changed, env, node.getEntity(), ((DiaHierarchyNode) payload).getEntity()));
             }
             ImGui.endDragDropTarget();
         }
-        entityContextMenu(e);
+
+        if (isEntityOpen) {
+            for (String childId : node.getChildren()) {
+                DiaHierarchyNode childNode = env.getNodes().get(childId);
+                drawEntityNode(childNode, env);
+            }
+            ImGui.treePop();
+        }
+        entityContextMenu(env, e);
     }
 
     private void mainContextMenu() {
         if (ImGui.beginPopupContextItem("env_menu")) {
             if (ImGui.menuItem(Sapphire.getLiteral("create_env")))
-                SappEvents.notify(new SappEvent(SappEventType.Add_env));
+                SappEventSystem.throwEvent(new SappEvent(SappEventType.Add_env));
             ImGui.endPopup();
         }
     }
@@ -120,15 +125,16 @@ public class EnvHierarchyWindow extends ImguiWindow {
     private void envContextMenu(Environment env) {
         if (ImGui.beginPopupContextItem(env.getUuid())) {
 
-            if (ImGui.menuItem(Sapphire.getLiteral("make_current"))) SappEvents.notify(
+            if (ImGui.menuItem(Sapphire.getLiteral("make_current"))) SappEventSystem.throwEvent(
                     new SappEvent(SappEventType.Make_current, env));
             ImGui.separator();
 
-            if (ImGui.menuItem(Sapphire.getLiteral("add_entity"))) SappEvents.notify(
-                    new SappEvent(SappEventType.Add_object, env, new Entity()));
+            if (ImGui.menuItem(Sapphire.getLiteral("add_entity"))) {
+                SappEventSystem.throwEvent(new SappEvent(SappEventType.Add_object, env, new Entity()));
+            }
             ImGui.separator();
 
-            if (ImGui.menuItem(Sapphire.getLiteral("remove"))) SappEvents.notify(
+            if (ImGui.menuItem(Sapphire.getLiteral("remove"))) SappEventSystem.throwEvent(
                     new SappEvent(SappEventType.Delete_object, env));
             ImGui.endPopup();
         }
@@ -139,21 +145,21 @@ public class EnvHierarchyWindow extends ImguiWindow {
      *
      * @param e Entity
      */
-    private void entityContextMenu(Entity e) {
+    private void entityContextMenu(Environment env, Entity e) {
         if (ImGui.beginPopupContextItem(e.getUuid())) {
 
             // Component addition options
-            if (ImGui.menuItem(Sapphire.getLiteral("add_tile_map"))) SappEvents.notify(
+            if (ImGui.menuItem(Sapphire.getLiteral("add_tile_map"))) SappEventSystem.throwEvent(
                     new SappEvent(SappEventType.Add_object, null, e, new TileMap(32)));
-            if (ImGui.menuItem(Sapphire.getLiteral("add_sprite_renderer"))) SappEvents.notify(
+            if (ImGui.menuItem(Sapphire.getLiteral("add_sprite_renderer"))) SappEventSystem.throwEvent(
                     new SappEvent(SappEventType.Add_object, null, e, new Sprite()));
-            if (ImGui.menuItem(Sapphire.getLiteral("add_text_renderer"))) SappEvents.notify(
+            if (ImGui.menuItem(Sapphire.getLiteral("add_text_renderer"))) SappEventSystem.throwEvent(
                     new SappEvent(SappEventType.Add_object, null, e, new Sprite()));
             ImGui.separator();
 
-            if (ImGui.menuItem(Sapphire.getLiteral("copy"))) SappEvents.notify(
-                    new SappEvent(SappEventType.Copy_object, e.getEnv(), e));
-            if (ImGui.menuItem(Sapphire.getLiteral("delete"))) SappEvents.notify(
+            if (ImGui.menuItem(Sapphire.getLiteral("copy"))) SappEventSystem.throwEvent(
+                    new SappEvent(SappEventType.Copy_object, env, e));
+            if (ImGui.menuItem(Sapphire.getLiteral("delete"))) SappEventSystem.throwEvent(
                     new SappEvent(SappEventType.Delete_object, null, e));
             ImGui.endPopup();
         }

@@ -8,7 +8,7 @@ import imgui.flag.ImGuiStyleVar;
 import imgui.internal.ImGuiDockNode;
 import sapphire.Sapphire;
 import sapphire.SappKeyControls;
-import sapphire.eventsSystem.SappEvents;
+import sapphire.eventsSystem.SappEventSystem;
 import sapphire.SappSettings;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
@@ -368,7 +368,7 @@ public class SappImGuiLayer {
         imGuiGlfw.newFrame();
         ImGui.newFrame();
         if (fontChanged) {
-            SappEvents.notify(new SappEvent(SappEventType.Font_changed));
+            SappEventSystem.throwEvent(new SappEvent(SappEventType.Font_changed));
             fontChanged = false;
         }
     }

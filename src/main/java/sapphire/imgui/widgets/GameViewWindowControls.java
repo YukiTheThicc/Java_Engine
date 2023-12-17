@@ -7,7 +7,7 @@ import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import sapphire.Sapphire;
-import sapphire.eventsSystem.SappEvents;
+import sapphire.eventsSystem.SappEventSystem;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.AlignX;
@@ -68,11 +68,11 @@ public class GameViewWindowControls {
         SappImGuiUtils.align(AlignX.CENTER, AlignY.CENTER, iconSizeX * 2 + ImGui.getStyle().getFramePaddingX(), iconSizeY);
 
         if (play.draw(!isDiasRunning)) {
-            SappEvents.notify(new SappEvent(SappEventType.Play));
+            SappEventSystem.throwEvent(new SappEvent(SappEventType.Play));
         }
         ImGui.sameLine();
         if (stop.draw(isDiasRunning)) {
-            SappEvents.notify(new SappEvent(SappEventType.Stop));
+            SappEventSystem.throwEvent(new SappEvent(SappEventType.Stop));
         }
         ImGui.endChild();
 
