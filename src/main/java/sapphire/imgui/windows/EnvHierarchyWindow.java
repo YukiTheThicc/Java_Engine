@@ -150,17 +150,17 @@ public class EnvHierarchyWindow extends ImguiWindow {
 
             // Component addition options
             if (ImGui.menuItem(Sapphire.getLiteral("add_tile_map"))) SappEventSystem.throwEvent(
-                    new SappEvent(SappEventType.Add_object, null, e, new TileMap(32)));
+                    new SappEvent(SappEventType.Add_object, env, e, new TileMap(32)));
             if (ImGui.menuItem(Sapphire.getLiteral("add_sprite_renderer"))) SappEventSystem.throwEvent(
-                    new SappEvent(SappEventType.Add_object, null, e, new Sprite()));
+                    new SappEvent(SappEventType.Add_object, env, e, new Sprite()));
             if (ImGui.menuItem(Sapphire.getLiteral("add_text_renderer"))) SappEventSystem.throwEvent(
-                    new SappEvent(SappEventType.Add_object, null, e, new Sprite()));
+                    new SappEvent(SappEventType.Add_object, env, e, new Sprite()));
             ImGui.separator();
 
             if (ImGui.menuItem(Sapphire.getLiteral("copy"))) SappEventSystem.throwEvent(
                     new SappEvent(SappEventType.Copy_object, env, e));
             if (ImGui.menuItem(Sapphire.getLiteral("delete"))) SappEventSystem.throwEvent(
-                    new SappEvent(SappEventType.Delete_object, null, e));
+                    new SappEvent(SappEventType.Delete_object, env, e));
             ImGui.endPopup();
         }
     }

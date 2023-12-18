@@ -75,6 +75,7 @@ public class WindowsEventHandler implements SappObserver {
                 }
             }
             event.entity.addComponent((Component) event.payload);
+            event.env.setModified();
         }
     }
 
