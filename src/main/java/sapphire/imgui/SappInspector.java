@@ -45,17 +45,6 @@ public class SappInspector {
                 e.setModified();
             }
         }
-
-        ImInt newWidth = new ImInt(e.getFrameX());
-        if (SappImGuiUtils.inputInt(Sapphire.getLiteral("frame_width"), newWidth)) {
-            e.changeFrame(newWidth.get(), e.getFrameY());
-            e.setModified();
-        }
-        ImInt newHeight = new ImInt(e.getFrameY());
-        if (SappImGuiUtils.inputInt(Sapphire.getLiteral("frame_height"), newHeight)) {
-            e.changeFrame(e.getFrameX(), newHeight.get());
-            e.setModified();
-        }
         ImGui.separator();
 
         // UID System INFO
@@ -73,13 +62,9 @@ public class SappInspector {
         }
         ImGui.endTable();
 
-        /*
-        ImGui.text("winSizeAdjustX: " + winSizeAdjustX);
-        ImGui.text("winSizeAdjustY: " + winSizeAdjustY);
-        ImGui.text(Window.getWidth() + " / " + Window.getHeight());
-        ImGui.text((float) Window.getWidth() / frameX + " / " + (float) Window.getHeight() / frameY);
-        ImGui.text("Ratio: " + getRatio());
-        */
+        ImGui.text("winSizeAdjustX: " + e.getWinSizeAdjustX());
+        ImGui.text("winSizeAdjustY: " + e.getWinSizeAdjustY());
+        ImGui.text("Ratio: " + e.getAspectRatio());
     }
 
     private static void inspectEntity(Entity e) {

@@ -82,8 +82,8 @@ public class Camera{
 
     // METHODS
     private void calculateActualPSize() {
-        this.pSizeActual.x = pSize.x * Diamond.getCurrentEnv().getAspectRatio() / Diamond.getCurrentEnv().getWinSizeAdjustX();
-        this.pSizeActual.y = pSize.y / Diamond.getCurrentEnv().getWinSizeAdjustY();
+        this.pSizeActual.x = pSize.x * Diamond.getCurrentEnv().getAspectRatio();
+        this.pSizeActual.y =  pSize.y;
     }
 
     public void updateProjection() {

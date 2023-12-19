@@ -174,6 +174,7 @@ public class Environment extends DiaObject {
                 nodes.put(e.getUuid(), node);
                 nestEntity(null, e);
                 DiaEventSystem.throwEvent(new DiaEvent(DiaEventType.ENTITY_ADDED, this, e));
+                isModified = true;
             }
             for (DiaHierarchyNode node : nodesToDelete) {
                 Entity e = node.getEntity();
@@ -188,6 +189,7 @@ public class Environment extends DiaObject {
                 entities.remove(e);
                 nodes.remove(e.getUuid(), node);
                 DiaEventSystem.throwEvent(new DiaEvent(DiaEventType.ENTITY_REMOVED, this, e));
+                isModified = true;
             }
             // Clear buffer lists
             nodesToAdd.clear();

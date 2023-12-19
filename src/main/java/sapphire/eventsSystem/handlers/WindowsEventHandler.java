@@ -95,8 +95,13 @@ public class WindowsEventHandler implements SappObserver {
             if (Sapphire.getActiveObject() == event.env) Sapphire.setActiveObject(null);
         }
 
+        // Remove entity from environment
+        if (event.env != null && event.entity != null) {
+            event.env.deleteEntity(event.entity);
+        }
+
         // Remove component from entity
-        if (event.env == null && event.entity != null && event.payload != null) {
+        if (event.env != null && event.entity != null && event.payload != null) {
             if (event.payload instanceof Component) {
                 event.entity.removeComponent(((Component) event.payload));
             }

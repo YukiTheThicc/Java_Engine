@@ -4,6 +4,7 @@ import diamondEngine.Camera;
 import diamondEngine.Diamond;
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaRenderer.DebugRenderer;
+import diamondEngine.diaUtils.DiaLogger;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import sapphire.imgui.windows.GameViewWindow;
@@ -110,7 +111,7 @@ public class TileMap implements Component {
     private void cellSizeChanged(int cellX, int cellY) {
         this.cellY = cellY;
         this.cellX = cellX;
-        cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX() * Diamond.getCurrentEnv().getAspectRatio();
+        cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX();
         cellNY = (float) cellY / Diamond.getCurrentEnv().getFrameY();
     }
 
@@ -118,17 +119,28 @@ public class TileMap implements Component {
         if (drawGrid) {
             Camera camera = GameViewWindow.editorCamera;
             Vector2f cameraPos = camera.pos;
-            Vector2f pSize = camera.getPSize();
+            Vector2f pSize = camera.getPSizeActual();
 
+            cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX();
+            cellNY = (float) cellY / Diamond.getCurrentEnv().getFrameX();
             if (camera.zoom <= 4) {
 
-                int numHLines = (int) (camera.zoom * pSize.y / cellNY) + 3;
-                int numVLines = (int) (camera.zoom * pSize.x * Diamond.getCurrentEnv().getAspectRatio() / cellNX) + 3;
-                float width = (cellNX * 2 + camera.zoom * pSize.x) * Diamond.getCurrentEnv().getAspectRatio();
+                // CORRECT
+                int numVLines = (int) (camera.zoom * pSize.x / cellNX) + 2;
+
+                // INCORRECT
+                int numHLines = (int) (camera.zoom * pSize.y / cellNX) + 2;
+                float width = cellNX * 2 + camera.zoom * pSize.x;
                 float height = cellNY * 2 + camera.zoom * pSize.y;
                 float firstX = ((int) (cameraPos.x / cellNX) - 1) * cellNX;
                 float firstY = ((int) (cameraPos.y / cellNY) - 1) * cellNY;
                 int maxLines = Math.max(numVLines, numHLines);
+
+                DiaLogger.log("numHLines: " + numHLines);
+                DiaLogger.log("numVLines: " + numVLines);
+                DiaLogger.log("maxLines: " + maxLines);
+                DiaLogger.log("cellNX: " + cellNX);
+                DiaLogger.log("cellNY: " + cellNY);
 
                 float x = 0;
                 float y = 0;
