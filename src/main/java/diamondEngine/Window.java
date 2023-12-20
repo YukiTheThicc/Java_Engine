@@ -135,8 +135,6 @@ public class Window {
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         glfwShowWindow(glfwWindow);
 
-        glViewport(0, 0, width, height);
-
         GLFWImage.Buffer image = DiaUtils.loadGLFWImage(iconPath);
         if (image != null) {
             glfwSetWindowIcon(glfwWindow, image);

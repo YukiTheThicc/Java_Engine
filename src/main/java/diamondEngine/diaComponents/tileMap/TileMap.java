@@ -22,30 +22,26 @@ public class TileMap implements Component {
     private boolean drawGrid;
 
     // RUNTIME ATTRIBUTES
-    private transient float cellNX;
-    private transient float cellNY;
     private transient Vector3f gridColor;
 
     // CONSTRUCTORS
     public TileMap(int cell) {
         super();
         this.tileSet = null;
-        this.tiles = new ArrayList<Tile>();
+        this.tiles = new ArrayList<>();
         this.cellX = cell;
         this.cellY = cell;
         this.drawGrid = true;
-        this.cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX();
-        this.cellNY = (float) cellY / Diamond.getCurrentEnv().getFrameY();
         this.gridColor = new Vector3f(0.333f, 0.333f, 0.333f);
     }
 
     public TileMap(int cellX, int cellY) {
         super();
+        this.tileSet = null;
+        this.tiles = new ArrayList<>();
         this.cellX = cellX;
         this.cellY = cellY;
         this.drawGrid = true;
-        this.cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX() * Diamond.getCurrentEnv().getAspectRatio();
-        this.cellNY = (float) cellY / Diamond.getCurrentEnv().getFrameY();
         this.gridColor = new Vector3f(0.333f, 0.333f, 0.333f);
     }
 
@@ -85,15 +81,11 @@ public class TileMap implements Component {
     // METHODS
     @Override
     public void init() {
-        this.cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX() * Diamond.getCurrentEnv().getAspectRatio();
-        this.cellNY = (float) cellY / Diamond.getCurrentEnv().getFrameY();
         this.gridColor = new Vector3f(0.444f, 0.444f, 0.444f);
-        cellSizeChanged(cellX, cellY);
     }
 
     @Override
     public void update(float dt) {
-
         // The tileSet grid is drawn if it is set to be visible
         drawGrid();
     }
@@ -108,50 +100,34 @@ public class TileMap implements Component {
 
     }
 
-    private void cellSizeChanged(int cellX, int cellY) {
-        this.cellY = cellY;
-        this.cellX = cellX;
-        cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX();
-        cellNY = (float) cellY / Diamond.getCurrentEnv().getFrameY();
-    }
-
     private void drawGrid() {
         if (drawGrid) {
             Camera camera = GameViewWindow.editorCamera;
             Vector2f cameraPos = camera.pos;
             Vector2f pSize = camera.getPSizeActual();
 
-            cellNX = (float) cellX / Diamond.getCurrentEnv().getFrameX();
-            cellNY = (float) cellY / Diamond.getCurrentEnv().getFrameX();
             if (camera.zoom <= 4) {
 
-                // CORRECT
-                int numVLines = (int) (camera.zoom * pSize.x / cellNX) + 2;
-
-                // INCORRECT
-                int numHLines = (int) (camera.zoom * pSize.y / cellNX) + 2;
-                float width = cellNX * 2 + camera.zoom * pSize.x;
-                float height = cellNY * 2 + camera.zoom * pSize.y;
+                // RUNTIME ATTRIBUTES
+                float cellNX = Diamond.getCurrentEnv().getAspectRatio() * cellX / Diamond.getCurrentEnv().getFrameX();
+                float cellNY = (float) cellY / Diamond.getCurrentEnv().getFrameY();
+                int numVLines = (int) (pSize.x / cellNX) + 3;
+                int numHLines = (int) (pSize.y / cellNY) + 3;
+                float width = cellNY * 2 + pSize.x;
+                float height = cellNY * 2 + pSize.y;
                 float firstX = ((int) (cameraPos.x / cellNX) - 1) * cellNX;
                 float firstY = ((int) (cameraPos.y / cellNY) - 1) * cellNY;
                 int maxLines = Math.max(numVLines, numHLines);
-
-                DiaLogger.log("numHLines: " + numHLines);
-                DiaLogger.log("numVLines: " + numVLines);
-                DiaLogger.log("maxLines: " + maxLines);
-                DiaLogger.log("cellNX: " + cellNX);
-                DiaLogger.log("cellNY: " + cellNY);
 
                 float x = 0;
                 float y = 0;
                 for (int i = 0; i < maxLines; i++) {
                     x = firstX + (cellNX * i);
                     y = firstY + (cellNY * i);
-
+                    DiaLogger.log("Line ["+ i + "] x: " + x + " / y: " + y);
                     if (i < numHLines) {
                         DebugRenderer.addLine(new Vector2f(firstX, y), new Vector2f(width + firstX, y), gridColor);
                     }
-
                     if (i < numVLines) {
                         DebugRenderer.addLine(new Vector2f(x, firstY), new Vector2f(x, height + firstY), gridColor);
                     }

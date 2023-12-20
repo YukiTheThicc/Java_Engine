@@ -84,7 +84,7 @@ public class DebugRenderer {
     public static void draw() {
 
         Camera camera = GameViewWindow.editorCamera;
-        if (lines.size() <= 0) return;
+        if (lines.size() == 0) return;
 
         int index = 0;
         for (Line line : lines) {

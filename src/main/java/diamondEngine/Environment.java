@@ -135,8 +135,8 @@ public class Environment extends DiaObject {
         originFile = null;
         nodesToAdd = new ArrayList<>();
         nodesToDelete = new ArrayList<>();
-        winSizeAdjustX = (float) Window.getWidth() / frameX;
-        winSizeAdjustY = (float) Window.getHeight() / frameY;
+        winSizeAdjustX = (float) frameX / Window.getWidth();
+        winSizeAdjustY = (float) frameY / Window.getHeight();
 
         if (isProfiling) {
             Diamond.getProfiler().addRegister("Update Lists");

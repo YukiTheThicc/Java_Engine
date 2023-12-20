@@ -43,6 +43,7 @@ public class Framebuffer {
 
     // METHODS
     public void bind() {
+        glViewport(0, 0, texture.getWidth(), texture.getHeight());
         glBindFramebuffer(GL_FRAMEBUFFER, this.fboId);
     }
 

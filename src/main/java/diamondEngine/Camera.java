@@ -82,15 +82,15 @@ public class Camera{
 
     // METHODS
     private void calculateActualPSize() {
-        this.pSizeActual.x = pSize.x * Diamond.getCurrentEnv().getAspectRatio();
-        this.pSizeActual.y =  pSize.y;
+        this.pSizeActual.x = this.zoom * pSize.x * Diamond.getCurrentEnv().getAspectRatio();
+        this.pSizeActual.y = this.zoom * pSize.y;
     }
 
     public void updateProjection() {
         if (isActive) {
             pMatrix.identity();
             calculateActualPSize();
-            pMatrix.ortho(0.0f, this.zoom * pSizeActual.x, 0.0f, this.zoom * pSizeActual.y, 0.0f, 100.0f);
+            pMatrix.ortho(0.0f, pSizeActual.x, 0.0f, pSizeActual.y, 0.0f, 100.0f);
             pMatrix.invert(invProj);
         }
     }
