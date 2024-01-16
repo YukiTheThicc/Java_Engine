@@ -124,7 +124,6 @@ public class TileMap implements Component {
                 for (int i = 0; i < maxLines; i++) {
                     x = firstX + (cellNX * i);
                     y = firstY + (cellNY * i);
-                    DiaLogger.log("Line ["+ i + "] x: " + x + " / y: " + y);
                     if (i < numHLines) {
                         DebugRenderer.addLine(new Vector2f(firstX, y), new Vector2f(width + firstX, y), gridColor);
                     }
