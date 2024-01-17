@@ -1,6 +1,5 @@
 package diamondEngine;
 
-import diamondEngine.diaControls.MouseControls;
 import diamondEngine.diaUtils.DiaUtils;
 import org.lwjgl.glfw.*;
 import org.joml.Vector2f;

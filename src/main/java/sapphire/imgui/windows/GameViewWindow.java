@@ -2,7 +2,7 @@ package sapphire.imgui.windows;
 
 import diamondEngine.Diamond;
 import diamondEngine.Camera;
-import diamondEngine.diaControls.MouseControls;
+import diamondEngine.MouseControls;
 import diamondEngine.diaUtils.DiaMath;
 import imgui.ImGui;
 import imgui.ImVec2;

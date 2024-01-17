@@ -4,7 +4,6 @@ import diamondEngine.Camera;
 import diamondEngine.Diamond;
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaRenderer.DebugRenderer;
-import diamondEngine.diaUtils.DiaLogger;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import sapphire.imgui.windows.GameViewWindow;

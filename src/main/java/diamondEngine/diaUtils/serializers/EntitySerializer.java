@@ -2,9 +2,7 @@ package diamondEngine.diaUtils.serializers;
 
 import com.google.gson.*;
 import diamondEngine.Entity;
-import diamondEngine.Environment;
 import diamondEngine.diaComponents.Component;
-import diamondEngine.diaComponents.Transform;
 
 import java.lang.reflect.Type;
 

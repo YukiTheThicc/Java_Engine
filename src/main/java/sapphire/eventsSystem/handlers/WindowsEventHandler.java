@@ -5,6 +5,8 @@ import diamondEngine.Diamond;
 import diamondEngine.Entity;
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaUtils.*;
+import diamondEngine.diaUtils.diaLogger.DiaLogger;
+import diamondEngine.diaUtils.diaLogger.DiaLoggerLevel;
 import sapphire.Sapphire;
 import sapphire.SappProject;
 import sapphire.eventsSystem.SappEvent;

@@ -7,6 +7,8 @@ import diamondEngine.diaEvents.DiaEventType;
 import diamondEngine.diaEvents.DiaEventSystem;
 import diamondEngine.diaAssets.Shader;
 import diamondEngine.diaAssets.Texture;
+import diamondEngine.diaUtils.diaLogger.DiaLogger;
+import diamondEngine.diaUtils.diaLogger.DiaLoggerLevel;
 
 import java.io.File;
 import java.util.Collection;

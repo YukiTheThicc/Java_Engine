@@ -6,7 +6,7 @@ import sapphire.eventsSystem.SappEventSystem;
 import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.windows.ImguiWindow;
-import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.diaUtils.diaLogger.DiaLogger;
 
 public class SappMenuBar {
 

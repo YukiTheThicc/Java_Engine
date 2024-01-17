@@ -5,8 +5,8 @@ import com.google.gson.GsonBuilder;
 import diamondEngine.Environment;
 import diamondEngine.Diamond;
 import diamondEngine.diaUtils.DiaAssetPool;
-import diamondEngine.diaUtils.DiaLogger;
-import diamondEngine.diaUtils.DiaLoggerLevel;
+import diamondEngine.diaUtils.diaLogger.DiaLogger;
+import diamondEngine.diaUtils.diaLogger.DiaLoggerLevel;
 import diamondEngine.diaUtils.serializers.EnvironmentSerializer;
 import sapphire.imgui.SappImGuiUtils;
 

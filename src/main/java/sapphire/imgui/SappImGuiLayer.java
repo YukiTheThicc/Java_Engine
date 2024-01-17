@@ -1,7 +1,7 @@
 package sapphire.imgui;
 
-import diamondEngine.diaControls.MouseControls;
-import diamondEngine.diaUtils.DiaLoggerLevel;
+import diamondEngine.MouseControls;
+import diamondEngine.diaUtils.diaLogger.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
 import imgui.extension.implot.ImPlot;
 import imgui.flag.ImGuiStyleVar;
@@ -14,7 +14,7 @@ import sapphire.eventsSystem.SappEvent;
 import sapphire.eventsSystem.SappEventType;
 import sapphire.imgui.windows.*;
 import diamondEngine.Window;
-import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.diaUtils.diaLogger.DiaLogger;
 import imgui.*;
 import imgui.callback.ImStrConsumer;
 import imgui.callback.ImStrSupplier;

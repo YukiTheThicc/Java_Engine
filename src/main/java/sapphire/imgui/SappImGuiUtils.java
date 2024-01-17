@@ -1,7 +1,7 @@
 package sapphire.imgui;
 
 import diamondEngine.diaAssets.Texture;
-import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.diaUtils.diaLogger.DiaLogger;
 import imgui.ImGui;
 import imgui.flag.*;
 import imgui.type.ImFloat;

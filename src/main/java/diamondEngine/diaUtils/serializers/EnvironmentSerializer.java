@@ -5,8 +5,8 @@ import diamondEngine.Diamond;
 import diamondEngine.Entity;
 import diamondEngine.Environment;
 import diamondEngine.diaComponents.Component;
-import diamondEngine.diaUtils.DiaLogger;
-import diamondEngine.diaUtils.DiaLoggerLevel;
+import diamondEngine.diaUtils.diaLogger.DiaLogger;
+import diamondEngine.diaUtils.diaLogger.DiaLoggerLevel;
 import sapphire.Sapphire;
 
 import java.io.FileWriter;

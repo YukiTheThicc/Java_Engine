@@ -2,7 +2,7 @@ package sapphire.eventsSystem.handlers;
 
 import diamondEngine.Diamond;
 import diamondEngine.Environment;
-import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.diaUtils.diaLogger.DiaLogger;
 import diamondEngine.diaUtils.DiaUtils;
 import diamondEngine.diaUtils.serializers.EnvironmentSerializer;
 import sapphire.Sapphire;

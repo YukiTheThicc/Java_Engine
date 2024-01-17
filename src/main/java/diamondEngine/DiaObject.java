@@ -1,7 +1,6 @@
 package diamondEngine;
 
 import diamondEngine.diaUtils.DiaUUID;
-import imgui.ImGui;
 
 public abstract class DiaObject {
 

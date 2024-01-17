@@ -1,7 +1,5 @@
-package diamondEngine.diaControls;
+package diamondEngine;
 
-import diamondEngine.Window;
-import diamondEngine.Camera;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;

@@ -1,8 +1,8 @@
 package sapphire;
 
 import diamondEngine.Diamond;
-import diamondEngine.diaControls.MouseControls;
-import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.MouseControls;
+import diamondEngine.diaUtils.diaLogger.DiaLogger;
 import org.joml.Vector2f;
 import sapphire.imgui.windows.GameViewWindow;
 

@@ -1,8 +1,8 @@
 package sapphire;
 
 import com.google.gson.*;
-import diamondEngine.diaUtils.DiaLogger;
-import diamondEngine.diaUtils.DiaLoggerLevel;
+import diamondEngine.diaUtils.diaLogger.DiaLogger;
+import diamondEngine.diaUtils.diaLogger.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
 import imgui.ImFont;
 

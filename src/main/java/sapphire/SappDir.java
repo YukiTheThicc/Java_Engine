@@ -1,7 +1,7 @@
 package sapphire;
 
-import diamondEngine.diaUtils.DiaLogger;
-import diamondEngine.diaUtils.DiaLoggerLevel;
+import diamondEngine.diaUtils.diaLogger.DiaLogger;
+import diamondEngine.diaUtils.diaLogger.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
 
 import java.io.File;

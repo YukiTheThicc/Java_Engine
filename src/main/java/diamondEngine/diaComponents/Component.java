@@ -1,8 +1,5 @@
 package diamondEngine.diaComponents;
 
-import diamondEngine.Entity;
-import imgui.ImGui;
-
 public interface Component {
 
     /**

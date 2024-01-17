@@ -2,12 +2,8 @@ package diamondEngine;
 
 import diamondEngine.diaComponents.Component;
 import diamondEngine.diaComponents.Transform;
-import diamondEngine.diaUtils.DiaLogger;
-import diamondEngine.diaUtils.DiaLoggerLevel;
-import imgui.ImGui;
-import imgui.type.ImString;
-import sapphire.Sapphire;
-import sapphire.imgui.SappImGuiUtils;
+import diamondEngine.diaUtils.diaLogger.DiaLogger;
+import diamondEngine.diaUtils.diaLogger.DiaLoggerLevel;
 
 import java.util.ArrayList;
 

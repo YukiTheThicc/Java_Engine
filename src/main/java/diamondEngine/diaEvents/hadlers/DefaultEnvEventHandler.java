@@ -2,7 +2,7 @@ package diamondEngine.diaEvents.hadlers;
 
 import diamondEngine.diaEvents.DiaEvent;
 import diamondEngine.diaEvents.DiaObserver;
-import diamondEngine.diaUtils.DiaLogger;
+import diamondEngine.diaUtils.diaLogger.DiaLogger;
 
 public class DefaultEnvEventHandler implements DiaObserver {
 

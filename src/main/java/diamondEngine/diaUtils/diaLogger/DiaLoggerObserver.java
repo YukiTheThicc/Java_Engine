@@ -1,4 +1,4 @@
-package diamondEngine.diaUtils;
+package diamondEngine.diaUtils.diaLogger;
 
 public interface DiaLoggerObserver {
 

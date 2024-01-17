@@ -1,8 +1,8 @@
 package sapphire.imgui.windows;
 
-import diamondEngine.diaUtils.DiaLogger;
-import diamondEngine.diaUtils.DiaLoggerLevel;
-import diamondEngine.diaUtils.DiaLoggerObserver;
+import diamondEngine.diaUtils.diaLogger.DiaLogger;
+import diamondEngine.diaUtils.diaLogger.DiaLoggerLevel;
+import diamondEngine.diaUtils.diaLogger.DiaLoggerObserver;
 import diamondEngine.diaUtils.DiaUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;

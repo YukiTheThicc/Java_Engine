@@ -1,8 +1,8 @@
 package diamondEngine.diaRenderer;
 
 import diamondEngine.diaAssets.Texture;
-import diamondEngine.diaUtils.DiaLogger;
-import diamondEngine.diaUtils.DiaLoggerLevel;
+import diamondEngine.diaUtils.diaLogger.DiaLogger;
+import diamondEngine.diaUtils.diaLogger.DiaLoggerLevel;
 
 import static org.lwjgl.opengl.GL30.*;
 

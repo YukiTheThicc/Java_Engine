@@ -2,8 +2,8 @@ package sapphire.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import diamondEngine.diaUtils.DiaLogger;
-import diamondEngine.diaUtils.DiaLoggerLevel;
+import diamondEngine.diaUtils.diaLogger.DiaLogger;
+import diamondEngine.diaUtils.diaLogger.DiaLoggerLevel;
 import diamondEngine.diaUtils.DiaUtils;
 import sapphire.Sapphire;
 import sapphire.SappDir;

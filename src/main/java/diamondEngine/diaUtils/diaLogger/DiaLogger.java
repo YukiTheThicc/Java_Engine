@@ -1,4 +1,4 @@
-package diamondEngine.diaUtils;
+package diamondEngine.diaUtils.diaLogger;
 
 import java.io.*;
 import java.nio.file.Files;

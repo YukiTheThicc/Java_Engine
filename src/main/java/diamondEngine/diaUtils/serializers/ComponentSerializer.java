@@ -1,11 +1,8 @@
 package diamondEngine.diaUtils.serializers;
 
 import com.google.gson.*;
-import diamondEngine.Environment;
 import diamondEngine.diaComponents.Component;
-import diamondEngine.diaUtils.DiaLogger;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 
 public class ComponentSerializer implements JsonSerializer<Component>, JsonDeserializer<Component> {
