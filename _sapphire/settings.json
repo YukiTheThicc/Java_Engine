@@ -1,0 +1,19 @@
+{
+  "workspace": "C:\\Proyects\\",
+  "currentFont": "consola.ttf",
+  "currentLang": "en",
+  "lastProject": "C:\\Users\\santiago.barreiro\\test",
+  "sappDebug": false,
+  "activeWindows": {
+    "editor_camera": true,
+    "assets": true,
+    "debug_sapp": false,
+    "env_hierarchy": true,
+    "navigator": true,
+    "log_viewer": true,
+    "inspector": true,
+    "profiler": false
+  },
+  "showPreferences": {},
+  "fontSize": 13
+}

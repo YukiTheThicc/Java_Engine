@@ -1,0 +1,8 @@
+rootProject.name = 'Diamond_Engine'
+include '_sapphire:sapphire'
+findProject(':_sapphire:sapphire')?.name = 'sapphire'
+include '_diamond:diamond'
+findProject(':_diamond:diamond')?.name = 'diamond'
+include '_alma'
+include '_common'
+

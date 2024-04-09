@@ -5,7 +5,6 @@ build
 gradlew
 gradlew.bat
 log.txt
-settings.gradle
 
-sapphire/imgui.ini
-sapphire/settings.json
+_sapphire/imgui.ini
+_sapphire/settings.json
